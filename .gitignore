@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# build
+tsconfig.tsbuildinfo
+
+# misc
+.DS_Store
+*.pem
+
+# financial/sensitive
+OSCRSJ Financial Tracker.xlsx
+
+# env files
+.env
+.env*.local
+
+# vercel
+.vercel
