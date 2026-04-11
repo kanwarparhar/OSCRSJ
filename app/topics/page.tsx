@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = { title: 'Browse by Topic — OSCRSJ' }
 
@@ -16,37 +17,38 @@ const topics = [
 
 export default function TopicsPage() {
   return (
-    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="mb-10">
-        <h1 className="font-serif text-3xl font-normal text-brown-dark">Browse by Topic</h1>
-        <p className="text-tan mt-2 text-lg">
-          Explore case reports and series across all orthopedic subspecialties
-        </p>
-      </div>
+    <div>
+      <PageHeader
+        label="Browse by Specialty"
+        title="Topics"
+        subtitle="Explore case reports and series across all orthopedic subspecialties"
+      />
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        {topics.map((topic) => (
-          <Link
-            key={topic.slug}
-            href={`/topics/${topic.slug}`}
-            className="group bg-cream border border-border rounded-xl p-5 hover:border-peach/40 hover:shadow-sm transition-all"
-          >
-            <h2 className="font-serif text-lg font-normal text-brown-dark group-hover:text-brown transition-colors mb-2">
-              {topic.name}
-            </h2>
-            <p className="text-sm text-tan leading-relaxed">
-              {topic.desc}
-            </p>
-            <span className="inline-block mt-3 text-xs font-medium text-brown">
-              View articles &rarr;
-            </span>
-          </Link>
-        ))}
-      </div>
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid sm:grid-cols-2 gap-4">
+          {topics.map((topic) => (
+            <Link
+              key={topic.slug}
+              href={`/topics/${topic.slug}`}
+              className="group bg-cream border border-border rounded-xl p-6 hover:border-peach/40 hover:shadow-sm transition-all"
+            >
+              <h2 className="font-serif text-lg font-normal text-brown-dark group-hover:text-brown transition-colors mb-2">
+                {topic.name}
+              </h2>
+              <p className="text-sm text-brown-dark leading-relaxed">
+                {topic.desc}
+              </p>
+              <span className="inline-block mt-3 text-xs font-medium text-brown">
+                View articles &rarr;
+              </span>
+            </Link>
+          ))}
+        </div>
 
-      <div className="mt-12 flex flex-col sm:flex-row gap-3">
-        <Link href="/articles" className="btn-primary">Browse All Articles</Link>
-        <Link href="/submit" className="btn-outline">Submit a Manuscript</Link>
+        <div className="mt-12 flex flex-col sm:flex-row gap-3">
+          <Link href="/articles" className="btn-primary">Browse All Articles</Link>
+          <Link href="/submit" className="btn-outline">Submit a Manuscript</Link>
+        </div>
       </div>
     </div>
   )

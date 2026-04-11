@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import PageHeader from '@/components/PageHeader'
 
 const topicData: Record<string, { name: string; desc: string }> = {
   trauma: {
@@ -51,43 +52,48 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
   if (!topic) notFound()
 
   return (
-    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="mb-2">
-        <Link href="/topics" className="text-sm text-brown hover:text-brown transition-colors font-medium">
-          &larr; All Topics
-        </Link>
-      </div>
+    <div>
+      <PageHeader
+        label="Topics"
+        title={topic.name}
+      />
 
-      <div className="mb-10">
-        <h1 className="font-serif text-3xl font-normal text-brown-dark">{topic.name}</h1>
-      </div>
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="mb-4">
+          <Link href="/topics" className="text-sm text-brown hover:text-brown transition-colors font-medium">
+            &larr; All Topics
+          </Link>
+        </div>
 
-      <section className="mb-10 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
-        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">About This Topic</h2>
-        <p className="text-tan leading-relaxed">
-          {topic.desc}
-        </p>
-      </section>
+        <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
+          <span className="section-label">Overview</span>
+          <h2 className="section-heading mb-3">About This Topic</h2>
+          <p className="text-brown-dark leading-relaxed">
+            {topic.desc}
+          </p>
+        </section>
 
-      <section className="mb-10 bg-cream-alt border border-border rounded-2xl p-8 text-center">
-        <div className="text-4xl mb-4">📝</div>
-        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">Articles Coming Soon</h2>
-        <p className="text-tan leading-relaxed max-w-lg mx-auto">
-          We are currently accepting submissions in {topic.name.toLowerCase()}. Published articles in this subspecialty will appear here as they are peer-reviewed and accepted.
-        </p>
-      </section>
+        <section className="mb-12 bg-cream-alt border border-border rounded-2xl p-8 text-center">
+          <div className="text-4xl mb-4">📝</div>
+          <h2 className="section-heading mb-3">Articles Coming Soon</h2>
+          <p className="text-brown-dark leading-relaxed max-w-lg mx-auto">
+            We are currently accepting submissions in {topic.name.toLowerCase()}. Published articles in this subspecialty will appear here as they are peer-reviewed and accepted.
+          </p>
+        </section>
 
-      <section className="mb-10">
-        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">Submit Your Case</h2>
-        <p className="text-tan leading-relaxed mb-4">
-          Have a compelling case in {topic.name.toLowerCase()}? OSCRSJ welcomes case reports and case series from medical students, residents, fellows, and attending surgeons. APCs are waived through the end of 2026.
-        </p>
-      </section>
+        <section className="mb-12">
+          <span className="section-label">Contribute</span>
+          <h2 className="section-heading mb-3">Submit Your Case</h2>
+          <p className="text-brown-dark leading-relaxed mb-4">
+            Have a compelling case in {topic.name.toLowerCase()}? OSCRSJ welcomes case reports and case series from medical students, residents, fellows, and attending surgeons. APCs are waived through the end of 2026.
+          </p>
+        </section>
 
-      <div className="flex flex-col sm:flex-row gap-3">
-        <Link href="/submit" className="btn-primary">Submit a Manuscript</Link>
-        <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
-        <Link href="/topics" className="btn-ghost">All Topics</Link>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link href="/submit" className="btn-primary">Submit a Manuscript</Link>
+          <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
+          <Link href="/topics" className="btn-ghost">All Topics</Link>
+        </div>
       </div>
     </div>
   )
