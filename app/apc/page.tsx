@@ -20,8 +20,43 @@ const waivers = [
 ]
 
 export default function ApcPage() {
+  const faqData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How much does it cost to publish in OSCRSJ?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'OSCRSJ is currently offering free article processing for all submissions through the end of 2026. After this introductory period, APCs will begin at $299.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Does OSCRSJ offer APC waivers?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. OSCRSJ offers 100% waivers for authors from low-income countries, 50% for lower-middle-income countries and PGY-1/2 residents or medical students, and 25% for first-time published authors.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is OSCRSJ open access?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. All articles published in OSCRSJ are immediately and permanently free to read, download, and share under a Creative Commons license.',
+        },
+      },
+    ],
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
+      />
       <div className="mb-10">
         <h1 className="font-serif text-3xl font-semibold text-charcoal">Article Processing Charges</h1>
         <p className="text-charcoal-muted mt-2 text-lg">

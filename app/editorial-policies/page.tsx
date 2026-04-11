@@ -60,8 +60,14 @@ export default function EditorialPoliciesPage() {
 
         <section>
           <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Conflicts of Interest</h2>
+          <p className="text-charcoal-muted leading-relaxed mb-3">
+            All authors must disclose any financial or personal relationships that could influence or appear to influence their work. Disclosures must cover the preceding 36 months and include: funding sources, consulting fees, honoraria, stock ownership, patent holdings, paid expert testimony, and institutional affiliations that may pose a conflict. The corresponding author is responsible for collecting and submitting conflict of interest statements from all co-authors at the time of submission.
+          </p>
+          <p className="text-charcoal-muted leading-relaxed mb-3">
+            Editors and reviewers are held to the same standard. Any editor or reviewer with a potential conflict must recuse themselves from the decision-making process for that manuscript. The Editor-in-Chief will assign an alternate editor when necessary.
+          </p>
           <p className="text-charcoal-muted leading-relaxed">
-            All authors must disclose any financial or personal relationships that could influence or appear to influence their work. This includes funding sources, consulting relationships, stock ownership, patent holdings, and institutional affiliations that may pose a conflict. The corresponding author is responsible for collecting and submitting conflict of interest statements from all co-authors at the time of submission.
+            Failure to disclose a relevant conflict of interest may result in rejection of the manuscript, retraction of a published article, or notification of the authors' institutions. All COI disclosures are published alongside the article.
           </p>
         </section>
 
@@ -95,6 +101,33 @@ export default function EditorialPoliciesPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Authorship Disputes</h2>
+          <p className="text-charcoal-muted leading-relaxed mb-3">
+            If a dispute arises regarding authorship before or after publication, the corresponding author should notify the Editor-in-Chief immediately. OSCRSJ will follow COPE guidelines for resolving authorship disputes. The journal will not adjudicate authorship disagreements but will require all named authors to confirm their contributions before publication proceeds.
+          </p>
+          <p className="text-charcoal-muted leading-relaxed">
+            If a dispute cannot be resolved among the authors, the manuscript will be held until the authors' institutions have investigated and provided a resolution. Published articles with unresolved authorship disputes may receive a published notice pending resolution.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Animal Research Ethics</h2>
+          <p className="text-charcoal-muted leading-relaxed">
+            Although OSCRSJ primarily publishes clinical case reports and case series involving human subjects, manuscripts that include animal research must comply with institutional and national guidelines for the care and use of laboratory animals. Authors must confirm that appropriate Institutional Animal Care and Use Committee (IACUC) approval was obtained and must include the approval number in the manuscript. All animal research must adhere to the ARRIVE guidelines for reporting.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Data Availability & Reproducibility</h2>
+          <p className="text-charcoal-muted leading-relaxed mb-3">
+            OSCRSJ requires all authors to include a Data Availability Statement in their manuscript. This statement should describe whether data supporting the findings are available and, if so, how they can be accessed. For case reports, this typically includes de-identified clinical data, imaging, and outcome measures.
+          </p>
+          <p className="text-charcoal-muted leading-relaxed">
+            Authors are encouraged to deposit supplementary data in publicly accessible repositories when possible. All shared data must comply with patient privacy regulations, including HIPAA in the United States. If data cannot be shared due to privacy or ethical restrictions, this should be stated explicitly.
+          </p>
         </section>
 
         <section>

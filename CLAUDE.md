@@ -6,7 +6,21 @@ The official website for **OSCRSJ** (Orthopedic Surgery Case Reports & Series Jo
 ---
 
 ## Current State
-A complete Next.js 14 website — **26 pages total**, all TypeScript-clean, no 404s. The site is feature-complete for a pre-launch journal. The site has **not yet been deployed** — that is the next step.
+A complete Next.js 14 website — **26 pages total**, all TypeScript-clean, no 404s. The site is feature-complete for a pre-launch journal and is **live at https://oscrsj.com**.
+
+### Deployment & Infrastructure
+| Item | Details |
+|---|---|
+| **Live URL** | https://oscrsj.com |
+| **GitHub Repo** | github.com/kanwarparhar/OSCRSJ (public) |
+| **Hosting** | Vercel (free tier) — auto-deploys from `main` branch |
+| **Domain Registrar** | GoDaddy — DNS configured |
+| **DNS Records** | A record: `76.76.21.21` / CNAME: `cname.vercel-dns.com` |
+| **SSL** | Active — auto-provisioned by Vercel (HTTPS) |
+| **WWW redirect** | www.oscrsj.com → oscrsj.com |
+| **Backup URL** | oscrsj.vercel.app |
+
+**How to deploy updates:** Push any commit to the `main` branch on GitHub → Vercel auto-rebuilds and goes live in ~60 seconds.
 
 ### Pages Built — All 26
 | Route | File | Status |
@@ -89,17 +103,9 @@ Custom component classes in `globals.css`: `.btn-primary`, `.btn-outline`, `.btn
 
 ## Immediate Next Steps (for this Claude Code session)
 
-All 26 pages are built and the site is ready for deployment. Priorities in order:
+The site is live at oscrsj.com. Deployment is complete. Priorities in order:
 
-1. **Deploy to Vercel** ← START HERE
-   - `git init && git add . && git commit -m "Initial OSCRSJ website — 26 pages"`
-   - Push to a new GitHub repo
-   - Connect repo to Vercel at vercel.com → New Project
-   - Add custom domain `OSCRSJ.com` in Vercel dashboard
-   - Configure DNS records with domain registrar
-   - Verify HTTPS is working
-
-2. **Logo & branding** — No logo yet
+1. **Logo & branding** — No logo yet ← START HERE
    - Design an SVG wordmark or monogram ("OSCRSJ") fitting the coral/serif aesthetic
    - Create a favicon (consider an "O" monogram)
    - Add Open Graph images for social sharing

@@ -42,8 +42,35 @@ const sections = [
 ]
 
 export default function GuideForAuthorsPage() {
+  const faqData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What types of manuscripts does OSCRSJ accept?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'OSCRSJ publishes orthopedic surgery case reports and case series across all subspecialties including trauma, sports medicine, spine, hand, foot and ankle, arthroplasty, pediatric orthopedics, and oncology.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How long does peer review take at OSCRSJ?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'OSCRSJ targets a first decision within 30 days of submission. Our double-blind peer review process typically involves 2 independent reviewers.',
+        },
+      },
+    ],
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
+      />
       <div className="mb-10">
         <h1 className="font-serif text-3xl font-semibold text-charcoal">Guide for Authors</h1>
         <p className="text-charcoal-muted mt-2">

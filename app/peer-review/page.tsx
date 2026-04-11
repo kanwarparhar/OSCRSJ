@@ -4,8 +4,35 @@ import Link from 'next/link'
 export const metadata: Metadata = { title: 'Peer Review Policy — OSCRSJ' }
 
 export default function PeerReviewPage() {
+  const faqData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What type of peer review does OSCRSJ use?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'OSCRSJ uses double-blind peer review. Neither authors nor reviewers know each other\'s identities during the review process.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How many reviewers evaluate each manuscript?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Each manuscript is reviewed by at least two independent reviewers with expertise in the relevant orthopedic subspecialty.',
+        },
+      },
+    ],
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
+      />
       <div className="mb-10">
         <h1 className="font-serif text-3xl font-semibold text-charcoal">Peer Review Policy</h1>
         <p className="text-charcoal-muted mt-2 text-lg">
