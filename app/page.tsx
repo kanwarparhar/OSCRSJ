@@ -49,31 +49,36 @@ export default function HomePage() {
         className="relative flex items-center justify-center text-center"
         style={{
           background: 'radial-gradient(ellipse at 50% 40%, var(--brown) 0%, var(--dark) 70%)',
-          minHeight: '520px',
-          padding: '100px 24px',
+          minHeight: '440px',
+          padding: '80px 24px',
         }}
       >
         <div className="max-w-content mx-auto">
           <h1
             className="font-serif text-peach leading-tight mb-6"
-            style={{ fontSize: 'clamp(36px, 5vw, 52px)', letterSpacing: '-0.02em' }}
+            style={{ fontSize: 'clamp(32px, 4.5vw, 44px)', letterSpacing: '-0.02em' }}
           >
             Advancing <em>surgical knowledge</em>,<br />one case at a time
           </h1>
           <p className="text-peach/60 text-base max-w-xl mx-auto mb-8 leading-relaxed">
             A peer-reviewed, open-access journal for orthopedic case reports and case series. Built for medical students, residents, and fellows.
           </p>
-          <Link href="/articles" className="btn-ghost">
-            Browse Articles
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/submit" className="btn-primary">
+              Submit Your Manuscript
+            </Link>
+            <Link href="/articles" className="btn-ghost">
+              Browse Articles
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* 2. Latest Articles */}
-      <section className="bg-cream" style={{ padding: '100px 24px' }}>
+      <section className="bg-cream" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">Latest Articles</span>
           <div className="flex items-end justify-between mb-8">
@@ -136,7 +141,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. For Authors */}
-      <section className="bg-cream-alt" style={{ padding: '100px 24px' }}>
+      <section className="bg-cream-alt" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">For Authors</span>
           <h2 className="section-heading mb-2">Our editorial process</h2>
@@ -189,7 +194,7 @@ export default function HomePage() {
       </section>
 
       {/* 4. Editorial Board */}
-      <section className="bg-cream" style={{ padding: '100px 24px' }}>
+      <section className="bg-cream" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">Editorial Board</span>
           <h2 className="section-heading mb-8">Expertise across every subspecialty</h2>
@@ -218,7 +223,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. News */}
-      <section className="bg-cream-alt" style={{ padding: '100px 24px' }}>
+      <section className="bg-cream-alt" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">News</span>
           <h2 className="section-heading mb-8">From the field</h2>
@@ -239,7 +244,7 @@ export default function HomePage() {
       </section>
 
       {/* 6. Newsletter */}
-      <section className="bg-cream" style={{ padding: '100px 24px' }}>
+      <section className="bg-cream" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center max-w-lg">
           <span className="section-label">Stay Updated</span>
           <h2 className="section-heading mb-2">Get notified when new issues are published</h2>
@@ -261,7 +266,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. CTA */}
-      <section style={{ backgroundColor: 'var(--dark)', padding: '100px 24px' }}>
+      <section style={{ backgroundColor: 'var(--dark)', padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center">
           <h2
             className="font-serif text-peach leading-tight mb-6"
