@@ -32,16 +32,6 @@ export default function OGImage() {
           }}
         />
 
-        {/* Subtle background pattern — vertical lines */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            opacity: 0.04,
-            backgroundImage:
-              'repeating-linear-gradient(90deg, #1A1A1A 0px, #1A1A1A 1px, transparent 1px, transparent 60px)',
-          }}
-        />
 
         {/* Main wordmark */}
         <div
