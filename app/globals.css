@@ -27,7 +27,7 @@ body {
   background-color: var(--cream);
   color: #3d2a18;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
@@ -48,6 +48,11 @@ a {
 
   .btn-ghost {
     @apply border border-peach/60 text-peach font-medium px-5 py-2 rounded-full transition-all duration-200 inline-flex items-center gap-1.5 text-sm bg-transparent hover:bg-peach hover:text-brown;
+  }
+
+  .page-title {
+    @apply font-serif text-4xl font-normal text-brown-dark mb-1;
+    letter-spacing: -0.02em;
   }
 
   .section-heading {
