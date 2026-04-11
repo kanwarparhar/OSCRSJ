@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import Logo from './Logo'
 
 const navItems = [
   {
@@ -85,15 +86,11 @@ export default function Header() {
 
       {/* Brand */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center py-5">
-          <Link href="/" className="text-center group">
-            <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-charcoal tracking-tight group-hover:text-coral transition-colors">
-              Orthopedic Surgery Case Reports &amp; Series Journal
-            </h1>
-            <p className="text-xs text-charcoal-muted mt-1 tracking-widest uppercase font-medium">
-              OSCRSJ &nbsp;·&nbsp; Open Access &nbsp;·&nbsp; DOI Registered
-            </p>
-          </Link>
+        <div className="flex flex-col items-center py-5 gap-1.5">
+          <Logo size="md" showTagline={false} />
+          <p className="text-xs text-charcoal-muted tracking-wide font-medium">
+            Orthopedic Surgery Case Reports &amp; Series Journal
+          </p>
         </div>
       </div>
 

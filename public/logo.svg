@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 72" width="260" height="72" role="img" aria-label="OSCRSJ — Orthopedic Surgery Case Reports &amp; Series Journal">
+  <title>OSCRSJ</title>
+  <defs>
+    <style>
+      .wm { font-family: 'Lora', 'Georgia', 'Times New Roman', serif; font-size: 52px; font-weight: 600; letter-spacing: -1.5px; }
+      .rule { }
+      .sub { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; font-size: 9px; font-weight: 500; letter-spacing: 2.4px; text-transform: uppercase; }
+    </style>
+  </defs>
+
+  <!-- Wordmark -->
+  <text x="2" y="52" class="wm">
+    <tspan fill="#D97757">O</tspan><tspan fill="#1A1A1A">SCRSJ</tspan>
+  </text>
+
+  <!-- Thin rule -->
+  <rect x="2" y="58" width="256" height="1" fill="#D97757" opacity="0.35" />
+
+  <!-- Tagline -->
+  <text x="2" y="70" class="sub" fill="#9C9490">Open Access · DOI Registered</text>
+</svg>

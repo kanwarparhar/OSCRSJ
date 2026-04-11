@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56" role="img" aria-label="OSCRSJ">
+  <title>OSCRSJ</title>
+  <!-- Background circle -->
+  <circle cx="28" cy="28" r="28" fill="#FAF9F7"/>
+  <!-- O monogram -->
+  <text
+    x="50%"
+    y="50%"
+    dominant-baseline="central"
+    text-anchor="middle"
+    font-family="'Lora', 'Georgia', 'Times New Roman', serif"
+    font-size="36"
+    font-weight="700"
+    fill="#D97757"
+    letter-spacing="-1"
+  >O</text>
+</svg>
