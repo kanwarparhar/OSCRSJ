@@ -9,23 +9,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cream: '#FAF9F7',
-        sand: '#F0EBE3',
-        border: '#E5DDD5',
-        coral: {
-          DEFAULT: '#D97757',
-          dark: '#C46442',
-          light: '#F0C4B0',
+        peach: '#FFDBBB',
+        taupe: '#CCBEB1',
+        tan: '#997E67',
+        brown: {
+          DEFAULT: '#664930',
+          dark: '#3d2a18',
         },
-        charcoal: {
-          DEFAULT: '#1A1A1A',
-          muted: '#6B6560',
-          light: '#9C9490',
+        dark: {
+          DEFAULT: '#1c0f05',
+          card: '#261609',
+          mid: '#2e1a0b',
         },
+        cream: {
+          DEFAULT: '#FFF5EB',
+          alt: '#F5EAE0',
+        },
+        border: 'rgba(153,126,103,0.12)',
       },
       fontFamily: {
-        serif: ['Lora', 'Georgia', 'serif'],
+        serif: ['DM Serif Display', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      maxWidth: {
+        content: '1100px',
       },
     },
   },

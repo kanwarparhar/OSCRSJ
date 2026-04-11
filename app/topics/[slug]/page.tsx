@@ -51,35 +51,35 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
   if (!topic) notFound()
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="mb-2">
-        <Link href="/topics" className="text-sm text-coral hover:text-coral-dark transition-colors font-medium">
+        <Link href="/topics" className="text-sm text-brown hover:text-brown transition-colors font-medium">
           &larr; All Topics
         </Link>
       </div>
 
       <div className="mb-10">
-        <h1 className="font-serif text-3xl font-semibold text-charcoal">{topic.name}</h1>
+        <h1 className="font-serif text-3xl font-normal text-brown-dark">{topic.name}</h1>
       </div>
 
-      <section className="mb-10 bg-gradient-to-br from-coral/10 to-sand border border-coral/20 rounded-2xl p-8">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">About This Topic</h2>
-        <p className="text-charcoal-muted leading-relaxed">
+      <section className="mb-10 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">About This Topic</h2>
+        <p className="text-tan leading-relaxed">
           {topic.desc}
         </p>
       </section>
 
-      <section className="mb-10 bg-sand border border-border rounded-2xl p-8 text-center">
+      <section className="mb-10 bg-cream-alt border border-border rounded-2xl p-8 text-center">
         <div className="text-4xl mb-4">📝</div>
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Articles Coming Soon</h2>
-        <p className="text-charcoal-muted leading-relaxed max-w-lg mx-auto">
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">Articles Coming Soon</h2>
+        <p className="text-tan leading-relaxed max-w-lg mx-auto">
           We are currently accepting submissions in {topic.name.toLowerCase()}. Published articles in this subspecialty will appear here as they are peer-reviewed and accepted.
         </p>
       </section>
 
       <section className="mb-10">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Submit Your Case</h2>
-        <p className="text-charcoal-muted leading-relaxed mb-4">
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">Submit Your Case</h2>
+        <p className="text-tan leading-relaxed mb-4">
           Have a compelling case in {topic.name.toLowerCase()}? OSCRSJ welcomes case reports and case series from medical students, residents, fellows, and attending surgeons. APCs are waived through the end of 2026.
         </p>
       </section>

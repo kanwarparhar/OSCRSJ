@@ -28,27 +28,27 @@ export default function PeerReviewPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
       />
       <div className="mb-10">
-        <h1 className="font-serif text-3xl font-semibold text-charcoal">Peer Review Policy</h1>
-        <p className="text-charcoal-muted mt-2 text-lg">
+        <h1 className="font-serif text-3xl font-normal text-brown-dark">Peer Review Policy</h1>
+        <p className="text-tan mt-2 text-lg">
           Rigorous, fair, and timely evaluation of every submission
         </p>
       </div>
 
-      <section className="mb-10 bg-gradient-to-br from-coral/10 to-sand border border-coral/20 rounded-2xl p-8">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Double-Blind Peer Review</h2>
-        <p className="text-charcoal-muted leading-relaxed">
+      <section className="mb-10 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">Double-Blind Peer Review</h2>
+        <p className="text-tan leading-relaxed">
           All manuscripts submitted to OSCRSJ undergo double-blind peer review. Neither the authors nor the reviewers know each other's identities during the review process. This ensures that every submission is evaluated solely on its scientific merit, clinical significance, and adherence to reporting standards — regardless of the author's institution, training level, or reputation.
         </p>
       </section>
 
       <section className="mb-10">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-5">Review Process</h2>
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-5">Review Process</h2>
         <div className="space-y-3">
           {[
             { step: '1', title: 'Initial Editorial Screening', desc: 'The Editor-in-Chief screens submissions for scope, completeness, and basic quality. Manuscripts that do not meet minimum criteria are returned within 7 days with feedback.', time: '1–7 days' },
@@ -58,27 +58,27 @@ export default function PeerReviewPage() {
             { step: '5', title: 'Revision & Resubmission', desc: 'Authors are given clear, constructive feedback and a deadline for revision. Revised manuscripts may undergo additional review.', time: '14 days' },
             { step: '6', title: 'Final Decision & Publication', desc: 'Accepted manuscripts receive copyediting, DOI assignment, and are published online.', time: '3–7 days' },
           ].map((item) => (
-            <div key={item.step} className="flex gap-4 bg-white border border-border rounded-xl p-5">
-              <span className="w-8 h-8 rounded-full bg-sand flex items-center justify-center text-sm font-bold text-charcoal-muted flex-shrink-0">
+            <div key={item.step} className="flex gap-4 bg-cream border border-border rounded-xl p-5">
+              <span className="w-8 h-8 rounded-full bg-cream-alt flex items-center justify-center text-sm font-bold text-tan flex-shrink-0">
                 {item.step}
               </span>
               <div className="flex-1">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="font-semibold text-charcoal text-sm">{item.title}</p>
-                  <span className="text-xs text-charcoal-light bg-sand rounded-full px-2.5 py-0.5 flex-shrink-0">{item.time}</span>
+                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
+                  <span className="text-xs text-taupe bg-cream-alt rounded-full px-2.5 py-0.5 flex-shrink-0">{item.time}</span>
                 </div>
-                <p className="text-sm text-charcoal-muted mt-0.5">{item.desc}</p>
+                <p className="text-sm text-tan mt-0.5">{item.desc}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-sm text-charcoal-muted mt-4 italic">
+        <p className="text-sm text-tan mt-4 italic">
           Target: first decision within 30 days of submission.
         </p>
       </section>
 
       <section className="mb-10">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-5">Reviewer Criteria</h2>
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-5">Reviewer Criteria</h2>
         <div className="space-y-3">
           {[
             { title: 'Clinical Significance', desc: 'Does the case contribute meaningful knowledge to orthopedic practice or education?' },
@@ -88,13 +88,13 @@ export default function PeerReviewPage() {
             { title: 'Reporting Quality', desc: 'Does the manuscript follow CARE guidelines and OSCRSJ formatting standards?' },
             { title: 'Clarity', desc: 'Is the manuscript well-written, logically structured, and free of ambiguity?' },
           ].map((item) => (
-            <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-5">
-              <svg className="w-5 h-5 text-coral mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div key={item.title} className="flex gap-3 bg-cream border border-border rounded-xl p-5">
+              <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <div>
-                <p className="font-semibold text-charcoal text-sm">{item.title}</p>
-                <p className="text-sm text-charcoal-muted mt-0.5">{item.desc}</p>
+                <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
+                <p className="text-sm text-tan mt-0.5">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -102,9 +102,9 @@ export default function PeerReviewPage() {
       </section>
 
       <section className="mb-10">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-3">Appeals</h2>
-        <p className="text-charcoal-muted leading-relaxed">
-          Authors who believe their manuscript was unfairly rejected may submit a written appeal to the Editor-in-Chief at <span className="text-coral font-medium">editor@oscrsj.com</span>. Appeals must include a detailed response to each reviewer comment and a rationale for reconsideration. The editorial team will evaluate the appeal and may seek additional review. The final decision rests with the Editor-in-Chief.
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-3">Appeals</h2>
+        <p className="text-tan leading-relaxed">
+          Authors who believe their manuscript was unfairly rejected may submit a written appeal to the Editor-in-Chief at <span className="text-brown font-medium">editor@oscrsj.com</span>. Appeals must include a detailed response to each reviewer comment and a rationale for reconsideration. The editorial team will evaluate the appeal and may seek additional review. The final decision rests with the Editor-in-Chief.
         </p>
       </section>
 

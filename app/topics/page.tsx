@@ -16,10 +16,10 @@ const topics = [
 
 export default function TopicsPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="mb-10">
-        <h1 className="font-serif text-3xl font-semibold text-charcoal">Browse by Topic</h1>
-        <p className="text-charcoal-muted mt-2 text-lg">
+        <h1 className="font-serif text-3xl font-normal text-brown-dark">Browse by Topic</h1>
+        <p className="text-tan mt-2 text-lg">
           Explore case reports and series across all orthopedic subspecialties
         </p>
       </div>
@@ -29,15 +29,15 @@ export default function TopicsPage() {
           <Link
             key={topic.slug}
             href={`/topics/${topic.slug}`}
-            className="group bg-white border border-border rounded-xl p-5 hover:border-coral/40 hover:shadow-sm transition-all"
+            className="group bg-cream border border-border rounded-xl p-5 hover:border-peach/40 hover:shadow-sm transition-all"
           >
-            <h2 className="font-serif text-lg font-semibold text-charcoal group-hover:text-coral transition-colors mb-2">
+            <h2 className="font-serif text-lg font-normal text-brown-dark group-hover:text-brown transition-colors mb-2">
               {topic.name}
             </h2>
-            <p className="text-sm text-charcoal-muted leading-relaxed">
+            <p className="text-sm text-tan leading-relaxed">
               {topic.desc}
             </p>
-            <span className="inline-block mt-3 text-xs font-medium text-coral">
+            <span className="inline-block mt-3 text-xs font-medium text-brown">
               View articles &rarr;
             </span>
           </Link>

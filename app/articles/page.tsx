@@ -35,11 +35,11 @@ const articles = [
 
 export default function ArticlesPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-charcoal">Articles</h1>
-        <p className="text-charcoal-muted mt-2">Browse peer-reviewed case reports and case series in orthopedic surgery.</p>
+        <h1 className="font-serif text-3xl font-normal text-brown-dark">Articles</h1>
+        <p className="text-tan mt-2">Browse peer-reviewed case reports and case series in orthopedic surgery.</p>
       </div>
 
       {/* Filter tabs */}
@@ -49,8 +49,8 @@ export default function ArticlesPage() {
             key={tab}
             className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               i === 0
-                ? 'border-coral text-coral'
-                : 'border-transparent text-charcoal-muted hover:text-charcoal'
+                ? 'border-peach text-brown'
+                : 'border-transparent text-tan hover:text-brown-dark'
             }`}
           >
             {tab}
@@ -63,14 +63,14 @@ export default function ArticlesPage() {
         <aside className="lg:col-span-1 space-y-6">
           {/* Search */}
           <div>
-            <label className="block text-xs font-semibold text-charcoal-muted uppercase tracking-widest mb-2">Search</label>
+            <label className="block text-xs font-semibold text-tan uppercase tracking-widest mb-2">Search</label>
             <div className="relative">
               <input
                 type="text"
                 placeholder="Keywords, authors…"
-                className="w-full text-sm pl-9 pr-3 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-coral focus:ring-1 focus:ring-coral/30"
+                className="w-full text-sm pl-9 pr-3 py-2.5 bg-cream border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40"
               />
-              <svg className="absolute left-3 top-3 w-4 h-4 text-charcoal-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="absolute left-3 top-3 w-4 h-4 text-taupe" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
@@ -78,10 +78,10 @@ export default function ArticlesPage() {
 
           {/* Filter by topic */}
           <div>
-            <label className="block text-xs font-semibold text-charcoal-muted uppercase tracking-widest mb-2">Topic</label>
+            <label className="block text-xs font-semibold text-tan uppercase tracking-widest mb-2">Topic</label>
             <div className="space-y-1">
               {['All Topics', 'Trauma & Fractures', 'Sports Medicine', 'Spine', 'Arthroplasty', 'Pediatric Orthopedics', 'Hand & Wrist', 'Foot & Ankle', 'Tumor & Oncology'].map((topic) => (
-                <button key={topic} className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${topic === 'All Topics' ? 'bg-coral/10 text-coral font-medium' : 'text-charcoal-muted hover:bg-sand'}`}>
+                <button key={topic} className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${topic === 'All Topics' ? 'bg-tan/20 text-brown font-medium' : 'text-tan hover:bg-cream-alt'}`}>
                   {topic}
                 </button>
               ))}
@@ -90,10 +90,10 @@ export default function ArticlesPage() {
 
           {/* Filter by type */}
           <div>
-            <label className="block text-xs font-semibold text-charcoal-muted uppercase tracking-widest mb-2">Article Type</label>
+            <label className="block text-xs font-semibold text-tan uppercase tracking-widest mb-2">Article Type</label>
             <div className="space-y-1">
               {['All Types', 'Case Report', 'Case Series'].map((type) => (
-                <button key={type} className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${type === 'All Types' ? 'bg-coral/10 text-coral font-medium' : 'text-charcoal-muted hover:bg-sand'}`}>
+                <button key={type} className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${type === 'All Types' ? 'bg-tan/20 text-brown font-medium' : 'text-tan hover:bg-cream-alt'}`}>
                   {type}
                 </button>
               ))}
@@ -106,23 +106,23 @@ export default function ArticlesPage() {
           {articles.map((article) => (
             <article
               key={article.doi}
-              className="bg-white border border-border rounded-xl p-6 hover:border-coral/40 hover:shadow-sm transition-all duration-200"
+              className="bg-cream border border-border rounded-xl p-6 hover:border-peach/40 hover:shadow-sm transition-all duration-200"
             >
               <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="text-xs font-semibold text-coral bg-coral/10 px-2.5 py-1 rounded-full">{article.type}</span>
-                <span className="text-xs text-charcoal-muted bg-sand px-2.5 py-1 rounded-full">{article.topic}</span>
-                <span className="text-xs text-charcoal-light ml-auto">{article.date}</span>
+                <span className="text-xs font-semibold text-brown bg-tan/20 px-2.5 py-1 rounded-full">{article.type}</span>
+                <span className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full">{article.topic}</span>
+                <span className="text-xs text-taupe ml-auto">{article.date}</span>
               </div>
-              <h2 className="font-serif text-lg font-semibold text-charcoal leading-snug mb-2 hover:text-coral transition-colors cursor-pointer">
+              <h2 className="font-serif text-lg font-normal text-brown-dark leading-snug mb-2 hover:text-brown transition-colors cursor-pointer">
                 {article.title}
               </h2>
-              <p className="text-sm text-charcoal-muted mb-3">{article.authors}</p>
-              <p className="text-sm text-charcoal-muted leading-relaxed mb-4 line-clamp-3">{article.abstract}</p>
+              <p className="text-sm text-tan mb-3">{article.authors}</p>
+              <p className="text-sm text-tan leading-relaxed mb-4 line-clamp-3">{article.abstract}</p>
               <div className="flex items-center justify-between">
-                <p className="text-xs text-charcoal-light font-mono">{article.doi}</p>
+                <p className="text-xs text-taupe font-mono">{article.doi}</p>
                 <Link
                   href={`/articles/${article.doi}`}
-                  className="text-sm text-coral font-medium hover:text-coral-dark transition-colors flex items-center gap-1"
+                  className="text-sm text-brown font-medium hover:text-brown transition-colors flex items-center gap-1"
                 >
                   Read article →
                 </Link>

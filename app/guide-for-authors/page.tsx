@@ -66,27 +66,27 @@ export default function GuideForAuthorsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
       />
       <div className="mb-10">
-        <h1 className="font-serif text-3xl font-semibold text-charcoal">Guide for Authors</h1>
-        <p className="text-charcoal-muted mt-2">
+        <h1 className="font-serif text-3xl font-normal text-brown-dark">Guide for Authors</h1>
+        <p className="text-tan mt-2">
           Everything you need to prepare and submit a manuscript to OSCRSJ.
         </p>
       </div>
 
       {/* Jump links */}
-      <div className="bg-sand border border-border rounded-xl p-5 mb-10">
-        <p className="text-xs font-semibold text-charcoal-muted uppercase tracking-widest mb-3">On This Page</p>
+      <div className="bg-cream-alt border border-border rounded-xl p-5 mb-10">
+        <p className="text-xs font-semibold text-tan uppercase tracking-widest mb-3">On This Page</p>
         <div className="flex flex-wrap gap-2">
           {sections.map((s) => (
             <a
               key={s.id}
               href={`#${s.id}`}
-              className="text-sm text-charcoal-muted hover:text-coral transition-colors px-3 py-1.5 bg-white border border-border rounded-full hover:border-coral"
+              className="text-sm text-tan hover:text-brown transition-colors px-3 py-1.5 bg-cream border border-border rounded-full hover:border-peach"
             >
               {s.title}
             </a>
@@ -98,10 +98,10 @@ export default function GuideForAuthorsPage() {
       <div className="space-y-10">
         {sections.map((section) => (
           <section key={section.id} id={section.id} className="scroll-mt-24">
-            <h2 className="font-serif text-xl font-semibold text-charcoal mb-3 pb-2 border-b border-border">
+            <h2 className="font-serif text-xl font-normal text-brown-dark mb-3 pb-2 border-b border-border">
               {section.title}
             </h2>
-            <div className="text-sm text-charcoal-muted leading-relaxed whitespace-pre-line">
+            <div className="text-sm text-tan leading-relaxed whitespace-pre-line">
               {section.content}
             </div>
           </section>
@@ -109,10 +109,10 @@ export default function GuideForAuthorsPage() {
       </div>
 
       {/* CTA */}
-      <div className="mt-14 bg-coral/10 border border-coral/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="mt-14 bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <p className="font-semibold text-charcoal">Ready to submit?</p>
-          <p className="text-sm text-charcoal-muted mt-0.5">Publishing is free through the end of 2026.</p>
+          <p className="font-semibold text-brown-dark">Ready to submit?</p>
+          <p className="text-sm text-tan mt-0.5">Publishing is free through the end of 2026.</p>
         </div>
         <Link href="/submit" className="btn-primary flex-shrink-0">
           Submit a Manuscript →

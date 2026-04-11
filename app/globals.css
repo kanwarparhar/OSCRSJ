@@ -1,17 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --cream: #FAF9F7;
-  --sand: #F0EBE3;
-  --border: #E5DDD5;
-  --coral: #D97757;
-  --coral-dark: #C46442;
-  --text: #1A1A1A;
-  --text-muted: #6B6560;
+  --peach: #FFDBBB;
+  --taupe: #CCBEB1;
+  --tan: #997E67;
+  --brown: #664930;
+  --dark: #1c0f05;
+  --dark-card: #261609;
+  --dark-mid: #2e1a0b;
+  --cream: #FFF5EB;
+  --cream-alt: #F5EAE0;
 }
 
 * {
@@ -23,8 +25,10 @@
 html,
 body {
   background-color: var(--cream);
-  color: var(--text);
+  color: #3d2a18;
   font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -35,26 +39,52 @@ a {
 
 @layer components {
   .btn-primary {
-    @apply bg-coral hover:bg-coral-dark text-white font-medium px-5 py-2.5 rounded-md transition-colors duration-200 inline-flex items-center gap-2 text-sm;
+    @apply bg-peach text-brown font-semibold px-6 py-2.5 rounded-full transition-all duration-200 inline-flex items-center gap-2 text-sm hover:brightness-95 hover:shadow-md;
   }
 
   .btn-outline {
-    @apply border border-border hover:border-coral hover:text-coral text-charcoal-muted font-medium px-5 py-2.5 rounded-md transition-colors duration-200 inline-flex items-center gap-2 text-sm bg-white;
+    @apply border border-peach text-peach font-medium px-6 py-2.5 rounded-full transition-all duration-200 inline-flex items-center gap-2 text-sm bg-transparent hover:bg-peach hover:text-brown;
   }
 
   .btn-ghost {
-    @apply text-charcoal-muted hover:text-coral font-medium px-4 py-2 rounded-md transition-colors duration-200 inline-flex items-center gap-1.5 text-sm;
+    @apply border border-peach/60 text-peach font-medium px-5 py-2 rounded-full transition-all duration-200 inline-flex items-center gap-1.5 text-sm bg-transparent hover:bg-peach hover:text-brown;
   }
 
   .section-heading {
-    @apply font-serif text-2xl font-semibold text-charcoal mb-1;
+    @apply font-serif text-3xl font-normal text-brown-dark mb-1;
+    letter-spacing: -0.02em;
+  }
+
+  .section-label {
+    @apply text-tan uppercase font-medium mb-3 block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
   }
 
   .card {
-    @apply bg-white border border-border rounded-xl p-6 hover:border-coral/40 hover:shadow-sm transition-all duration-200;
+    @apply bg-cream border border-border rounded-xl p-6 transition-all duration-200;
+  }
+  .card:hover {
+    background-color: var(--cream-alt);
   }
 
   .nav-link {
-    @apply text-charcoal-muted hover:text-charcoal font-medium text-sm transition-colors duration-150 py-1;
+    @apply text-brown-dark font-medium transition-colors duration-150 py-1;
+    font-size: 13.5px;
+    letter-spacing: 0.01em;
   }
+  .nav-link:hover {
+    color: var(--peach);
+  }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

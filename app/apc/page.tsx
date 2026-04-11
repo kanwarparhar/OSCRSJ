@@ -52,22 +52,22 @@ export default function ApcPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
       />
       <div className="mb-10">
-        <h1 className="font-serif text-3xl font-semibold text-charcoal">Article Processing Charges</h1>
-        <p className="text-charcoal-muted mt-2 text-lg">
+        <h1 className="font-serif text-3xl font-normal text-brown-dark">Article Processing Charges</h1>
+        <p className="text-tan mt-2 text-lg">
           OSCRSJ is fully open access. APCs support our operations — peer review coordination, DOI registration, and hosting.
         </p>
       </div>
 
       {/* Currently free banner */}
-      <div className="bg-coral text-white rounded-xl p-6 mb-10">
+      <div className="bg-peach text-white rounded-xl p-6 mb-10">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
+          <div className="w-10 h-10 bg-cream/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
           <div>
             <p className="font-semibold text-lg">Currently Free to Publish</p>
             <p className="text-white/80 text-sm mt-1">
@@ -79,21 +79,21 @@ export default function ApcPage() {
 
       {/* Pricing timeline */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-5">Pricing Roadmap</h2>
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-5">Pricing Roadmap</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {phases.map((p, i) => (
-            <div key={p.phase} className={`border rounded-xl p-5 ${i === 0 ? 'border-coral/50 bg-coral/5' : 'border-border bg-white'}`}>
+            <div key={p.phase} className={`border rounded-xl p-5 ${i === 0 ? 'border-peach/50 bg-tan/10' : 'border-border bg-cream'}`}>
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <p className="text-xs font-semibold text-charcoal-muted uppercase tracking-widest">{p.phase}</p>
-                  <p className="text-xs text-charcoal-muted mt-0.5">{p.period}</p>
+                  <p className="text-xs font-semibold text-tan uppercase tracking-widest">{p.phase}</p>
+                  <p className="text-xs text-tan mt-0.5">{p.period}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-serif text-2xl font-bold text-coral">{p.price}</p>
-                  <p className={`text-xs font-semibold mt-0.5 ${i === 0 ? 'text-coral' : 'text-charcoal-muted'}`}>{p.label}</p>
+                  <p className="font-serif text-2xl font-bold text-brown">{p.price}</p>
+                  <p className={`text-xs font-semibold mt-0.5 ${i === 0 ? 'text-brown' : 'text-tan'}`}>{p.label}</p>
                 </div>
               </div>
-              <p className="text-sm text-charcoal-muted leading-relaxed">{p.desc}</p>
+              <p className="text-sm text-tan leading-relaxed">{p.desc}</p>
             </div>
           ))}
         </div>
@@ -101,38 +101,38 @@ export default function ApcPage() {
 
       {/* Waivers */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-2">Waiver & Discount Policy</h2>
-        <p className="text-charcoal-muted text-sm mb-5">
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-2">Waiver & Discount Policy</h2>
+        <p className="text-tan text-sm mb-5">
           OSCRSJ is mission-driven. We don&apos;t want cost to be a barrier for trainees or authors from lower-income settings.
         </p>
-        <div className="bg-white border border-border rounded-xl overflow-hidden">
+        <div className="bg-cream border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-sand border-b border-border">
+            <thead className="bg-cream-alt border-b border-border">
               <tr>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-charcoal-muted uppercase tracking-widest">Group</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-charcoal-muted uppercase tracking-widest">Discount</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-charcoal-muted uppercase tracking-widest hidden sm:table-cell">Notes</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-tan uppercase tracking-widest">Group</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-tan uppercase tracking-widest">Discount</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-tan uppercase tracking-widest hidden sm:table-cell">Notes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {waivers.map((w) => (
-                <tr key={w.group} className="hover:bg-sand/50 transition-colors">
-                  <td className="px-5 py-3 text-charcoal">{w.group}</td>
-                  <td className="px-5 py-3 font-semibold text-coral">{w.discount}</td>
-                  <td className="px-5 py-3 text-charcoal-muted hidden sm:table-cell">{w.note}</td>
+                <tr key={w.group} className="hover:bg-cream-alt/50 transition-colors">
+                  <td className="px-5 py-3 text-brown-dark">{w.group}</td>
+                  <td className="px-5 py-3 font-semibold text-brown">{w.discount}</td>
+                  <td className="px-5 py-3 text-tan hidden sm:table-cell">{w.note}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-charcoal-muted mt-3">
-          To apply for a waiver, email <a href="mailto:waivers@oscrsj.com" className="text-coral hover:underline">waivers@oscrsj.com</a> with your submission ID and supporting documentation.
+        <p className="text-xs text-tan mt-3">
+          To apply for a waiver, email <a href="mailto:waivers@oscrsj.com" className="text-brown hover:underline">waivers@oscrsj.com</a> with your submission ID and supporting documentation.
         </p>
       </section>
 
       {/* FAQ */}
       <section>
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-5">Frequently Asked Questions</h2>
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-5">Frequently Asked Questions</h2>
         <div className="space-y-4">
           {[
             { q: 'When is the APC charged?', a: 'The APC is charged after acceptance — never before. You won\'t pay anything if your manuscript is rejected.' },
@@ -140,9 +140,9 @@ export default function ApcPage() {
             { q: 'Are revisions charged separately?', a: 'No. Resubmissions after major revision are not re-charged. You pay once per accepted article.' },
             { q: 'How do I pay?', a: 'We accept payment via Stripe (credit/debit card). An invoice is provided for institutional reimbursement.' },
           ].map((faq) => (
-            <div key={faq.q} className="bg-white border border-border rounded-xl p-5">
-              <p className="font-semibold text-charcoal text-sm mb-1.5">{faq.q}</p>
-              <p className="text-sm text-charcoal-muted">{faq.a}</p>
+            <div key={faq.q} className="bg-cream border border-border rounded-xl p-5">
+              <p className="font-semibold text-brown-dark text-sm mb-1.5">{faq.q}</p>
+              <p className="text-sm text-tan">{faq.a}</p>
             </div>
           ))}
         </div>

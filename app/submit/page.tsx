@@ -30,40 +30,40 @@ const articleTypes = [
 
 export default function SubmitPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="mb-10">
-        <h1 className="font-serif text-3xl font-semibold text-charcoal">Submit a Manuscript</h1>
-        <p className="text-charcoal-muted mt-2 text-lg">
+        <h1 className="font-serif text-3xl font-normal text-brown-dark">Submit a Manuscript</h1>
+        <p className="text-tan mt-2 text-lg">
           We welcome case reports and case series from medical students, residents, fellows, and attending surgeons.
         </p>
       </div>
 
       {/* APC Notice */}
-      <div className="bg-coral/10 border border-coral/30 rounded-xl p-5 mb-10 flex items-start gap-3">
-        <svg className="w-5 h-5 text-coral mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="bg-tan/20 border border-peach/30 rounded-xl p-5 mb-10 flex items-start gap-3">
+        <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div>
-          <p className="text-sm font-semibold text-coral">Free to Publish Through End of 2026</p>
-          <p className="text-sm text-charcoal-muted mt-0.5">
+          <p className="text-sm font-semibold text-brown">Free to Publish Through End of 2026</p>
+          <p className="text-sm text-tan mt-0.5">
             During our launch phase, all article processing charges (APCs) are waived.{' '}
-            <Link href="/apc" className="text-coral hover:text-coral-dark underline">Learn about our APC policy →</Link>
+            <Link href="/apc" className="text-brown hover:text-brown underline">Learn about our APC policy →</Link>
           </p>
         </div>
       </div>
 
       {/* Article types */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-4">Article Types We Accept</h2>
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-4">Article Types We Accept</h2>
         <div className="grid sm:grid-cols-2 gap-5">
           {articleTypes.map((t) => (
-            <div key={t.type} className="bg-white border border-border rounded-xl p-6">
-              <h3 className="font-semibold text-charcoal text-base mb-2">{t.type}</h3>
-              <p className="text-sm text-charcoal-muted mb-4">{t.desc}</p>
+            <div key={t.type} className="bg-cream border border-border rounded-xl p-6">
+              <h3 className="font-semibold text-brown-dark text-base mb-2">{t.type}</h3>
+              <p className="text-sm text-tan mb-4">{t.desc}</p>
               <div className="space-y-1.5">
                 {[t.maxWords, t.figures, t.refs].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-xs text-charcoal-muted">
-                    <svg className="w-3.5 h-3.5 text-coral" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div key={item} className="flex items-center gap-2 text-xs text-tan">
+                    <svg className="w-3.5 h-3.5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                     {item}
@@ -77,16 +77,16 @@ export default function SubmitPage() {
 
       {/* Submission Steps */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-charcoal mb-6">Submission Process</h2>
+        <h2 className="font-serif text-xl font-normal text-brown-dark mb-6">Submission Process</h2>
         <div className="space-y-4">
           {steps.map((s) => (
             <div key={s.step} className="flex gap-5 items-start">
-              <div className="w-10 h-10 bg-coral/10 rounded-full flex-shrink-0 flex items-center justify-center">
-                <span className="text-xs font-bold text-coral">{s.step}</span>
+              <div className="w-10 h-10 bg-tan/20 rounded-full flex-shrink-0 flex items-center justify-center">
+                <span className="text-xs font-bold text-brown">{s.step}</span>
               </div>
               <div className="pt-1.5">
-                <h3 className="font-semibold text-charcoal text-sm">{s.title}</h3>
-                <p className="text-sm text-charcoal-muted mt-0.5">{s.desc}</p>
+                <h3 className="font-semibold text-brown-dark text-sm">{s.title}</h3>
+                <p className="text-sm text-tan mt-0.5">{s.desc}</p>
               </div>
             </div>
           ))}
@@ -94,9 +94,9 @@ export default function SubmitPage() {
       </section>
 
       {/* CTA */}
-      <div className="bg-sand border border-border rounded-2xl p-8 text-center">
-        <h2 className="font-serif text-2xl font-semibold text-charcoal mb-2">Ready to Submit?</h2>
-        <p className="text-charcoal-muted text-sm mb-6">
+      <div className="bg-cream-alt border border-border rounded-2xl p-8 text-center">
+        <h2 className="font-serif text-2xl font-normal text-brown-dark mb-2">Ready to Submit?</h2>
+        <p className="text-tan text-sm mb-6">
           Our submission portal is coming soon. In the meantime, submit via email.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">

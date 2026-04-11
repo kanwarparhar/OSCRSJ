@@ -8,7 +8,7 @@ export default function OGImage() {
     (
       <div
         style={{
-          background: '#FAF9F7',
+          background: '#1c0f05',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -20,18 +20,17 @@ export default function OGImage() {
           overflow: 'hidden',
         }}
       >
-        {/* Top coral accent bar */}
+        {/* Top peach accent bar */}
         <div
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
-            height: 8,
-            background: '#D97757',
+            height: 6,
+            background: '#FFDBBB',
           }}
         />
-
 
         {/* Main wordmark */}
         <div
@@ -45,16 +44,16 @@ export default function OGImage() {
             marginBottom: 24,
           }}
         >
-          <span style={{ color: '#D97757' }}>O</span>
-          <span style={{ color: '#1A1A1A' }}>SCRSJ</span>
+          <span style={{ color: '#FFDBBB' }}>O</span>
+          <span style={{ color: '#CCBEB1' }}>SCRSJ</span>
         </div>
 
         {/* Thin rule */}
         <div
           style={{
             width: 560,
-            height: 2,
-            background: '#E5DDD5',
+            height: 1,
+            background: 'rgba(153,126,103,0.3)',
             marginBottom: 28,
           }}
         />
@@ -63,7 +62,7 @@ export default function OGImage() {
         <div
           style={{
             fontSize: 28,
-            color: '#6B6560',
+            color: '#997E67',
             letterSpacing: '0.01em',
             textAlign: 'center',
             maxWidth: 800,
@@ -85,12 +84,12 @@ export default function OGImage() {
             <div
               key={badge}
               style={{
-                background: '#F0EBE3',
-                border: '1px solid #E5DDD5',
+                background: 'rgba(153,126,103,0.15)',
+                border: '1px solid rgba(153,126,103,0.25)',
                 borderRadius: 24,
                 padding: '8px 20px',
                 fontSize: 18,
-                color: '#6B6560',
+                color: '#CCBEB1',
                 fontFamily: 'Georgia, serif',
               }}
             >
@@ -106,7 +105,7 @@ export default function OGImage() {
             bottom: 40,
             right: 60,
             fontSize: 20,
-            color: '#D97757',
+            color: '#FFDBBB',
             fontFamily: 'Georgia, serif',
             fontWeight: 600,
           }}

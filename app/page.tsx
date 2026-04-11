@@ -1,55 +1,5 @@
 import Link from 'next/link'
 
-const stats = [
-  { value: 'Free', label: 'APC through end of 2026', sub: 'No charge to publish' },
-  { value: '< 30', label: 'Days to first decision', sub: 'Fast, structured peer review' },
-  { value: '100%', label: 'Open access', sub: 'Free to read, forever' },
-  { value: 'DOI', label: 'Crossref registered', sub: 'Every article indexed' },
-]
-
-const quickActions = [
-  {
-    title: 'Submit a Manuscript',
-    desc: 'Case reports and case series in all areas of orthopedic surgery.',
-    href: '/submit',
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 4v16m8-8H4" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Aims & Scope',
-    desc: 'Learn what we publish and who we serve.',
-    href: '/aims-scope',
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Guide for Authors',
-    desc: 'Formatting, structure, and submission requirements.',
-    href: '/guide-for-authors',
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Sign Up for Alerts',
-    desc: 'Get notified when new issues are published.',
-    href: '/subscribe',
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-      </svg>
-    ),
-  },
-]
-
 const featuredArticles = [
   {
     type: 'Case Report',
@@ -74,199 +24,262 @@ const featuredArticles = [
   },
 ]
 
-const topics = [
-  'Trauma & Fractures', 'Sports Medicine', 'Spine', 'Arthroplasty',
-  'Pediatric Orthopedics', 'Hand & Wrist', 'Foot & Ankle', 'Tumor & Oncology',
+const editors = [
+  { name: 'Position Open', role: 'Editor-in-Chief', specialty: 'General Orthopedics' },
+  { name: 'Position Open', role: 'Associate Editor', specialty: 'Trauma & Fractures' },
+  { name: 'Position Open', role: 'Associate Editor', specialty: 'Sports Medicine' },
+  { name: 'Position Open', role: 'Associate Editor', specialty: 'Spine Surgery' },
+  { name: 'Position Open', role: 'Associate Editor', specialty: 'Arthroplasty' },
+  { name: 'Position Open', role: 'Associate Editor', specialty: 'Hand & Wrist' },
 ]
+
+const newsItems = [
+  { date: 'April 2026', title: 'OSCRSJ officially launches, accepting submissions across all orthopedic subspecialties' },
+  { date: 'April 2026', title: 'Article Processing Charges waived through the end of 2026' },
+  { date: 'March 2026', title: 'Crossref membership confirmed, DOI registration active' },
+]
+
+const indexingBadges = ['Scopus', 'DOAJ', 'Crossref', 'Google Scholar', 'EMBASE', 'EBSCO', 'Web of Science', 'COPE Member']
 
 export default function HomePage() {
   return (
     <div>
-      {/* Hero — Current Issue + Quick Actions + Stats */}
-      <section className="bg-gradient-to-b from-sand to-cream border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-
-            {/* Current Issue */}
-            <div className="lg:col-span-1">
-              <p className="text-xs font-semibold text-coral uppercase tracking-widest mb-3">Current Issue</p>
-              <div className="flex gap-5 items-start">
-                {/* Journal cover placeholder */}
-                <div className="w-24 h-32 bg-gradient-to-br from-coral/20 to-coral/5 border border-coral/20 rounded-lg flex-shrink-0 flex items-center justify-center shadow-sm">
-                  <div className="text-center px-2">
-                    <p className="font-serif text-xs font-semibold text-coral leading-tight">OSCRSJ</p>
-                    <p className="text-[9px] text-charcoal-muted mt-1">Vol. 1, Issue 1</p>
-                    <p className="text-[9px] text-charcoal-muted">2026</p>
-                  </div>
-                </div>
-                <div>
-                  <Link href="/articles/current-issue" className="font-semibold text-coral text-sm hover:text-coral-dark transition-colors">
-                    Volume 1, Issue 1 · 2026
-                  </Link>
-                  <div className="mt-3 space-y-1.5">
-                    <Link href="/articles/in-press" className="block text-sm text-charcoal-muted hover:text-charcoal transition-colors">
-                      → Articles in Press
-                    </Link>
-                    <Link href="/articles/past-issues" className="block text-sm text-charcoal-muted hover:text-charcoal transition-colors">
-                      → Past Issues
-                    </Link>
-                    <Link href="/articles/most-read" className="block text-sm text-charcoal-muted hover:text-charcoal transition-colors">
-                      → Most Read
-                    </Link>
-                  </div>
-                  <Link href="/articles/current-issue" className="mt-4 btn-primary text-xs py-2 px-3 inline-flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    View Full Issue
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="lg:col-span-1">
-              <p className="text-xs font-semibold text-charcoal-muted uppercase tracking-widest mb-3">Quick Access</p>
-              <div className="space-y-2">
-                {quickActions.map((action) => (
-                  <Link
-                    key={action.title}
-                    href={action.href}
-                    className="flex items-center gap-3 p-3 bg-white border border-border rounded-lg hover:border-coral/50 hover:shadow-sm transition-all duration-200 group"
-                  >
-                    <span className="text-coral group-hover:scale-110 transition-transform">{action.icon}</span>
-                    <span className="text-sm font-medium text-charcoal group-hover:text-coral transition-colors">
-                      {action.title}
-                    </span>
-                    <svg className="w-4 h-4 text-charcoal-light ml-auto group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Journal Stats */}
-            <div className="lg:col-span-1">
-              <p className="text-xs font-semibold text-charcoal-muted uppercase tracking-widest mb-3">Journal Highlights</p>
-              <div className="grid grid-cols-2 gap-3">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="bg-white border border-border rounded-xl p-4">
-                    <p className="font-serif text-2xl font-bold text-coral">{stat.value}</p>
-                    <p className="text-xs font-semibold text-charcoal mt-1 leading-tight">{stat.label}</p>
-                    <p className="text-xs text-charcoal-muted mt-0.5">{stat.sub}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mission Banner */}
-      <section className="bg-coral">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h2 className="font-serif text-2xl font-semibold text-white">
-                Advancing Orthopedic Education
-              </h2>
-              <p className="text-white/80 text-sm mt-1 max-w-xl">
-                OSCRSJ is the go-to venue for medical students, residents, and fellows who need to publish quality orthopedic case reports with fast, fair peer review.
-              </p>
-            </div>
-            <Link
-              href="/submit"
-              className="flex-shrink-0 bg-white text-coral font-semibold text-sm px-6 py-3 rounded-lg hover:bg-cream transition-colors"
-            >
-              Submit Your Case →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Articles */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="section-heading">Recent Articles</h2>
-          <Link href="/articles" className="text-sm text-coral hover:text-coral-dark font-medium transition-colors">
-            View all articles →
+      {/* 1. Hero */}
+      <section
+        className="relative flex items-center justify-center text-center"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 40%, var(--brown) 0%, var(--dark) 70%)',
+          minHeight: '520px',
+          padding: '100px 24px',
+        }}
+      >
+        <div className="max-w-content mx-auto">
+          <h1
+            className="font-serif text-peach leading-tight mb-6"
+            style={{ fontSize: 'clamp(36px, 5vw, 52px)', letterSpacing: '-0.02em' }}
+          >
+            Advancing <em>surgical knowledge</em>,<br />one case at a time
+          </h1>
+          <p className="text-peach/60 text-base max-w-xl mx-auto mb-8 leading-relaxed">
+            A peer-reviewed, open-access journal for orthopedic case reports and case series. Built for medical students, residents, and fellows.
+          </p>
+          <Link href="/articles" className="btn-ghost">
+            Browse Articles
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {featuredArticles.map((article) => (
-            <article
-              key={article.doi}
-              className="bg-white border border-border rounded-xl p-6 hover:border-coral/40 hover:shadow-md transition-all duration-200 flex flex-col"
+      </section>
+
+      {/* 2. Latest Articles */}
+      <section className="bg-cream" style={{ padding: '100px 24px' }}>
+        <div className="max-w-content mx-auto">
+          <span className="section-label">Latest Articles</span>
+          <div className="flex items-end justify-between mb-8">
+            <h2 className="section-heading">Recent Publications</h2>
+            <Link
+              href="/articles"
+              className="text-sm text-tan hover:text-brown font-medium transition-colors hidden sm:inline-flex items-center gap-1"
             >
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-semibold text-coral bg-coral/10 px-2.5 py-1 rounded-full">
-                  {article.type}
-                </span>
-                <span className="text-xs text-charcoal-muted bg-sand px-2.5 py-1 rounded-full">
-                  {article.topic}
-                </span>
-              </div>
-              <h3 className="font-serif text-base font-semibold text-charcoal leading-snug mb-3 flex-1">
-                {article.title}
-              </h3>
-              <p className="text-xs text-charcoal-muted mb-2">{article.authors}</p>
-              <p className="text-xs text-charcoal-light font-mono">{article.doi}</p>
-              <Link
-                href={`/articles/${article.doi}`}
-                className="mt-4 text-sm text-coral font-medium hover:text-coral-dark transition-colors flex items-center gap-1"
+              See all articles
+              <svg className="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredArticles.map((article, i) => (
+              <article
+                key={article.doi}
+                className={`card flex flex-col ${i === 0 ? 'md:row-span-2' : ''}`}
               >
-                Read article
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </article>
-          ))}
+                {i === 0 && (
+                  <div
+                    className="w-full h-48 rounded-lg mb-4 flex items-center justify-center"
+                    style={{ background: 'linear-gradient(135deg, var(--cream-alt) 0%, var(--taupe) 100%)' }}
+                  >
+                    <span className="text-tan/60 text-xs uppercase tracking-widest">Radiograph</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xs font-medium text-brown bg-tan/20 px-2.5 py-1 rounded-full">
+                    {article.type}
+                  </span>
+                  <span className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full">
+                    {article.topic}
+                  </span>
+                </div>
+                <h3 className="font-serif text-lg font-normal text-brown-dark leading-snug mb-3 flex-1">
+                  {article.title}
+                </h3>
+                <p className="text-xs text-tan mb-2">{article.authors}</p>
+                <p className="text-xs text-taupe font-mono">{article.doi}</p>
+                <Link
+                  href={`/articles/${article.doi}`}
+                  className="mt-4 text-sm text-brown font-medium hover:text-peach transition-colors flex items-center gap-1"
+                >
+                  Read article
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center sm:hidden">
+            <Link href="/articles" className="btn-primary">See all articles</Link>
+          </div>
         </div>
       </section>
 
-      {/* Browse by Topic */}
-      <section className="bg-sand border-y border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h2 className="section-heading mb-6">Browse by Topic</h2>
-          <div className="flex flex-wrap gap-2.5">
-            {topics.map((topic) => (
-              <Link
-                key={topic}
-                href={`/topics/${topic.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}
-                className="px-4 py-2 bg-white border border-border rounded-full text-sm text-charcoal-muted hover:text-coral hover:border-coral hover:shadow-sm transition-all duration-200 font-medium"
+      {/* 3. For Authors */}
+      <section className="bg-cream-alt" style={{ padding: '100px 24px' }}>
+        <div className="max-w-content mx-auto">
+          <span className="section-label">For Authors</span>
+          <h2 className="section-heading mb-2">Our editorial process</h2>
+          <p className="text-tan text-base mb-10 max-w-2xl">
+            Built on scientific rigour and clinical relevance.
+          </p>
+
+          {/* Process steps */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+            {[
+              { step: '01', title: 'Submit', desc: 'Upload your manuscript with clinical images and patient consent documentation.' },
+              { step: '02', title: 'Review & Revise', desc: 'Double-blind peer review with structured feedback from subspecialty experts.' },
+              { step: '03', title: 'Publish', desc: 'Accepted articles receive a Crossref DOI and are published open access.' },
+            ].map((s) => (
+              <div key={s.step} className="card">
+                <span className="text-peach font-serif text-2xl">{s.step}</span>
+                <h3 className="font-serif text-xl text-brown-dark mt-3 mb-2">{s.title}</h3>
+                <p className="text-sm text-tan leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Metrics row */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+            {[
+              { value: '21 days', label: 'First decision' },
+              { value: '14 days', label: 'To publication' },
+              { value: 'Open access', label: 'Always free to read' },
+            ].map((m) => (
+              <div key={m.label} className="text-center py-6">
+                <p className="font-serif text-2xl text-brown-dark">{m.value}</p>
+                <p className="text-xs text-tan mt-1 uppercase tracking-wider">{m.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Indexing badges */}
+          <div className="flex flex-wrap justify-center gap-3">
+            {indexingBadges.map((badge) => (
+              <span
+                key={badge}
+                className="text-xs font-medium text-brown px-4 py-2 rounded-full"
+                style={{ backgroundColor: 'rgba(153,126,103,0.12)' }}
               >
-                {topic}
-              </Link>
+                {badge}
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Newsletter Signup */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="bg-white border border-border rounded-2xl p-8 md:p-12 text-center max-w-2xl mx-auto">
-          <div className="w-12 h-12 bg-coral/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-6 h-6 text-coral" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+      {/* 4. Editorial Board */}
+      <section className="bg-cream" style={{ padding: '100px 24px' }}>
+        <div className="max-w-content mx-auto">
+          <span className="section-label">Editorial Board</span>
+          <h2 className="section-heading mb-8">Expertise across every subspecialty</h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            {editors.map((editor) => (
+              <div key={editor.specialty} className="card">
+                <p className="font-serif text-lg text-brown-dark">{editor.name}</p>
+                <p className="text-xs text-tan mt-1">{editor.role}</p>
+                <span
+                  className="inline-block mt-3 text-xs font-medium text-brown px-3 py-1 rounded-full"
+                  style={{ backgroundColor: 'rgba(153,126,103,0.12)' }}
+                >
+                  {editor.specialty}
+                </span>
+              </div>
+            ))}
           </div>
-          <h2 className="font-serif text-2xl font-semibold text-charcoal mb-2">Stay Updated</h2>
-          <p className="text-charcoal-muted text-sm mb-6">
-            Get notified when new articles and issues are published. No spam — just orthopedic research.
+
+          <div className="mt-8 text-center">
+            <Link href="/editorial-board" className="btn-outline border-tan text-tan hover:bg-tan hover:text-cream">
+              View full board
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. News */}
+      <section className="bg-cream-alt" style={{ padding: '100px 24px' }}>
+        <div className="max-w-content mx-auto">
+          <span className="section-label">News</span>
+          <h2 className="section-heading mb-8">From the field</h2>
+
+          <div className="space-y-0">
+            {newsItems.map((item, i) => (
+              <div
+                key={i}
+                className="py-5 flex items-start gap-6"
+                style={{ borderBottom: '1px solid rgba(153,126,103,0.12)' }}
+              >
+                <span className="text-xs text-tan whitespace-nowrap mt-0.5 min-w-[90px]">{item.date}</span>
+                <p className="text-sm text-brown-dark leading-relaxed">{item.title}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Newsletter */}
+      <section className="bg-cream" style={{ padding: '100px 24px' }}>
+        <div className="max-w-content mx-auto text-center max-w-lg">
+          <span className="section-label">Stay Updated</span>
+          <h2 className="section-heading mb-2">Get notified when new issues are published</h2>
+          <p className="text-tan text-sm mb-6">
+            No spam. Just orthopedic research delivered to your inbox.
           </p>
           <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
               placeholder="your@email.com"
-              className="flex-1 text-sm px-4 py-2.5 bg-sand border border-border rounded-lg focus:outline-none focus:border-coral focus:ring-1 focus:ring-coral/30"
+              className="flex-1 text-sm px-4 py-2.5 bg-cream-alt border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-peach/40 placeholder:text-taupe transition"
             />
             <button type="submit" className="btn-primary justify-center">
               Subscribe
             </button>
           </form>
-          <p className="text-xs text-charcoal-light mt-3">Unsubscribe at any time.</p>
+          <p className="text-xs text-taupe mt-3">Unsubscribe at any time.</p>
+        </div>
+      </section>
+
+      {/* 7. CTA */}
+      <section style={{ backgroundColor: 'var(--dark)', padding: '100px 24px' }}>
+        <div className="max-w-content mx-auto text-center">
+          <h2
+            className="font-serif text-peach leading-tight mb-6"
+            style={{ fontSize: 'clamp(28px, 4vw, 40px)', letterSpacing: '-0.02em' }}
+          >
+            Raising the bar for orthopedic case reporting
+          </h2>
+          <p className="text-peach/50 text-sm mb-8 max-w-lg mx-auto">
+            Join a growing community of orthopedic trainees and faculty publishing rigorous, peer-reviewed case reports.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/submit" className="btn-primary">
+              Submit Your Case
+            </Link>
+            <Link href="/about" className="btn-ghost">
+              Learn More
+            </Link>
+          </div>
         </div>
       </section>
     </div>

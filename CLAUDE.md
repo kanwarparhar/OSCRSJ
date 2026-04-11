@@ -67,26 +67,29 @@ A complete Next.js 14 website — **26 pages total**, all TypeScript-clean, no 4
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS with custom design tokens
-- **Fonts:** Lora (serif headings) + Inter (body) via Google Fonts
+- **Fonts:** DM Serif Display (serif headings) + Inter (body) via Google Fonts
 - **Deployment target:** Vercel (free tier) → connect OSCRSJ.com
 
 ---
 
 ## Design System
-Inspired by Anthropic/Claude's warm aesthetic. All tokens are in `tailwind.config.ts` and `app/globals.css`.
+"Neutral Elegance" palette inspired by newgenre.studio. Dark gradient hero, editorial serif typography, warm tones. All tokens in `tailwind.config.ts` and `app/globals.css`.
 
 | Token | Value | Usage |
 |---|---|---|
-| `cream` | `#FAF9F7` | Main background |
-| `sand` | `#F0EBE3` | Cards, secondary bg |
-| `border` | `#E5DDD5` | All borders |
-| `coral` | `#D97757` | Primary accent, CTAs, links |
-| `coral-dark` | `#C46442` | Hover states |
-| `charcoal` | `#1A1A1A` | Primary text |
-| `charcoal-muted` | `#6B6560` | Secondary text |
-| `charcoal-light` | `#9C9490` | Placeholder, labels |
+| `peach` | `#FFDBBB` | Primary accent, CTAs, buttons |
+| `taupe` | `#CCBEB1` | Tertiary text |
+| `tan` | `#997E67` | Secondary text, labels |
+| `brown` | `#664930` | Accent text on light bg, button text |
+| `brown-dark` | `#3d2a18` | Primary text |
+| `dark` | `#1c0f05` | Hero bg, nav bg, footer bg |
+| `dark-card` | `#261609` | Dark card backgrounds |
+| `cream` | `#FFF5EB` | Main background |
+| `cream-alt` | `#F5EAE0` | Secondary background |
+| `border` | `rgba(153,126,103,0.12)` | Subtle borders/dividers |
 
-Custom component classes in `globals.css`: `.btn-primary`, `.btn-outline`, `.btn-ghost`, `.card`, `.section-heading`, `.nav-link`
+**Fonts:** DM Serif Display (headings) + Inter (body)
+Custom component classes in `globals.css`: `.btn-primary`, `.btn-outline`, `.btn-ghost`, `.card`, `.section-heading`, `.section-label`, `.nav-link`
 
 ---
 
@@ -139,7 +142,7 @@ The site is live at oscrsj.com. Deployment is complete. Priorities in order:
 ## What Kanwar Wants Claude Code to Focus On
 - He is **non-technical** but comfortable using Claude Code with Opus
 - Prefer clear, self-contained components over abstracted systems
-- Design should stay true to the Anthropic/Claude warm aesthetic — don't drift to generic medical blue
+- Design uses the "Neutral Elegance" palette (dark hero, warm browns/peach, DM Serif Display headings) inspired by newgenre.studio
 - Every page should be complete with real content (no lorem ipsum left behind)
 - The site should look credible and polished on day one — it's a professional journal
 
