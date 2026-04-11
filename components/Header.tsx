@@ -20,7 +20,10 @@ const navItems = [
     dropdown: [
       { label: 'Submit Article', href: '/submit' },
       { label: 'Guide for Authors', href: '/guide-for-authors' },
-      { label: 'Aims & Scope', href: '/aims-scope' },
+      { label: 'Article Types', href: '/article-types' },
+      { label: 'Templates', href: '/templates' },
+      { label: 'For Reviewers', href: '/for-reviewers' },
+      { label: 'Author FAQ', href: '/faq' },
       { label: 'APC Fees', href: '/apc' },
     ],
   },
