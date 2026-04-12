@@ -41,18 +41,28 @@ export default function EditorialBoardPage() {
           <h2 className="section-heading mb-4">Associate Editors</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              'Trauma & Fractures', 'Sports Medicine', 'Spine', 'Arthroplasty',
-              'Pediatric Orthopedics', 'Hand & Wrist', 'Foot & Ankle', 'Tumor & Oncology',
-            ].map((specialty) => (
-              <div key={specialty} className="bg-cream border border-border rounded-xl p-6 flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-cream-alt flex-shrink-0 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-taupe" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              { name: 'Nathaniel Schaffer, MD', specialty: 'Trauma & Fractures', recruiting: false },
+              { name: null, specialty: 'Sports Medicine', recruiting: true },
+              { name: 'Miguel A. Schmitz, MD', specialty: 'Spine', recruiting: false },
+              { name: 'Bill K. Huang, MD', specialty: 'Adult Reconstruction', recruiting: false },
+              { name: null, specialty: 'Pediatric Orthopedics', recruiting: true },
+              { name: null, specialty: 'Hand & Wrist', recruiting: true },
+              { name: null, specialty: 'Foot & Ankle', recruiting: true },
+              { name: null, specialty: 'Tumor & Oncology', recruiting: true },
+            ].map((member) => (
+              <div key={member.specialty} className="bg-cream border border-border rounded-xl p-6 flex items-start gap-4">
+                <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${member.recruiting ? 'bg-cream-alt' : 'bg-peach/20'}`}>
+                  <svg className={`w-5 h-5 ${member.recruiting ? 'text-taupe' : 'text-brown'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-tan italic">Recruiting</p>
-                  <p className="text-xs text-taupe mt-0.5">Associate Editor · {specialty}</p>
+                  {member.recruiting ? (
+                    <p className="text-sm font-medium text-tan italic">Recruiting</p>
+                  ) : (
+                    <p className="text-sm font-semibold text-brown-dark">{member.name}</p>
+                  )}
+                  <p className="text-xs text-taupe mt-0.5">Associate Editor · {member.specialty}</p>
                 </div>
               </div>
             ))}
