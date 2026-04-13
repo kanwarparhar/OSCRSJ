@@ -6,6 +6,6 @@ import { getOrcidAuthUrl } from '@/lib/auth/orcid'
  * GET /api/auth/orcid
  */
 export async function GET() {
-  const url = getOrcidAuthUrl()
+  const url = await getOrcidAuthUrl()
   return NextResponse.redirect(url)
 }

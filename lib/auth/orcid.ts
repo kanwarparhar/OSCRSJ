@@ -18,7 +18,7 @@ const ORCID_API = 'https://pub.orcid.org/v3.0'
  * Build the ORCID authorization URL.
  * The user is redirected here to authorize OSCRSJ to read their public profile.
  */
-export function getOrcidAuthUrl(): string {
+export async function getOrcidAuthUrl(): Promise<string> {
   const clientId = process.env.NEXT_PUBLIC_ORCID_CLIENT_ID
   const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback/orcid`
 

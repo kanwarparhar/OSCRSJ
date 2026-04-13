@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { updateProfile, COUNTRIES } from '@/lib/auth/actions'
+import { updateProfile } from '@/lib/auth/actions'
+import { COUNTRIES } from '@/lib/constants'
 
 interface ProfileFormProps {
   initialData: {

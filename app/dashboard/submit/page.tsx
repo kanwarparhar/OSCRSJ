@@ -1,41 +1,56 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import type { ManuscriptRow, ManuscriptMetadataRow, ManuscriptFileRow } from '@/lib/types/database'
+import SubmissionWizard from './SubmissionWizard'
 
 export const metadata: Metadata = { title: 'New Submission — OSCRSJ' }
 
-export default function SubmitPage() {
+export default async function SubmitPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login?redirect=/dashboard/submit')
+  }
+
+  // Load existing draft (most recent)
+  let manuscript: ManuscriptRow | null = null
+  let metadata: ManuscriptMetadataRow | null = null
+  let files: ManuscriptFileRow[] = []
+
+  const { data: manuscripts } = await supabase
+    .from('manuscripts')
+    .select('*')
+    .eq('corresponding_author_id', user.id)
+    .eq('status', 'draft')
+    .order('created_at', { ascending: false })
+    .limit(1)
+
+  const rows = manuscripts as ManuscriptRow[] | null
+  if (rows && rows.length > 0) {
+    manuscript = rows[0]
+
+    // Load metadata
+    const { data: metaData } = await supabase
+      .from('manuscript_metadata')
+      .select('*')
+      .eq('manuscript_id', manuscript.id)
+      .single()
+    metadata = metaData as ManuscriptMetadataRow | null
+
+    // Load files
+    const { data: fileData } = await supabase
+      .from('manuscript_files')
+      .select('*')
+      .eq('manuscript_id', manuscript.id)
+      .order('file_order', { ascending: true })
+    files = (fileData as ManuscriptFileRow[] | null) || []
+  }
+
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="font-serif text-2xl text-brown-dark">Submit a Manuscript</h1>
-        <p className="text-sm text-tan mt-1">
-          Our 5-step submission wizard is being finalized. It will be available in your dashboard shortly.
-        </p>
-      </div>
-
-      <div className="bg-white border border-border rounded-xl p-8 text-center max-w-lg mx-auto">
-        <div className="w-16 h-16 bg-cream-alt rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8 text-tan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-        </div>
-        <h2 className="font-serif text-xl text-brown-dark mb-2">Coming Soon</h2>
-        <p className="text-sm text-tan mb-6">
-          The manuscript submission wizard will walk you through uploading your files, entering metadata, adding co-authors, and completing required declarations.
-        </p>
-        <p className="text-sm text-tan mb-4">
-          In the meantime, you can submit your manuscript by email:
-        </p>
-        <a href="mailto:submit@oscrsj.com" className="text-brown font-semibold hover:underline">
-          submit@oscrsj.com
-        </a>
-
-        <div className="mt-6 pt-4 border-t border-border">
-          <Link href="/guide-for-authors" className="text-sm text-brown hover:underline">
-            Review the Guide for Authors before submitting &rarr;
-          </Link>
-        </div>
-      </div>
-    </div>
+    <SubmissionWizard
+      draft={{ manuscript, metadata, files }}
+    />
   )
 }

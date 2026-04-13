@@ -3,7 +3,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signUp, validatePassword, COUNTRIES } from '@/lib/auth/actions'
+import { signUp } from '@/lib/auth/actions'
+import { COUNTRIES } from '@/lib/constants'
 import Turnstile from '@/components/Turnstile'
 
 function getOrcidPrefill(): { orcid_id?: string; full_name?: string; affiliation?: string; country?: string } | null {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import PageHeader from '@/components/PageHeader'
 import LoginForm from './LoginForm'
 
@@ -13,7 +14,9 @@ export default function LoginPage() {
         subtitle="Access your author dashboard to submit manuscripts and track reviews"
       />
       <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <LoginForm />
+        <Suspense fallback={<div className="h-64" />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   )
