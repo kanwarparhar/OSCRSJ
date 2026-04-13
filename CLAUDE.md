@@ -62,17 +62,23 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 | `/reset-password` | `app/reset-password/page.tsx` | ✅ Complete (Session 2, new password form) |
 
 ### Components
-- `components/Header.tsx` — sticky header, full dropdown nav, mobile hamburger, search bar, top bar with Submit/Login/Register links (~200 lines)
-- `components/Footer.tsx` — 4-column footer with dark charcoal background (~95 lines)
-- `components/PageHeader.tsx` — reusable page header with breadcrumbs
-- `components/Turnstile.tsx` — Cloudflare Turnstile CAPTCHA widget (dynamic script loading, managed mode)
+- `components/Header.tsx` -- sticky header, full dropdown nav, mobile hamburger, search bar, top bar with Submit/Login/Register links (~200 lines)
+- `components/Footer.tsx` -- 4-column footer with dark charcoal background (~95 lines)
+- `components/PageHeader.tsx` -- reusable page header with breadcrumbs
+- `components/Turnstile.tsx` -- Cloudflare Turnstile CAPTCHA widget (dynamic script loading, managed mode)
+- `app/dashboard/submit/SubmissionWizard.tsx` -- 5-step wizard shell with progress bar, auto-save, step navigation
+- `app/dashboard/submit/Step1Type.tsx` -- Manuscript type radio selector + 3 confirmation checkboxes
+- `app/dashboard/submit/Step2Files.tsx` -- 6-category file upload with drag-and-drop, Supabase Storage integration
+- `app/dashboard/submit/Step3Info.tsx` -- Title, abstract (word counter), keyword tags, subspecialty dropdown, reviewer suggestions
 
 ### What Doesn't Work Yet (known gaps)
-- Forms are static (contact, subscribe, search) — no backend wired
+- Forms are static (contact, subscribe, search) -- no backend wired
 - Search bar in header is non-functional UI
 - No real articles published (3 sample placeholders on `/articles`)
-- Dashboard submission form is a placeholder (coming Session 3)
+- Submission wizard Steps 4-5 (Authors, Declarations) not yet built -- coming Session 4
+- Supabase Storage bucket "submissions" must be created manually in Supabase dashboard (private, 50MB max)
 - Auth system built but not yet tested on production (Vercel env vars added)
+- File upload requires Supabase Storage to be configured with proper RLS on the bucket
 
 ---
 
@@ -129,11 +135,14 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. 35 pages, all pushed to main. Session 2 (2026-04-13) added: full auth system (register, login, forgot/reset password), author dashboard with submissions list + profile settings, ORCID OAuth prefill, Cloudflare Turnstile CAPTCHA. Supabase backend with 12-table schema, RLS policies, and migrations. GA4 active (G-BTXMY8RWEW). Sitemap at 37 URLs. All changes deployed. Priorities in order:
+The site is live at oscrsj.com. 35 pages, all pushed to main. Session 3 (2026-04-13) added: 5-step submission wizard shell with Steps 1-3 functional (type selection, file upload via Supabase Storage, manuscript info with keywords/reviewers), auto-save system (30s debounce + step transition saves), draft resume on return. GA4 active (G-BTXMY8RWEW). Sitemap at 37 URLs. All changes deployed. Priorities in order:
 
-1. **Submission Portal Session 3** ← START HERE (Sushant Agent scope)
-   - Build the manuscript submission form (file upload, metadata, article type selection)
-   - Implement file storage via Supabase Storage (manuscript PDFs, figures, cover letters)
+1. **Submission Portal Session 4** (Sushant Agent scope)
+   - Step 4: Authors & Contributors (co-author search, drag reorder, ICMJE contributions, consent checkbox)
+   - Step 5: Declarations & Confirmation (COI, funding, data availability, ethics, final review page, submit button)
+   - Wire "Submit Manuscript" to change status from DRAFT to SUBMITTED
+   - Test full wizard flow end-to-end
+   - Create Supabase Storage bucket "submissions" (private, 50MB max) if not already done
    - Create submission confirmation + email notifications (Resend integration)
    - Build editorial dashboard for managing incoming submissions
 
@@ -247,7 +256,11 @@ OSCRSJ/
 │   │   │   ├── page.tsx
 │   │   │   └── ProfileForm.tsx        ← Client component (profile editor)
 │   │   └── submit/
-│   │       └── page.tsx               ← Placeholder (coming Session 3)
+│   │       ├── page.tsx               ← Server wrapper (loads draft, renders wizard)
+│   │       ├── SubmissionWizard.tsx    ← Client component (5-step wizard shell + auto-save)
+│   │       ├── Step1Type.tsx           ← Client component (manuscript type + confirmations)
+│   │       ├── Step2Files.tsx          ← Client component (file upload + Supabase Storage)
+│   │       └── Step3Info.tsx           ← Client component (title, abstract, keywords, reviewers)
 │   ├── privacy/page.tsx
 │   ├── terms/page.tsx
 │   ├── article-types/page.tsx          ← 6 article type specs
@@ -264,6 +277,9 @@ OSCRSJ/
 │   ├── auth/
 │   │   ├── actions.ts                 ← Server actions (signUp, signIn, signOut, resetPassword, updateProfile)
 │   │   └── orcid.ts                   ← ORCID OAuth utilities (auth URL, code exchange, profile fetch)
+│   ├── constants.ts                   ← Shared constants (COUNTRIES list)
+│   ├── submission/
+│   │   └── actions.ts                 ← Server actions (createOrUpdateDraft, saveManuscriptInfo, recordFile, deleteFile)
 │   ├── supabase/
 │   │   ├── client.ts                  ← Browser Supabase client
 │   │   ├── server.ts                  ← Server Supabase client (cookie-based)
