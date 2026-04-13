@@ -6,7 +6,7 @@ The official website for **OSCRSJ** (Orthopedic Surgery Case Reports & Series Jo
 ---
 
 ## Current State
-A complete Next.js 14 website — **31 pages total**, all TypeScript-clean, no 404s. The site is feature-complete for a pre-launch journal and is **live at https://oscrsj.com**.
+A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, and Cloudflare Turnstile CAPTCHA. **Live at https://oscrsj.com**.
 
 ### Deployment & Infrastructure
 | Item | Details |
@@ -22,7 +22,7 @@ A complete Next.js 14 website — **31 pages total**, all TypeScript-clean, no 4
 
 **How to deploy updates:** Push any commit to the `main` branch on GitHub → Vercel auto-rebuilds and goes live in ~60 seconds.
 
-### Pages Built — All 31
+### Pages Built — All 35
 | Route | File | Status |
 |---|---|---|
 | `/` | `app/page.tsx` | ✅ Complete |
@@ -46,8 +46,8 @@ A complete Next.js 14 website — **31 pages total**, all TypeScript-clean, no 4
 | `/editorial-board` | `app/editorial-board/page.tsx` | ✅ Complete (3 real members + 5 recruiting) |
 | `/contact` | `app/contact/page.tsx` | ✅ Complete |
 | `/subscribe` | `app/subscribe/page.tsx` | ✅ Complete |
-| `/login` | `app/login/page.tsx` | ✅ Placeholder (portal coming soon) |
-| `/register` | `app/register/page.tsx` | ✅ Placeholder (registration coming soon) |
+| `/login` | `app/login/page.tsx` | ✅ Complete (Session 2, full auth form + ORCID sign-in) |
+| `/register` | `app/register/page.tsx` | ✅ Complete (Session 2, full auth form + ORCID prefill + Turnstile) |
 | `/privacy` | `app/privacy/page.tsx` | ✅ Complete |
 | `/terms` | `app/terms/page.tsx` | ✅ Complete |
 | `/article-types` | `app/article-types/page.tsx` | ✅ Complete (added 2026-04-11) |
@@ -55,16 +55,24 @@ A complete Next.js 14 website — **31 pages total**, all TypeScript-clean, no 4
 | `/for-reviewers` | `app/for-reviewers/page.tsx` | ✅ Complete (full reviewer guide, added 2026-04-11) |
 | `/faq` | `app/faq/page.tsx` | ✅ Complete (27 questions, 5 categories, added 2026-04-11) |
 | `/accessibility` | `app/accessibility/page.tsx` | ✅ Complete (added 2026-04-11) |
+| `/dashboard` | `app/dashboard/page.tsx` | ✅ Complete (Session 2, author submissions list) |
+| `/dashboard/settings` | `app/dashboard/settings/page.tsx` | ✅ Complete (Session 2, profile editor) |
+| `/dashboard/submit` | `app/dashboard/submit/page.tsx` | ✅ Placeholder (submission form coming Session 3) |
+| `/forgot-password` | `app/forgot-password/page.tsx` | ✅ Complete (Session 2, email reset request) |
+| `/reset-password` | `app/reset-password/page.tsx` | ✅ Complete (Session 2, new password form) |
 
 ### Components
 - `components/Header.tsx` — sticky header, full dropdown nav, mobile hamburger, search bar, top bar with Submit/Login/Register links (~200 lines)
 - `components/Footer.tsx` — 4-column footer with dark charcoal background (~95 lines)
+- `components/PageHeader.tsx` — reusable page header with breadcrumbs
+- `components/Turnstile.tsx` — Cloudflare Turnstile CAPTCHA widget (dynamic script loading, managed mode)
 
 ### What Doesn't Work Yet (known gaps)
 - Forms are static (contact, subscribe, search) — no backend wired
-- Login/Register are placeholder pages — no auth system built yet
 - Search bar in header is non-functional UI
 - No real articles published (3 sample placeholders on `/articles`)
+- Dashboard submission form is a placeholder (coming Session 3)
+- Auth system built but not yet tested on production (Vercel env vars added)
 
 ---
 
@@ -73,7 +81,10 @@ A complete Next.js 14 website — **31 pages total**, all TypeScript-clean, no 4
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS with custom design tokens
 - **Fonts:** DM Serif Display (serif headings) + Inter (body) via Google Fonts
-- **Deployment target:** Vercel (free tier) → connect OSCRSJ.com
+- **Backend/Auth:** Supabase (PostgreSQL + Auth + Row Level Security)
+- **CAPTCHA:** Cloudflare Turnstile (managed mode)
+- **ORCID:** Public API OAuth 2.0 (profile prefill + verified iD)
+- **Deployment:** Vercel (free tier), auto-deploys from `main`
 
 ---
 
@@ -118,31 +129,30 @@ A complete Next.js 14 website — **31 pages total**, all TypeScript-clean, no 4
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. 31 pages, all pushed to main. Homepage overhauled (2026-04-12): OSCRSJ title + full journal name in hero, clickable For Authors cards, 4-card metrics row with icons, horizontal scrollable news tiles, radiograph placeholders on all article cards, editorial board section removed (pending real members), favicon = dark O on peach. GA4 active (G-BTXMY8RWEW). Sitemap at 36 URLs. All changes deployed. Priorities in order:
+The site is live at oscrsj.com. 35 pages, all pushed to main. Session 2 (2026-04-13) added: full auth system (register, login, forgot/reset password), author dashboard with submissions list + profile settings, ORCID OAuth prefill, Cloudflare Turnstile CAPTCHA. Supabase backend with 12-table schema, RLS policies, and migrations. GA4 active (G-BTXMY8RWEW). Sitemap at 37 URLs. All changes deployed. Priorities in order:
 
-1. **Submit sitemap to Google Search Console** ← START HERE
+1. **Submission Portal Session 3** ← START HERE (Sushant Agent scope)
+   - Build the manuscript submission form (file upload, metadata, article type selection)
+   - Implement file storage via Supabase Storage (manuscript PDFs, figures, cover letters)
+   - Create submission confirmation + email notifications (Resend integration)
+   - Build editorial dashboard for managing incoming submissions
+
+2. **Submit sitemap to Google Search Console**
    - Go to search.google.com/search-console → add oscrsj.com property
    - Submit https://oscrsj.com/sitemap.xml
 
-2. **Downloadable templates & checklists**
-   - Create downloadable patient consent form template (PDF or DOCX)
-   - Create author pre-submission checklist (on Guide for Authors + Submit pages)
-
 3. **Wire up forms**
-   - Contact form: connect to Resend, Formspree, or a Next.js API route
+   - Contact form: connect to Resend or Next.js API route
    - Newsletter signup (`/subscribe`): integrate with Buttondown, Mailchimp, or Resend
    - Add form validation and success/error states
 
-4. **Sample articles & reviewer recruitment**
+4. **Downloadable templates & checklists**
+   - Create downloadable patient consent form template (PDF or DOCX)
+   - Create author pre-submission checklist (on Guide for Authors + Submit pages)
+
+5. **Sample articles & reviewer recruitment**
    - Create 1-2 sample/template articles showing what good submissions look like
    - Build a reviewer interest/application form
-
-5. **Build the Submission Portal** (core product -- future session)
-   - Author registration and authentication
-   - Manuscript upload with metadata form
-   - Automated screening and plagiarism detection
-   - Reviewer assignment and tracking dashboard
-   - Editorial decision workflow + email notifications
 
 6. **Publish first articles & launch** (target: mid-2026)
    - Recruit 3-5 initial submissions from your network
@@ -179,10 +189,22 @@ OSCRSJ/
 ├── tailwind.config.ts
 ├── tsconfig.json
 ├── postcss.config.js
+├── middleware.ts                       ← Supabase session refresh + route protection
+├── .env.local                         ← Environment variables (gitignored)
+├── .env.example                       ← Template for env vars
+├── OSCRSJ_CREDENTIALS.md             ← Master credential file (gitignored)
 ├── app/
 │   ├── layout.tsx
 │   ├── globals.css
+│   ├── sitemap.ts                     ← Dynamic sitemap (37 URLs)
 │   ├── page.tsx                       ← Homepage
+│   ├── api/
+│   │   └── auth/
+│   │       └── orcid/route.ts         ← ORCID OAuth redirect endpoint
+│   ├── auth/
+│   │   └── callback/
+│   │       ├── route.ts               ← Supabase auth code exchange
+│   │       └── orcid/route.ts         ← ORCID OAuth callback handler
 │   ├── articles/
 │   │   ├── page.tsx
 │   │   ├── current-issue/page.tsx
@@ -205,8 +227,27 @@ OSCRSJ/
 │   ├── editorial-board/page.tsx
 │   ├── contact/page.tsx
 │   ├── subscribe/page.tsx
-│   ├── login/page.tsx
-│   ├── register/page.tsx
+│   ├── login/
+│   │   ├── page.tsx
+│   │   └── LoginForm.tsx              ← Client component (email/password + ORCID)
+│   ├── register/
+│   │   ├── page.tsx
+│   │   └── RegisterForm.tsx           ← Client component (7 fields + ORCID prefill + Turnstile)
+│   ├── forgot-password/
+│   │   ├── page.tsx
+│   │   └── ForgotPasswordForm.tsx     ← Client component (email reset request)
+│   ├── reset-password/
+│   │   ├── page.tsx
+│   │   └── ResetPasswordForm.tsx      ← Client component (new password form)
+│   ├── dashboard/
+│   │   ├── layout.tsx                 ← Auth guard + DashboardShell wrapper
+│   │   ├── DashboardShell.tsx         ← Client component (sidebar nav, mobile menu)
+│   │   ├── page.tsx                   ← My Submissions list with status badges
+│   │   ├── settings/
+│   │   │   ├── page.tsx
+│   │   │   └── ProfileForm.tsx        ← Client component (profile editor)
+│   │   └── submit/
+│   │       └── page.tsx               ← Placeholder (coming Session 3)
 │   ├── privacy/page.tsx
 │   ├── terms/page.tsx
 │   ├── article-types/page.tsx          ← 6 article type specs
@@ -214,7 +255,23 @@ OSCRSJ/
 │   ├── for-reviewers/page.tsx          ← Full reviewer instruction guide
 │   ├── faq/page.tsx                    ← 27 questions, 5 categories
 │   └── accessibility/page.tsx
-└── components/
-    ├── Header.tsx
-    └── Footer.tsx
+├── components/
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── PageHeader.tsx                 ← Reusable page header with breadcrumbs
+│   └── Turnstile.tsx                  ← Cloudflare Turnstile CAPTCHA widget
+├── lib/
+│   ├── auth/
+│   │   ├── actions.ts                 ← Server actions (signUp, signIn, signOut, resetPassword, updateProfile)
+│   │   └── orcid.ts                   ← ORCID OAuth utilities (auth URL, code exchange, profile fetch)
+│   ├── supabase/
+│   │   ├── client.ts                  ← Browser Supabase client
+│   │   ├── server.ts                  ← Server Supabase client (cookie-based)
+│   │   ├── middleware.ts              ← Supabase middleware helper
+│   │   └── db.ts                      ← Admin client (service role key)
+│   └── types/
+│       └── database.ts                ← TypeScript types for all 12 Supabase tables + enums
+└── supabase/
+    └── migrations/
+        └── 001_initial_schema.sql     ← Full schema: 12 tables, enums, RLS policies, triggers
 ```

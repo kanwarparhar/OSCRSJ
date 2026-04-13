@@ -23,3 +23,9 @@ OSCRSJ_CREDENTIALS.md
 # vercel
 .vercel
 node_modules
+
+# session artifacts / working docs
+claude-code-prompt-session1.md
+claude-code-session1-portal-foundation.md
+claude-code-session2-cleanup-prompt.md
+OSCRSJ_Publish_Section_Report.docx
