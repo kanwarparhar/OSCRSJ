@@ -49,7 +49,7 @@ export default function MostCitedPage() {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/articles" className="btn-primary">Browse All Articles</Link>
+          <Link href="/articles" className="btn-primary-light">Browse All Articles</Link>
           <Link href="/articles/most-read" className="btn-outline">Most Read</Link>
         </div>
       </div>

@@ -125,7 +125,7 @@ export default function GuideForAuthorsPage() {
             <p className="font-semibold text-brown-dark">Ready to submit?</p>
             <p className="text-sm text-tan mt-0.5">Publishing is free through the end of 2026.</p>
           </div>
-          <Link href="/submit" className="btn-primary flex-shrink-0">
+          <Link href="/submit" className="btn-primary-light flex-shrink-0">
             Submit a Manuscript →
           </Link>
         </div>

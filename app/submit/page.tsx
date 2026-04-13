@@ -46,7 +46,7 @@ export default function SubmitPage() {
             Send your manuscript, cover letter, and supplementary files to the address below. Online portal launching soon.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="mailto:submit@oscrsj.com" className="btn-primary">
+            <Link href="mailto:submit@oscrsj.com" className="btn-primary-light">
               submit@oscrsj.com
             </Link>
             <Link href="/guide-for-authors" className="border border-brown text-brown font-medium px-6 py-2.5 rounded-full transition-all duration-200 inline-flex items-center gap-2 text-sm hover:bg-brown hover:text-cream">

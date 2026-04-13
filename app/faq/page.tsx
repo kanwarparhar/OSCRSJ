@@ -129,7 +129,7 @@ export default function FAQPage() {
             <p className="font-semibold text-brown-dark">Still have questions?</p>
             <p className="text-sm text-tan mt-0.5">Our editorial team is here to help.</p>
           </div>
-          <Link href="/contact" className="btn-primary flex-shrink-0">
+          <Link href="/contact" className="btn-primary-light flex-shrink-0">
             Contact Us →
           </Link>
         </div>

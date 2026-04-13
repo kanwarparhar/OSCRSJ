@@ -85,7 +85,7 @@ export default function AimsScopePage() {
                 'Submissions without appropriate patient consent or IRB documentation',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
-                  <span className="text-taupe mt-1 flex-shrink-0">&#10005;</span>
+                  <span className="text-tan mt-1 flex-shrink-0">&#10005;</span>
                   <span className="text-brown-dark">{item}</span>
                 </li>
               ))}
@@ -94,7 +94,7 @@ export default function AimsScopePage() {
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-3">
-          <Link href="/submit" className="btn-primary">Submit a Manuscript</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>
           <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
         </div>
       </div>

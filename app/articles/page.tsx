@@ -70,9 +70,9 @@ export default function ArticlesPage() {
                 <input
                   type="text"
                   placeholder="Keywords, authors…"
-                  className="w-full text-sm pl-9 pr-3 py-2.5 bg-cream border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40"
+                  className="w-full text-sm pl-9 pr-3 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40"
                 />
-                <svg className="absolute left-3 top-3 w-4 h-4 text-taupe" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="absolute left-3 top-3 w-4 h-4 text-tan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -113,7 +113,7 @@ export default function ArticlesPage() {
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <span className="text-xs font-semibold text-brown bg-tan/20 px-2.5 py-1 rounded-full">{article.type}</span>
                   <span className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full">{article.topic}</span>
-                  <span className="text-xs text-taupe ml-auto">{article.date}</span>
+                  <span className="text-xs text-tan ml-auto">{article.date}</span>
                 </div>
                 <h2 className="font-serif text-xl font-normal text-brown-dark leading-snug mb-2 hover:text-brown transition-colors cursor-pointer">
                   {article.title}
@@ -121,7 +121,7 @@ export default function ArticlesPage() {
                 <p className="text-sm text-tan mb-3">{article.authors}</p>
                 <p className="text-sm text-brown-dark leading-relaxed mb-4 line-clamp-3">{article.abstract}</p>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-taupe font-mono">{article.doi}</p>
+                  <p className="text-xs text-tan font-mono">{article.doi}</p>
                   <Link
                     href={`/articles/${article.doi}`}
                     className="text-sm text-brown font-medium hover:text-brown transition-colors flex items-center gap-1"

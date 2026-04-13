@@ -9,7 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        white: '#FFFFFF',
         peach: '#FFDBBB',
+        'peach-dark': '#F0C49A',
         taupe: '#CCBEB1',
         tan: '#997E67',
         brown: {

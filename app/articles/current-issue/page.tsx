@@ -55,7 +55,7 @@ export default function CurrentIssuePage() {
             Publishing in a journal's inaugural issue is a unique opportunity. APCs are waived through the end of 2026 — submit your case report or case series today.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/submit" className="btn-primary">Submit a Manuscript</Link>
+            <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>
             <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
           </div>
         </section>

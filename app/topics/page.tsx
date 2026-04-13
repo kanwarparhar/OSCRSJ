@@ -46,7 +46,7 @@ export default function TopicsPage() {
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-3">
-          <Link href="/articles" className="btn-primary">Browse All Articles</Link>
+          <Link href="/articles" className="btn-primary-light">Browse All Articles</Link>
           <Link href="/submit" className="btn-outline">Submit a Manuscript</Link>
         </div>
       </div>

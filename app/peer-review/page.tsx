@@ -68,7 +68,7 @@ export default function PeerReviewPage() {
                 <div className="flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                    <span className="text-xs text-taupe bg-cream-alt rounded-full px-2.5 py-0.5 flex-shrink-0">{item.time}</span>
+                    <span className="text-xs text-tan bg-cream-alt rounded-full px-2.5 py-0.5 flex-shrink-0">{item.time}</span>
                   </div>
                   <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
                 </div>
@@ -114,7 +114,7 @@ export default function PeerReviewPage() {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/submit" className="btn-primary">Submit a Manuscript</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>
           <Link href="/editorial-policies" className="btn-outline">Editorial Policies</Link>
           <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
         </div>

@@ -47,7 +47,7 @@ export default function SubscribePage() {
                 type="text"
                 id="name"
                 placeholder="Dr. Jane Smith"
-                className="w-full text-sm px-4 py-2.5 bg-cream-alt border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-taupe transition"
+                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-tan transition"
               />
             </div>
             <div>
@@ -56,14 +56,14 @@ export default function SubscribePage() {
                 type="email"
                 id="email"
                 placeholder="jane.smith@hospital.edu"
-                className="w-full text-sm px-4 py-2.5 bg-cream-alt border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-taupe transition"
+                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-tan transition"
               />
             </div>
             <div>
               <label htmlFor="role" className="block text-sm font-medium text-tan mb-1">Role (optional)</label>
               <select
                 id="role"
-                className="w-full text-sm px-4 py-2.5 bg-cream-alt border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 text-tan transition"
+                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 text-tan transition"
               >
                 <option value="">Select your role</option>
                 <option value="medical-student">Medical Student</option>
@@ -74,11 +74,11 @@ export default function SubscribePage() {
                 <option value="other">Other</option>
               </select>
             </div>
-            <button type="submit" className="btn-primary w-full">
+            <button type="submit" className="btn-primary-light w-full">
               Subscribe
             </button>
           </form>
-          <p className="text-xs text-taupe text-center mt-3">
+          <p className="text-xs text-tan text-center mt-3">
             We respect your privacy. Unsubscribe at any time. No spam, ever.
           </p>
         </section>

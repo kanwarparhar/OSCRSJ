@@ -52,7 +52,7 @@ export default function EditorialBoardPage() {
             ].map((member) => (
               <div key={member.specialty} className="bg-cream border border-border rounded-xl p-6 flex items-start gap-4">
                 <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${member.recruiting ? 'bg-cream-alt' : 'bg-peach/20'}`}>
-                  <svg className={`w-5 h-5 ${member.recruiting ? 'text-taupe' : 'text-brown'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className={`w-5 h-5 ${member.recruiting ? 'text-tan' : 'text-brown'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
@@ -62,7 +62,7 @@ export default function EditorialBoardPage() {
                   ) : (
                     <p className="text-sm font-semibold text-brown-dark">{member.name}</p>
                   )}
-                  <p className="text-xs text-taupe mt-0.5">Associate Editor · {member.specialty}</p>
+                  <p className="text-xs text-tan mt-0.5">Associate Editor · {member.specialty}</p>
                 </div>
               </div>
             ))}
@@ -77,7 +77,7 @@ export default function EditorialBoardPage() {
             We are building an editorial board of practicing orthopedic surgeons across all subspecialties. Board members contribute to the mission of providing fast, fair, high-quality peer review for early-career surgeons.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/contact" className="btn-primary">Express Interest</Link>
+            <Link href="/contact" className="btn-primary-light">Express Interest</Link>
             <Link href="/about" className="btn-outline">Learn More About OSCRSJ</Link>
           </div>
         </div>

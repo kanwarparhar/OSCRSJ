@@ -99,7 +99,7 @@ export default function ArticleTypesPage() {
 
         {/* CTA */}
         <div className="mt-12 flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/templates" className="btn-primary">Download Templates</Link>
+          <Link href="/templates" className="btn-primary-light">Download Templates</Link>
           <Link href="/guide-for-authors" className="btn-outline">Full Author Guidelines</Link>
           <Link href="/submit" className="btn-outline">Submit a Manuscript</Link>
         </div>

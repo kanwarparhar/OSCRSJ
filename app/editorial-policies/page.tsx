@@ -158,7 +158,7 @@ export default function EditorialPoliciesPage() {
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-3">
-          <Link href="/peer-review" className="btn-primary">Peer Review Policy</Link>
+          <Link href="/peer-review" className="btn-primary-light">Peer Review Policy</Link>
           <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
           <Link href="/submit" className="btn-outline">Submit a Manuscript</Link>
         </div>

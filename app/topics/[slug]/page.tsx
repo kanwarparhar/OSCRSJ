@@ -90,7 +90,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/submit" className="btn-primary">Submit a Manuscript</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>
           <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
           <Link href="/topics" className="btn-ghost">All Topics</Link>
         </div>

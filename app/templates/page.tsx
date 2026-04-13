@@ -67,7 +67,7 @@ export default function TemplatesPage() {
                     <span className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full">{t.wordLimit}</span>
                   </div>
                 </div>
-                <span className="btn-primary text-center cursor-default opacity-60">
+                <span className="btn-primary-light text-center cursor-default opacity-60">
                   Template Coming Soon
                 </span>
               </div>
@@ -90,7 +90,7 @@ export default function TemplatesPage() {
             <p className="font-semibold text-brown-dark">Need help preparing your manuscript?</p>
             <p className="text-sm text-tan mt-0.5">Review our full author guidelines for detailed formatting and content requirements.</p>
           </div>
-          <Link href="/guide-for-authors" className="btn-primary flex-shrink-0">
+          <Link href="/guide-for-authors" className="btn-primary-light flex-shrink-0">
             Guide for Authors →
           </Link>
         </div>

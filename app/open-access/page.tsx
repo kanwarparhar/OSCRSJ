@@ -83,7 +83,7 @@ export default function OpenAccessPage() {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/apc" className="btn-primary">APC & Fees</Link>
+          <Link href="/apc" className="btn-primary-light">APC & Fees</Link>
           <Link href="/submit" className="btn-outline">Submit a Manuscript</Link>
         </div>
       </div>

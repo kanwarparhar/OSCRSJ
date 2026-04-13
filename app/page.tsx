@@ -118,7 +118,7 @@ export default function HomePage() {
                   {article.title}
                 </h3>
                 <p className="text-xs text-tan mb-2">{article.authors}</p>
-                <p className="text-xs text-taupe font-mono">{article.doi}</p>
+                <p className="text-xs text-tan font-mono">{article.doi}</p>
                 <Link
                   href={`/articles/${article.doi}`}
                   className="mt-4 text-sm text-brown font-medium hover:text-peach transition-colors flex items-center gap-1"
@@ -133,7 +133,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-8 text-center sm:hidden">
-            <Link href="/articles" className="btn-primary">See all articles</Link>
+            <Link href="/articles" className="btn-primary-light">See all articles</Link>
           </div>
         </div>
       </section>
@@ -150,7 +150,7 @@ export default function HomePage() {
               { step: '02', title: 'Guide for Authors', desc: 'Everything you need to know about formatting, structure, and submission requirements.', href: '/guide-for-authors' },
               { step: '03', title: 'Author FAQ', desc: 'Answers to common questions about peer review, APCs, timelines, and more.', href: '/faq' },
             ].map((s) => (
-              <Link key={s.step} href={s.href} className="card group hover:shadow-md transition-shadow cursor-pointer block">
+              <Link key={s.step} href={s.href} className="card bg-white group hover:shadow-md transition-shadow cursor-pointer block">
                 <span className="text-peach font-serif text-2xl">{s.step}</span>
                 <h3 className="font-serif text-xl text-brown-dark mt-3 mb-2 group-hover:text-brown transition-colors">{s.title}</h3>
                 <p className="text-sm text-tan leading-relaxed">{s.desc}</p>
@@ -180,7 +180,7 @@ export default function HomePage() {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
               )},
             ].map((m) => (
-              <div key={m.label} className="bg-cream rounded-xl p-5 text-center" style={{ border: '1px solid rgba(153,126,103,0.12)' }}>
+              <div key={m.label} className="bg-white rounded-xl p-5 text-center" style={{ border: '1px solid rgba(153,126,103,0.12)' }}>
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-peach/20 text-brown mb-3">
                   {m.icon}
                 </div>
@@ -221,7 +221,7 @@ export default function HomePage() {
               {newsItems.map((item, i) => (
                 <div
                   key={i}
-                  className="card flex-shrink-0 flex flex-col justify-between"
+                  className="card bg-white flex-shrink-0 flex flex-col justify-between"
                   style={{ width: '300px', minHeight: '180px', scrollSnapAlign: 'start' }}
                 >
                   <div>
@@ -265,13 +265,13 @@ export default function HomePage() {
             <input
               type="email"
               placeholder="your@email.com"
-              className="flex-1 text-sm px-4 py-2.5 bg-cream-alt border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-peach/40 placeholder:text-taupe transition"
+              className="flex-1 text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-peach/40 placeholder:text-tan transition"
             />
-            <button type="submit" className="btn-primary justify-center">
+            <button type="submit" className="btn-primary-light justify-center">
               Subscribe
             </button>
           </form>
-          <p className="text-xs text-taupe mt-3">Unsubscribe at any time.</p>
+          <p className="text-xs text-tan mt-3">Unsubscribe at any time.</p>
         </div>
       </section>
 

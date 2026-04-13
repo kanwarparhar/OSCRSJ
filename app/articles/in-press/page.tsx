@@ -54,7 +54,7 @@ export default function InPressPage() {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/submit" className="btn-primary">Submit a Manuscript</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>
           <Link href="/articles/current-issue" className="btn-outline">Current Issue</Link>
         </div>
       </div>

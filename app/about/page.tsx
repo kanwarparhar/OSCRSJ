@@ -89,7 +89,7 @@ export default function AboutPage() {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/aims-scope" className="btn-primary">View Aims & Scope</Link>
+          <Link href="/aims-scope" className="btn-primary-light">View Aims & Scope</Link>
           <Link href="/editorial-board" className="btn-outline">Meet the Editorial Board</Link>
           <Link href="/contact" className="btn-outline">Contact Us</Link>
         </div>

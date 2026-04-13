@@ -50,7 +50,7 @@ export default function RegisterPage() {
         </section>
 
         <div className="flex flex-col gap-3 items-center">
-          <Link href="/subscribe" className="btn-primary">Subscribe for Updates</Link>
+          <Link href="/subscribe" className="btn-primary-light">Subscribe for Updates</Link>
           <div className="text-sm text-tan">
             Already have an account?{' '}
             <Link href="/login" className="text-brown hover:text-brown transition-colors font-medium">

@@ -44,7 +44,7 @@ export default function PastIssuesPage() {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/articles/current-issue" className="btn-primary">View Current Issue</Link>
+          <Link href="/articles/current-issue" className="btn-primary-light">View Current Issue</Link>
           <Link href="/articles/in-press" className="btn-outline">Articles in Press</Link>
         </div>
       </div>

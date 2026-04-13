@@ -6,6 +6,7 @@
 
 :root {
   --peach: #FFDBBB;
+  --peach-dark: #F0C49A;
   --taupe: #CCBEB1;
   --tan: #997E67;
   --brown: #664930;
@@ -40,6 +41,10 @@ a {
 @layer components {
   .btn-primary {
     @apply bg-peach text-brown font-semibold px-6 py-2.5 rounded-full transition-all duration-200 inline-flex items-center gap-2 text-sm hover:brightness-95 hover:shadow-md;
+  }
+
+  .btn-primary-light {
+    @apply bg-peach-dark text-brown font-semibold px-6 py-2.5 rounded-full transition-all duration-200 inline-flex items-center gap-2 text-sm hover:brightness-95 hover:shadow-md border border-brown/20;
   }
 
   .btn-outline {

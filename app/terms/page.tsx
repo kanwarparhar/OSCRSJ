@@ -100,7 +100,7 @@ export default function TermsPage() {
                 'Misrepresent your identity or affiliation',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
-                  <span className="text-taupe mt-1 flex-shrink-0">&#10005;</span>
+                  <span className="text-tan mt-1 flex-shrink-0">&#10005;</span>
                   <span className="text-brown-dark">{item}</span>
                 </li>
               ))}

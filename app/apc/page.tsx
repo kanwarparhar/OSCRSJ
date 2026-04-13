@@ -153,7 +153,7 @@ export default function ApcPage() {
         </section>
 
         <div className="text-center">
-          <Link href="/submit" className="btn-primary">Submit a Manuscript — Free in 2026</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Free in 2026</Link>
         </div>
       </div>
     </div>

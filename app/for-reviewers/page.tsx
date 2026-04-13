@@ -104,7 +104,7 @@ export default function ForReviewersPage() {
             <p className="font-semibold text-brown-dark">Interested in reviewing for OSCRSJ?</p>
             <p className="text-sm text-tan mt-0.5">We are actively recruiting reviewers across all orthopedic subspecialties.</p>
           </div>
-          <Link href="/contact" className="btn-primary flex-shrink-0">
+          <Link href="/contact" className="btn-primary-light flex-shrink-0">
             Contact Us →
           </Link>
         </div>
