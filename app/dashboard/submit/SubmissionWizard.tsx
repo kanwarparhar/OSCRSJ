@@ -2,11 +2,14 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import type { ManuscriptRow, ManuscriptMetadataRow, ManuscriptFileRow, ManuscriptType } from '@/lib/types/database'
-import { createOrUpdateDraft, saveManuscriptInfo } from '@/lib/submission/actions'
+import type { ManuscriptRow, ManuscriptMetadataRow, ManuscriptFileRow, ManuscriptAuthorRow, ManuscriptType } from '@/lib/types/database'
+import { createOrUpdateDraft, saveManuscriptInfo, saveAuthors, saveDeclarations, submitManuscript } from '@/lib/submission/actions'
 import Step1Type from './Step1Type'
 import Step2Files from './Step2Files'
 import Step3Info from './Step3Info'
+import Step4Authors from './Step4Authors'
+import type { AuthorEntry } from './Step4Authors'
+import Step5Declarations from './Step5Declarations'
 
 // ---- Step definitions ----
 
@@ -37,6 +40,21 @@ export interface WizardState {
   subspecialty: string
   suggestedReviewers: { name: string; email: string; expertise: string }[]
   nonPreferredReviewers: { name: string; reason: string }[]
+  // Step 4
+  authors: AuthorEntry[]
+  authorConsentCertified: boolean
+  // Step 5
+  conflictOfInterest: string
+  noConflicts: boolean
+  fundingSources: string[]
+  noFunding: boolean
+  dataAvailability: string
+  dataAvailabilityUrl: string
+  ethicsInvolved: boolean
+  ethicsApprovalNumber: string
+  clinicalTrial: boolean
+  clinicalTrialId: string
+  noteToEditor: string
 }
 
 interface SubmissionWizardProps {
@@ -44,12 +62,62 @@ interface SubmissionWizardProps {
     manuscript: ManuscriptRow | null
     metadata: ManuscriptMetadataRow | null
     files: ManuscriptFileRow[]
+    authors: ManuscriptAuthorRow[]
   }
+  userProfile: {
+    full_name: string
+    email: string
+    affiliation: string | null
+    orcid_id: string | null
+    degrees: string | null
+  } | null
 }
 
-function initialStateFromDraft(draft: SubmissionWizardProps['draft']): WizardState {
+function authorsFromDraft(draftAuthors: ManuscriptAuthorRow[]): AuthorEntry[] {
+  return draftAuthors.map(a => ({
+    full_name: a.full_name,
+    email: a.email,
+    affiliation: a.affiliation || '',
+    orcid_id: a.orcid_id || '',
+    degrees: a.degrees || '',
+    contribution: a.contribution || '',
+    is_corresponding: a.is_corresponding,
+    author_order: a.author_order,
+  }))
+}
+
+function initialStateFromDraft(
+  draft: SubmissionWizardProps['draft'],
+  userProfile: SubmissionWizardProps['userProfile'],
+): WizardState {
   const m = draft.manuscript
   const meta = draft.metadata
+
+  // Build authors list — from draft if available, else seed with logged-in user
+  let authors: AuthorEntry[]
+  if (draft.authors.length > 0) {
+    authors = authorsFromDraft(draft.authors)
+  } else if (userProfile) {
+    authors = [{
+      full_name: userProfile.full_name,
+      email: userProfile.email,
+      affiliation: userProfile.affiliation || '',
+      orcid_id: userProfile.orcid_id || '',
+      degrees: userProfile.degrees || '',
+      contribution: '',
+      is_corresponding: true,
+      author_order: 1,
+    }]
+  } else {
+    authors = []
+  }
+
+  // Determine COI/funding state from metadata
+  const coiValue = meta?.conflict_of_interest || ''
+  const fundingValues = meta?.funding_sources || []
+  const noConflicts = !coiValue && (meta?.author_consent_certified !== undefined ? !coiValue : false)
+  const noFunding = fundingValues.length === 0 && (meta?.author_consent_certified !== undefined ? true : false)
+
   return {
     manuscriptId: m?.id || null,
     submissionId: m?.submission_id || null,
@@ -64,25 +132,40 @@ function initialStateFromDraft(draft: SubmissionWizardProps['draft']): WizardSta
     subspecialty: m?.subspecialty || '',
     suggestedReviewers: [],
     nonPreferredReviewers: [],
+    authors,
+    authorConsentCertified: meta?.author_consent_certified || false,
+    conflictOfInterest: coiValue,
+    noConflicts,
+    fundingSources: fundingValues,
+    noFunding,
+    dataAvailability: meta?.data_availability_statement || '',
+    dataAvailabilityUrl: '',
+    ethicsInvolved: !!meta?.ethics_approval_number,
+    ethicsApprovalNumber: meta?.ethics_approval_number || '',
+    clinicalTrial: !!meta?.clinical_trial_id,
+    clinicalTrialId: meta?.clinical_trial_id || '',
+    noteToEditor: m?.note_to_editor || '',
   }
 }
 
 function computeInitialStep(state: WizardState): number {
-  // Resume at the first incomplete step
   if (!state.manuscriptType) return 1
   const hasMain = state.files.some(f => f.file_type === 'manuscript')
   const hasBlinded = state.files.some(f => f.file_type === 'blinded_manuscript')
   if (!hasMain || !hasBlinded) return 2
   if (!state.title || !state.abstract || state.keywords.length < 3 || !state.subspecialty) return 3
-  return 3 // Stay on step 3 max for now
+  if (state.authors.length === 0 || !state.authorConsentCertified) return 4
+  return 5
 }
 
-export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
+export default function SubmissionWizard({ draft, userProfile }: SubmissionWizardProps) {
   const router = useRouter()
-  const [state, setState] = useState<WizardState>(() => initialStateFromDraft(draft))
-  const [currentStep, setCurrentStep] = useState(() => computeInitialStep(initialStateFromDraft(draft)))
+  const [state, setState] = useState<WizardState>(() => initialStateFromDraft(draft, userProfile))
+  const [currentStep, setCurrentStep] = useState(() => computeInitialStep(initialStateFromDraft(draft, userProfile)))
   const [saving, setSaving] = useState(false)
   const [savedToast, setSavedToast] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const stateRef = useRef(state)
   stateRef.current = state
@@ -124,8 +207,9 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
         }))
       }
 
-      // Save step 3 data if we have a manuscript ID and title
       const mId = result.manuscriptId || s.manuscriptId
+
+      // Save step 3 data if we have a manuscript ID and title
       if (mId && s.title) {
         await saveManuscriptInfo({
           manuscriptId: mId,
@@ -135,6 +219,29 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
           subspecialty: s.subspecialty,
           suggestedReviewers: s.suggestedReviewers,
           nonPreferredReviewers: s.nonPreferredReviewers,
+          noteToEditor: s.noteToEditor || undefined,
+        })
+      }
+
+      // Save step 4 data (authors)
+      if (mId && s.authors.length > 0) {
+        await saveAuthors({
+          manuscriptId: mId,
+          authors: s.authors,
+        })
+      }
+
+      // Save step 5 data (declarations)
+      if (mId) {
+        await saveDeclarations({
+          manuscriptId: mId,
+          conflictOfInterest: s.noConflicts ? null : (s.conflictOfInterest || null),
+          fundingSources: s.noFunding ? [] : s.fundingSources,
+          dataAvailabilityStatement: s.dataAvailability || null,
+          ethicsApprovalNumber: s.ethicsInvolved ? (s.ethicsApprovalNumber || null) : null,
+          clinicalTrialId: s.clinicalTrial ? (s.clinicalTrialId || null) : null,
+          authorConsentCertified: s.authorConsentCertified,
+          noteToEditor: s.noteToEditor || null,
         })
       }
 
@@ -170,7 +277,7 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
   // ---- Step navigation ----
   const goNext = useCallback(async () => {
     await saveDraft()
-    if (currentStep < 3) setCurrentStep(prev => prev + 1)
+    if (currentStep < 5) setCurrentStep(prev => prev + 1)
   }, [currentStep, saveDraft])
 
   const goBack = useCallback(async () => {
@@ -178,12 +285,43 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
     if (currentStep > 1) setCurrentStep(prev => prev - 1)
   }, [currentStep, saveDraft])
 
+  const goToStep = useCallback(async (step: number) => {
+    await saveDraft()
+    setCurrentStep(step)
+  }, [saveDraft])
+
   const saveAndExit = useCallback(async () => {
     await saveDraft()
     router.push('/dashboard')
   }, [saveDraft, router])
 
-  // ---- Step 1 completion check ----
+  // ---- Submit handler ----
+  const handleSubmit = useCallback(async () => {
+    if (!state.manuscriptId) return
+    setSubmitting(true)
+    setSubmitError(null)
+
+    try {
+      // Save everything first
+      await saveDraft()
+
+      const result = await submitManuscript(state.manuscriptId)
+      if (result.error) {
+        setSubmitError(result.error)
+        setSubmitting(false)
+        return
+      }
+
+      // Success — redirect to dashboard
+      router.push('/dashboard?submitted=true')
+    } catch (err) {
+      console.error('Submit error:', err)
+      setSubmitError('An unexpected error occurred. Please try again.')
+      setSubmitting(false)
+    }
+  }, [state.manuscriptId, saveDraft, router])
+
+  // ---- Step completion checks ----
   const step1Complete = !!(
     state.manuscriptType &&
     state.notUnderReview &&
@@ -191,18 +329,35 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
     state.allAuthorsAgreed
   )
 
-  // ---- Step 2 completion check ----
   const hasMainManuscript = state.files.some(f => f.file_type === 'manuscript')
   const hasBlindedManuscript = state.files.some(f => f.file_type === 'blinded_manuscript')
   const step2Complete = hasMainManuscript && hasBlindedManuscript
 
-  // ---- Step 3 completion check ----
   const step3Complete = !!(
     state.title &&
     state.abstract &&
     state.keywords.length >= 3 &&
     state.subspecialty
   )
+
+  const step4Complete = state.authors.length >= 1 && state.authorConsentCertified
+
+  const coiOk = state.noConflicts || state.conflictOfInterest.trim().length > 0
+  const fundingOk = state.noFunding || state.fundingSources.length > 0
+  const dataOk = state.dataAvailability.length > 0 &&
+    (state.dataAvailability !== 'Data available in a public repository' || state.dataAvailabilityUrl.trim().length > 0)
+  const ethicsOk = !state.ethicsInvolved || state.ethicsApprovalNumber.trim().length > 0
+  const trialOk = !state.clinicalTrial || state.clinicalTrialId.trim().length > 0
+  const step5Complete = coiOk && fundingOk && dataOk && ethicsOk && trialOk
+
+  // Can we move to the next step?
+  const canProceed = (step: number) => {
+    if (step === 1) return step1Complete
+    if (step === 2) return step2Complete
+    if (step === 3) return step3Complete
+    if (step === 4) return step4Complete
+    return false
+  }
 
   return (
     <div>
@@ -220,9 +375,9 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
           {STEPS.map((step, idx) => {
             const isCompleted = (step.number === 1 && step1Complete && currentStep > 1) ||
               (step.number === 2 && step2Complete && currentStep > 2) ||
-              (step.number === 3 && step3Complete && currentStep > 3)
+              (step.number === 3 && step3Complete && currentStep > 3) ||
+              (step.number === 4 && step4Complete && currentStep > 4)
             const isCurrent = step.number === currentStep
-            const isLocked = step.number > 3
 
             return (
               <div key={step.number} className="flex items-center flex-1 last:flex-initial">
@@ -234,25 +389,19 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
                         ? 'bg-green-100 text-green-700 border-2 border-green-400'
                         : isCurrent
                           ? 'bg-peach-dark text-brown border-2 border-brown/30'
-                          : isLocked
-                            ? 'bg-cream-alt text-taupe border-2 border-border'
-                            : 'bg-cream text-tan border-2 border-border'
+                          : 'bg-cream text-tan border-2 border-border'
                     }`}
                   >
                     {isCompleted ? (
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                    ) : isLocked ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
                     ) : (
                       step.number
                     )}
                   </div>
                   <span className={`text-xs mt-1.5 text-center hidden sm:block ${
-                    isCurrent ? 'text-brown-dark font-medium' : isLocked ? 'text-taupe' : 'text-tan'
+                    isCurrent ? 'text-brown-dark font-medium' : 'text-tan'
                   }`}>
                     {step.label}
                   </span>
@@ -311,6 +460,43 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
             onChange={updateState}
           />
         )}
+
+        {currentStep === 4 && (
+          <Step4Authors
+            authors={state.authors}
+            authorConsentCertified={state.authorConsentCertified}
+            onChange={updateState}
+          />
+        )}
+
+        {currentStep === 5 && (
+          <Step5Declarations
+            conflictOfInterest={state.conflictOfInterest}
+            noConflicts={state.noConflicts}
+            fundingSources={state.fundingSources}
+            noFunding={state.noFunding}
+            dataAvailability={state.dataAvailability}
+            dataAvailabilityUrl={state.dataAvailabilityUrl}
+            ethicsInvolved={state.ethicsInvolved}
+            ethicsApprovalNumber={state.ethicsApprovalNumber}
+            clinicalTrial={state.clinicalTrial}
+            clinicalTrialId={state.clinicalTrialId}
+            noteToEditor={state.noteToEditor}
+            manuscriptType={state.manuscriptType}
+            files={state.files}
+            title={state.title}
+            abstract={state.abstract}
+            keywords={state.keywords}
+            subspecialty={state.subspecialty}
+            authors={state.authors}
+            authorConsentCertified={state.authorConsentCertified}
+            onChange={updateState}
+            onGoToStep={goToStep}
+            onSubmit={handleSubmit}
+            submitting={submitting}
+            submitError={submitError}
+          />
+        )}
       </div>
 
       {/* Navigation buttons */}
@@ -336,28 +522,16 @@ export default function SubmissionWizard({ draft }: SubmissionWizardProps) {
             {saving ? 'Saving...' : 'Save & Continue Later'}
           </button>
 
-          {currentStep < 3 ? (
+          {currentStep < 5 && (
             <button
               onClick={goNext}
-              disabled={
-                saving ||
-                (currentStep === 1 && !step1Complete) ||
-                (currentStep === 2 && !step2Complete)
-              }
+              disabled={saving || !canProceed(currentStep)}
               className="btn-primary-light disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Next
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </button>
-          ) : (
-            <button
-              disabled
-              className="btn-primary-light opacity-40 cursor-not-allowed"
-              title="Steps 4 and 5 coming soon"
-            >
-              Next (Coming Soon)
             </button>
           )}
         </div>
