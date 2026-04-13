@@ -40,7 +40,7 @@ export default function AboutPage() {
               { label: 'Current APC', value: 'Free through end of 2026' },
               { label: 'Indexing Goal', value: 'PubMed (2-year pathway)' },
             ].map((fact) => (
-              <div key={fact.label} className="flex items-start gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={fact.label} className="flex items-start gap-3 bg-white border border-border rounded-xl p-6">
                 <div>
                   <p className="text-xs font-semibold text-tan uppercase tracking-widest">{fact.label}</p>
                   <p className="text-sm font-medium text-brown-dark mt-0.5">{fact.value}</p>
@@ -75,7 +75,7 @@ export default function AboutPage() {
               { title: 'DOI-registered and indexed', desc: 'Every article receives a Crossref DOI. We are actively pursuing PubMed indexing.' },
               { title: 'LLM-assisted operations', desc: 'Our backend is AI-augmented, which means faster turnarounds and less admin delay than traditional journals.' },
             ].map((item) => (
-              <div key={item.title} className="flex gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>

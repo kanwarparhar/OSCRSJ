@@ -26,7 +26,7 @@ export default function LoginPage() {
           </p>
         </section>
 
-        <section className="mb-12 bg-cream border border-border rounded-xl p-6 text-center">
+        <section className="mb-12 bg-white border border-border rounded-xl p-6 text-center">
           <h3 className="font-semibold text-brown-dark mb-2">Submit by Email</h3>
           <p className="text-sm text-brown-dark mb-3">
             Send your manuscript, cover letter, and supplementary files to:

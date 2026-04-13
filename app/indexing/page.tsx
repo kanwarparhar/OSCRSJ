@@ -33,7 +33,7 @@ export default function IndexingPage() {
               { title: 'PMC / PubMed', status: 'Planned — Year 2', desc: 'PubMed Central and PubMed indexing require a track record of consistent, high-quality publication (typically 12–24 months). This is our primary indexing goal.', done: false },
               { title: 'Scopus', status: 'Planned — Year 2–3', desc: 'Scopus evaluates journals based on editorial quality, citedness, regularity of publication, and online availability. Application follows PubMed.', done: false },
             ].map((item) => (
-              <div key={item.title} className={`flex gap-4 border rounded-xl p-6 ${item.done ? 'bg-tan/10 border-peach/30' : 'bg-cream border-border'}`}>
+              <div key={item.title} className={`flex gap-4 border rounded-xl p-6 ${item.done ? 'bg-tan/10 border-peach/30' : 'bg-white border-border'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-peach text-white' : 'bg-cream-alt text-tan'}`}>
                   {item.done ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,7 +69,7 @@ export default function IndexingPage() {
               { label: 'Acceptance Rate', value: 'To be reported after first year' },
               { label: 'Average Review Time', value: 'Target: 30 days to first decision' },
             ].map((fact) => (
-              <div key={fact.label} className="bg-cream border border-border rounded-xl p-6">
+              <div key={fact.label} className="bg-white border border-border rounded-xl p-6">
                 <p className="text-xs font-semibold text-tan uppercase tracking-widest">{fact.label}</p>
                 <p className="text-sm font-medium text-brown-dark mt-0.5">{fact.value}</p>
               </div>

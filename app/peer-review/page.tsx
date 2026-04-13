@@ -61,7 +61,7 @@ export default function PeerReviewPage() {
               { step: '5', title: 'Revision & Resubmission', desc: 'Authors are given clear, constructive feedback and a deadline for revision. Revised manuscripts may undergo additional review.', time: '14 days' },
               { step: '6', title: 'Final Decision & Publication', desc: 'Accepted manuscripts receive copyediting, DOI assignment, and are published online.', time: '3–7 days' },
             ].map((item) => (
-              <div key={item.step} className="flex gap-4 bg-cream border border-border rounded-xl p-6">
+              <div key={item.step} className="flex gap-4 bg-white border border-border rounded-xl p-6">
                 <span className="w-8 h-8 rounded-full bg-cream-alt flex items-center justify-center text-sm font-bold text-tan flex-shrink-0">
                   {item.step}
                 </span>
@@ -92,7 +92,7 @@ export default function PeerReviewPage() {
               { title: 'Reporting Quality', desc: 'Does the manuscript follow CARE guidelines and OSCRSJ formatting standards?' },
               { title: 'Clarity', desc: 'Is the manuscript well-written, logically structured, and free of ambiguity?' },
             ].map((item) => (
-              <div key={item.title} className="flex gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>

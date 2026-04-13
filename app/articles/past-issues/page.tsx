@@ -35,7 +35,7 @@ export default function PastIssuesPage() {
               { label: 'Archiving', value: 'Permanent digital archive with DOIs' },
               { label: 'Access', value: 'Free to read, download, and share (CC BY 4.0)' },
             ].map((fact) => (
-              <div key={fact.label} className="bg-cream border border-border rounded-xl p-6">
+              <div key={fact.label} className="bg-white border border-border rounded-xl p-6">
                 <p className="text-xs font-semibold text-tan uppercase tracking-widest">{fact.label}</p>
                 <p className="text-sm font-medium text-brown-dark mt-0.5">{fact.value}</p>
               </div>

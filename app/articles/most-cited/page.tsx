@@ -18,7 +18,7 @@ export default function MostCitedPage() {
           <div className="text-4xl mb-4">🏆</div>
           <h2 className="section-heading mb-3">Coming Soon</h2>
           <p className="text-brown-dark leading-relaxed max-w-lg mx-auto">
-            Citation data takes time to accumulate. As our published articles are cited in the broader medical literature, this page will rank them by citation count — a key indicator of academic impact and clinical utility.
+            Citation data takes time to accumulate. As our published articles are cited in the broader medical literature, this page will rank them by citation count, a key indicator of academic impact and clinical utility.
           </p>
         </section>
 
@@ -32,7 +32,7 @@ export default function MostCitedPage() {
               { label: 'Update Frequency', value: 'Monthly' },
               { label: 'Coverage', value: 'All OSCRSJ articles with assigned DOIs' },
             ].map((fact) => (
-              <div key={fact.label} className="bg-cream border border-border rounded-xl p-6">
+              <div key={fact.label} className="bg-white border border-border rounded-xl p-6">
                 <p className="text-xs font-semibold text-tan uppercase tracking-widest">{fact.label}</p>
                 <p className="text-sm font-medium text-brown-dark mt-0.5">{fact.value}</p>
               </div>

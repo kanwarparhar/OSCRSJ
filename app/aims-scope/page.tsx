@@ -47,7 +47,7 @@ export default function AimsScopePage() {
                 'Foot & Ankle Surgery', 'Orthopedic Oncology & Tumors', 'Shoulder & Shoulder Arthroplasty',
                 'Nerve & Peripheral Nerve Surgery', 'Revision Surgery', 'Rare & Unusual Presentations',
               ].map((sub) => (
-                <div key={sub} className="flex items-center gap-2 bg-cream border border-border rounded-lg px-4 py-2.5">
+                <div key={sub} className="flex items-center gap-2 bg-white border border-border rounded-lg px-4 py-2.5">
                   <svg className="w-3.5 h-3.5 text-brown flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                   </svg>

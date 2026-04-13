@@ -30,7 +30,7 @@ export default function TopicsPage() {
             <Link
               key={topic.slug}
               href={`/topics/${topic.slug}`}
-              className="group bg-cream border border-border rounded-xl p-6 hover:border-peach/40 hover:shadow-sm transition-all"
+              className="group bg-white border border-border rounded-xl p-6 hover:border-tan hover:shadow-sm transition-all"
             >
               <h2 className="font-serif text-lg font-normal text-brown-dark group-hover:text-brown transition-colors mb-2">
                 {topic.name}

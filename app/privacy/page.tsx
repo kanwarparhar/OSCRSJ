@@ -35,7 +35,7 @@ export default function PrivacyPage() {
                 { title: 'Usage Data', desc: 'Anonymous analytics including pages visited, time on site, referral source, and device type. We use this data to improve the website experience.' },
                 { title: 'Cookies', desc: 'We use essential cookies for site functionality. We do not use advertising cookies or third-party tracking cookies.' },
               ].map((item) => (
-                <div key={item.title} className="bg-cream border border-border rounded-xl p-6">
+                <div key={item.title} className="bg-white border border-border rounded-xl p-6">
                   <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
                   <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
                 </div>

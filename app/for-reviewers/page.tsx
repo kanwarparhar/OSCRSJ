@@ -48,7 +48,7 @@ export default function ForReviewersPage() {
               { step: '21 days', label: 'Complete your review', desc: 'We ask reviewers to submit their evaluation within 3 weeks of accepting the invitation.' },
               { step: '7 days', label: 'Revision re-review', desc: 'If asked to re-evaluate a revised manuscript, please respond within 1 week.' },
             ].map((t) => (
-              <div key={t.label} className="bg-cream border border-border rounded-xl p-6">
+              <div key={t.label} className="bg-white border border-border rounded-xl p-6">
                 <p className="font-serif text-2xl text-brown-dark">{t.step}</p>
                 <p className="text-xs text-tan mt-1 uppercase tracking-wider font-medium">{t.label}</p>
                 <p className="text-sm text-brown-dark mt-3 leading-relaxed">{t.desc}</p>
@@ -63,7 +63,7 @@ export default function ForReviewersPage() {
           <h2 className="section-heading mb-6">Review Criteria</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {reviewCriteria.map((c) => (
-              <div key={c.title} className="flex gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={c.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>

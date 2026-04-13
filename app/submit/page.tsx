@@ -75,7 +75,7 @@ export default function SubmitPage() {
           <h2 className="section-heading mb-6">What We Accept</h2>
           <div className="grid sm:grid-cols-2 gap-6">
             {articleTypes.map((t) => (
-              <div key={t.type} className="bg-cream border border-border rounded-xl p-6">
+              <div key={t.type} className="bg-white border border-border rounded-xl p-6">
                 <h3 className="font-serif text-xl font-normal text-brown-dark mb-2">{t.type}</h3>
                 <p className="text-sm text-tan mb-4">{t.desc}</p>
                 <div className="space-y-1.5">

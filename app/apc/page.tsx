@@ -84,7 +84,7 @@ export default function ApcPage() {
           <h2 className="section-heading mb-5">Pricing Roadmap</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {phases.map((p, i) => (
-              <div key={p.phase} className={`border rounded-xl p-6 ${i === 0 ? 'border-peach/50 bg-tan/10' : 'border-border bg-cream'}`}>
+              <div key={p.phase} className={`border rounded-xl p-6 ${i === 0 ? 'border-peach/50 bg-tan/10' : 'border-border bg-white'}`}>
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold text-tan uppercase tracking-widest">{p.phase}</p>
@@ -108,7 +108,7 @@ export default function ApcPage() {
           <p className="text-brown-dark text-sm mb-5">
             OSCRSJ is mission-driven. We don&apos;t want cost to be a barrier for trainees or authors from lower-income settings.
           </p>
-          <div className="bg-cream border border-border rounded-xl overflow-hidden">
+          <div className="bg-white border border-border rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-cream-alt border-b border-border">
                 <tr>
@@ -144,7 +144,7 @@ export default function ApcPage() {
               { q: 'Are revisions charged separately?', a: 'No. Resubmissions after major revision are not re-charged. You pay once per accepted article.' },
               { q: 'How do I pay?', a: 'We accept payment via Stripe (credit/debit card). An invoice is provided for institutional reimbursement.' },
             ].map((faq) => (
-              <div key={faq.q} className="bg-cream border border-border rounded-xl p-6">
+              <div key={faq.q} className="bg-white border border-border rounded-xl p-6">
                 <p className="font-semibold text-brown-dark text-sm mb-1.5">{faq.q}</p>
                 <p className="text-sm text-brown-dark">{faq.a}</p>
               </div>

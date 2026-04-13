@@ -94,7 +94,7 @@ export default function GuideForAuthorsPage() {
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className="text-sm text-brown-dark hover:text-brown transition-colors px-4 py-3 bg-cream border border-border rounded-lg hover:border-peach text-center font-medium"
+                className="text-sm text-brown-dark hover:text-brown transition-colors px-4 py-3 bg-white border border-border rounded-lg hover:border-tan text-center font-medium"
               >
                 {s.label}
               </a>

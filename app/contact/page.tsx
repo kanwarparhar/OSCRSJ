@@ -45,7 +45,7 @@ export default function ContactPage() {
               <a
                 key={c.label}
                 href={`mailto:${c.email}`}
-                className="bg-cream border border-border rounded-xl p-6 hover:border-peach/50 hover:shadow-sm transition-all duration-200 group"
+                className="bg-white border border-border rounded-xl p-6 hover:border-tan hover:shadow-sm transition-all duration-200 group"
               >
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 bg-tan/20 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5">
@@ -65,7 +65,7 @@ export default function ContactPage() {
         </section>
 
         {/* Contact form */}
-        <div className="bg-cream border border-border rounded-2xl p-8">
+        <div className="bg-white border border-border rounded-2xl p-8">
           <span className="section-label">Message</span>
           <h2 className="section-heading mb-6">Send a Message</h2>
           <form className="space-y-5">

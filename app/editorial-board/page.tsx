@@ -18,7 +18,7 @@ export default function EditorialBoardPage() {
         <section className="mb-12">
           <span className="section-label">Leadership</span>
           <h2 className="section-heading mb-4">Editor-in-Chief</h2>
-          <div className="bg-cream border border-border rounded-xl p-6 flex items-start gap-5">
+          <div className="bg-white border border-border rounded-xl p-6 flex items-start gap-5">
             <div className="w-14 h-14 rounded-full bg-tan/20 flex-shrink-0 flex items-center justify-center">
               <svg className="w-7 h-7 text-brown/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -50,7 +50,7 @@ export default function EditorialBoardPage() {
               { name: null, specialty: 'Foot & Ankle', recruiting: true },
               { name: null, specialty: 'Tumor & Oncology', recruiting: true },
             ].map((member) => (
-              <div key={member.specialty} className="bg-cream border border-border rounded-xl p-6 flex items-start gap-4">
+              <div key={member.specialty} className="bg-white border border-border rounded-xl p-6 flex items-start gap-4">
                 <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${member.recruiting ? 'bg-cream-alt' : 'bg-peach/20'}`}>
                   <svg className={`w-5 h-5 ${member.recruiting ? 'text-tan' : 'text-brown'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

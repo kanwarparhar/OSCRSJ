@@ -62,7 +62,7 @@ export default function ArticleTypesPage() {
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="space-y-8">
           {articleTypes.map((t) => (
-            <section key={t.type} className="bg-cream border border-border rounded-xl p-6">
+            <section key={t.type} className="bg-white border border-border rounded-xl p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <h2 className="font-serif text-xl font-normal text-brown-dark">{t.type}</h2>
                 <span className="text-xs font-medium text-brown bg-tan/20 px-3 py-1 rounded-full">{t.guideline}</span>

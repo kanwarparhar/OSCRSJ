@@ -25,7 +25,7 @@ export default function OpenAccessPage() {
         <section className="mb-12">
           <span className="section-label">Licensing</span>
           <h2 className="section-heading mb-5">Creative Commons License</h2>
-          <div className="bg-cream border border-border rounded-xl p-6 mb-4">
+          <div className="bg-white border border-border rounded-xl p-6 mb-4">
             <p className="font-semibold text-brown-dark text-sm mb-2">CC BY 4.0 — Creative Commons Attribution 4.0 International</p>
             <p className="text-sm text-brown-dark leading-relaxed">
               All articles are published under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. This means anyone is free to:
@@ -58,7 +58,7 @@ export default function OpenAccessPage() {
               { title: 'Funder Compliance', desc: 'Many funding agencies (NIH, NSF, Wellcome Trust) require open-access publication. CC BY 4.0 satisfies Plan S and other open-access mandates.' },
               { title: 'Author Rights', desc: 'Authors retain copyright of their work. You can share, present, and reuse your article without seeking publisher permission.' },
             ].map((item) => (
-              <div key={item.title} className="flex gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>

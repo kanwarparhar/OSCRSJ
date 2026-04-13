@@ -114,7 +114,7 @@ export default function FAQPage() {
             <h2 className="section-heading mb-6">{section.label} Questions</h2>
             <div className="space-y-4">
               {section.questions.map((faq) => (
-                <div key={faq.q} className="bg-cream border border-border rounded-xl p-6">
+                <div key={faq.q} className="bg-white border border-border rounded-xl p-6">
                   <h3 className="font-semibold text-brown-dark mb-2">{faq.q}</h3>
                   <p className="text-sm text-brown-dark leading-relaxed">{faq.a}</p>
                 </div>

@@ -58,7 +58,7 @@ export default function TemplatesPage() {
         {/* Template cards */}
         <div className="space-y-6 mb-12">
           {templates.map((t) => (
-            <div key={t.type} className="bg-cream border border-border rounded-xl p-6 hover:border-peach/40 transition-all duration-200">
+            <div key={t.type} className="bg-white border border-border rounded-xl p-6 hover:border-tan hover:shadow-sm transition-all duration-200">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                 <div>
                   <h2 className="font-serif text-xl font-normal text-brown-dark">{t.type}</h2>

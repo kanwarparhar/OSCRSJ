@@ -32,7 +32,7 @@ export default function MostReadPage() {
               { title: 'Rolling Window', desc: 'Rankings reflect activity over the past 90 days to highlight trending research.' },
               { title: 'All-Time Rankings', desc: 'Cumulative readership data available for the full archive.' },
             ].map((item) => (
-              <div key={item.title} className="flex gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>

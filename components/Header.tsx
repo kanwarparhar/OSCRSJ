@@ -9,6 +9,7 @@ const navItems = [
     label: 'Articles',
     href: '/articles',
     dropdown: [
+      { label: 'All Articles', href: '/articles' },
       { label: 'Articles in Press', href: '/articles/in-press' },
       { label: 'Current Issue', href: '/articles/current-issue' },
       { label: 'Archives', href: '/articles/past-issues' },

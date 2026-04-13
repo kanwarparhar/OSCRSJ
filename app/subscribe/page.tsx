@@ -37,7 +37,7 @@ export default function SubscribePage() {
           </div>
         </section>
 
-        <section className="mb-12 bg-cream border border-border rounded-xl p-6">
+        <section className="mb-12 bg-white border border-border rounded-xl p-6">
           <span className="section-label">Sign Up</span>
           <h3 className="font-semibold text-brown-dark mb-4 text-center">Join Our Mailing List</h3>
           <form className="space-y-4">

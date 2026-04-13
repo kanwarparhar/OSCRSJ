@@ -72,10 +72,7 @@ a {
   }
 
   .card {
-    @apply bg-cream border border-border rounded-xl p-6 transition-all duration-200;
-  }
-  .card:hover {
-    background-color: var(--cream-alt);
+    @apply bg-white border border-border rounded-xl p-6 transition-all duration-200;
   }
 
   .nav-link {

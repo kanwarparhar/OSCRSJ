@@ -40,7 +40,7 @@ export default function AccessibilityPage() {
               { title: 'Alternative text', desc: 'All meaningful images include descriptive alt text. Decorative images are hidden from assistive technologies.' },
               { title: 'Readable typography', desc: 'We use a minimum 16px base font size, 1.5+ line height, and high-legibility typefaces (Inter and DM Serif Display).' },
             ].map((item) => (
-              <div key={item.title} className="flex gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>

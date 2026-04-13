@@ -36,7 +36,7 @@ export default function RegisterPage() {
               { title: 'Profile Page', desc: 'Your published articles, ORCID link, and institutional affiliation in one place.' },
               { title: 'Email Notifications', desc: 'Real-time updates on submission status, editorial decisions, and publication.' },
             ].map((item) => (
-              <div key={item.title} className="flex gap-3 bg-cream border border-border rounded-xl p-6">
+              <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
