@@ -57,7 +57,7 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 | `/accessibility` | `app/accessibility/page.tsx` | ✅ Complete (added 2026-04-11) |
 | `/dashboard` | `app/dashboard/page.tsx` | ✅ Complete (Session 2, author submissions list) |
 | `/dashboard/settings` | `app/dashboard/settings/page.tsx` | ✅ Complete (Session 2, profile editor) |
-| `/dashboard/submit` | `app/dashboard/submit/page.tsx` | ✅ Placeholder (submission form coming Session 3) |
+| `/dashboard/submit` | `app/dashboard/submit/page.tsx` | ✅ Complete (Session 3-4, full 5-step wizard) |
 | `/forgot-password` | `app/forgot-password/page.tsx` | ✅ Complete (Session 2, email reset request) |
 | `/reset-password` | `app/reset-password/page.tsx` | ✅ Complete (Session 2, new password form) |
 
@@ -70,15 +70,18 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 - `app/dashboard/submit/Step1Type.tsx` -- Manuscript type radio selector + 3 confirmation checkboxes
 - `app/dashboard/submit/Step2Files.tsx` -- 6-category file upload with drag-and-drop, Supabase Storage integration
 - `app/dashboard/submit/Step3Info.tsx` -- Title, abstract (word counter), keyword tags, subspecialty dropdown, reviewer suggestions
+- `app/dashboard/submit/Step4Authors.tsx` -- Author list with reorder, inline add/edit, ICMJE contributions, certification
+- `app/dashboard/submit/Step5Declarations.tsx` -- COI, funding, data availability, ethics, clinical trial, note to editor, full review summary, submit button
 
 ### What Doesn't Work Yet (known gaps)
 - Forms are static (contact, subscribe, search) -- no backend wired
 - Search bar in header is non-functional UI
 - No real articles published (3 sample placeholders on `/articles`)
-- Submission wizard Steps 4-5 (Authors, Declarations) not yet built -- coming Session 4
 - Supabase Storage bucket "submissions" must be created manually in Supabase dashboard (private, 50MB max)
 - Auth system built but not yet tested on production (Vercel env vars added)
 - File upload requires Supabase Storage to be configured with proper RLS on the bucket
+- No email notifications yet (submission confirmation, co-author notification) -- coming Session 5
+- No draft withdrawal button on dashboard -- coming Session 6
 
 ---
 
@@ -135,16 +138,17 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. 35 pages, all pushed to main. Session 3 (2026-04-13) added: 5-step submission wizard shell with Steps 1-3 functional (type selection, file upload via Supabase Storage, manuscript info with keywords/reviewers), auto-save system (30s debounce + step transition saves), draft resume on return. GA4 active (G-BTXMY8RWEW). Sitemap at 37 URLs. All changes deployed. Priorities in order:
+The site is live at oscrsj.com. 35 pages, all pushed to main. Session 4 (2026-04-13) completed: full 5-step submission wizard now functional. Steps 4-5 added (authors & contributors with reorder/ICMJE contributions, declarations with COI/funding/data/ethics/clinical trial, full review summary, submit button with confirmation dialog). `submitManuscript` server action validates all fields and changes status DRAFT → SUBMITTED. Auto-save extended to cover all 5 steps. GA4 active (G-BTXMY8RWEW). Sitemap at 37 URLs. All changes deployed. Priorities in order:
 
-1. **Submission Portal Session 4** (Sushant Agent scope)
-   - Step 4: Authors & Contributors (co-author search, drag reorder, ICMJE contributions, consent checkbox)
-   - Step 5: Declarations & Confirmation (COI, funding, data availability, ethics, final review page, submit button)
-   - Wire "Submit Manuscript" to change status from DRAFT to SUBMITTED
-   - Test full wizard flow end-to-end
-   - Create Supabase Storage bucket "submissions" (private, 50MB max) if not already done
-   - Create submission confirmation + email notifications (Resend integration)
-   - Build editorial dashboard for managing incoming submissions
+1. **Submission Portal Session 5: Email Integration** (Sushant Agent scope)
+   - Connect Resend for transactional emails
+   - Submission confirmation email (to author)
+   - Co-author notification email (includes "I did not agree" dispute link per COPE)
+   - Withdrawal confirmation email
+   - Email logging to email_logs table
+   - Verify webhook signature on Resend delivery callbacks
+   - Co-author dispute handler
+   - Test: full submission flow end-to-end with real emails
 
 2. **Submit sitemap to Google Search Console**
    - Go to search.google.com/search-console → add oscrsj.com property
@@ -256,11 +260,13 @@ OSCRSJ/
 │   │   │   ├── page.tsx
 │   │   │   └── ProfileForm.tsx        ← Client component (profile editor)
 │   │   └── submit/
-│   │       ├── page.tsx               ← Server wrapper (loads draft, renders wizard)
-│   │       ├── SubmissionWizard.tsx    ← Client component (5-step wizard shell + auto-save)
+│   │       ├── page.tsx               ← Server wrapper (loads draft + authors + profile, renders wizard)
+│   │       ├── SubmissionWizard.tsx    ← Client component (5-step wizard shell + auto-save + submit)
 │   │       ├── Step1Type.tsx           ← Client component (manuscript type + confirmations)
 │   │       ├── Step2Files.tsx          ← Client component (file upload + Supabase Storage)
-│   │       └── Step3Info.tsx           ← Client component (title, abstract, keywords, reviewers)
+│   │       ├── Step3Info.tsx           ← Client component (title, abstract, keywords, reviewers)
+│   │       ├── Step4Authors.tsx        ← Client component (author list, reorder, ICMJE, certification)
+│   │       └── Step5Declarations.tsx   ← Client component (COI, funding, ethics, review summary, submit)
 │   ├── privacy/page.tsx
 │   ├── terms/page.tsx
 │   ├── article-types/page.tsx          ← 6 article type specs
@@ -279,7 +285,7 @@ OSCRSJ/
 │   │   └── orcid.ts                   ← ORCID OAuth utilities (auth URL, code exchange, profile fetch)
 │   ├── constants.ts                   ← Shared constants (COUNTRIES list)
 │   ├── submission/
-│   │   └── actions.ts                 ← Server actions (createOrUpdateDraft, saveManuscriptInfo, recordFile, deleteFile)
+│   │   └── actions.ts                 ← Server actions (createOrUpdateDraft, saveManuscriptInfo, recordFile, deleteFile, saveAuthors, saveDeclarations, submitManuscript)
 │   ├── supabase/
 │   │   ├── client.ts                  ← Browser Supabase client
 │   │   ├── server.ts                  ← Server Supabase client (cookie-based)
