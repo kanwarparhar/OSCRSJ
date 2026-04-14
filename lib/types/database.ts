@@ -50,7 +50,12 @@ export type ReviewRecommendation = 'accept' | 'minor_revisions' | 'major_revisio
 
 export type EditorialDecisionType = 'accept' | 'reject' | 'major_revisions' | 'minor_revisions' | 'desk_reject'
 
-export type EmailDeliveryStatus = 'sent' | 'bounced' | 'failed'
+export type EmailDeliveryStatus =
+  | 'sent'
+  | 'delivered'
+  | 'bounced'
+  | 'complained'
+  | 'failed'
 
 
 // ---- Row Types (what you get back from a SELECT) ----
@@ -126,8 +131,14 @@ export interface ManuscriptMetadataRow {
   not_under_review_elsewhere: boolean
   not_previously_published: boolean
   all_authors_agreed: boolean
+  co_author_disputes: CoAuthorDispute[]
   created_at: string
   updated_at: string
+}
+
+export interface CoAuthorDispute {
+  email: string
+  disputed_at: string
 }
 
 export interface PaymentRow {
@@ -209,6 +220,10 @@ export interface EmailLogRow {
   manuscript_id: string | null
   sent_date: string
   delivery_status: EmailDeliveryStatus
+  resend_message_id: string | null
+  bounce_reason: string | null
+  delivered_at: string | null
+  bounced_at: string | null
   created_at: string
 }
 
@@ -219,6 +234,7 @@ export interface AuditLogRow {
   resource_type: string
   resource_id: string | null
   ip_address: string | null
+  details: Record<string, unknown> | null
   timestamp: string
 }
 
@@ -346,6 +362,10 @@ export interface EmailLogInsert {
   email_type: string
   manuscript_id?: string | null
   delivery_status?: EmailDeliveryStatus
+  resend_message_id?: string | null
+  bounce_reason?: string | null
+  delivered_at?: string | null
+  bounced_at?: string | null
 }
 
 export interface AuditLogInsert {
@@ -354,6 +374,7 @@ export interface AuditLogInsert {
   resource_type: string
   resource_id?: string | null
   ip_address?: string | null
+  details?: Record<string, unknown> | null
 }
 
 
