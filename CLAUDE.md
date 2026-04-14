@@ -72,15 +72,25 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 - `app/dashboard/submit/Step3Info.tsx` -- Title, abstract (word counter), keyword tags, subspecialty dropdown, reviewer suggestions
 - `app/dashboard/submit/Step4Authors.tsx` -- Author list with reorder, inline add/edit, ICMJE contributions, certification
 - `app/dashboard/submit/Step5Declarations.tsx` -- COI, funding, data availability, ethics, clinical trial, note to editor, full review summary, submit button
+- `lib/email/resend.ts` -- Resend client singleton + `sendEmail()` wrapper (logs every send to `email_logs`, never throws into callers)
+- `lib/email/disputeTokens.ts` -- HS256 JWT sign/verify (30-day expiry) and URL builder for co-author dispute links
+- `lib/email/templates/shared.ts` -- Inline-styled OSCRSJ email shell (cream bg, peach CTA, editorial footer) plus paragraph/cta/detailsList helpers
+- `lib/email/templates/submissionConfirmation.ts` -- Branded receipt email to the corresponding author
+- `lib/email/templates/coAuthorNotification.ts` -- COPE-compliant co-author notice with signed "I did not agree" link
+- `lib/email/templates/coAuthorDisputeNotification.ts` -- Dispute notice to corresponding author and editorial office (forEditor flag tweaks wording)
+- `app/api/submissions/[id]/co-author-dispute/route.ts` -- GET handler that verifies the JWT, records the dispute, and renders a confirmation/error page
+- `app/api/webhooks/resend/route.ts` -- POST handler that verifies Svix signatures and updates `email_logs.delivery_status` on delivered/bounced/complained events
 
 ### What Doesn't Work Yet (known gaps)
 - Forms are static (contact, subscribe, search) -- no backend wired
 - Search bar in header is non-functional UI
 - No real articles published (3 sample placeholders on `/articles`)
-- Supabase Storage bucket "submissions" must be created manually in Supabase dashboard (private, 50MB max)
+- ~~Supabase Storage bucket~~ ✅ Created (private, 50MB max)
 - Auth system built but not yet tested on production (Vercel env vars added)
-- File upload requires Supabase Storage to be configured with proper RLS on the bucket
-- No email notifications yet (submission confirmation, co-author notification) -- coming Session 5
+- File upload RLS on Supabase Storage bucket should be verified with a real upload test
+- ~~No email notifications~~ ✅ Submission confirmation + co-author notification live as of Session 5 (2026-04-14). Withdrawal email pending until Session 6 ships the dashboard withdrawal button.
+- Resend webhook must be registered manually in the Resend dashboard (URL `https://oscrsj.com/api/webhooks/resend`, events: delivered/bounced/complained/delivery_delayed) and its signing secret copied into `RESEND_WEBHOOK_SECRET` on Vercel before delivery status updates will flow.
+- Migrations 003 and 004 must be executed manually in the Supabase SQL Editor before Session 5 features work end-to-end.
 - No draft withdrawal button on dashboard -- coming Session 6
 
 ---
@@ -138,17 +148,16 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. 35 pages, all pushed to main. Session 4 (2026-04-13) completed: full 5-step submission wizard now functional. Steps 4-5 added (authors & contributors with reorder/ICMJE contributions, declarations with COI/funding/data/ethics/clinical trial, full review summary, submit button with confirmation dialog). `submitManuscript` server action validates all fields and changes status DRAFT → SUBMITTED. Auto-save extended to cover all 5 steps. GA4 active (G-BTXMY8RWEW). Sitemap at 37 URLs. All changes deployed. Priorities in order:
+The site is live at oscrsj.com. 35 pages, all pushed to main. Session 5 (2026-04-14) completed: transactional email pipeline live. Resend SDK wired, four branded email templates (submission confirmation, co-author notification, dispute notifications to corresponding author and editor), JWT-signed co-author dispute tokens, dispute handler route at `/api/submissions/[id]/co-author-dispute`, Resend webhook at `/api/webhooks/resend` with Svix signature verification. `submitManuscript` now fires confirmation + co-author emails after status flip; email failures never roll back the submission. Priorities in order:
 
-1. **Submission Portal Session 5: Email Integration** (Sushant Agent scope)
-   - Connect Resend for transactional emails
-   - Submission confirmation email (to author)
-   - Co-author notification email (includes "I did not agree" dispute link per COPE)
-   - Withdrawal confirmation email
-   - Email logging to email_logs table
-   - Verify webhook signature on Resend delivery callbacks
-   - Co-author dispute handler
-   - Test: full submission flow end-to-end with real emails
+1. **Submission Portal Session 6: Withdrawal flow + deferred polish** (Sushant Agent scope)
+   - Dashboard withdrawal button (UI on the submissions list for pre-decision manuscripts)
+   - `withdrawManuscript` server action (DRAFT/SUBMITTED/UNDER_REVIEW → WITHDRAWN, with optional reason)
+   - Withdrawal confirmation email to author + editor + active reviewers
+   - End-to-end auth retest deferred from 2026-04-13 (signup → email → confirm → dashboard)
+   - Reply-To header on `noreply@oscrsj.com` so replies route to a real inbox
+   - Custom auth domain (`auth.oscrsj.com`) so Supabase confirmation links match the sending domain
+   - Stripe payment integration planning (blocked until LLC formed, but can spec)
 
 2. **Submit sitemap to Google Search Console**
    - Go to search.google.com/search-console → add oscrsj.com property
@@ -212,8 +221,13 @@ OSCRSJ/
 │   ├── sitemap.ts                     ← Dynamic sitemap (37 URLs)
 │   ├── page.tsx                       ← Homepage
 │   ├── api/
-│   │   └── auth/
-│   │       └── orcid/route.ts         ← ORCID OAuth redirect endpoint
+│   │   ├── auth/
+│   │   │   └── orcid/route.ts         ← ORCID OAuth redirect endpoint
+│   │   ├── submissions/
+│   │   │   └── [id]/
+│   │   │       └── co-author-dispute/route.ts  ← Co-author dispute handler (JWT-verified)
+│   │   └── webhooks/
+│   │       └── resend/route.ts        ← Resend webhook (Svix-signed delivery events)
 │   ├── auth/
 │   │   └── callback/
 │   │       ├── route.ts               ← Supabase auth code exchange
@@ -284,8 +298,16 @@ OSCRSJ/
 │   │   ├── actions.ts                 ← Server actions (signUp, signIn, signOut, resetPassword, updateProfile)
 │   │   └── orcid.ts                   ← ORCID OAuth utilities (auth URL, code exchange, profile fetch)
 │   ├── constants.ts                   ← Shared constants (COUNTRIES list)
+│   ├── email/
+│   │   ├── resend.ts                  ← Resend client + sendEmail() wrapper with email_logs logging
+│   │   ├── disputeTokens.ts           ← HS256 JWT sign/verify (co-author dispute tokens)
+│   │   └── templates/
+│   │       ├── shared.ts              ← Inline-styled email shell + helpers (paragraph, cta, detailsList)
+│   │       ├── submissionConfirmation.ts
+│   │       ├── coAuthorNotification.ts
+│   │       └── coAuthorDisputeNotification.ts
 │   ├── submission/
-│   │   └── actions.ts                 ← Server actions (createOrUpdateDraft, saveManuscriptInfo, recordFile, deleteFile, saveAuthors, saveDeclarations, submitManuscript)
+│   │   └── actions.ts                 ← Server actions (createOrUpdateDraft, saveManuscriptInfo, recordFile, deleteFile, saveAuthors, saveDeclarations, submitManuscript — submitManuscript now fires transactional emails)
 │   ├── supabase/
 │   │   ├── client.ts                  ← Browser Supabase client
 │   │   ├── server.ts                  ← Server Supabase client (cookie-based)
@@ -295,5 +317,8 @@ OSCRSJ/
 │       └── database.ts                ← TypeScript types for all 12 Supabase tables + enums
 └── supabase/
     └── migrations/
-        └── 001_initial_schema.sql     ← Full schema: 12 tables, enums, RLS policies, triggers
+        ├── 001_initial_schema.sql     ← Full schema: 12 tables, enums, RLS policies, triggers
+        ├── 002_rls_policies.sql       ← RLS policy adjustments
+        ├── 003_email_logs_resend.sql  ← Resend message id, delivery event columns, enum additions
+        └── 004_co_author_disputes.sql ← manuscript_metadata.co_author_disputes + audit_logs.details
 ```
