@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Submit a Manuscript' }
 const steps = [
   { step: '01', title: 'Prepare Your Manuscript', desc: 'Review the Guide for Authors and ensure your submission meets formatting and content requirements.' },
   { step: '02', title: 'Create an Account', desc: 'Register for a free author account on our submission portal.' },
-  { step: '03', title: 'Submit Online', desc: 'Upload your manuscript, cover letter, and any supplementary files through the portal.' },
+  { step: '03', title: 'Submit Online', desc: 'Log in and use our 5-step submission wizard to upload your manuscript, add co-authors, and complete declarations.' },
   { step: '04', title: 'Peer Review', desc: 'Your submission undergoes double-blind peer review. You\'ll receive a decision within 30 days.' },
   { step: '05', title: 'Revision & Acceptance', desc: 'Revise based on reviewer feedback. Once accepted, your article receives a DOI and is published.' },
 ]
@@ -39,15 +39,15 @@ export default function SubmitPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Submit via Email CTA — moved higher */}
+        {/* Submit Online CTA */}
         <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 mb-12 text-center">
-          <h2 className="font-serif text-2xl font-normal text-brown-dark mb-2">Submit via Email</h2>
+          <h2 className="font-serif text-2xl font-normal text-brown-dark mb-2">Submit Online</h2>
           <p className="text-tan text-sm mb-6 max-w-lg mx-auto">
-            Send your manuscript, cover letter, and supplementary files to the address below. Online portal launching soon.
+            Use our submission portal to upload your manuscript, cover letter, and supplementary files. You&apos;ll need a free author account to get started.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="mailto:submit@oscrsj.com" className="btn-primary-light">
-              submit@oscrsj.com
+            <Link href="/dashboard/submit" className="btn-primary-light">
+              Start a Submission
             </Link>
             <Link href="/guide-for-authors" className="border border-brown text-brown font-medium px-6 py-2.5 rounded-full transition-all duration-200 inline-flex items-center gap-2 text-sm hover:bg-brown hover:text-cream">
               Read the Guide First
