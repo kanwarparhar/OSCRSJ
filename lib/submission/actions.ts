@@ -7,7 +7,21 @@ import type {
   ManuscriptMetadataRow,
   ManuscriptFileRow,
   ManuscriptAuthorRow,
+  UserRow,
 } from '@/lib/types/database'
+import { sendEmail } from '@/lib/email/resend'
+import {
+  renderSubmissionConfirmation,
+  getSubmissionConfirmationSubject,
+} from '@/lib/email/templates/submissionConfirmation'
+import {
+  renderCoAuthorNotification,
+  getCoAuthorNotificationSubject,
+} from '@/lib/email/templates/coAuthorNotification'
+import {
+  generateDisputeToken,
+  buildDisputeUrl,
+} from '@/lib/email/disputeTokens'
 
 // ---- Types for wizard state ----
 
@@ -433,5 +447,120 @@ export async function submitManuscript(manuscriptId: string) {
 
   if (error) return { error: 'Failed to submit manuscript' }
 
-  return { success: true, submissionId: m.submission_id }
+  // ---- Fire transactional emails ----
+  // Critical: anything below this line is best-effort. The submission
+  // is already committed to the database; an email failure must not
+  // surface as a submission failure to the user. All errors are
+  // collected into emailWarnings for the UI to surface non-blockingly.
+  const emailWarnings: string[] = []
+
+  try {
+    // Load the full author list (server actions run as the user; RLS
+    // already lets the corresponding author read their own authors).
+    const { data: authorsList } = await supabase
+      .from('manuscript_authors')
+      .select('*')
+      .eq('manuscript_id', manuscriptId)
+      .order('author_order', { ascending: true })
+
+    const allAuthors = (authorsList as ManuscriptAuthorRow[] | null) || []
+
+    // Load corresponding author profile for the salutation
+    const { data: profileData } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+    const profile = profileData as UserRow | null
+
+    const correspondingAuthor =
+      allAuthors.find((a) => a.is_corresponding) ||
+      allAuthors.find((a) => a.author_id === user.id) ||
+      null
+
+    const correspondingName =
+      correspondingAuthor?.full_name ||
+      profile?.full_name ||
+      'Author'
+    const correspondingEmail =
+      correspondingAuthor?.email || profile?.email || user.email || null
+
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      'https://oscrsj.com'
+
+    // 1. Submission confirmation to corresponding author
+    if (correspondingEmail) {
+      const { html, text } = renderSubmissionConfirmation({
+        authorName: correspondingName,
+        submissionId: m.submission_id,
+        title: m.title || '(untitled)',
+        manuscriptType: m.manuscript_type!,
+        dashboardUrl: `${siteUrl.replace(/\/$/, '')}/dashboard`,
+      })
+      const result = await sendEmail({
+        to: correspondingEmail,
+        subject: getSubmissionConfirmationSubject(m.submission_id),
+        html,
+        text,
+        emailType: 'submission_confirmation',
+        manuscriptId,
+      })
+      if (result.error) {
+        emailWarnings.push(
+          `Confirmation email to ${correspondingEmail} failed: ${result.error}`
+        )
+      }
+    } else {
+      emailWarnings.push(
+        'No email address available for the corresponding author'
+      )
+    }
+
+    // 2. Co-author notifications (everyone except corresponding author)
+    const coAuthors = allAuthors.filter(
+      (a) => !a.is_corresponding && a.email
+    )
+    for (const coAuthor of coAuthors) {
+      try {
+        const token = await generateDisputeToken(manuscriptId, coAuthor.email)
+        const disputeUrl = buildDisputeUrl(manuscriptId, token, siteUrl)
+        const { html, text } = renderCoAuthorNotification({
+          coAuthorName: coAuthor.full_name || 'Co-author',
+          correspondingAuthorName: correspondingName,
+          submissionId: m.submission_id,
+          title: m.title || '(untitled)',
+          disputeUrl,
+        })
+        const result = await sendEmail({
+          to: coAuthor.email,
+          subject: getCoAuthorNotificationSubject(m.submission_id),
+          html,
+          text,
+          emailType: 'co_author_notification',
+          manuscriptId,
+        })
+        if (result.error) {
+          emailWarnings.push(
+            `Co-author email to ${coAuthor.email} failed: ${result.error}`
+          )
+        }
+      } catch (err) {
+        emailWarnings.push(
+          `Co-author email to ${coAuthor.email} threw: ${err instanceof Error ? err.message : 'unknown error'}`
+        )
+      }
+    }
+  } catch (err) {
+    emailWarnings.push(
+      `Email pipeline error: ${err instanceof Error ? err.message : 'unknown error'}`
+    )
+  }
+
+  return {
+    success: true,
+    submissionId: m.submission_id,
+    ...(emailWarnings.length > 0 ? { emailWarnings } : {}),
+  }
 }
