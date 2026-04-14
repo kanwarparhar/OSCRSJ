@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signUp } from '@/lib/auth/actions'
 import { COUNTRIES } from '@/lib/constants'
-import Turnstile from '@/components/Turnstile'
+// import Turnstile from '@/components/Turnstile' // Disabled until Cloudflare config is resolved
 
 function getOrcidPrefill(): { orcid_id?: string; full_name?: string; affiliation?: string; country?: string } | null {
   if (typeof document === 'undefined') return null
@@ -26,7 +26,7 @@ export default function RegisterForm() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
-  const [turnstileToken, setTurnstileToken] = useState('')
+  const [turnstileToken] = useState('')  // Turnstile disabled for now
   const [orcidPrefill, setOrcidPrefill] = useState<ReturnType<typeof getOrcidPrefill>>(null)
   const [passwordHints, setPasswordHints] = useState({
     length: false,
@@ -305,12 +305,6 @@ export default function RegisterForm() {
           </div>
         </div>
       </div>
-
-      {/* CAPTCHA */}
-      <Turnstile
-        onVerify={useCallback((token: string) => setTurnstileToken(token), [])}
-        onExpire={useCallback(() => setTurnstileToken(''), [])}
-      />
 
       {/* Submit */}
       <div className="flex flex-col items-center gap-4">
