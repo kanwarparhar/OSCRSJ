@@ -45,13 +45,14 @@ export async function signUp(formData: FormData) {
   const orcidId = (formData.get('orcidId') as string)?.trim() || null
   const turnstileToken = formData.get('turnstileToken') as string
 
-  // Turnstile verification
+  // Turnstile verification — only enforce when both keys are configured
+  const turnstileConfigured = process.env.TURNSTILE_SECRET_KEY && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
   if (turnstileToken) {
     const valid = await verifyTurnstile(turnstileToken)
     if (!valid) {
       return { error: 'CAPTCHA verification failed. Please try again.' }
     }
-  } else if (process.env.TURNSTILE_SECRET_KEY) {
+  } else if (turnstileConfigured) {
     return { error: 'Please complete the CAPTCHA verification.' }
   }
 
