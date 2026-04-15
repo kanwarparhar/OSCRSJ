@@ -6,7 +6,7 @@ The official website for **OSCRSJ** (Orthopedic Surgery Case Reports & Series Jo
 ---
 
 ## Current State
-A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, and Cloudflare Turnstile CAPTCHA. **Live at https://oscrsj.com**.
+A complete Next.js 14 website — **43 pages total** (35 existing + `/news` landing + `/news/ai-in-orthopedics` + 6 category archives), all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, Cloudflare Turnstile CAPTCHA, and an AI in Orthopedics content hub scaffolded and awaiting Arjun's inaugural brief slate. **Live at https://oscrsj.com**.
 
 ### Deployment & Infrastructure
 | Item | Details |
@@ -22,7 +22,7 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 
 **How to deploy updates:** Push any commit to the `main` branch on GitHub → Vercel auto-rebuilds and goes live in ~60 seconds.
 
-### Pages Built — All 35
+### Pages Built — All 43
 | Route | File | Status |
 |---|---|---|
 | `/` | `app/page.tsx` | ✅ Complete |
@@ -60,6 +60,10 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 | `/dashboard/submit` | `app/dashboard/submit/page.tsx` | ✅ Complete (Session 3-4, full 5-step wizard) |
 | `/forgot-password` | `app/forgot-password/page.tsx` | ✅ Complete (Session 2, email reset request) |
 | `/reset-password` | `app/reset-password/page.tsx` | ✅ Complete (Session 2, new password form) |
+| `/news` | `app/news/page.tsx` | ✅ Scaffold (Session Franklin 2026-04-14, AI feed + placeholders for headlines/updates) |
+| `/news/ai-in-orthopedics` | `app/news/ai-in-orthopedics/page.tsx` | ✅ Scaffold (hero + primer + 6 category cards + latest + Editor's Picks + glossary placeholder + CTAs + methodology) |
+| `/news/ai-in-orthopedics/[slug]` | `app/news/ai-in-orthopedics/[slug]/page.tsx` | ✅ Scaffold — 6 category archives pre-rendered via generateStaticParams |
+| `/news/ai-in-orthopedics/[slug]/[brief]` | `app/news/ai-in-orthopedics/[slug]/[brief]/page.tsx` | ✅ Template ready — NewsArticle + ScholarlyArticle JSON-LD in SSR, full Vancouver citation block, cross-links, submit CTA |
 
 ### Components
 - `components/Header.tsx` -- sticky header, full dropdown nav, mobile hamburger, search bar, top bar with Submit/Login/Register links (~200 lines)
@@ -80,6 +84,9 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 - `lib/email/templates/coAuthorDisputeNotification.ts` -- Dispute notice to corresponding author and editorial office (forEditor flag tweaks wording)
 - `app/api/submissions/[id]/co-author-dispute/route.ts` -- GET handler that verifies the JWT, records the dispute, and renders a confirmation/error page
 - `app/api/webhooks/resend/route.ts` -- POST handler that verifies Svix signatures and updates `email_logs.delivery_status` on delivered/bounced/complained events
+- `components/icons/ai-ortho/` -- six inline SVG category icons (Imaging, SurgicalPlanning, Robotics, Outcomes, LLMs, ResearchTools); 24x24 viewBox, 1.5px stroke, currentColor for theme inheritance
+- `lib/ai-ortho/data.ts` -- typed category list + `AiOrthoBrief` schema + empty `AI_ORTHO_BRIEFS` array + helper getters (placeholder primer, empty briefs; Arjun populates)
+- `lib/schema/newsArticle.ts` -- `buildNewsArticleSchema()` returning NewsArticle + nested ScholarlyArticle JSON-LD for every brief page; injected via inline `<script type="application/ld+json">` inside the server component for SSR rendering (verified on dev — `/news/ai-in-orthopedics/[slug]/[brief]` ships JSON-LD in initial HTML)
 
 ### What Doesn't Work Yet (known gaps)
 - Forms are static (contact, subscribe, search) -- no backend wired
@@ -92,6 +99,9 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 - Resend webhook must be registered manually in the Resend dashboard (URL `https://oscrsj.com/api/webhooks/resend`, events: delivered/bounced/complained/delivery_delayed) and its signing secret copied into `RESEND_WEBHOOK_SECRET` on Vercel before delivery status updates will flow.
 - Migrations 003 and 004 must be executed manually in the Supabase SQL Editor before Session 5 features work end-to-end.
 - No draft withdrawal button on dashboard -- coming Session 6
+- **AI in Orthopedics hub is scaffolded but empty**: `/news/ai-in-orthopedics` and all 6 category archives render a "coming soon" empty state. `AI_ORTHO_BRIEFS` in `lib/ai-ortho/data.ts` is `[]`. Arjun must ship the 10 inaugural briefs, 3 Editor's Picks, and glossary v1 before the hub launches for Janine's GSC validation.
+- Hero image at `/news/ai-in-orthopedics` is a placeholder slot. Drop the Canva export at `/public/images/ai-in-ortho-hero.png` (1920×800 web hero + 1200×630 OG export per Page Plan §13) and uncomment the `<Image>` block in `app/news/ai-in-orthopedics/page.tsx` to wire it up.
+- Editor's Picks on the hub link to `#` (primer, LLM guide, glossary not yet written). The "For Students hub" link also points to `#` — `/students` doesn't exist yet.
 
 ---
 
@@ -148,9 +158,15 @@ A complete Next.js 14 website — **35 pages total**, all TypeScript-clean, no 4
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. 35 pages, all pushed to main. Session 5 (2026-04-14) completed: transactional email pipeline live. Resend SDK wired, four branded email templates (submission confirmation, co-author notification, dispute notifications to corresponding author and editor), JWT-signed co-author dispute tokens, dispute handler route at `/api/submissions/[id]/co-author-dispute`, Resend webhook at `/api/webhooks/resend` with Svix signature verification. `submitManuscript` now fires confirmation + co-author emails after status flip; email failures never roll back the submission. Priorities in order:
+The site is live at oscrsj.com. 43 pages pushed to main. Session Franklin (2026-04-14) completed: AI in Orthopedics hub scaffolding shipped — landing, 6 category archives, brief template with NewsArticle + ScholarlyArticle JSON-LD (SSR-verified), 6 inline SVG category icons, sitemap + nav updates. Content is placeholder; Arjun owns brief population. Session 5 (2026-04-14) prior: transactional email pipeline live (Resend SDK + 4 branded templates + JWT dispute tokens + webhook). Priorities in order:
 
-1. **Submission Portal Session 6: Withdrawal flow + deferred polish** (Sushant Agent scope)
+1. **AI in Orthopedics content population** (Arjun Agent scope — handoff already pushed)
+   - 10 inaugural briefs per Page Plan §4 slate, written into `AI_ORTHO_BRIEFS` in `lib/ai-ortho/data.ts`
+   - 3 Editor's Picks (Imaging Primer, LLM Guide for Residents, Glossary v1 with 20 terms at launch)
+   - Replace the 150-word primer in `lib/ai-ortho/data.ts` → `AI_ORTHO_PRIMER` with final copy
+   - Kanwar to supply the Canva hero export per Page Plan §13 (1920×800) and drop at `/public/images/ai-in-ortho-hero.png`, then uncomment the `<Image>` in `app/news/ai-in-orthopedics/page.tsx`
+
+2. **Submission Portal Session 6: Withdrawal flow + deferred polish** (Sushant Agent scope)
    - Dashboard withdrawal button (UI on the submissions list for pre-decision manuscripts)
    - `withdrawManuscript` server action (DRAFT/SUBMITTED/UNDER_REVIEW → WITHDRAWN, with optional reason)
    - Withdrawal confirmation email to author + editor + active reviewers
@@ -218,7 +234,7 @@ OSCRSJ/
 ├── app/
 │   ├── layout.tsx
 │   ├── globals.css
-│   ├── sitemap.ts                     ← Dynamic sitemap (37 URLs)
+│   ├── sitemap.ts                     ← Dynamic sitemap (45 URLs — includes /news hub)
 │   ├── page.tsx                       ← Homepage
 │   ├── api/
 │   │   ├── auth/
@@ -287,16 +303,30 @@ OSCRSJ/
 │   ├── templates/page.tsx              ← Downloadable templates (coming soon)
 │   ├── for-reviewers/page.tsx          ← Full reviewer instruction guide
 │   ├── faq/page.tsx                    ← 27 questions, 5 categories
-│   └── accessibility/page.tsx
+│   ├── accessibility/page.tsx
+│   └── news/
+│       ├── page.tsx                   ← /news landing (AI feed + Ortho Headlines + Journal Updates placeholders)
+│       └── ai-in-orthopedics/
+│           ├── page.tsx               ← AI in Orthopedics hub landing
+│           └── [slug]/
+│               ├── page.tsx           ← Category archive (6 pre-rendered via generateStaticParams)
+│               └── [brief]/
+│                   └── page.tsx       ← Individual brief template (NewsArticle JSON-LD in SSR)
 ├── components/
-│   ├── Header.tsx
+│   ├── Header.tsx                     ← News dropdown added 2026-04-14
 │   ├── Footer.tsx
 │   ├── PageHeader.tsx                 ← Reusable page header with breadcrumbs
-│   └── Turnstile.tsx                  ← Cloudflare Turnstile CAPTCHA widget
+│   ├── Turnstile.tsx                  ← Cloudflare Turnstile CAPTCHA widget
+│   └── icons/
+│       └── ai-ortho/                  ← 6 inline SVG category icons (Imaging, SurgicalPlanning, Robotics, Outcomes, LLMs, ResearchTools)
 ├── lib/
 │   ├── auth/
 │   │   ├── actions.ts                 ← Server actions (signUp, signIn, signOut, resetPassword, updateProfile)
 │   │   └── orcid.ts                   ← ORCID OAuth utilities (auth URL, code exchange, profile fetch)
+│   ├── ai-ortho/
+│   │   └── data.ts                    ← Category list + AiOrthoBrief schema + empty AI_ORTHO_BRIEFS + landing primer
+│   ├── schema/
+│   │   └── newsArticle.ts             ← NewsArticle + ScholarlyArticle JSON-LD builder (buildNewsArticleSchema)
 │   ├── constants.ts                   ← Shared constants (COUNTRIES list)
 │   ├── email/
 │   │   ├── resend.ts                  ← Resend client + sendEmail() wrapper with email_logs logging
