@@ -29,6 +29,14 @@ const navItems = [
     ],
   },
   {
+    label: 'News',
+    href: '/news',
+    dropdown: [
+      { label: 'All News', href: '/news' },
+      { label: 'AI in Orthopedics', href: '/news/ai-in-orthopedics' },
+    ],
+  },
+  {
     label: 'About',
     href: '/about',
     dropdown: [

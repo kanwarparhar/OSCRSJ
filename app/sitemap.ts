@@ -1,7 +1,37 @@
 import type { MetadataRoute } from 'next'
 
+const AI_ORTHO_CATEGORY_SLUGS = [
+  'imaging',
+  'surgical-planning',
+  'robotics',
+  'outcomes-prediction',
+  'llms-and-decision-support',
+  'research-tools',
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://oscrsj.com'
+
+  const aiOrthoPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/news`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/news/ai-in-orthopedics`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    ...AI_ORTHO_CATEGORY_SLUGS.map((slug) => ({
+      url: `${baseUrl}/news/ai-in-orthopedics/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+  ]
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -234,5 +264,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  return staticPages
+  return [...staticPages, ...aiOrthoPages]
 }
