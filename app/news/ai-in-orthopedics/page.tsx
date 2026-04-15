@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   AI_ORTHO_CATEGORIES,
@@ -27,6 +28,21 @@ export const metadata: Metadata = {
       'Curated research, tools, and guidance for orthopedic trainees and surgeons.',
     url: 'https://oscrsj.com/news/ai-in-orthopedics',
     type: 'website',
+    images: [
+      {
+        url: 'https://oscrsj.com/images/ai-in-ortho-og.png',
+        width: 1200,
+        height: 630,
+        alt: 'AI in Orthopedics — OSCRSJ editorial hub',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI in Orthopedics | OSCRSJ',
+    description:
+      'Curated research, tools, and guidance for orthopedic trainees and surgeons.',
+    images: ['https://oscrsj.com/images/ai-in-ortho-og.png'],
   },
 }
 
@@ -86,19 +102,14 @@ export default function AiInOrthopedicsLanding() {
           </div>
           <div className="md:col-span-5">
             <div className="relative aspect-[3/2] rounded-xl overflow-hidden bg-dark-card border border-peach/15">
-              {/* Placeholder slot. When Kanwar drops the Canva export at
-                  /public/images/ai-in-ortho-hero.png, uncomment the Image. */}
-              {/* <Image
+              <Image
                 src="/images/ai-in-ortho-hero.png"
                 alt="AI in Orthopedics — editorial collage"
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 480px"
                 className="object-cover"
-              /> */}
-              <div className="absolute inset-0 flex items-center justify-center text-peach/30 text-xs uppercase tracking-widest">
-                Hero image pending
-              </div>
+              />
             </div>
           </div>
         </div>
