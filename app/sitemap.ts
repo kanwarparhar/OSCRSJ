@@ -31,6 +31,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     })),
+    {
+      url: `${baseUrl}/news/ai-in-orthopedics/guides/imaging-primer-for-residents`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/news/ai-in-orthopedics/guides/llm-guide-for-trainees`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
   ]
 
   const staticPages: MetadataRoute.Sitemap = [

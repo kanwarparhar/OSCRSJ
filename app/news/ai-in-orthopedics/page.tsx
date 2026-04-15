@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   AI_ORTHO_CATEGORIES,
+  AI_ORTHO_GLOSSARY,
   AI_ORTHO_PRIMER,
   getBriefsByCategory,
   getLatestBriefs,
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
         url: 'https://oscrsj.com/images/ai-in-ortho-og.png',
         width: 1200,
         height: 630,
-        alt: 'AI in Orthopedics — OSCRSJ editorial hub',
+        alt: 'AI in Orthopedics, OSCRSJ editorial hub',
       },
     ],
   },
@@ -50,23 +51,26 @@ const EDITORS_PICKS = [
   {
     label: 'Primer',
     title: 'AI in Orthopedic Imaging: A 2026 Primer for Residents',
-    href: '#',
+    href: '/news/ai-in-orthopedics/guides/imaging-primer-for-residents',
     summary:
-      'Definitions, landscape, what is in clinical use versus research, and key sources. A reference piece written in institutional voice.',
+      'Definitions, landscape, what is in clinical use versus research, and how to read a validation study critically. A reference piece written in institutional voice.',
+    status: 'Reference',
   },
   {
     label: 'Guide',
     title: 'Large Language Models for Orthopedic Trainees: What\u2019s Safe, What\u2019s Not',
-    href: '#',
+    href: '/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
     summary:
-      'Ethical and practical guidance on LLM use for research, patient-facing tasks, studying, and writing. Cites ICMJE, WAME, and AAOS positions.',
+      'Practical and ethical guidance on LLM use for research, studying, writing, and patient-facing tasks. Cites ICMJE, WAME, and AAOS positions.',
+    status: 'Reference',
   },
   {
     label: 'Reference',
     title: 'AI in Orthopedics Glossary',
-    href: '#',
+    href: '#glossary',
     summary:
-      'Thirty-plus terms defined in plain language: CNN, transformer, sensitivity, specificity, generalizability, prompt, hallucination, PACS, DICOM, and more.',
+      'Twenty terms defined in plain language: CNN, transformer, sensitivity, specificity, external validation, PACS, DICOM, and more.',
+    status: 'Reference',
   },
 ]
 
@@ -104,7 +108,7 @@ export default function AiInOrthopedicsLanding() {
             <div className="relative aspect-[3/2] rounded-xl overflow-hidden bg-dark-card border border-peach/15">
               <Image
                 src="/images/ai-in-ortho-hero.png"
-                alt="AI in Orthopedics — editorial collage"
+                alt="AI in Orthopedics editorial collage"
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 480px"
@@ -238,30 +242,41 @@ export default function AiInOrthopedicsLanding() {
                 </span>
                 <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">{p.title}</h3>
                 <p className="text-sm text-brown-dark/80 leading-relaxed">{p.summary}</p>
-                <p className="text-xs text-tan mt-3">Coming soon</p>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Glossary (empty accordion placeholder) */}
-      {/* TODO: Arjun to populate 20 glossary terms at launch per Page Plan §1 / §8.
-          Terms slated: CNN, transformer, sensitivity, specificity, PPV, NPV,
-          generalizability, prompt, hallucination, PACS, DICOM, ROC / AUC,
-          overfitting, training/validation/test, federated learning, RAG,
-          foundation model, and related. Render as <details>/<summary>
-          accordion once content is ready. */}
-      <section className="bg-cream">
+      {/* Glossary — 20 terms at launch, growing to 40 by Month 3 */}
+      <section id="glossary" className="bg-cream scroll-mt-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <span className="section-label">Reference</span>
           <h2 className="section-heading mb-5">AI in Orthopedics Glossary</h2>
-          <p className="text-brown-dark leading-relaxed mb-4">
-            A living reference of core terms. Twenty definitions at launch, growing to forty over the first quarter.
+          <p className="text-brown-dark leading-relaxed mb-8">
+            A living reference of core terms. Twenty definitions at launch, expanding to forty over the first quarter. Click a term to expand.
           </p>
-          <div className="bg-white border border-border rounded-xl p-6 text-center">
-            <p className="text-sm text-brown-dark">The glossary publishes alongside the inaugural slate of briefs.</p>
+          <div className="bg-white border border-border rounded-xl divide-y divide-border overflow-hidden">
+            {AI_ORTHO_GLOSSARY.map((entry) => (
+              <details key={entry.term} className="group">
+                <summary className="flex items-center justify-between gap-4 cursor-pointer px-6 py-4 hover:bg-cream-alt transition-colors list-none">
+                  <span className="font-serif text-base text-brown-dark">{entry.term}</span>
+                  <span
+                    className="text-tan text-xl leading-none transition-transform group-open:rotate-45 select-none"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+                </summary>
+                <div className="px-6 pb-5 pt-1">
+                  <p className="text-sm text-brown-dark/90 leading-relaxed">{entry.definition}</p>
+                </div>
+              </details>
+            ))}
           </div>
+          <p className="text-xs text-tan leading-relaxed mt-6">
+            This glossary is reviewed and expanded regularly. Terms are chosen for their frequency in the orthopedic AI literature and their utility to a trainee reader. Suggest additions via the contact form.
+          </p>
         </div>
       </section>
 

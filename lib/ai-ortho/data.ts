@@ -137,8 +137,120 @@ export function getBrief(
 }
 
 // ---------------------------------------------------------------------------
-// Landing primer (150 words — placeholder until Arjun ships final copy)
+// Landing primer (150 words, institutional voice)
 // ---------------------------------------------------------------------------
 
 export const AI_ORTHO_PRIMER =
-  'Artificial intelligence is rapidly reshaping how orthopedic surgeons diagnose fractures, plan procedures, and predict outcomes. From deep-learning fracture detection on radiographs to language models that support clinical decision-making, new tools are moving from research benchtops into real operating rooms and clinics. For residents and fellows, the pace of change can feel overwhelming, and the distance between a promising study and validated clinical practice is often unclear. The AI in Orthopedics hub is OSCRSJ\u2019s curated reference on this landscape: peer-reviewed research, validated tools, and honest limitations, all summarized in plain language for trainees and attendings. We cover imaging, surgical planning, robotics, outcomes prediction, large language models, and research workflows. Every brief links to the primary source, reports effect sizes honestly, and names what the study could not answer. Our goal is to be the canonical reference orthopedic trainees cite.'
+  'Artificial intelligence has moved from research into daily orthopedic practice. Deep learning now reads radiographs for fracture detection, segments MRI scans, and grades osteoarthritis severity. Machine learning models predict surgical complications and post-operative outcomes. Large language models are increasingly used by trainees for clinical workup, patient education, and writing assistance. The pace is uneven, and the distance between a promising study and a validated clinical tool is often unclear. The AI in Orthopedics hub is OSCRSJ\u2019s curated reference on this landscape. It covers six categories: imaging, surgical planning and navigation, robotic surgery, outcomes and risk prediction, large language models and clinical decision support, and research and education tools. Every brief draws from peer-reviewed orthopedic journals or specialty society communications, links to the primary source, reports effect sizes honestly, and names the limitations the study could not resolve.'
+
+// ---------------------------------------------------------------------------
+// Glossary v1 — 20 terms at launch, target 40 by Month 3
+// ---------------------------------------------------------------------------
+
+export interface GlossaryEntry {
+  term: string
+  definition: string
+}
+
+export const AI_ORTHO_GLOSSARY: GlossaryEntry[] = [
+  {
+    term: 'Machine learning',
+    definition:
+      'A family of algorithms that learn patterns from data rather than being explicitly programmed with rules. In orthopedics, machine learning models are commonly trained on labeled imaging or outcomes data.',
+  },
+  {
+    term: 'Deep learning',
+    definition:
+      'A subset of machine learning that uses layered neural networks, capable of learning complex features directly from raw data such as radiographs or MRI scans. Most recent AI imaging tools in orthopedics rely on deep learning.',
+  },
+  {
+    term: 'Convolutional neural network (CNN)',
+    definition:
+      'A deep learning architecture designed for image data. CNNs scan an image with small filters to detect local features such as edges and textures, and remain a standard architecture for fracture detection, segmentation, and OA grading.',
+  },
+  {
+    term: 'Transformer',
+    definition:
+      'A neural network architecture built around an attention mechanism that weighs relationships across an input sequence. Transformers power large language models and are increasingly used for medical imaging and clinical text.',
+  },
+  {
+    term: 'Foundation model',
+    definition:
+      'A large model pretrained on a broad dataset that can be adapted to many downstream tasks. Foundation models are often the backbone of newer clinical AI tools and include families such as GPT, Claude, and medical-specific variants.',
+  },
+  {
+    term: 'Large language model (LLM)',
+    definition:
+      'A transformer-based foundation model trained on text. LLMs produce fluent natural-language output and can summarize literature, draft notes, and answer clinical questions, but they can also fabricate information. See Hallucination.',
+  },
+  {
+    term: 'Prompt',
+    definition:
+      'The natural-language input given to a large language model. Prompt wording substantially affects output quality, and small changes to a prompt can change the model\u2019s answer.',
+  },
+  {
+    term: 'Hallucination',
+    definition:
+      'The production by a large language model of confident-sounding content that is false or unsupported by any source. Hallucinations are a well-documented failure mode and a central safety concern for clinical LLM use.',
+  },
+  {
+    term: 'Retrieval-augmented generation (RAG)',
+    definition:
+      'A technique in which a language model is connected to a curated document store at query time and instructed to answer from retrieved passages. RAG is used to reduce hallucinations in clinical and research tools.',
+  },
+  {
+    term: 'Sensitivity',
+    definition:
+      'The proportion of true positives correctly identified by a test or model. A fracture detection model with 95 percent sensitivity misses 5 percent of fractures present in the data.',
+  },
+  {
+    term: 'Specificity',
+    definition:
+      'The proportion of true negatives correctly identified by a test or model. High sensitivity with low specificity produces many false alarms. Both numbers should always be reported together.',
+  },
+  {
+    term: 'Positive predictive value (PPV)',
+    definition:
+      'Among cases the model flags as positive, the proportion that are truly positive. PPV depends on disease prevalence and falls sharply in low-prevalence populations.',
+  },
+  {
+    term: 'Negative predictive value (NPV)',
+    definition:
+      'Among cases the model flags as negative, the proportion that are truly negative. NPV also depends on prevalence and is often high when disease is uncommon.',
+  },
+  {
+    term: 'ROC curve and AUC',
+    definition:
+      'A receiver operating characteristic curve plots sensitivity against 1 minus specificity across all classification thresholds. The area under the curve (AUC) summarizes overall discrimination on a 0 to 1 scale, with 0.5 indicating chance and 1.0 indicating perfect discrimination.',
+  },
+  {
+    term: 'Training, validation, and test sets',
+    definition:
+      'The three data partitions used to develop and evaluate a model. The model learns from the training set, is tuned on the validation set, and is evaluated on the held-out test set. A model that has seen the test data during training will report inflated performance.',
+  },
+  {
+    term: 'Overfitting',
+    definition:
+      'When a model learns patterns specific to its training data that do not generalize to new cases. Overfit models perform well on their own test set but fail on external cases.',
+  },
+  {
+    term: 'External validation',
+    definition:
+      'Evaluation of a model on data from an institution, scanner, or population not used during training. External validation is the standard for judging whether a model will generalize to clinical use.',
+  },
+  {
+    term: 'Ground truth',
+    definition:
+      'The reference label against which model predictions are compared, for example an orthopedic surgeon\u2019s read of a radiograph or a confirmed intraoperative diagnosis. Model performance is only as reliable as the ground truth it is measured against.',
+  },
+  {
+    term: 'PACS',
+    definition:
+      'Picture Archiving and Communication System. The hospital infrastructure that stores, retrieves, and distributes medical imaging. Clinical AI imaging tools are typically integrated at the PACS level.',
+  },
+  {
+    term: 'DICOM',
+    definition:
+      'Digital Imaging and Communications in Medicine. The standard file format and communication protocol for medical imaging. AI imaging models typically consume DICOM inputs.',
+  },
+]

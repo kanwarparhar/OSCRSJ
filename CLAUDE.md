@@ -6,7 +6,7 @@ The official website for **OSCRSJ** (Orthopedic Surgery Case Reports & Series Jo
 ---
 
 ## Current State
-A complete Next.js 14 website — **43 pages total** (35 existing + `/news` landing + `/news/ai-in-orthopedics` + 6 category archives), all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, Cloudflare Turnstile CAPTCHA, and an AI in Orthopedics content hub scaffolded and awaiting Arjun's inaugural brief slate. **Live at https://oscrsj.com**.
+A complete Next.js 14 website — **45 pages total** (35 existing + `/news` landing + `/news/ai-in-orthopedics` + 6 category archives + 2 Editor's Pick guides), all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, Cloudflare Turnstile CAPTCHA, and an AI in Orthopedics hub with 2 Editor's Picks + 20-term glossary now live, awaiting Arjun's inaugural brief slate. **Live at https://oscrsj.com**.
 
 ### Deployment & Infrastructure
 | Item | Details |
@@ -64,6 +64,8 @@ A complete Next.js 14 website — **43 pages total** (35 existing + `/news` land
 | `/news/ai-in-orthopedics` | `app/news/ai-in-orthopedics/page.tsx` | ✅ Scaffold (hero + primer + 6 category cards + latest + Editor's Picks + glossary placeholder + CTAs + methodology) |
 | `/news/ai-in-orthopedics/[slug]` | `app/news/ai-in-orthopedics/[slug]/page.tsx` | ✅ Scaffold — 6 category archives pre-rendered via generateStaticParams |
 | `/news/ai-in-orthopedics/[slug]/[brief]` | `app/news/ai-in-orthopedics/[slug]/[brief]/page.tsx` | ✅ Template ready — NewsArticle + ScholarlyArticle JSON-LD in SSR, full Vancouver citation block, cross-links, submit CTA |
+| `/news/ai-in-orthopedics/guides/imaging-primer-for-residents` | `app/news/ai-in-orthopedics/guides/imaging-primer-for-residents/page.tsx` | ✅ Complete (Arjun Session 2026-04-14, ~1350 words, institutional voice) |
+| `/news/ai-in-orthopedics/guides/llm-guide-for-trainees` | `app/news/ai-in-orthopedics/guides/llm-guide-for-trainees/page.tsx` | ✅ Complete (Arjun Session 2026-04-14, ~1050 words, institutional voice) |
 
 ### Components
 - `components/Header.tsx` -- sticky header, full dropdown nav, mobile hamburger, search bar, top bar with Submit/Login/Register links (~200 lines)
@@ -85,7 +87,7 @@ A complete Next.js 14 website — **43 pages total** (35 existing + `/news` land
 - `app/api/submissions/[id]/co-author-dispute/route.ts` -- GET handler that verifies the JWT, records the dispute, and renders a confirmation/error page
 - `app/api/webhooks/resend/route.ts` -- POST handler that verifies Svix signatures and updates `email_logs.delivery_status` on delivered/bounced/complained events
 - `components/icons/ai-ortho/` -- six inline SVG category icons (Imaging, SurgicalPlanning, Robotics, Outcomes, LLMs, ResearchTools); 24x24 viewBox, 1.5px stroke, currentColor for theme inheritance
-- `lib/ai-ortho/data.ts` -- typed category list + `AiOrthoBrief` schema + empty `AI_ORTHO_BRIEFS` array + helper getters (placeholder primer, empty briefs; Arjun populates)
+- `lib/ai-ortho/data.ts` -- typed category list + `AiOrthoBrief` schema + empty `AI_ORTHO_BRIEFS` array + helper getters + `AI_ORTHO_GLOSSARY` (20 terms, live on landing page) + `AI_ORTHO_PRIMER` (final 150-word institutional copy, shipped 2026-04-14)
 - `lib/schema/newsArticle.ts` -- `buildNewsArticleSchema()` returning NewsArticle + nested ScholarlyArticle JSON-LD for every brief page; injected via inline `<script type="application/ld+json">` inside the server component for SSR rendering (verified on dev — `/news/ai-in-orthopedics/[slug]/[brief]` ships JSON-LD in initial HTML)
 
 ### What Doesn't Work Yet (known gaps)
@@ -99,7 +101,7 @@ A complete Next.js 14 website — **43 pages total** (35 existing + `/news` land
 - Resend webhook must be registered manually in the Resend dashboard (URL `https://oscrsj.com/api/webhooks/resend`, events: delivered/bounced/complained/delivery_delayed) and its signing secret copied into `RESEND_WEBHOOK_SECRET` on Vercel before delivery status updates will flow.
 - Migrations 003 and 004 must be executed manually in the Supabase SQL Editor before Session 5 features work end-to-end.
 - No draft withdrawal button on dashboard -- coming Session 6
-- **AI in Orthopedics hub is scaffolded but empty**: `/news/ai-in-orthopedics` and all 6 category archives render a "coming soon" empty state. `AI_ORTHO_BRIEFS` in `lib/ai-ortho/data.ts` is `[]`. Arjun must ship the 10 inaugural briefs, 3 Editor's Picks, and glossary v1 before the hub launches for Janine's GSC validation.
+- **AI in Orthopedics hub is partially populated**: landing has live 20-term glossary + final 150-word primer; 2 of 3 Editor's Picks live (Imaging Primer + LLM Guide). Third Editor's Pick tile (glossary) now anchors to `#glossary` on the landing page. `AI_ORTHO_BRIEFS` is still `[]` — 10 inaugural briefs remain the critical-path blocker for Janine's GSC validation.
 - Hero image at `/news/ai-in-orthopedics` is a placeholder slot. Drop the Canva export at `/public/images/ai-in-ortho-hero.png` (1920×800 web hero + 1200×630 OG export per Page Plan §13) and uncomment the `<Image>` block in `app/news/ai-in-orthopedics/page.tsx` to wire it up.
 - Editor's Picks on the hub link to `#` (primer, LLM guide, glossary not yet written). The "For Students hub" link also points to `#` — `/students` doesn't exist yet.
 
@@ -160,11 +162,14 @@ A complete Next.js 14 website — **43 pages total** (35 existing + `/news` land
 
 The site is live at oscrsj.com. 43 pages pushed to main. Session Franklin (2026-04-14) completed: AI in Orthopedics hub scaffolding shipped — landing, 6 category archives, brief template with NewsArticle + ScholarlyArticle JSON-LD (SSR-verified), 6 inline SVG category icons, sitemap + nav updates. Content is placeholder; Arjun owns brief population. Session 5 (2026-04-14) prior: transactional email pipeline live (Resend SDK + 4 branded templates + JWT dispute tokens + webhook). Priorities in order:
 
-1. **AI in Orthopedics content population** (Arjun Agent scope — handoff already pushed)
-   - 10 inaugural briefs per Page Plan §4 slate, written into `AI_ORTHO_BRIEFS` in `lib/ai-ortho/data.ts`
-   - 3 Editor's Picks (Imaging Primer, LLM Guide for Residents, Glossary v1 with 20 terms at launch)
-   - Replace the 150-word primer in `lib/ai-ortho/data.ts` → `AI_ORTHO_PRIMER` with final copy
-   - Kanwar to supply the Canva hero export per Page Plan §13 (1920×800) and drop at `/public/images/ai-in-ortho-hero.png`, then uncomment the `<Image>` in `app/news/ai-in-orthopedics/page.tsx`
+1. **AI in Orthopedics content population** (Arjun Agent scope — partial handoff cleared 2026-04-14)
+   - ✅ Glossary v1 (20 terms) — live on landing page accordion
+   - ✅ Final 150-word primer (`AI_ORTHO_PRIMER`) — shipped
+   - ✅ Editor's Pick: Imaging Primer for Residents — live at `/news/ai-in-orthopedics/guides/imaging-primer-for-residents`
+   - ✅ Editor's Pick: LLM Guide for Trainees — live at `/news/ai-in-orthopedics/guides/llm-guide-for-trainees`
+   - ⏳ 10 inaugural briefs per Page Plan §4 slate — deferred to a separate session because Claude cannot reliably cite exact DOIs, author lists, and numeric results from memory. Plan: either (a) Arjun/Kanwar runs WebSearch per-paper to verify source bundles before drafting, or (b) papers are uploaded as PDFs for in-context citation extraction.
+   - ⏳ Kanwar to supply the Canva hero export per Page Plan §13 (1920×800) and drop at `/public/images/ai-in-ortho-hero.png` — `<Image>` block is already uncommented and waiting
+   - ⏳ OG image: drop 1200×630 Canva export at `/public/images/ai-in-ortho-og.png` so social previews render (metadata wired 2026-04-14)
 
 2. **Submission Portal Session 6: Withdrawal flow + deferred polish** (Sushant Agent scope)
    - Dashboard withdrawal button (UI on the submissions list for pre-decision manuscripts)
