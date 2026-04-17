@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { buildBreadcrumbSchema } from '@/lib/schema/breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Large Language Models for Orthopedic Trainees: What\u2019s Safe, What\u2019s Not',
@@ -27,8 +28,22 @@ export const metadata: Metadata = {
 }
 
 export default function LlmGuideForTrainees() {
+  const breadcrumbLd = buildBreadcrumbSchema([
+    { name: 'News', url: 'https://oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+    { name: 'Guides', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+    {
+      name: 'Large Language Models for Orthopedic Trainees: What\u2019s Safe, What\u2019s Not',
+      url: 'https://oscrsj.com/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
+    },
+  ])
+
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       {/* Breadcrumb */}
       <nav className="text-xs text-tan mb-6">
         <Link href="/news" className="hover:text-brown-dark transition-colors">

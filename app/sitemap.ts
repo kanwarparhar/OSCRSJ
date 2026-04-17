@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { AI_ORTHO_BRIEFS } from '@/lib/ai-ortho/data'
 
 const AI_ORTHO_CATEGORY_SLUGS = [
   'imaging',
@@ -29,6 +30,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/news/ai-in-orthopedics/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+    // Individual briefs — one entry per AI_ORTHO_BRIEFS item
+    ...AI_ORTHO_BRIEFS.map((brief) => ({
+      url: `${baseUrl}/news/ai-in-orthopedics/${brief.category}/${brief.slug}`,
+      lastModified: brief.publishedAt ? new Date(brief.publishedAt) : new Date(),
+      changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
     {

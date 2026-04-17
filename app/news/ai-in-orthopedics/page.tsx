@@ -9,6 +9,7 @@ import {
   getLatestBriefs,
   getCategory,
 } from '@/lib/ai-ortho/data'
+import { buildBreadcrumbSchema } from '@/lib/schema/breadcrumb'
 
 export const metadata: Metadata = {
   title: 'AI in Orthopedics',
@@ -77,8 +78,17 @@ const EDITORS_PICKS = [
 export default function AiInOrthopedicsLanding() {
   const latest = getLatestBriefs(10)
 
+  const breadcrumbLd = buildBreadcrumbSchema([
+    { name: 'News', url: 'https://oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+  ])
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       {/* Hero */}
       <section
         className="relative"

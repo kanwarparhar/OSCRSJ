@@ -6,6 +6,7 @@ import {
   getBriefsByCategory,
   getCategory,
 } from '@/lib/ai-ortho/data'
+import { buildBreadcrumbSchema } from '@/lib/schema/breadcrumb'
 
 interface PageProps {
   params: { slug: string }
@@ -34,8 +35,18 @@ export default function CategoryArchive({ params }: PageProps) {
   const briefs = getBriefsByCategory(cat.slug)
   const Icon = cat.Icon
 
+  const breadcrumbLd = buildBreadcrumbSchema([
+    { name: 'News', url: 'https://oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+    { name: cat.short, url: `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}` },
+  ])
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       {/* Hero */}
       <section
         className="relative flex items-center justify-center text-center"

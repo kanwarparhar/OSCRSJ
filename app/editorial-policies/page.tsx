@@ -144,7 +144,7 @@ export default function EditorialPoliciesPage() {
             <span className="section-label">Technology</span>
             <h2 className="section-heading mb-3">AI-Assisted Writing</h2>
             <p className="text-brown-dark leading-relaxed">
-              Authors may use AI tools (such as ChatGPT, Claude, or Grammarly) to assist with grammar, clarity, or formatting. However, AI tools cannot be listed as authors and must not generate clinical content, data, or conclusions. Authors must disclose the use of AI writing tools in their cover letter and remain fully responsible for the accuracy, integrity, and originality of their manuscript.
+              Authors may use AI tools (such as ChatGPT, Claude, or Grammarly) to assist with grammar, clarity, or formatting. However, AI tools cannot be listed as authors and must not generate clinical content, data, or conclusions. Authors must disclose any use of AI writing tools in the Declarations step of the submission portal, specifying the tool(s), version(s), and the scope of use. This disclosure will be reproduced in the published article. Authors remain fully responsible for the accuracy, integrity, and originality of their manuscript.
             </p>
           </section>
 

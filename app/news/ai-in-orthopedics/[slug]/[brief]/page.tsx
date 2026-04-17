@@ -8,6 +8,7 @@ import {
   type AiOrthoCategorySlug,
 } from '@/lib/ai-ortho/data'
 import { buildNewsArticleSchema } from '@/lib/schema/newsArticle'
+import { buildBreadcrumbSchema } from '@/lib/schema/breadcrumb'
 
 interface PageProps {
   params: { slug: string; brief: string }
@@ -61,12 +62,23 @@ export default function BriefPage({ params }: PageProps) {
     sourceUrl: brief.source.url,
   })
 
+  const breadcrumbLd = buildBreadcrumbSchema([
+    { name: 'News', url: 'https://oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+    { name: cat.short, url: `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}` },
+    { name: brief.headline, url: briefUrl },
+  ])
+
   return (
     <div>
       {/* JSON-LD — rendered in SSR HTML by being inside a Server Component's JSX */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
