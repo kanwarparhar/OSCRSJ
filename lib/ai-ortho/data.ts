@@ -120,10 +120,10 @@ export interface AiOrthoBrief {
   citation: string
 }
 
-// Inaugural slate — first 6 briefs shipped 2026-04-16 (Arjun Cowork session).
-// Pilot batch covering Imaging (2), Robotics (2), and LLMs (2). Remaining 4
-// briefs (Surgical Planning, Outcomes, Research Tools) follow in a subsequent
-// session once additional source PDFs are provided.
+// Inaugural slate — 11 briefs shipped 2026-04-16 across two Arjun Cowork
+// sessions on the same day. First batch (commit 02cc31e) covered Imaging (2),
+// Robotics (2), and LLMs (2). Second batch added Surgical Planning (2),
+// Outcomes (1), and Research Tools (2), completing all six categories.
 export const AI_ORTHO_BRIEFS: AiOrthoBrief[] = [
   {
     slug: 'commercial-ai-fracture-detection-meta-analysis',
@@ -344,6 +344,201 @@ export const AI_ORTHO_BRIEFS: AiOrthoBrief[] = [
     },
     citation:
       'Mu Y, He D. The potential applications and challenges of ChatGPT in the medical field. Int J Gen Med. 2024;17:817-826. doi:10.2147/IJGM.S456659',
+  },
+
+  {
+    slug: 'ai-3d-planning-total-hip-arthroplasty-meta-analysis',
+    category: 'surgical-planning',
+    headline:
+      'AI 3D preoperative planning for total hip arthroplasty: meta-analysis of 8 studies finds exact cup and stem sizing predicted roughly 3 to 4 times more often than with 2D templating',
+    publishedAt: '2026-04-16',
+    readMinutes: 4,
+    summary:
+      'A systematic review and meta-analysis of eight studies and 1,371 patients reports that AI-assisted 3D preoperative planning predicts the exact acetabular cup size with an odds ratio of 3.85 and the exact femoral stem size with an odds ratio of 3.28 compared with conventional 2D templating.',
+    bottomLine:
+      'Across eight studies from Chinese centers, AI-assisted 3D planning was 3.85 times more likely to predict the acetabular cup to the exact size than 2D templating (95% CI 2.79 to 5.32, p < 0.0001) and 3.28 times more likely to predict the femoral stem to the exact size (95% CI 2.56 to 4.22, p < 0.0001). All included studies originated in China, limiting geographic generalizability.',
+    whatTheyDid:
+      'The authors searched PubMed, Scopus, and Embase from inception through October 2024 for studies comparing AI-assisted 3D preoperative planning against conventional 2D templating for acetabular cup and femoral stem sizing in total hip arthroplasty. Eight studies with 1,371 participants were included in the meta-analysis. A random-effects model was used given high between-study heterogeneity. Odds ratios with 95% confidence intervals were calculated for exact-size predictions and for predictions within one standard deviation. The Newcastle-Ottawa Scale assessed study quality. The analysis followed PRISMA reporting guidelines.',
+    whatTheyFound:
+      'For the acetabular cup, AI-assisted planning predicted the exact size significantly more often than 2D templating (OR 3.85, 95% CI 2.79 to 5.32, p < 0.0001; I² = 42%) and predicted a size within one standard deviation more often as well (OR 3.49, 95% CI 1.21 to 10.13, p = 0.0212; I² = 81%). For the femoral stem, AI outperformed 2D templating for exact-size prediction (OR 3.28, 95% CI 2.56 to 4.22, p < 0.0001; I² = 0%) and for within-one-standard-deviation prediction (OR 5.35, 95% CI 3.84 to 7.45, p < 0.0001; I² = 0%). Newcastle-Ottawa quality scores ranged from 6 to 9.',
+    whyItMatters:
+      'Implant sizing is one of the most predictable determinants of stable fixation and soft-tissue balance in total hip arthroplasty. Correct preoperative sizing reduces reliance on intraoperative trial-and-error, shortens operative time, and lowers the risk of periprosthetic fracture in press-fit designs. This meta-analysis provides the first pooled effect sizes suggesting AI-assisted 3D planning is materially more accurate than conventional 2D templating, rather than equivalent. For surgeons considering a move to 3D planning workflows, the data support the investment on sizing grounds alone, before any operative-time or complication analyses.',
+    limitations:
+      'Every included study originated in a Chinese center, and Asian anatomy may not generalize to North American or European populations, particularly for femoral morphology. Study designs were mixed, with 38% prospective cohorts and the remainder retrospective. Heterogeneity for within-one-standard-deviation cup prediction was high (I² = 81%). The meta-analysis does not report operative time, functional outcomes, or revision rates, only sizing accuracy. No study directly compared different AI platforms against each other.',
+    source: {
+      paperTitle:
+        'The accuracy of artificial intelligence in 3D preoperative planning for total hip arthroplasty: a systematic review and meta-analysis',
+      authors: 'Altahtamouni SB, Salman LA, Al-Ani A, Ahmed G',
+      journal: 'Journal of Experimental Orthopaedics',
+      paperPublishedAt: '2026',
+      doi: '10.1002/jeo2.70427',
+      url: 'https://doi.org/10.1002/jeo2.70427',
+      openAccess: true,
+    },
+    keyFigure: {
+      label: 'Forest plots (Figures 2 and 3)',
+      description:
+        'Forest plots of the pooled odds ratios for acetabular cup and femoral stem size prediction, showing AI-assisted 3D planning outperforming 2D templating across all eight included studies.',
+      url: 'https://doi.org/10.1002/jeo2.70427',
+    },
+    citation:
+      'Altahtamouni SB, Salman LA, Al-Ani A, Ahmed G. The accuracy of artificial intelligence in 3D preoperative planning for total hip arthroplasty: a systematic review and meta-analysis. J Exp Orthop. 2026. doi:10.1002/jeo2.70427',
+  },
+
+  {
+    slug: 'ar-navigation-pedicle-screw-rct',
+    category: 'surgical-planning',
+    headline:
+      'AR navigation for thoracolumbar pedicle screws: 150-patient randomized trial reports 98.0% vs 91.7% accuracy compared with CT-guided freehand',
+    publishedAt: '2026-04-16',
+    readMinutes: 4,
+    summary:
+      'A single-blind randomized trial across three Chinese centers enrolled 150 patients and 699 pedicle screws, reporting 98.0% screw placement accuracy with augmented reality navigation versus 91.7% with CT-guided freehand technique (p < 0.05). One co-author is affiliated with the AR system manufacturer.',
+    bottomLine:
+      'Augmented reality surgical navigation produced 98.0% excellent-grade pedicle screw placement (344 of 351 screws) versus 91.7% with CT-guided freehand (319 of 348 screws, p < 0.05). Average fluoroscopy use dropped from 13.25 to 7.29 exposures per screw. Interpret alongside the disclosed manufacturer affiliation.',
+    whatTheyDid:
+      'One hundred fifty patients requiring thoracolumbar pedicle screw fixation were enrolled across three Chinese centers and randomized 1:1 (single-blind) to AR-guided pedicle screw placement or CT-guided conventional freehand placement. The AR system (developed by Shanghai Linyan Medical Technology) overlaid real-time high-resolution imaging with virtual vertebral models to guide screw trajectories. Primary outcome was screw placement accuracy graded by the Gertzbein-Robbins classification on post-operative CT. Secondary outcomes included fluoroscopy exposures, average time per screw, and adverse events. The trial was registered and IRB-approved (Changhai Hospital, Second Military Medical University).',
+    whatTheyFound:
+      'A total of 699 pedicle screws were placed (351 AR, 348 control). The AR-guided group achieved an excellent placement rate of 98.0% (344 of 351 screws), significantly higher than the 91.7% rate (319 of 348 screws) in the CT-guided freehand group (p < 0.05). Per protocol analysis showed excellent-plus-good rates of 99.1% versus 91.7%. Intraoperative fluoroscopy exposures per screw averaged 7.29 ± 2.90 in the AR group versus 13.25 ± 6.02 in the control group (p < 0.05). No significant difference was observed in serious adverse events.',
+    whyItMatters:
+      'Pedicle screw malposition is a primary driver of neurovascular injury, revision surgery, and litigation in spine practice. A 6.3 percentage point gain in excellent-grade placement, validated on CT, is clinically meaningful at the level of an individual screw and compounds across multi-level constructs. The nearly halved fluoroscopy burden has direct radiation-safety implications for the surgical team over a career of exposure. For spine programs evaluating navigation platforms, this trial provides a rare prospective randomized benchmark rather than a retrospective cohort.',
+    limitations:
+      'Co-author Yanlong Dong is affiliated with Shanghai Linyan Medical Technology, the company that developed the AR navigation system, and this represents a disclosed conflict of interest that readers should weigh when interpreting the effect size. All three participating centers are in China, limiting cross-regional generalizability. The comparator was CT-guided freehand rather than other commercially available navigation platforms, so the relative performance against O-arm, StealthStation, or robotic systems remains unknown. Follow-up was limited to the immediate post-operative period and did not include long-term clinical outcomes such as fusion rates or reoperation.',
+    source: {
+      paperTitle:
+        'Augmented reality navigation system enhances the accuracy of spinal surgery pedicle screw placement',
+      authors: 'Ma Y, Wu J, Dong Y, Tang H, Ma X',
+      journal: 'Orthopaedic Surgery',
+      paperPublishedAt: '2025',
+      doi: '10.1111/os.70097',
+      url: 'https://doi.org/10.1111/os.70097',
+      openAccess: true,
+    },
+    keyFigure: {
+      label: 'Table 4',
+      description:
+        'Group comparison of pedicle screw placement accuracy (98.0% AR vs 91.7% freehand), excellent-plus-good rates, average fluoroscopy exposures per screw, and mean time per screw.',
+      url: 'https://doi.org/10.1111/os.70097',
+    },
+    citation:
+      'Ma Y, Wu J, Dong Y, Tang H, Ma X. Augmented reality navigation system enhances the accuracy of spinal surgery pedicle screw placement. Orthop Surg. 2025. doi:10.1111/os.70097',
+  },
+
+  {
+    slug: 'xgboost-tka-complications-prediction',
+    category: 'outcomes-prediction',
+    headline:
+      'XGBoost model for TKA complications: moderate discrimination for major complications (AUC 0.68), no better than chance for residual pain (AUC 0.53)',
+    publishedAt: '2026-04-16',
+    readMinutes: 4,
+    summary:
+      'A retrospective single-center study of 783 primary total knee arthroplasties at Technical University of Munich reports that an XGBoost model trained on AAHKS-defined risk factors achieved moderate accuracy for predicting major complications and any complication, and performed at chance level for predicting residual pain at one year.',
+    bottomLine:
+      'Trained on 783 primary TKAs, the XGBoost model achieved AUC 0.68 for major complications requiring revision, AUC 0.65 for any complication, and AUC 0.53 for one-year residual pain (Visual Analog Scale ≥ 4). Smoking status, ASA ≥ 3, and previous open reduction internal fixation of the knee emerged as the dominant features for complication prediction.',
+    whatTheyDid:
+      'The authors retrospectively analyzed 783 patients who underwent primary total knee arthroplasty at Klinikum Rechts der Isar, a single academic center affiliated with Technical University of Munich. Demographic, surgical, and outcome data covering 12 AAHKS-defined preoperative risk factors were extracted from the institutional database. An XGBoost gradient-boosted tree model was trained to perform binary classification for three target variables: major complications requiring revision, any complication (major or minor), and residual pain at one-year follow-up, defined as Visual Analog Scale score 4 or higher. SMOTE oversampling addressed class imbalance. Model performance was evaluated with area under the receiver operating characteristic curve (AUC), sensitivity, specificity, and accuracy. SHAP values were computed to rank feature importance.',
+    whatTheyFound:
+      'The model discriminated major complications requiring revision with an AUC of 0.68 and any complication with an AUC of 0.65, both categorized by the authors as moderate. Residual pain at one year was not reliably predicted, with an AUC of 0.53 (at or near chance). Among the 12 AAHKS-defined preoperative risk factors, the most important predictors identified by SHAP analysis were smoking status, ASA physical status class of 3 or higher, and a history of previous open reduction and internal fixation of the knee. The 83.8% one-year follow-up rate was above typical registry standards.',
+    whyItMatters:
+      'Preoperative risk prediction is increasingly embedded in shared decision-making conversations and in bundled-payment models that adjust for patient complexity. A moderate AUC of 0.68 for major complications is aligned with prior published models and suggests that complications research has plateaued at the level of risk stratification useful for counseling rather than precise individual prediction. The flat performance on residual pain is an important result in its own right: structured preoperative risk factors alone cannot predict one-year pain outcomes, and the field will need richer inputs (imaging features, patient-reported baselines, biomarkers) if meaningful pain prediction is a clinical goal.',
+    limitations:
+      'This is a retrospective single-center study at an academic referral hospital, which limits generalizability to community practice and to other healthcare systems. Class imbalance was significant, with major complications occurring in fewer than 3% of patients, and the authors used SMOTE oversampling to mitigate this, a technique that can inflate reported model performance relative to deployment performance. External validation on a population from a different institution was not performed. The follow-up window for residual pain was one year, and longer-term pain trajectories were not modeled. The model was trained on AAHKS-defined structured variables only, so the ceiling reported here may not reflect what a richer feature set could achieve.',
+    source: {
+      paperTitle:
+        'Machine learning-based prediction of complications and residual pain after total knee arthroplasty',
+      authors: 'Müller D, Gillani A, Hinterwimmer F, Arber A, Graichen H, von Eisenhart-Rothe R, Lazic I',
+      journal: 'Journal of Orthopaedics',
+      paperPublishedAt: '2026',
+      doi: '10.1016/j.jor.2025.08.038',
+      url: 'https://doi.org/10.1016/j.jor.2025.08.038',
+      openAccess: true,
+    },
+    keyFigure: {
+      label: 'Figure 3',
+      description:
+        'ROC curves for the three target variables, showing the AUC of 0.68 for major complications, 0.65 for any complication, and 0.53 for residual pain.',
+      url: 'https://doi.org/10.1016/j.jor.2025.08.038',
+    },
+    citation:
+      'Müller D, Gillani A, Hinterwimmer F, Arber A, Graichen H, von Eisenhart-Rothe R, Lazic I. Machine learning-based prediction of complications and residual pain after total knee arthroplasty. J Orthop. 2026;71:60-66. doi:10.1016/j.jor.2025.08.038',
+  },
+
+  {
+    slug: 'chatgpt-orthopedic-literature-review-comparison',
+    category: 'research-tools',
+    headline:
+      'ChatGPT vs JBJS systematic reviews: median 91% of target abstracts captured in search, 75% after screening, 100% after manual review of model-identified papers',
+    publishedAt: '2026-04-16',
+    readMinutes: 4,
+    summary:
+      'An evaluation study using five high-impact JBJS systematic reviews as the gold standard reports that ChatGPT-4 captured a median 91% of target abstracts during search design, 75% after abstract screening, and 55% on manuscript inclusion screening, with manual review of the 28 papers ChatGPT identified recovering the remaining target articles for 100% inclusion.',
+    bottomLine:
+      'ChatGPT-4 is useful as a supervised assistant for the search and screening phases of an orthopedic systematic review, not as an autonomous replacement for a research team. Prompt engineering materially changed the results. The LLM is not deterministic: identical prompts can return different outputs on different days.',
+    whatTheyDid:
+      'The authors identified five systematic reviews published in the Journal of Bone and Joint Surgery in 2021 and 2022 covering spine, arthroplasty, hip arthroscopy, and meniscal surgery topics. They used ChatGPT-4 to perform three distinct PRISMA-aligned tasks for each review: designing a database search strategy from the clinical question, screening the resulting abstracts against the original inclusion and exclusion criteria, and (for one review) reviewing individual manuscript texts for inclusion. ChatGPT memory was cleared between tasks and between reviews. Outputs were compared against the final list of articles actually included in each published review. The primary outcome was the percentage of target articles captured at each step; secondary outcomes were precision and F-score.',
+    whatTheyFound:
+      'For search strategy design, ChatGPT captured a median of 91% of target abstracts (IQR 84 to 94%) while returning a roughly eightfold larger total set than the manual reviews (median 8,388 abstracts vs 1,307), consistent with the broad-search prompt used. For abstract screening against inclusion criteria, ChatGPT captured a median of 75% of target articles (IQR 70 to 79%). For manuscript-level screening on a single review, ChatGPT initially captured only 55% of target articles, but manual review of the 28 papers ChatGPT flagged led to identification of 11 of 11 (100%) included papers. Prompt engineering was required to elicit reliable performance; early iterations produced fabricated abstracts with invented titles and DOIs.',
+    whyItMatters:
+      'For residents and early-career faculty weighing whether to use LLMs in literature work, this study offers the most rigorous benchmark available to date in orthopedics. The headline is that a well-prompted LLM can replicate meaningful portions of PRISMA phase 1 and 2, but manuscript-level inclusion screening still requires human judgment. The workflow most supported by these data is sequential: use ChatGPT to draft broad search strategies and pre-screen abstracts, then rely on trained reviewers for manuscript-level inclusion and quality assessment. Unsupervised delegation of a systematic review to an LLM remains unsafe, and fabricated references are a recurring failure mode even on recent model versions.',
+    limitations:
+      'The study was not prospective, and the authors engineered their approach to retrieve articles that were already known to be in the gold-standard reviews, which does not fully answer whether ChatGPT can conduct a systematic review de novo. Only five JBJS reviews were included. ChatGPT is a general-purpose LLM trained on general internet text and is not tuned for medical literature; a domain-specific model may perform differently in either direction. Corresponding author Dr. Namdari reports a large set of industry disclosures, though none are directly tied to the study outcome. Variable PDF formats were a technical barrier to manuscript-level review. The study used ChatGPT-4 released March 2023, and newer model releases may perform differently.',
+    source: {
+      paperTitle:
+        'Evaluation of a popular large language model in orthopedic literature review: comparison to previously published reviews',
+      authors: 'Yao JJ, Lopez RD, Rizk AA, Aggarwal M, Namdari S',
+      journal: 'Archives of Bone and Joint Surgery',
+      paperPublishedAt: '2025',
+      doi: '10.22038/ABJS.2025.84896.3874',
+      url: 'https://doi.org/10.22038/ABJS.2025.84896.3874',
+      openAccess: true,
+    },
+    keyFigure: {
+      label: 'Tables 2 and 3',
+      description:
+        'Head-to-head comparison of ChatGPT search and screening performance against five JBJS systematic reviews, reporting captured article counts, sensitivity, and precision for each review.',
+      url: 'https://doi.org/10.22038/ABJS.2025.84896.3874',
+    },
+    citation:
+      'Yao JJ, Lopez RD, Rizk AA, Aggarwal M, Namdari S. Evaluation of a popular large language model in orthopedic literature review: comparison to previously published reviews. Arch Bone Jt Surg. 2025;13(7):460-469. doi:10.22038/ABJS.2025.84896.3874',
+  },
+
+  {
+    slug: 'ai-research-assistant-orthopedic-resident-review',
+    category: 'research-tools',
+    headline:
+      'AI research assistant tools for orthopedic residents: narrative review catalogs 23 platforms across writing, search, citations, plagiarism detection, and statistics',
+    publishedAt: '2026-04-16',
+    readMinutes: 4,
+    summary:
+      'A narrative review from a resident perspective organizes 23 AI-powered research tools by function and outlines the workflow in which each fits, from manuscript drafting through literature search, citation management, plagiarism detection, and statistical analysis.',
+    bottomLine:
+      'The piece is a map of the current AI research-assistant landscape, not an outcome study. It distinguishes general LLMs (ChatGPT, Claude, Gemini) from specialized literature tools (Consensus, SciSpace, Elicit, Rayyan), citation managers (Zotero, Mendeley, EndNote), and plagiarism detectors (iThenticate, GPT-Zero). The authors name specific limits: LLMs cannot directly access paywalled databases, AI-generated statistics must be validated by a biostatistician, and plagiarism tools are struggling to distinguish AI-generated from original text.',
+    whatTheyDid:
+      'Two orthopedic residents at Pontifical Bolivarian University in Medellín, Colombia authored a narrative review of AI tools used in orthopedic research workflow. The review is structured by research task rather than by technology, covering six domains: academic writing and manuscript drafting, literature summarization and synthesis, literature search optimization, citation management, plagiarism detection, and statistical analysis. A summary table categorizes 23 commonly available AI tools by function. Ethical considerations specific to research (data privacy, algorithmic bias, AI literacy in residency curriculum) are addressed in a separate section.',
+    whatTheyFound:
+      'The review identifies specific tools for each workflow stage and describes what they do well and where they fail. General LLMs (ChatGPT, Claude, Gemini, Bard) excel at drafting and semantic understanding but lack direct access to subscription databases. Dedicated literature platforms (Consensus, SciSpace, Elicit, ChatPDF, OpenEvidence) can summarize individual papers and cross-reference findings. Citation managers (Zotero, Mendeley, EndNote) automate bibliography generation and are adding AI-powered reference suggestion. Plagiarism detection (iThenticate, GPT-Zero, Grammarly) is increasingly strained by the sophistication of AI-generated paraphrasing. Statistical tools generate code for R and Python but require validation by an experienced analyst.',
+    whyItMatters:
+      'For residents planning their first systematic review, case series, or outcomes paper, the landscape of available AI tools has expanded faster than formal curricula can catch up. A structured map of what each category of tool is for, and what it is not for, is more useful at the outset of a project than piecemeal tool-by-tool discovery. The review also flags the right ethical posture: AI is a research assistant, not an authority. Statistical outputs need biostatistician review, literature summaries need primary-source verification, and plagiarism scores need contextual evaluation rather than mechanical acceptance. Residency programs building AI literacy into curricula can use this piece as an entry-level reference.',
+    limitations:
+      'This is a narrative review rather than a systematic review or benchmark study, and it does not measure or compare tool performance empirically. The tool landscape changes on a timescale of months, and several products described here will have been updated, deprecated, or consolidated by the time a reader encounters them. Coverage skews toward tools with an English-language interface and open-web access. Training limitations of the LLMs cited (ChatGPT knowledge cutoff of October 2023 at the time of writing) are discussed but not quantified. No outcome data on research quality, time-to-publication, or citation impact for AI-assisted versus conventional workflows is presented.',
+    source: {
+      paperTitle:
+        'Artificial intelligence in orthopedic research assistance: a resident\u2019s perspective',
+      authors: 'Arias Perez RD, Londoño Garcia R',
+      journal: 'Musculoskeletal Surgery',
+      paperPublishedAt: '2025',
+      doi: '10.1007/s12306-025-00894-w',
+      url: 'https://doi.org/10.1007/s12306-025-00894-w',
+      openAccess: true,
+    },
+    keyFigure: {
+      label: 'Table 1',
+      description:
+        'Matrix of 23 AI tools scored across six research workflow stages (plagiarism detection, academic writing, literature search, summarizing and synthesizing, analytical analysis, categorizing evidence), useful as a starting reference when selecting tools for a given project.',
+      url: 'https://doi.org/10.1007/s12306-025-00894-w',
+    },
+    citation:
+      'Arias Perez RD, Londoño Garcia R. Artificial intelligence in orthopedic research assistance: a resident\u2019s perspective. Musculoskelet Surg. 2025. doi:10.1007/s12306-025-00894-w',
   },
 ]
 
