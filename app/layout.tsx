@@ -37,23 +37,50 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'REPLACE_WITH_VERIFICATION_CODE',
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? '',
   },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
-    url: 'https://oscrsj.com',
-    description:
-      'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series.',
-    publisher: {
-      '@type': 'Organization',
-      name: 'OSCRSJ',
-      url: 'https://oscrsj.com',
-    },
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': 'https://oscrsj.com/#website',
+        name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
+        url: 'https://oscrsj.com',
+        description:
+          'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series.',
+        publisher: { '@id': 'https://oscrsj.com/#organization' },
+        inLanguage: 'en-US',
+      },
+      {
+        '@type': 'Organization',
+        '@id': 'https://oscrsj.com/#organization',
+        name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
+        alternateName: 'OSCRSJ',
+        url: 'https://oscrsj.com',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://oscrsj.com/logo.svg',
+        },
+        foundingDate: '2026',
+        description:
+          'Independent, peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series. Serves medical students, residents, and fellows worldwide.',
+        // sameAs: [] — populate as social accounts launch (Arjun handoff)
+      },
+      {
+        '@type': 'Periodical',
+        '@id': 'https://oscrsj.com/#periodical',
+        name: 'Orthopedic Surgery Case Reports and Series Journal',
+        abbreviation: 'OSCRSJ',
+        url: 'https://oscrsj.com',
+        publisher: { '@id': 'https://oscrsj.com/#organization' },
+        inLanguage: 'en-US',
+        // issn: '' — populate once Janine lands ISSN (Gate 1, post-5-articles)
+      },
+    ],
   }
 
   return (
