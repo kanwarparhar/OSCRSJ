@@ -133,6 +133,27 @@ export default function BriefPage({ params }: PageProps) {
               </span>
             )}
           </p>
+          {brief.keyFigure && (
+            <p className="mt-2">
+              <span className="text-brown-dark font-medium">Key {brief.keyFigure.label.toLowerCase().startsWith('table') ? 'table' : 'figure'}:</span>{' '}
+              <span className="text-brown-dark">{brief.keyFigure.label}</span>
+              {' — '}
+              {brief.keyFigure.description}
+              {brief.keyFigure.url && (
+                <>
+                  {' '}
+                  <a
+                    href={brief.keyFigure.url}
+                    target="_blank"
+                    rel="noopener"
+                    className="text-brown hover:text-brown-dark transition-colors underline decoration-border"
+                  >
+                    View in source
+                  </a>
+                </>
+              )}
+            </p>
+          )}
         </div>
 
         {/* Bottom line callout */}

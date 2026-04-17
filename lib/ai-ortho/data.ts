@@ -108,6 +108,14 @@ export interface AiOrthoBrief {
     url?: string // canonical link (falls back to https://doi.org/<doi>)
     openAccess?: boolean
   }
+  // Reference to a single important figure or table from the source paper that
+  // captures the study's core result. Rendered under the DOI line on the brief
+  // page. OSCRSJ does not reproduce paywalled figures — we link out.
+  keyFigure?: {
+    label: string // e.g. "Figure 3" or "Table 2"
+    description: string // one-sentence description of what it shows
+    url?: string // optional direct link to the figure/table in the paper
+  }
   // Full Vancouver-style citation string for the bottom of the brief.
   citation: string
 }
@@ -146,6 +154,12 @@ export const AI_ORTHO_BRIEFS: AiOrthoBrief[] = [
       url: 'https://doi.org/10.1038/s41598-024-73058-8',
       openAccess: true,
     },
+    keyFigure: {
+      label: 'Figure 4',
+      description:
+        'Forest plot of pooled sensitivity and specificity for stand-alone commercial AI, broken out by anatomical region, showing the sharp performance drop on rib and spine radiographs.',
+      url: 'https://www.nature.com/articles/s41598-024-73058-8/figures/4',
+    },
     citation:
       'Husarek J, Hess S, Razaeian S, Ruder TD, Sehmisch S, Müller M, Liodakis E. Artificial intelligence in commercial fracture detection products: a systematic review and meta-analysis of diagnostic test accuracy. Sci Rep. 2024;14:23053. doi:10.1038/s41598-024-73058-8',
   },
@@ -178,6 +192,12 @@ export const AI_ORTHO_BRIEFS: AiOrthoBrief[] = [
       doi: '10.1007/s43390-024-00954-4',
       url: 'https://doi.org/10.1007/s43390-024-00954-4',
       openAccess: true,
+    },
+    keyFigure: {
+      label: 'Figure 4',
+      description:
+        'Forest plot of the 17 studies contributing to the meta-analysis, showing the overall pooled CMAE of 2.99 degrees and the subgroup advantage of segmentation-based models (2.40°) over landmark-based models (3.31°).',
+      url: 'https://link.springer.com/article/10.1007/s43390-024-00954-4/figures/4',
     },
     citation:
       'Zhu Y, Yin X, Chen Z, Zhang H, Xu K, Zhang J, Wu N. Deep learning in Cobb angle automated measurement on X-rays: a systematic review and meta-analysis. Spine Deform. 2025;13(1):19-27. doi:10.1007/s43390-024-00954-4',
@@ -212,8 +232,14 @@ export const AI_ORTHO_BRIEFS: AiOrthoBrief[] = [
       url: 'https://doi.org/10.1007/s00264-025-06623-z',
       openAccess: true,
     },
+    keyFigure: {
+      label: 'Table 1',
+      description:
+        'Demographics and operative data comparing the robot-assisted and conventional arms side by side, including the intraoperative fluoroscopy count, length discrepancy, and anteversion difference that drive the paper\u2019s conclusion.',
+      url: 'https://link.springer.com/article/10.1007/s00264-025-06623-z',
+    },
     citation:
-      'Zhao C, Xiao H, Cao Q, Bei M, Li B, Song Y, Zhu G, Wu X. Robot-assisted closed reduction of femoral shaft fractures: a prospective controlled study. Int Orthop. 2025. doi:10.1007/s00264-025-06623-z',
+      'Zhao C, Xiao H, Cao Q, Bei M, Li B, Song Y, Zhu G, Wu X. Robot-assisted closed reduction of femoral shaft fractures: a prospective controlled study. Int Orthop. 2025;49(9):2251-2261. doi:10.1007/s00264-025-06623-z',
   },
 
   {
@@ -276,6 +302,12 @@ export const AI_ORTHO_BRIEFS: AiOrthoBrief[] = [
       doi: '10.1186/s12911-025-03202-5',
       url: 'https://doi.org/10.1186/s12911-025-03202-5',
       openAccess: true,
+    },
+    keyFigure: {
+      label: 'Figure 4',
+      description:
+        'Side-by-side bar chart of binary accuracy, weighted accuracy, and concordance across the 14 AAOS clavicle CPG questions for ChatGPT-4o versus DeepSeek.',
+      url: 'https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-025-03202-5/figures/4',
     },
     citation:
       'Keçeci T, Karagöz B. Can large language models follow guidelines? A comparative study of ChatGPT-4o and DeepSeek AI in clavicle fracture management based on AAOS recommendations. BMC Med Inform Decis Mak. 2025;25:350. doi:10.1186/s12911-025-03202-5',
