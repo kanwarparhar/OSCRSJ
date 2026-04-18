@@ -32,7 +32,7 @@ import type {
   ManuscriptAuthorRow,
 } from '@/lib/types/database'
 
-const ADMIN_NOTIFY_EMAIL = 'admin@oscrsj.com'
+const ADMIN_NOTIFY_EMAIL = 'kanwarparhar@gmail.com'
 
 export async function GET(
   request: NextRequest,
