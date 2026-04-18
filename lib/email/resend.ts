@@ -34,6 +34,13 @@ function getResend(): Resend {
 const DEFAULT_FROM =
   process.env.EMAIL_FROM || 'OSCRSJ Editorial Office <noreply@oscrsj.com>'
 
+// Reply-To lets recipients hit Reply and reach a real inbox even
+// though outbound mail is sent from the no-reply sending address.
+// Override via EMAIL_REPLY_TO; falls back to Kanwar's Gmail until a
+// dedicated editorial inbox (Google Workspace) is provisioned.
+const DEFAULT_REPLY_TO =
+  process.env.EMAIL_REPLY_TO || 'kanwarparhar@gmail.com'
+
 export interface SendEmailParams {
   to: string
   subject: string
@@ -63,6 +70,7 @@ export async function sendEmail(
       to,
       subject,
       html,
+      replyTo: DEFAULT_REPLY_TO,
       ...(text ? { text } : {}),
     })
 

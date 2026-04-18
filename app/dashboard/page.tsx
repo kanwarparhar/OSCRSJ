@@ -3,6 +3,15 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import type { ManuscriptStatus, ManuscriptRow } from '@/lib/types/database'
+import WithdrawButton from './WithdrawButton'
+
+const WITHDRAWABLE_STATUSES: ReadonlySet<ManuscriptStatus> = new Set<ManuscriptStatus>([
+  'draft',
+  'submitted',
+  'under_review',
+  'revision_requested',
+  'revision_received',
+])
 
 export const metadata: Metadata = { title: 'Dashboard — OSCRSJ' }
 
@@ -93,21 +102,30 @@ export default async function DashboardPage() {
                       </td>
                       <td className="px-4 py-3 text-tan whitespace-nowrap">{date}</td>
                       <td className="px-4 py-3">
-                        {ms.status === 'draft' ? (
-                          <Link
-                            href={`/dashboard/submit?draft=${ms.id}`}
-                            className="text-brown hover:underline text-xs font-medium"
-                          >
-                            Resume
-                          </Link>
-                        ) : (
-                          <Link
-                            href={`/dashboard/submission/${ms.id}`}
-                            className="text-brown hover:underline text-xs font-medium"
-                          >
-                            View
-                          </Link>
-                        )}
+                        <div className="flex items-center gap-3">
+                          {ms.status === 'draft' ? (
+                            <Link
+                              href={`/dashboard/submit?draft=${ms.id}`}
+                              className="text-brown hover:underline text-xs font-medium"
+                            >
+                              Resume
+                            </Link>
+                          ) : (
+                            <Link
+                              href={`/dashboard/submission/${ms.id}`}
+                              className="text-brown hover:underline text-xs font-medium"
+                            >
+                              View
+                            </Link>
+                          )}
+                          {WITHDRAWABLE_STATUSES.has(ms.status as ManuscriptStatus) && (
+                            <WithdrawButton
+                              manuscriptId={ms.id}
+                              submissionId={ms.submission_id}
+                              title={ms.title}
+                            />
+                          )}
+                        </div>
                       </td>
                     </tr>
                   )
