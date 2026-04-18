@@ -50,7 +50,7 @@ export default function TemplatesPage() {
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Intro */}
         <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 mb-12">
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             Using our templates ensures your manuscript meets OSCRSJ formatting requirements and follows established reporting guidelines. Each template includes all required sections, formatting instructions, and checklists. Templates are available in Microsoft Word (.docx) format.
           </p>
         </div>
@@ -71,7 +71,7 @@ export default function TemplatesPage() {
                   Template Coming Soon
                 </span>
               </div>
-              <p className="text-sm text-brown-dark leading-relaxed mb-4">{t.description}</p>
+              <p className="text-sm text-ink leading-relaxed mb-4">{t.description}</p>
               <div>
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Required Sections</p>
                 <div className="flex flex-wrap gap-2">
@@ -87,7 +87,7 @@ export default function TemplatesPage() {
         {/* CTA */}
         <div className="bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <p className="font-semibold text-brown-dark">Need help preparing your manuscript?</p>
+            <p className="font-semibold text-ink">Need help preparing your manuscript?</p>
             <p className="text-sm text-brown mt-0.5">Review our full author guidelines for detailed formatting and content requirements.</p>
           </div>
           <Link href="/guide-for-authors" className="btn-primary-light flex-shrink-0">

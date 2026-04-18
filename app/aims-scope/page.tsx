@@ -15,7 +15,7 @@ export default function AimsScopePage() {
           <section className="mb-12">
             <span className="section-label">Our Purpose</span>
             <h2 className="section-heading mb-3">Purpose</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is a peer-reviewed, open-access journal dedicated to the publication of case reports and case series in all subspecialties of orthopedic surgery and musculoskeletal medicine. Our purpose is to disseminate clinically instructive, novel, and educationally valuable case-based literature to a global audience, with a particular emphasis on supporting trainees at the early stages of their surgical careers.
             </p>
           </section>
@@ -23,7 +23,7 @@ export default function AimsScopePage() {
           <section className="mb-12">
             <span className="section-label">Article Types</span>
             <h2 className="section-heading mb-3">What We Publish</h2>
-            <p className="text-brown-dark mb-3">OSCRSJ publishes:</p>
+            <p className="text-ink mb-3">OSCRSJ publishes:</p>
             <ul className="space-y-2 pl-4">
               {[
                 'Case Reports: detailed documentation of a single clinical case with unusual presentation, rare diagnosis, novel treatment approach, or important teaching value.',
@@ -31,7 +31,7 @@ export default function AimsScopePage() {
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">→</span>
-                  <span className="text-brown-dark">{item}</span>
+                  <span className="text-ink">{item}</span>
                 </li>
               ))}
             </ul>
@@ -51,7 +51,7 @@ export default function AimsScopePage() {
                   <svg className="w-3.5 h-3.5 text-brown flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm text-brown-dark">{sub}</span>
+                  <span className="text-sm text-ink">{sub}</span>
                 </div>
               ))}
             </div>
@@ -60,7 +60,7 @@ export default function AimsScopePage() {
           <section className="mb-12">
             <span className="section-label">Readership</span>
             <h2 className="section-heading mb-3">Target Audience</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               OSCRSJ is designed for and authored by medical students, residents, fellows, and attending orthopedic surgeons. We are committed to being the most accessible, trainee-friendly peer-reviewed orthopedic journal in the United States — lowering the barrier to publishing without compromising the rigor of peer review.
             </p>
           </section>
@@ -68,7 +68,7 @@ export default function AimsScopePage() {
           <section className="mb-12">
             <span className="section-label">Access</span>
             <h2 className="section-heading mb-3">Open Access Policy</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               All articles published in OSCRSJ are freely available to read, download, and share under a Creative Commons Attribution (CC BY 4.0) license. We do not charge readers or institutions for access. The journal is sustained through article processing charges (APCs), which are currently waived during our launch phase. We believe that publicly relevant medical literature should be publicly accessible.
             </p>
           </section>
@@ -86,7 +86,7 @@ export default function AimsScopePage() {
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">&#10005;</span>
-                  <span className="text-brown-dark">{item}</span>
+                  <span className="text-ink">{item}</span>
                 </li>
               ))}
             </ul>

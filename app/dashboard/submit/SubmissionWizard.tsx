@@ -436,7 +436,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
                     )}
                   </div>
                   <span className={`text-xs mt-1.5 text-center hidden sm:block ${
-                    isCurrent ? 'text-brown-dark font-medium' : 'text-brown'
+                    isCurrent ? 'text-ink font-medium' : 'text-brown'
                   }`}>
                     {step.label}
                   </span>
@@ -568,7 +568,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
           <button
             onClick={saveAndExit}
             disabled={saving}
-            className="text-sm text-brown hover:text-brown-dark transition-colors disabled:opacity-50"
+            className="text-sm text-brown hover:text-ink transition-colors disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save & Continue Later'}
           </button>

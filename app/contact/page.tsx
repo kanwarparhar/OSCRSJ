@@ -54,7 +54,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="font-semibold text-brown-dark text-sm group-hover:text-brown transition-colors">{c.label}</p>
+                    <p className="font-semibold text-ink text-sm group-hover:text-brown transition-colors">{c.label}</p>
                     <p className="text-xs text-brown mt-0.5">{c.email}</p>
                     <p className="text-xs text-brown mt-1.5">{c.desc}</p>
                   </div>

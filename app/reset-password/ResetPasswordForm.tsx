@@ -40,7 +40,7 @@ export default function ResetPasswordForm() {
           </svg>
         </div>
         <h2 className="font-serif text-2xl text-brown-dark mb-3">Password Updated</h2>
-        <p className="text-brown-dark leading-relaxed">
+        <p className="text-ink leading-relaxed">
           Your password has been reset successfully. Redirecting you to your dashboard...
         </p>
       </div>
@@ -57,7 +57,7 @@ export default function ResetPasswordForm() {
 
       <div className="bg-white border border-border rounded-xl p-6 space-y-4">
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-brown-dark mb-1">
+          <label htmlFor="password" className="block text-sm font-medium text-ink mb-1">
             New Password
           </label>
           <input
@@ -66,13 +66,13 @@ export default function ResetPasswordForm() {
             type="password"
             required
             autoComplete="new-password"
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
           <p className="text-xs text-brown mt-1">At least 8 characters with one uppercase letter, one number, and one special character.</p>
         </div>
 
         <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-brown-dark mb-1">
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-ink mb-1">
             Confirm New Password
           </label>
           <input
@@ -81,7 +81,7 @@ export default function ResetPasswordForm() {
             type="password"
             required
             autoComplete="new-password"
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
         </div>
       </div>

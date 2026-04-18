@@ -84,17 +84,17 @@ export default function BriefPage({ params }: PageProps) {
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Breadcrumb */}
         <nav className="text-xs text-brown mb-6">
-          <Link href="/news" className="hover:text-brown-dark transition-colors">
+          <Link href="/news" className="hover:text-ink transition-colors">
             News
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/news/ai-in-orthopedics" className="hover:text-brown-dark transition-colors">
+          <Link href="/news/ai-in-orthopedics" className="hover:text-ink transition-colors">
             AI in Orthopedics
           </Link>
           <span className="mx-2">/</span>
           <Link
             href={`/news/ai-in-orthopedics/${cat.slug}`}
-            className="hover:text-brown-dark transition-colors"
+            className="hover:text-ink transition-colors"
           >
             {cat.short}
           </Link>
@@ -119,13 +119,13 @@ export default function BriefPage({ params }: PageProps) {
         {/* Source metadata */}
         <div className="text-sm text-brown leading-relaxed mb-8 pb-8 border-b border-border">
           <p>
-            <span className="text-brown-dark font-medium">Source:</span> {brief.source.journal}
+            <span className="text-ink font-medium">Source:</span> {brief.source.journal}
             <span className="mx-2">&middot;</span>
-            <span className="text-brown-dark font-medium">Published:</span>{' '}
+            <span className="text-ink font-medium">Published:</span>{' '}
             {brief.source.paperPublishedAt}
           </p>
           <p className="mt-1">
-            <span className="text-brown-dark font-medium">Authors:</span> {brief.source.authors}
+            <span className="text-ink font-medium">Authors:</span> {brief.source.authors}
             {doiUrl && (
               <>
                 <span className="mx-2">&middot;</span>
@@ -133,7 +133,7 @@ export default function BriefPage({ params }: PageProps) {
                   href={doiUrl}
                   target="_blank"
                   rel="noopener"
-                  className="text-brown hover:text-brown-dark transition-colors underline decoration-border"
+                  className="text-brown hover:text-ink transition-colors underline decoration-border"
                 >
                   {brief.source.doi ? `DOI: ${brief.source.doi}` : 'Source'}
                 </a>
@@ -147,8 +147,8 @@ export default function BriefPage({ params }: PageProps) {
           </p>
           {brief.keyFigure && (
             <p className="mt-2">
-              <span className="text-brown-dark font-medium">Key {brief.keyFigure.label.toLowerCase().startsWith('table') ? 'table' : 'figure'}:</span>{' '}
-              <span className="text-brown-dark">{brief.keyFigure.label}</span>
+              <span className="text-ink font-medium">Key {brief.keyFigure.label.toLowerCase().startsWith('table') ? 'table' : 'figure'}:</span>{' '}
+              <span className="text-ink">{brief.keyFigure.label}</span>
               {' — '}
               {brief.keyFigure.description}
               {brief.keyFigure.url && (
@@ -158,7 +158,7 @@ export default function BriefPage({ params }: PageProps) {
                     href={brief.keyFigure.url}
                     target="_blank"
                     rel="noopener"
-                    className="text-brown hover:text-brown-dark transition-colors underline decoration-border"
+                    className="text-brown hover:text-ink transition-colors underline decoration-border"
                   >
                     View in source
                   </a>
@@ -176,7 +176,7 @@ export default function BriefPage({ params }: PageProps) {
             borderColor: 'rgba(102,73,48,0.18)',
           }}
         >
-          <p className="text-sm text-brown-dark leading-relaxed">
+          <p className="text-sm text-ink leading-relaxed">
             <span className="font-semibold">Bottom line: </span>
             {brief.bottomLine}
           </p>
@@ -186,31 +186,31 @@ export default function BriefPage({ params }: PageProps) {
         <div className="prose-oscrsj space-y-8">
           <section>
             <h2 className="font-serif text-xl text-brown-dark mb-3">What the study did</h2>
-            <p className="text-brown-dark leading-relaxed">{brief.whatTheyDid}</p>
+            <p className="text-ink leading-relaxed">{brief.whatTheyDid}</p>
           </section>
 
           <section>
             <h2 className="font-serif text-xl text-brown-dark mb-3">What they found</h2>
-            <p className="text-brown-dark leading-relaxed">{brief.whatTheyFound}</p>
+            <p className="text-ink leading-relaxed">{brief.whatTheyFound}</p>
           </section>
 
           <section>
             <h2 className="font-serif text-xl text-brown-dark mb-3">Why it matters for orthopedic practice</h2>
-            <p className="text-brown-dark leading-relaxed">{brief.whyItMatters}</p>
+            <p className="text-ink leading-relaxed">{brief.whyItMatters}</p>
           </section>
 
           <section>
             <h2 className="font-serif text-xl text-brown-dark mb-3">Limitations</h2>
-            <p className="text-brown-dark leading-relaxed">{brief.limitations}</p>
+            <p className="text-ink leading-relaxed">{brief.limitations}</p>
           </section>
 
           {brief.furtherReading && brief.furtherReading.length > 0 && (
             <section>
               <h2 className="font-serif text-xl text-brown-dark mb-3">Further reading</h2>
-              <ul className="list-disc pl-6 space-y-1 text-brown-dark">
+              <ul className="list-disc pl-6 space-y-1 text-ink">
                 {brief.furtherReading.map((fr) => (
                   <li key={fr.href}>
-                    <Link href={fr.href} className="text-brown hover:text-brown-dark underline decoration-border">
+                    <Link href={fr.href} className="text-brown hover:text-ink underline decoration-border">
                       {fr.label}
                     </Link>
                   </li>
@@ -223,7 +223,7 @@ export default function BriefPage({ params }: PageProps) {
         {/* Full citation */}
         <div className="mt-12 pt-8 border-t border-border">
           <span className="section-label">Citation</span>
-          <p className="text-sm text-brown-dark leading-relaxed bg-cream border border-border rounded-lg p-4">
+          <p className="text-sm text-ink leading-relaxed bg-cream border border-border rounded-lg p-4">
             {brief.citation}
           </p>
         </div>
@@ -232,13 +232,13 @@ export default function BriefPage({ params }: PageProps) {
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
             href={`/news/ai-in-orthopedics/${cat.slug}`}
-            className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-brown-dark hover:border-tan hover:shadow-sm transition-all"
+            className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-ink hover:border-tan hover:shadow-sm transition-all"
           >
             More in {cat.short} &rarr;
           </Link>
           <Link
             href="/news/ai-in-orthopedics"
-            className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-brown-dark hover:border-tan hover:shadow-sm transition-all"
+            className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-ink hover:border-tan hover:shadow-sm transition-all"
           >
             AI in Orthopedics hub &rarr;
           </Link>
@@ -247,7 +247,7 @@ export default function BriefPage({ params }: PageProps) {
         {/* Submit CTA */}
         <div className="mt-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 text-center">
           <h3 className="font-serif text-xl text-brown-dark mb-2">Publishing AI research in orthopedics?</h3>
-          <p className="text-sm text-brown-dark/80 leading-relaxed mb-5 max-w-lg mx-auto">
+          <p className="text-sm text-ink/80 leading-relaxed mb-5 max-w-lg mx-auto">
             OSCRSJ accepts case reports and series on novel AI-assisted diagnoses and surgical planning. Free to publish in 2026.
           </p>
           <Link href="/submit" className="btn-primary-light">

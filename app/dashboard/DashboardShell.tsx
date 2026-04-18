@@ -84,7 +84,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 text-brown-dark hover:bg-cream rounded-lg"
+                className="lg:hidden p-2 text-ink hover:bg-cream rounded-lg"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
@@ -98,7 +98,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
             {/* Right: User info + sign out */}
             <div className="flex items-center gap-4">
               <div className="hidden sm:block text-right">
-                <p className="text-sm font-medium text-brown-dark">{userName}</p>
+                <p className="text-sm font-medium text-ink">{userName}</p>
                 <p className="text-xs text-brown">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</p>
               </div>
               <div className="w-9 h-9 bg-peach-dark rounded-full flex items-center justify-center text-brown font-semibold text-sm">
@@ -107,7 +107,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="text-sm text-brown hover:text-brown-dark transition-colors"
+                  className="text-sm text-brown hover:text-ink transition-colors"
                 >
                   Sign Out
                 </button>
@@ -128,8 +128,8 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive(item.href)
-                      ? 'bg-peach-dark/20 text-brown-dark'
-                      : 'text-brown hover:bg-cream hover:text-brown-dark'
+                      ? 'bg-peach-dark/20 text-ink'
+                      : 'text-brown hover:bg-cream hover:text-ink'
                   }`}
                 >
                   {item.icon}
@@ -150,8 +150,8 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                       href={item.href}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                         isActive(item.href)
-                          ? 'bg-peach-dark/20 text-brown-dark'
-                          : 'text-brown hover:bg-cream hover:text-brown-dark'
+                          ? 'bg-peach-dark/20 text-ink'
+                          : 'text-brown hover:bg-cream hover:text-ink'
                       }`}
                     >
                       {item.icon}
@@ -165,7 +165,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
             <div className="mt-8 border-t border-border pt-4">
               <Link
                 href="/"
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-brown hover:text-brown-dark transition-colors"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-brown hover:text-ink transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -180,7 +180,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
             <div className="lg:hidden fixed inset-0 z-50 bg-black/20" onClick={() => setMobileMenuOpen(false)}>
               <div className="bg-white w-64 h-full p-4 shadow-lg" onClick={(e) => e.stopPropagation()}>
                 <div className="mb-4 pb-4 border-b border-border">
-                  <p className="text-sm font-medium text-brown-dark">{userName}</p>
+                  <p className="text-sm font-medium text-ink">{userName}</p>
                   <p className="text-xs text-brown">{userEmail}</p>
                 </div>
                 <nav className="space-y-1">
@@ -191,8 +191,8 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                       onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                         isActive(item.href)
-                          ? 'bg-peach-dark/20 text-brown-dark'
-                          : 'text-brown hover:bg-cream hover:text-brown-dark'
+                          ? 'bg-peach-dark/20 text-ink'
+                          : 'text-brown hover:bg-cream hover:text-ink'
                       }`}
                     >
                       {item.icon}
@@ -213,8 +213,8 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                           onClick={() => setMobileMenuOpen(false)}
                           className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                             isActive(item.href)
-                              ? 'bg-peach-dark/20 text-brown-dark'
-                              : 'text-brown hover:bg-cream hover:text-brown-dark'
+                              ? 'bg-peach-dark/20 text-ink'
+                              : 'text-brown hover:bg-cream hover:text-ink'
                           }`}
                         >
                           {item.icon}
@@ -227,7 +227,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                 <div className="mt-6 border-t border-border pt-4">
                   <Link
                     href="/"
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-brown hover:text-brown-dark"
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-brown hover:text-ink"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

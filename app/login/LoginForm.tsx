@@ -60,7 +60,7 @@ export default function LoginForm() {
 
       <div className="bg-white border border-border rounded-xl p-6 space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-brown-dark mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-ink mb-1">
             Email Address
           </label>
           <input
@@ -71,13 +71,13 @@ export default function LoginForm() {
             autoComplete="email"
             defaultValue={orcidEmail || ''}
             placeholder="you@institution.edu"
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label htmlFor="password" className="block text-sm font-medium text-brown-dark">
+            <label htmlFor="password" className="block text-sm font-medium text-ink">
               Password
             </label>
             <Link href="/forgot-password" className="text-xs text-brown hover:underline">
@@ -90,7 +90,7 @@ export default function LoginForm() {
             type="password"
             required
             autoComplete="current-password"
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
         </div>
       </div>

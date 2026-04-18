@@ -17,7 +17,7 @@ export default function IndexingPage() {
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Where We Stand</span>
           <h2 className="section-heading mb-3">Current Status</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             OSCRSJ is a newly established journal (founded 2026). We are registered with Crossref for DOI assignment and are actively pursuing indexing in major medical databases. Every article published in OSCRSJ receives a unique DOI, making it permanently citable and discoverable in academic literature.
           </p>
         </section>
@@ -45,12 +45,12 @@ export default function IndexingPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
+                    <p className="font-semibold text-ink text-sm">{item.title}</p>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${item.done ? 'bg-tan/20 text-brown font-medium' : 'bg-cream text-brown'}`}>
                       {item.status}
                     </span>
                   </div>
-                  <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
+                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -71,7 +71,7 @@ export default function IndexingPage() {
             ].map((fact) => (
               <div key={fact.label} className="bg-white border border-border rounded-xl p-6">
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest">{fact.label}</p>
-                <p className="text-sm font-medium text-brown-dark mt-0.5">{fact.value}</p>
+                <p className="text-sm font-medium text-ink mt-0.5">{fact.value}</p>
               </div>
             ))}
           </div>
@@ -80,7 +80,7 @@ export default function IndexingPage() {
         <section className="mb-12">
           <span className="section-label">Why It Matters</span>
           <h2 className="section-heading mb-3">Why Indexing Matters</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             Indexing in databases like PubMed and Scopus makes your published work discoverable to the global medical community. For trainees, PubMed-indexed publications carry significant weight on residency and fellowship applications. We are building OSCRSJ with the explicit goal of achieving PubMed indexing within two years — and every article published now contributes to that track record.
           </p>
         </section>

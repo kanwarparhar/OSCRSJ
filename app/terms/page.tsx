@@ -19,7 +19,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Agreement</span>
             <h2 className="section-heading mb-3">Acceptance of Terms</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               By accessing and using the OSCRSJ website (oscrsj.com), you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our website or services. OSCRSJ reserves the right to modify these terms at any time. Continued use of the site constitutes acceptance of any changes.
             </p>
           </section>
@@ -27,7 +27,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Identity</span>
             <h2 className="section-heading mb-3">About OSCRSJ</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               The Orthopedic Surgery Case Reports & Series Journal (OSCRSJ) is an independent, peer-reviewed, open-access medical journal based in the United States. We publish case reports and case series in orthopedic surgery. The journal is not affiliated with any commercial publisher, hospital, or university.
             </p>
           </section>
@@ -35,7 +35,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Intellectual Property</span>
             <h2 className="section-heading mb-3">Copyright & Licensing</h2>
-            <p className="text-brown-dark mb-3">
+            <p className="text-ink mb-3">
               All articles published in OSCRSJ are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). This means:
             </p>
             <ul className="space-y-2 pl-4 mb-3">
@@ -47,11 +47,11 @@ export default function TermsPage() {
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">&rarr;</span>
-                  <span className="text-brown-dark">{item}</span>
+                  <span className="text-ink">{item}</span>
                 </li>
               ))}
             </ul>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               The OSCRSJ name, logo, and website design are the property of OSCRSJ and may not be reproduced without permission.
             </p>
           </section>
@@ -59,7 +59,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Author Obligations</span>
             <h2 className="section-heading mb-3">Submissions & Peer Review</h2>
-            <p className="text-brown-dark mb-3">
+            <p className="text-ink mb-3">
               By submitting a manuscript to OSCRSJ, authors agree to the following:
             </p>
             <ul className="space-y-2 pl-4">
@@ -73,7 +73,7 @@ export default function TermsPage() {
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">&rarr;</span>
-                  <span className="text-brown-dark">{item}</span>
+                  <span className="text-ink">{item}</span>
                 </li>
               ))}
             </ul>
@@ -82,7 +82,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Clinical Disclaimer</span>
             <h2 className="section-heading mb-3">Medical Disclaimer</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               Content published in OSCRSJ is intended for educational and informational purposes only. It does not constitute medical advice, diagnosis, or treatment recommendations. Clinical decisions should be based on individual patient assessment by qualified healthcare professionals. OSCRSJ, its editors, authors, and reviewers accept no liability for clinical outcomes resulting from the use of information published in this journal.
             </p>
           </section>
@@ -90,7 +90,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Acceptable Use</span>
             <h2 className="section-heading mb-3">Website Use</h2>
-            <p className="text-brown-dark mb-3">When using the OSCRSJ website, you agree not to:</p>
+            <p className="text-ink mb-3">When using the OSCRSJ website, you agree not to:</p>
             <ul className="space-y-2 pl-4">
               {[
                 'Use the site for any unlawful purpose',
@@ -101,7 +101,7 @@ export default function TermsPage() {
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">&#10005;</span>
-                  <span className="text-brown-dark">{item}</span>
+                  <span className="text-ink">{item}</span>
                 </li>
               ))}
             </ul>
@@ -110,7 +110,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Legal Limits</span>
             <h2 className="section-heading mb-3">Limitation of Liability</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               OSCRSJ provides this website and its content on an "as is" basis. We make no warranties, express or implied, regarding the accuracy, completeness, or reliability of any content. To the fullest extent permitted by law, OSCRSJ shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website or reliance on its content.
             </p>
           </section>
@@ -118,7 +118,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Jurisdiction</span>
             <h2 className="section-heading mb-3">Governing Law</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               These Terms of Use are governed by and construed in accordance with the laws of the United States. Any disputes arising from these terms or your use of the OSCRSJ website shall be resolved in the appropriate courts of the United States.
             </p>
           </section>
@@ -126,7 +126,7 @@ export default function TermsPage() {
           <section>
             <span className="section-label">Questions</span>
             <h2 className="section-heading mb-3">Contact</h2>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               Questions about these Terms of Use may be directed to{' '}
               <a href="mailto:legal@oscrsj.com" className="text-brown hover:text-brown transition-colors font-medium">legal@oscrsj.com</a>.
             </p>

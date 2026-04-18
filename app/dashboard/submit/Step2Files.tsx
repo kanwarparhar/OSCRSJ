@@ -243,7 +243,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
           {uploading.map(u => (
             <div key={u.fileName} className="flex items-center gap-3 p-3 bg-white rounded-lg">
               <div className="flex-1">
-                <p className="text-sm text-brown-dark font-medium">{u.fileName}</p>
+                <p className="text-sm text-ink font-medium">{u.fileName}</p>
                 <div className="mt-1 h-1.5 bg-cream rounded-full overflow-hidden">
                   <div
                     className="h-full bg-peach-dark rounded-full transition-all duration-300"
@@ -274,7 +274,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
             >
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <h3 className="text-sm font-semibold text-brown-dark">
+                  <h3 className="text-sm font-semibold text-ink">
                     {category.label}
                     {category.required && <span className="text-red-500 ml-1">*</span>}
                   </h3>
@@ -329,7 +329,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
                         <svg className="w-4 h-4 text-brown flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <span className="text-sm text-brown-dark truncate">{file.original_filename}</span>
+                        <span className="text-sm text-ink truncate">{file.original_filename}</span>
                         <span className="text-xs text-brown flex-shrink-0">{formatSize(file.file_size_bytes)}</span>
                       </div>
                       <div className="flex items-center gap-1.5 flex-shrink-0">

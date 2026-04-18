@@ -214,7 +214,7 @@ function ApplicationRow({ app }: { app: ReviewerApplicationRow }) {
           <div>
             <label
               htmlFor={`notes-${app.id}`}
-              className="block text-sm font-medium text-brown-dark mb-1"
+              className="block text-sm font-medium text-ink mb-1"
             >
               Admin notes (editor-only)
             </label>
@@ -225,7 +225,7 @@ function ApplicationRow({ app }: { app: ReviewerApplicationRow }) {
               rows={3}
               maxLength={4000}
               placeholder="Internal triage notes — never shown to applicant."
-              className="w-full border border-border rounded-lg px-3 py-2 text-sm text-brown-dark bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
@@ -234,7 +234,7 @@ function ApplicationRow({ app }: { app: ReviewerApplicationRow }) {
               type="button"
               onClick={onSaveNotes}
               disabled={isPending}
-              className="text-sm px-3 py-1.5 border border-border rounded-lg text-brown-dark bg-white hover:border-tan disabled:opacity-50"
+              className="text-sm px-3 py-1.5 border border-border rounded-lg text-ink bg-white hover:border-tan disabled:opacity-50"
             >
               Save notes
             </button>
@@ -278,7 +278,7 @@ function DetailField({
       <p className="text-[11px] uppercase tracking-widest text-brown mb-0.5">
         {label}
       </p>
-      <div className="text-sm text-brown-dark break-words">{value}</div>
+      <div className="text-sm text-ink break-words">{value}</div>
     </div>
   )
 }

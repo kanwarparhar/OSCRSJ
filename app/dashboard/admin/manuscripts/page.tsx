@@ -133,22 +133,22 @@ export default async function AdminManuscriptsPage() {
                     key={m.id}
                     className="border-t border-border hover:bg-cream/30"
                   >
-                    <td className="px-4 py-3 font-mono text-xs text-brown-dark">
+                    <td className="px-4 py-3 font-mono text-xs text-ink">
                       {m.submission_id}
                     </td>
-                    <td className="px-4 py-3 text-brown-dark max-w-sm truncate">
+                    <td className="px-4 py-3 text-ink max-w-sm truncate">
                       {m.title || (
                         <span className="text-brown italic">
                           (untitled)
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-brown-dark">
+                    <td className="px-4 py-3 text-ink">
                       {TYPE_LABELS[m.manuscript_type || ''] ||
                         m.manuscript_type ||
                         '—'}
                     </td>
-                    <td className="px-4 py-3 text-brown-dark">
+                    <td className="px-4 py-3 text-ink">
                       {m.subspecialty || '—'}
                     </td>
                     <td className="px-4 py-3">
@@ -158,7 +158,7 @@ export default async function AdminManuscriptsPage() {
                         {m.status.replace(/_/g, ' ')}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-brown-dark">
+                    <td className="px-4 py-3 text-ink">
                       {m.corresponding_author?.full_name || '—'}
                     </td>
                     <td className="px-4 py-3 text-xs text-brown">
@@ -169,7 +169,7 @@ export default async function AdminManuscriptsPage() {
                     <td className="px-4 py-3 text-right">
                       <Link
                         href={`/dashboard/admin/manuscripts/${m.id}`}
-                        className="text-sm text-brown-dark underline underline-offset-2 hover:text-brown"
+                        className="text-sm text-ink underline underline-offset-2 hover:text-brown"
                       >
                         View →
                       </Link>

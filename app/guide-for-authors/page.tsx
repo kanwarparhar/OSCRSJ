@@ -315,9 +315,9 @@ export default function GuideForAuthorsPage() {
               <tbody>
                 {comparisonRows.map((row, i) => (
                   <tr key={row.param} className={i % 2 === 0 ? 'bg-white' : 'bg-cream/50'}>
-                    <td className="px-4 py-2.5 font-medium text-brown-dark">{row.param}</td>
+                    <td className="px-4 py-2.5 font-medium text-ink">{row.param}</td>
                     {row.values.map((v, j) => (
-                      <td key={j} className="px-3 py-2.5 text-brown-dark">{v}</td>
+                      <td key={j} className="px-3 py-2.5 text-ink">{v}</td>
                     ))}
                   </tr>
                 ))}
@@ -333,14 +333,14 @@ export default function GuideForAuthorsPage() {
               <span className="section-label">{type.tagline}</span>
             </div>
             <h2 className="section-heading mb-3">{type.label}</h2>
-            <p className="text-sm text-brown-dark leading-relaxed max-w-3xl mb-6">{type.definition}</p>
+            <p className="text-sm text-ink leading-relaxed max-w-3xl mb-6">{type.definition}</p>
 
             {/* Specs grid */}
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mb-6 max-w-3xl">
               {type.specs.map((s) => (
                 <div key={s.label} className="flex gap-2 py-1.5 border-b border-border">
                   <span className="text-xs font-semibold text-brown uppercase tracking-wide whitespace-nowrap min-w-[110px]">{s.label}</span>
-                  <span className="text-sm text-brown-dark">{s.value}</span>
+                  <span className="text-sm text-ink">{s.value}</span>
                 </div>
               ))}
             </div>
@@ -350,7 +350,7 @@ export default function GuideForAuthorsPage() {
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-3">Required Sections (in order)</p>
               <ol className="space-y-2">
                 {type.sections.map((sec, i) => (
-                  <li key={i} className="flex gap-3 text-sm text-brown-dark leading-relaxed">
+                  <li key={i} className="flex gap-3 text-sm text-ink leading-relaxed">
                     <span className="text-xs font-bold text-brown mt-0.5 w-5 flex-shrink-0">{i + 1}.</span>
                     {sec}
                   </li>
@@ -372,7 +372,7 @@ export default function GuideForAuthorsPage() {
                 <a
                   key={s.id}
                   href={`#${s.id}`}
-                  className="text-xs text-brown-dark hover:text-brown transition-colors px-3 py-2 bg-white border border-border rounded-lg hover:border-tan font-medium"
+                  className="text-xs text-ink hover:text-brown transition-colors px-3 py-2 bg-white border border-border rounded-lg hover:border-tan font-medium"
                 >
                   {s.label}
                 </a>
@@ -389,7 +389,7 @@ export default function GuideForAuthorsPage() {
               <h3 className="text-lg font-serif text-brown-dark mb-4">{section.title}</h3>
               <ul className="space-y-2 max-w-3xl">
                 {section.items.map((item, j) => (
-                  <li key={j} className="flex gap-3 text-sm text-brown-dark leading-relaxed">
+                  <li key={j} className="flex gap-3 text-sm text-ink leading-relaxed">
                     <svg className="w-4 h-4 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -400,7 +400,7 @@ export default function GuideForAuthorsPage() {
               {section.example && (
                 <div className="mt-4 bg-cream border border-border rounded-lg p-4 max-w-3xl">
                   <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Example</p>
-                  <p className="text-sm text-brown-dark italic">{section.example}</p>
+                  <p className="text-sm text-ink italic">{section.example}</p>
                 </div>
               )}
             </section>
@@ -410,7 +410,7 @@ export default function GuideForAuthorsPage() {
         {/* ---- CTA ---- */}
         <div className="mt-12 bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <p className="font-semibold text-brown-dark">Ready to submit?</p>
+            <p className="font-semibold text-ink">Ready to submit?</p>
             <p className="text-sm text-brown mt-0.5">Publishing is free through the end of 2026.</p>
           </div>
           <div className="flex gap-3">

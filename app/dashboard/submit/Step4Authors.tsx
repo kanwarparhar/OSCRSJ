@@ -138,7 +138,7 @@ export default function Step4Authors({
                   <button
                     onClick={() => moveAuthor(idx, 'up')}
                     disabled={idx === 0}
-                    className="text-brown hover:text-brown-dark disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="text-brown hover:text-ink disabled:opacity-20 disabled:cursor-not-allowed"
                     title="Move up"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -149,7 +149,7 @@ export default function Step4Authors({
                   <button
                     onClick={() => moveAuthor(idx, 'down')}
                     disabled={idx === authors.length - 1}
-                    className="text-brown hover:text-brown-dark disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="text-brown hover:text-ink disabled:opacity-20 disabled:cursor-not-allowed"
                     title="Move down"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -160,7 +160,7 @@ export default function Step4Authors({
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-brown-dark">{author.full_name}</span>
+                    <span className="text-sm font-semibold text-ink">{author.full_name}</span>
                     {author.is_corresponding && (
                       <span className="text-[10px] font-medium bg-brown/10 text-brown px-2 py-0.5 rounded-full">
                         Corresponding Author
@@ -201,7 +201,7 @@ export default function Step4Authors({
 
             {/* Contribution text area */}
             <div className="mt-3">
-              <label className="block text-xs font-medium text-brown-dark mb-1">
+              <label className="block text-xs font-medium text-ink mb-1">
                 Author Contribution (ICMJE)
               </label>
               <textarea
@@ -209,7 +209,7 @@ export default function Step4Authors({
                 onChange={(e) => updateContribution(idx, e.target.value)}
                 rows={2}
                 placeholder="e.g., Conception and design, data collection, manuscript writing"
-                className="w-full px-3 py-2 border border-border rounded-lg text-xs text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+                className="w-full px-3 py-2 border border-border rounded-lg text-xs text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
               />
             </div>
           </div>
@@ -219,60 +219,60 @@ export default function Step4Authors({
       {/* Edit form (inline) */}
       {editingIndex !== null && (
         <div className="border border-brown/30 rounded-lg p-4 mb-6 bg-white">
-          <h3 className="text-sm font-semibold text-brown-dark mb-3">
+          <h3 className="text-sm font-semibold text-ink mb-3">
             Edit Author: {authors[editingIndex]?.full_name}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">
+              <label className="block text-xs font-medium text-ink mb-1">
                 Full Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">
+              <label className="block text-xs font-medium text-ink mb-1">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 value={formEmail}
                 onChange={(e) => setFormEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">Affiliation</label>
+              <label className="block text-xs font-medium text-ink mb-1">Affiliation</label>
               <input
                 type="text"
                 value={formAffiliation}
                 onChange={(e) => setFormAffiliation(e.target.value)}
                 placeholder="Institution or department"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">ORCID iD</label>
+              <label className="block text-xs font-medium text-ink mb-1">ORCID iD</label>
               <input
                 type="text"
                 value={formOrcid}
                 onChange={(e) => setFormOrcid(e.target.value)}
                 placeholder="0000-0000-0000-0000"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-brown-dark mb-1">Degree(s)</label>
+              <label className="block text-xs font-medium text-ink mb-1">Degree(s)</label>
               <input
                 type="text"
                 value={formDegrees}
                 onChange={(e) => setFormDegrees(e.target.value)}
                 placeholder="e.g., MD, PhD, DO"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
           </div>
@@ -286,7 +286,7 @@ export default function Step4Authors({
             </button>
             <button
               onClick={resetForm}
-              className="text-sm text-brown hover:text-brown-dark"
+              className="text-sm text-brown hover:text-ink"
             >
               Cancel
             </button>
@@ -297,10 +297,10 @@ export default function Step4Authors({
       {/* Add co-author form (inline) */}
       {showAddForm && editingIndex === null && (
         <div className="border border-border rounded-lg p-4 mb-6 bg-white">
-          <h3 className="text-sm font-semibold text-brown-dark mb-3">Add Co-Author</h3>
+          <h3 className="text-sm font-semibold text-ink mb-3">Add Co-Author</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">
+              <label className="block text-xs font-medium text-ink mb-1">
                 Full Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -308,11 +308,11 @@ export default function Step4Authors({
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
                 placeholder="Co-author's full name"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">
+              <label className="block text-xs font-medium text-ink mb-1">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -320,37 +320,37 @@ export default function Step4Authors({
                 value={formEmail}
                 onChange={(e) => setFormEmail(e.target.value)}
                 placeholder="Co-author's email"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">Affiliation</label>
+              <label className="block text-xs font-medium text-ink mb-1">Affiliation</label>
               <input
                 type="text"
                 value={formAffiliation}
                 onChange={(e) => setFormAffiliation(e.target.value)}
                 placeholder="Institution or department"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-brown-dark mb-1">ORCID iD</label>
+              <label className="block text-xs font-medium text-ink mb-1">ORCID iD</label>
               <input
                 type="text"
                 value={formOrcid}
                 onChange={(e) => setFormOrcid(e.target.value)}
                 placeholder="0000-0000-0000-0000"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-brown-dark mb-1">Degree(s)</label>
+              <label className="block text-xs font-medium text-ink mb-1">Degree(s)</label>
               <input
                 type="text"
                 value={formDegrees}
                 onChange={(e) => setFormDegrees(e.target.value)}
                 placeholder="e.g., MD, PhD, DO"
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
               />
             </div>
           </div>
@@ -364,7 +364,7 @@ export default function Step4Authors({
             </button>
             <button
               onClick={resetForm}
-              className="text-sm text-brown hover:text-brown-dark"
+              className="text-sm text-brown hover:text-ink"
             >
               Cancel
             </button>
@@ -398,7 +398,7 @@ export default function Step4Authors({
             onChange={(e) => onChange({ authorConsentCertified: e.target.checked })}
             className="mt-0.5 accent-brown w-4 h-4"
           />
-          <span className="text-sm text-brown-dark">
+          <span className="text-sm text-ink">
             I, as corresponding author, certify that all listed authors have reviewed and approved this manuscript for submission, agree to its content, and meet the ICMJE criteria for authorship.
           </span>
         </label>

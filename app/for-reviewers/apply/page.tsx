@@ -22,7 +22,7 @@ export default function ApplyPage() {
           <h2 className="font-serif text-lg text-brown-dark mb-2">
             What to expect
           </h2>
-          <ul className="list-disc pl-5 space-y-1 text-sm text-brown-dark leading-relaxed">
+          <ul className="list-disc pl-5 space-y-1 text-sm text-ink leading-relaxed">
             <li>
               Applications are reviewed by the editorial office, usually within
               14 days.

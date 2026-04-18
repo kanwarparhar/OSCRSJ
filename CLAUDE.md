@@ -135,7 +135,7 @@ A complete Next.js 14 website — **61 pages total** (35 existing + `/news` land
 ---
 
 ## Design System
-"Neutral Elegance" palette inspired by newgenre.studio. Dark gradient hero, editorial serif typography, warm tones. All tokens in `tailwind.config.ts` and `app/globals.css`. Design system **v2.1 — Clean Journal** (rollout 2026-04-18, commit `0ba6db4`) evolves v2.0 to a white body base. Hierarchy is now **dark hero → white body → cream accent sections → white cards**. Peach CTAs, dark hero, brown-dark body text, and DM Serif Display headings are unchanged. Page background is `#FFFFFF` (was `#FFF5EB`); cards and form wells sit on white without fighting a cream body. Cream (`#FFF5EB`) is now an accent band between white sections (formerly the page base). `cream-alt` is retired from layout use — any existing `bg-cream-alt` class was swept to `bg-cream`.
+"Neutral Elegance" palette inspired by newgenre.studio. Dark gradient hero, editorial serif typography, warm tones with journal-grade reading ink. All tokens in `tailwind.config.ts` and `app/globals.css`. Design system **v2.2 — Journal Ink** (rollout 2026-04-18, this session) evolves v2.1 by introducing a new `ink` token (#1a1410, warm near-black) as the default body/paragraph text color while headings stay in `brown-dark`. This is the editorial-journal reading-mode choice — body text on white surfaces now reads at NEJM/JAMA/JBJS contrast levels without sacrificing brand warmth, because headings remain serif + brown-dark (OSCRSJ signature) and cream-accent surfaces retain their mood through the surface color itself. Mental model: **white surfaces = reading mode (ink body + brown-dark headings) · cream surfaces = editorial accent · dark surfaces = brand mode.** Design system v2.1 — Clean Journal (commit `0ba6db4`, 2026-04-18 earlier same day) shipped the white body base.
 
 | Token | Value | Usage |
 |---|---|---|
@@ -144,7 +144,8 @@ A complete Next.js 14 website — **61 pages total** (35 existing + `/news` land
 | `taupe` | `#CCBEB1` | Decorative ONLY (borders, dividers). NEVER for text. |
 | `tan` | `#997E67` | Hover border on interactive cards, decorative dividers. **Banned from text classes** site-wide as of commit `14d03e3` (2026-04-17) — 3.53:1 contrast on cream fails WCAG AA for normal text. Use `text-brown` (7.62:1) for metadata. |
 | `brown` | `#664930` | Accent text on light bg, button text |
-| `brown-dark` | `#3d2a18` | Primary text |
+| `brown-dark` | `#3d2a18` | **Headings only** (h1–h6 + `.page-title` + `.section-heading`). Serif + brown-dark = OSCRSJ signature. Also nav (`.nav-link`) for brand identity on dropdowns. |
+| `ink` | `#1a1410` | **Primary body/paragraph text** (all `<p>`, `<li>`, `<span>`, `<td>` on white and cream surfaces). Warm near-black, 17:1 contrast on white. Set as HTML body default in `globals.css` so inherited text also resolves to ink. |
 | `dark` | `#1c0f05` | Hero bg, nav bg, footer bg |
 | `dark-card` | `#261609` | Dark card backgrounds |
 | `cream` | `#FFF5EB` | Main page background |
@@ -153,6 +154,8 @@ A complete Next.js 14 website — **61 pages total** (35 existing + `/news` land
 | `border` | `rgba(153,126,103,0.18)` | Subtle borders/dividers (bumped from 0.12 in v2.1 to strengthen card edges against the white body) |
 
 **3-tier visual hierarchy (v2.1):** dark (#1c0f05) → white (#FFFFFF) body → cream (#FFF5EB) accent sections → white (#FFFFFF) cards within cream. `cream-alt` retired from layout use.
+
+**Text color rule (v2.2):** Body/paragraph elements → `text-ink` (or inherited from body default). Headings → `text-brown-dark` (always paired with `font-serif`). Metadata → `text-brown`. Never use `text-tan` for text.
 
 **Fonts:** DM Serif Display (headings) + Inter (body)
 

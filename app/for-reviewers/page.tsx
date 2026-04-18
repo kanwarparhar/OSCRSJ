@@ -97,10 +97,10 @@ export default function ForReviewersPage() {
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Welcome</span>
           <h2 className="section-heading mb-3">Thank You for Reviewing</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             Peer review is the cornerstone of scientific publishing, and your expertise directly shapes the quality of OSCRSJ. As a reviewer, you serve two functions: advising the editorial team on whether a manuscript meets our standards for publication, and providing constructive feedback to help authors improve their work. Even manuscripts that require revision or rejection deserve thoughtful, respectful feedback.
           </p>
-          <p className="text-brown-dark leading-relaxed mt-3">
+          <p className="text-ink leading-relaxed mt-3">
             Many of our authors are medical students and residents submitting their first manuscript. Your review may shape their career in academic publishing.
           </p>
         </section>
@@ -121,7 +121,7 @@ export default function ForReviewersPage() {
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                <p className="text-sm text-brown-dark leading-relaxed">{item}</p>
+                <p className="text-sm text-ink leading-relaxed">{item}</p>
               </div>
             ))}
           </div>
@@ -140,11 +140,11 @@ export default function ForReviewersPage() {
               <div key={item.label} className="bg-cream border border-border rounded-xl p-5 text-center">
                 <p className="text-2xl font-serif text-brown-dark">{item.time}</p>
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest mt-1">{item.label}</p>
-                <p className="text-xs text-brown-dark mt-2">{item.desc}</p>
+                <p className="text-xs text-ink mt-2">{item.desc}</p>
               </div>
             ))}
           </div>
-          <p className="text-sm text-brown-dark mt-4 max-w-3xl">
+          <p className="text-sm text-ink mt-4 max-w-3xl">
             If you are unable to review, please suggest 1-2 alternative reviewers with relevant expertise.
           </p>
         </section>
@@ -165,8 +165,8 @@ export default function ForReviewersPage() {
                   {item.step}
                 </span>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                  <p className="text-sm text-brown-dark mt-1">{item.desc}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
+                  <p className="text-sm text-ink mt-1">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -181,10 +181,10 @@ export default function ForReviewersPage() {
           <div className="space-y-4 max-w-3xl">
             {evaluationSections.map((section) => (
               <div key={section.title} className="bg-white border border-border rounded-xl p-6">
-                <h3 className="font-semibold text-brown-dark text-sm mb-3 uppercase tracking-wide">{section.title}</h3>
+                <h3 className="font-semibold text-ink text-sm mb-3 uppercase tracking-wide">{section.title}</h3>
                 <ul className="space-y-2">
                   {section.items.map((item, i) => (
-                    <li key={i} className="flex gap-3 text-sm text-brown-dark leading-relaxed">
+                    <li key={i} className="flex gap-3 text-sm text-ink leading-relaxed">
                       <svg className="w-4 h-4 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
@@ -212,8 +212,8 @@ export default function ForReviewersPage() {
               <div key={item.heading} className="flex gap-4 bg-white border border-border rounded-xl p-6">
                 <span className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">{i + 1}</span>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.heading}</p>
-                  <p className="text-sm text-brown-dark mt-1">{item.desc}</p>
+                  <p className="font-semibold text-ink text-sm">{item.heading}</p>
+                  <p className="text-sm text-ink mt-1">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -229,7 +229,7 @@ export default function ForReviewersPage() {
                 { decision: 'Reject', desc: 'Does not meet standards and cannot be improved through revision' },
               ].map((d) => (
                 <div key={d.decision} className="bg-white border border-border rounded-lg p-3">
-                  <p className="font-semibold text-brown-dark text-sm">{d.decision}</p>
+                  <p className="font-semibold text-ink text-sm">{d.decision}</p>
                   <p className="text-xs text-brown mt-0.5">{d.desc}</p>
                 </div>
               ))}
@@ -251,7 +251,7 @@ export default function ForReviewersPage() {
               { tip: 'Avoid rewriting.', example: 'Point out what needs improvement, but let the authors make the changes in their own voice.' },
             ].map((item) => (
               <div key={item.tip} className="bg-white border border-border rounded-xl p-5">
-                <p className="text-sm text-brown-dark leading-relaxed">
+                <p className="text-sm text-ink leading-relaxed">
                   <span className="font-semibold">{item.tip}</span>{' '}{item.example}
                 </p>
               </div>
@@ -263,7 +263,7 @@ export default function ForReviewersPage() {
         <section id="recognition" className="mb-12 scroll-mt-24">
           <span className="section-label">Benefits</span>
           <h2 className="section-heading mb-5">Reviewer Recognition</h2>
-          <p className="text-sm text-brown-dark mb-4 max-w-3xl">
+          <p className="text-sm text-ink mb-4 max-w-3xl">
             OSCRSJ values your contribution to the peer review process. Reviewers who complete reviews on time and provide high-quality feedback will receive:
           </p>
           <div className="grid sm:grid-cols-2 gap-4 max-w-3xl">
@@ -274,8 +274,8 @@ export default function ForReviewersPage() {
               { title: 'CME Credit', desc: 'Continuing medical education credit for peer review activity (planned for Year 2).' },
             ].map((item) => (
               <div key={item.title} className="bg-cream border border-border rounded-xl p-5">
-                <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                <p className="text-xs text-brown-dark mt-1">{item.desc}</p>
+                <p className="font-semibold text-ink text-sm">{item.title}</p>
+                <p className="text-xs text-ink mt-1">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -284,7 +284,7 @@ export default function ForReviewersPage() {
         {/* ---- CTA ---- */}
         <div className="bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <p className="font-semibold text-brown-dark">Interested in reviewing for OSCRSJ?</p>
+            <p className="font-semibold text-ink">Interested in reviewing for OSCRSJ?</p>
             <p className="text-sm text-brown mt-0.5">We are actively recruiting reviewers across all orthopedic subspecialties.</p>
           </div>
           <Link href="/for-reviewers/apply" className="btn-primary-light flex-shrink-0">

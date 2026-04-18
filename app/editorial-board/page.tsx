@@ -25,9 +25,9 @@ export default function EditorialBoardPage() {
               </svg>
             </div>
             <div>
-              <p className="font-semibold text-brown-dark">Position Available</p>
+              <p className="font-semibold text-ink">Position Available</p>
               <p className="text-sm text-brown mt-0.5">Editor-in-Chief · OSCRSJ</p>
-              <p className="text-sm text-brown-dark mt-2">
+              <p className="text-sm text-ink mt-2">
                 We are actively recruiting an Editor-in-Chief with expertise in orthopedic surgery and academic publishing. Interested?{' '}
                 <Link href="/contact" className="text-brown hover:underline">Get in touch →</Link>
               </p>
@@ -60,7 +60,7 @@ export default function EditorialBoardPage() {
                   {member.recruiting ? (
                     <p className="text-sm font-medium text-brown italic">Recruiting</p>
                   ) : (
-                    <p className="text-sm font-semibold text-brown-dark">{member.name}</p>
+                    <p className="text-sm font-semibold text-ink">{member.name}</p>
                   )}
                   <p className="text-xs text-brown mt-0.5">Associate Editor · {member.specialty}</p>
                 </div>
@@ -73,7 +73,7 @@ export default function EditorialBoardPage() {
         <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 text-center">
           <span className="section-label">Get Involved</span>
           <h2 className="section-heading mb-2">Join Our Editorial Board</h2>
-          <p className="text-brown-dark text-sm mb-6 max-w-xl mx-auto">
+          <p className="text-ink text-sm mb-6 max-w-xl mx-auto">
             We are building an editorial board of practicing orthopedic surgeons across all subspecialties. Board members contribute to the mission of providing fast, fair, high-quality peer review for early-career surgeons.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

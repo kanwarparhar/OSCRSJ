@@ -17,7 +17,7 @@ export default function InPressPage() {
         <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
           <div className="text-4xl mb-4">📄</div>
           <h2 className="section-heading mb-3">No Articles in Press Yet</h2>
-          <p className="text-brown-dark leading-relaxed max-w-lg mx-auto">
+          <p className="text-ink leading-relaxed max-w-lg mx-auto">
             As we build our initial submission pipeline, accepted articles will appear here before they are assigned to an issue. Check back soon, or submit your own manuscript to be among the first.
           </p>
         </section>
@@ -37,8 +37,8 @@ export default function InPressPage() {
                   {i + 1}
                 </span>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                  <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
+                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}

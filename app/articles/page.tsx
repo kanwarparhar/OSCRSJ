@@ -82,7 +82,7 @@ export default function ArticlesPage() {
               className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
                 tab.href === '/articles'
                   ? 'border-peach text-brown'
-                  : 'border-transparent text-brown hover:text-brown-dark'
+                  : 'border-transparent text-brown hover:text-ink'
               }`}
             >
               {tab.label}
@@ -179,7 +179,7 @@ export default function ArticlesPage() {
                   {article.title}
                 </h2>
                 <p className="text-sm text-brown mb-3">{article.authors}</p>
-                <p className="text-sm text-brown-dark leading-relaxed mb-4 line-clamp-3">{article.abstract}</p>
+                <p className="text-sm text-ink leading-relaxed mb-4 line-clamp-3">{article.abstract}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-brown font-mono">{article.doi}</p>
                   <Link

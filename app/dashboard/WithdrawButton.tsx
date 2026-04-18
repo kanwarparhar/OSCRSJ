@@ -84,7 +84,7 @@ export default function WithdrawButton({
             </h2>
             <p className="text-sm text-brown mb-4">
               You are about to withdraw{' '}
-              <span className="font-medium text-brown-dark">
+              <span className="font-medium text-ink">
                 {submissionId || 'this manuscript'}
               </span>
               {title ? <> &mdash; &ldquo;{title}&rdquo;</> : null}. This
@@ -92,7 +92,7 @@ export default function WithdrawButton({
               cancelled automatically.
             </p>
 
-            <label className="block text-sm text-brown-dark mb-1">
+            <label className="block text-sm text-ink mb-1">
               Reason (optional)
             </label>
             <textarea
@@ -102,7 +102,7 @@ export default function WithdrawButton({
               rows={3}
               disabled={pending}
               placeholder="A short note to the editorial office. Not shown publicly."
-              className="w-full border border-border rounded-md px-3 py-2 text-sm text-brown-dark placeholder-tan/70 focus:outline-none focus:ring-2 focus:ring-peach-dark mb-1"
+              className="w-full border border-border rounded-md px-3 py-2 text-sm text-ink placeholder-tan/70 focus:outline-none focus:ring-2 focus:ring-peach-dark mb-1"
             />
             <p className="text-xs text-brown mb-4">{reason.length}/500</p>
 

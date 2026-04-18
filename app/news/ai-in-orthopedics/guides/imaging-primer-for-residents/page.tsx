@@ -46,15 +46,15 @@ export default function ImagingPrimerForResidents() {
       />
       {/* Breadcrumb */}
       <nav className="text-xs text-brown mb-6">
-        <Link href="/news" className="hover:text-brown-dark transition-colors">
+        <Link href="/news" className="hover:text-ink transition-colors">
           News
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/news/ai-in-orthopedics" className="hover:text-brown-dark transition-colors">
+        <Link href="/news/ai-in-orthopedics" className="hover:text-ink transition-colors">
           AI in Orthopedics
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-brown-dark">Guides</span>
+        <span className="text-ink">Guides</span>
       </nav>
 
       {/* Label */}
@@ -78,7 +78,7 @@ export default function ImagingPrimerForResidents() {
       </p>
 
       {/* Body */}
-      <div className="space-y-10 text-brown-dark leading-relaxed">
+      <div className="space-y-10 text-ink leading-relaxed">
         <section>
           <p>
             This primer is written for orthopedic residents, fellows, and medical students who want a structured entry point to the AI-in-imaging literature. It describes what AI tools in orthopedic imaging actually do, which applications have moved into clinical use, which remain in research, and how to read a validation study critically. It does not recommend specific products and does not reproduce figures from paywalled sources.
@@ -227,13 +227,13 @@ export default function ImagingPrimerForResidents() {
       <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Link
           href="/news/ai-in-orthopedics/guides/llm-guide-for-trainees"
-          className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-brown-dark hover:border-tan hover:shadow-sm transition-all"
+          className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-ink hover:border-tan hover:shadow-sm transition-all"
         >
           Companion: LLM Guide for Trainees &rarr;
         </Link>
         <Link
           href="/news/ai-in-orthopedics/imaging"
-          className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-brown-dark hover:border-tan hover:shadow-sm transition-all"
+          className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-ink hover:border-tan hover:shadow-sm transition-all"
         >
           Latest briefs: AI in Imaging &rarr;
         </Link>
@@ -242,7 +242,7 @@ export default function ImagingPrimerForResidents() {
       {/* Submit CTA */}
       <div className="mt-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 text-center">
         <h3 className="font-serif text-xl text-brown-dark mb-2">Publishing AI imaging research?</h3>
-        <p className="text-sm text-brown-dark/80 leading-relaxed mb-5 max-w-lg mx-auto">
+        <p className="text-sm text-ink/80 leading-relaxed mb-5 max-w-lg mx-auto">
           OSCRSJ accepts case reports and series on novel AI-assisted diagnoses and surgical planning. Free to publish in 2026.
         </p>
         <Link href="/submit" className="btn-primary-light">

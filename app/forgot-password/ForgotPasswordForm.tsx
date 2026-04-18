@@ -36,7 +36,7 @@ export default function ForgotPasswordForm() {
           </svg>
         </div>
         <h2 className="font-serif text-2xl text-brown-dark mb-3">Check Your Email</h2>
-        <p className="text-brown-dark leading-relaxed mb-6">
+        <p className="text-ink leading-relaxed mb-6">
           If an account exists with that email address, we have sent a password reset link. The link will expire in 24 hours.
         </p>
         <Link href="/login" className="btn-primary-light">
@@ -56,7 +56,7 @@ export default function ForgotPasswordForm() {
 
       <div className="bg-white border border-border rounded-xl p-6">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-brown-dark mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-ink mb-1">
             Email Address
           </label>
           <input
@@ -66,7 +66,7 @@ export default function ForgotPasswordForm() {
             required
             autoComplete="email"
             placeholder="you@institution.edu"
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
         </div>
       </div>

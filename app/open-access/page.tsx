@@ -17,7 +17,7 @@ export default function OpenAccessPage() {
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Our Commitment</span>
           <h2 className="section-heading mb-3">Fully Open Access</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             All articles published in OSCRSJ are immediately and permanently available to read, download, and share at no cost to the reader. We do not maintain paywalls, subscription fees, or institutional access requirements. Medical knowledge — especially educational case-based literature — should be freely accessible to clinicians, trainees, and patients worldwide.
           </p>
         </section>
@@ -26,8 +26,8 @@ export default function OpenAccessPage() {
           <span className="section-label">Licensing</span>
           <h2 className="section-heading mb-5">Creative Commons License</h2>
           <div className="bg-white border border-border rounded-xl p-6 mb-4">
-            <p className="font-semibold text-brown-dark text-sm mb-2">CC BY 4.0 — Creative Commons Attribution 4.0 International</p>
-            <p className="text-sm text-brown-dark leading-relaxed">
+            <p className="font-semibold text-ink text-sm mb-2">CC BY 4.0 — Creative Commons Attribution 4.0 International</p>
+            <p className="text-sm text-ink leading-relaxed">
               All articles are published under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. This means anyone is free to:
             </p>
             <ul className="mt-3 space-y-2 pl-4">
@@ -35,13 +35,13 @@ export default function OpenAccessPage() {
                 'Share — copy and redistribute the material in any medium or format',
                 'Adapt — remix, transform, and build upon the material for any purpose, including commercially',
               ].map((item) => (
-                <li key={item} className="flex items-start gap-2 text-brown-dark text-sm leading-relaxed">
+                <li key={item} className="flex items-start gap-2 text-ink text-sm leading-relaxed">
                   <span className="text-brown mt-1 flex-shrink-0">&rarr;</span>
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
-            <p className="text-sm text-brown-dark leading-relaxed mt-3">
+            <p className="text-sm text-ink leading-relaxed mt-3">
               The only requirement is appropriate credit — users must give proper attribution to the original authors and indicate if changes were made.
             </p>
           </div>
@@ -63,8 +63,8 @@ export default function OpenAccessPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                  <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
+                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -74,10 +74,10 @@ export default function OpenAccessPage() {
         <section className="mb-12">
           <span className="section-label">Sustainability</span>
           <h2 className="section-heading mb-3">How We Sustain Open Access</h2>
-          <p className="text-brown-dark leading-relaxed mb-3">
+          <p className="text-ink leading-relaxed mb-3">
             OSCRSJ is funded through article processing charges (APCs) paid by authors upon acceptance. APCs cover the costs of peer review coordination, copyediting, DOI registration, web hosting, and long-term digital archiving.
           </p>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             We offer generous waivers for trainees, first-time authors, and researchers from low- and middle-income countries. APCs are waived entirely during our 2026 launch phase. See our <Link href="/apc" className="text-brown hover:text-brown transition-colors font-medium">APC & Fees</Link> page for full details.
           </p>
         </section>

@@ -82,7 +82,7 @@ export default function Step1Type({
               className="mt-1 accent-brown"
             />
             <div>
-              <span className="text-sm font-semibold text-brown-dark">{type.label}</span>
+              <span className="text-sm font-semibold text-ink">{type.label}</span>
               <p className="text-xs text-brown mt-0.5">{type.description}</p>
             </div>
           </label>
@@ -104,7 +104,7 @@ export default function Step1Type({
               onChange={(e) => onChange({ notUnderReview: e.target.checked })}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               This manuscript is not currently under review elsewhere
             </span>
           </label>
@@ -116,7 +116,7 @@ export default function Step1Type({
               onChange={(e) => onChange({ notPreviouslyPublished: e.target.checked })}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               This work has not been previously published
             </span>
           </label>
@@ -128,7 +128,7 @@ export default function Step1Type({
               onChange={(e) => onChange({ allAuthorsAgreed: e.target.checked })}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               All authors have agreed to this submission
             </span>
           </label>

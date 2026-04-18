@@ -92,7 +92,7 @@ export default async function DashboardPage() {
                       <td className="px-4 py-3 font-mono text-xs text-brown whitespace-nowrap">
                         {ms.submission_id || '-'}
                       </td>
-                      <td className="px-4 py-3 text-brown-dark max-w-xs truncate">
+                      <td className="px-4 py-3 text-ink max-w-xs truncate">
                         {ms.title || 'Untitled manuscript'}
                       </td>
                       <td className="px-4 py-3">
@@ -172,7 +172,7 @@ export default async function DashboardPage() {
               },
             ].map((card) => (
               <div key={card.title} className="bg-white/50 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-brown-dark mb-1">{card.title}</h3>
+                <h3 className="text-sm font-semibold text-ink mb-1">{card.title}</h3>
                 <p className="text-xs text-brown mb-2">{card.desc}</p>
                 <Link href={card.link} className="text-xs text-brown hover:underline font-medium">
                   {card.linkText} &rarr;

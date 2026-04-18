@@ -20,10 +20,10 @@ export default function AccessibilityPage() {
         <section className="mb-12">
           <span className="section-label">Our Commitment</span>
           <h2 className="section-heading mb-4">Accessibility at OSCRSJ</h2>
-          <p className="text-brown-dark leading-relaxed mb-4">
+          <p className="text-ink leading-relaxed mb-4">
             The Orthopedic Surgery Case Reports & Series Journal (OSCRSJ) is committed to ensuring that our website and published content are accessible to all users, including people with disabilities. We strive to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA.
           </p>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             We believe that access to scientific knowledge should not be limited by disability. As an open-access journal, we are dedicated to removing barriers to reading, submitting, and reviewing orthopedic research.
           </p>
         </section>
@@ -45,7 +45,7 @@ export default function AccessibilityPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
                   <p className="text-sm text-brown mt-0.5">{item.desc}</p>
                 </div>
               </div>
@@ -56,12 +56,12 @@ export default function AccessibilityPage() {
         <section className="mb-12">
           <span className="section-label">Feedback</span>
           <h2 className="section-heading mb-4">Report an Accessibility Issue</h2>
-          <p className="text-brown-dark leading-relaxed mb-4">
+          <p className="text-ink leading-relaxed mb-4">
             We welcome feedback on the accessibility of OSCRSJ. If you encounter any barriers or have suggestions for improvement, please contact us:
           </p>
           <div className="bg-cream border border-border rounded-xl p-6">
-            <p className="text-sm text-brown-dark mb-1"><strong>Email:</strong> accessibility@oscrsj.com</p>
-            <p className="text-sm text-brown-dark"><strong>Response time:</strong> We aim to respond to accessibility feedback within 5 business days.</p>
+            <p className="text-sm text-ink mb-1"><strong>Email:</strong> accessibility@oscrsj.com</p>
+            <p className="text-sm text-ink"><strong>Response time:</strong> We aim to respond to accessibility feedback within 5 business days.</p>
           </div>
         </section>
 

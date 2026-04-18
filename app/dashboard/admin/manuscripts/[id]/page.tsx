@@ -92,7 +92,7 @@ export default async function AdminManuscriptDetailPage({
       <div>
         <Link
           href="/dashboard/admin/manuscripts"
-          className="text-xs text-brown hover:text-brown-dark underline underline-offset-2"
+          className="text-xs text-brown hover:text-ink underline underline-offset-2"
         >
           ← All manuscripts
         </Link>
@@ -120,7 +120,7 @@ export default async function AdminManuscriptDetailPage({
             <p className="text-[11px] uppercase tracking-widest text-brown mb-0.5">
               Type
             </p>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               {TYPE_LABELS[manuscript.manuscript_type || ''] ||
                 manuscript.manuscript_type ||
                 '—'}
@@ -130,13 +130,13 @@ export default async function AdminManuscriptDetailPage({
             <p className="text-[11px] uppercase tracking-widest text-brown mb-0.5">
               Subspecialty
             </p>
-            <p className="text-brown-dark">{manuscript.subspecialty || '—'}</p>
+            <p className="text-ink">{manuscript.subspecialty || '—'}</p>
           </div>
           <div>
             <p className="text-[11px] uppercase tracking-widest text-brown mb-0.5">
               Submitted
             </p>
-            <p className="text-brown-dark">
+            <p className="text-ink">
               {manuscript.submission_date
                 ? new Date(manuscript.submission_date).toLocaleString()
                 : '—'}
@@ -153,7 +153,7 @@ export default async function AdminManuscriptDetailPage({
               {manuscript.keywords.map((k) => (
                 <span
                   key={k}
-                  className="text-xs px-2 py-0.5 bg-cream text-brown-dark rounded-full border border-border"
+                  className="text-xs px-2 py-0.5 bg-cream text-ink rounded-full border border-border"
                 >
                   {k}
                 </span>
@@ -167,7 +167,7 @@ export default async function AdminManuscriptDetailPage({
             <p className="text-[11px] uppercase tracking-widest text-brown mb-1">
               Abstract
             </p>
-            <p className="text-sm text-brown-dark whitespace-pre-wrap leading-relaxed">
+            <p className="text-sm text-ink whitespace-pre-wrap leading-relaxed">
               {manuscript.abstract}
             </p>
           </div>
@@ -187,10 +187,10 @@ export default async function AdminManuscriptDetailPage({
                 key={a.id}
                 className="border-b border-border pb-2 last:border-b-0 last:pb-0"
               >
-                <p className="text-brown-dark font-medium">
+                <p className="text-ink font-medium">
                   {a.full_name}
                   {a.is_corresponding && (
-                    <span className="ml-2 text-[10px] uppercase tracking-widest bg-peach-dark/30 text-brown-dark px-1.5 py-0.5 rounded">
+                    <span className="ml-2 text-[10px] uppercase tracking-widest bg-peach-dark/30 text-ink px-1.5 py-0.5 rounded">
                       Corresponding
                     </span>
                   )}
@@ -221,7 +221,7 @@ export default async function AdminManuscriptDetailPage({
             {files.map((f) => (
               <li
                 key={f.id}
-                className="flex items-center justify-between gap-3 text-brown-dark"
+                className="flex items-center justify-between gap-3 text-ink"
               >
                 <span className="truncate flex-1">{f.original_filename}</span>
                 <span className="text-xs uppercase tracking-widest text-brown whitespace-nowrap">
@@ -248,7 +248,7 @@ export default async function AdminManuscriptDetailPage({
               <dt className="text-[11px] uppercase tracking-widest text-brown">
                 Conflict of interest
               </dt>
-              <dd className="text-brown-dark">
+              <dd className="text-ink">
                 {metadata.conflict_of_interest || 'None declared'}
               </dd>
             </div>
@@ -256,7 +256,7 @@ export default async function AdminManuscriptDetailPage({
               <dt className="text-[11px] uppercase tracking-widest text-brown">
                 Funding
               </dt>
-              <dd className="text-brown-dark">
+              <dd className="text-ink">
                 {metadata.funding_sources && metadata.funding_sources.length > 0
                   ? metadata.funding_sources.join(', ')
                   : 'None'}
@@ -266,7 +266,7 @@ export default async function AdminManuscriptDetailPage({
               <dt className="text-[11px] uppercase tracking-widest text-brown">
                 AI tools used
               </dt>
-              <dd className="text-brown-dark">
+              <dd className="text-ink">
                 {metadata.ai_tools_used
                   ? metadata.ai_tools_details || 'Yes (no detail)'
                   : 'No'}
@@ -276,7 +276,7 @@ export default async function AdminManuscriptDetailPage({
               <dt className="text-[11px] uppercase tracking-widest text-brown">
                 Ethics approval
               </dt>
-              <dd className="text-brown-dark">
+              <dd className="text-ink">
                 {metadata.ethics_approval_number || '—'}
               </dd>
             </div>

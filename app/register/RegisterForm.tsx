@@ -83,7 +83,7 @@ export default function RegisterForm() {
           </svg>
         </div>
         <h2 className="font-serif text-2xl text-brown-dark mb-3">Check Your Email</h2>
-        <p className="text-brown-dark leading-relaxed mb-6">
+        <p className="text-ink leading-relaxed mb-6">
           We have sent a verification link to your email address. Please click the link to confirm your account and start submitting manuscripts.
         </p>
         <p className="text-sm text-brown mb-6">
@@ -101,7 +101,7 @@ export default function RegisterForm() {
       {/* ORCID Quick Register */}
       {!orcidPrefill && (
         <div className="bg-white border border-border rounded-xl p-6 text-center">
-          <p className="text-sm text-brown-dark mb-3">Speed up registration by connecting your ORCID account:</p>
+          <p className="text-sm text-ink mb-3">Speed up registration by connecting your ORCID account:</p>
           <a
             href={`/api/auth/orcid`}
             className="inline-flex items-center gap-2 bg-[#A6CE39] text-white font-semibold px-5 py-2.5 rounded-full text-sm hover:brightness-95 transition-all"
@@ -145,7 +145,7 @@ export default function RegisterForm() {
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="fullName" className="block text-sm font-medium text-ink mb-1">
               Full Name *
             </label>
             <input
@@ -156,12 +156,12 @@ export default function RegisterForm() {
               autoComplete="name"
               defaultValue={orcidPrefill?.full_name || ''}
               placeholder="e.g., John A. Smith"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-ink mb-1">
               Email Address *
             </label>
             <input
@@ -171,13 +171,13 @@ export default function RegisterForm() {
               required
               autoComplete="email"
               placeholder="you@institution.edu"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="affiliation" className="block text-sm font-medium text-brown-dark mb-1">
+              <label htmlFor="affiliation" className="block text-sm font-medium text-ink mb-1">
                 Affiliation / Institution *
               </label>
               <input
@@ -187,12 +187,12 @@ export default function RegisterForm() {
                 required
                 defaultValue={orcidPrefill?.affiliation || ''}
                 placeholder="e.g., Massachusetts General Hospital"
-                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="degrees" className="block text-sm font-medium text-brown-dark mb-1">
+              <label htmlFor="degrees" className="block text-sm font-medium text-ink mb-1">
                 Degree(s)
               </label>
               <input
@@ -200,13 +200,13 @@ export default function RegisterForm() {
                 name="degrees"
                 type="text"
                 placeholder="e.g., MD, PhD"
-                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="country" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="country" className="block text-sm font-medium text-ink mb-1">
               Country *
             </label>
             <select
@@ -214,7 +214,7 @@ export default function RegisterForm() {
               name="country"
               required
               defaultValue={orcidPrefill?.country || ''}
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             >
               <option value="">Select your country</option>
               {COUNTRIES.map((c) => (
@@ -224,7 +224,7 @@ export default function RegisterForm() {
           </div>
 
           <div>
-            <label htmlFor="orcidId" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="orcidId" className="block text-sm font-medium text-ink mb-1">
               ORCID iD
             </label>
             <div className="flex items-center gap-2">
@@ -237,7 +237,7 @@ export default function RegisterForm() {
                 readOnly={!!orcidPrefill?.orcid_id}
                 placeholder="0000-0000-0000-0000"
                 pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"
-                className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
             <p className="text-xs text-brown mt-1">
@@ -257,7 +257,7 @@ export default function RegisterForm() {
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-ink mb-1">
               Password *
             </label>
             <input
@@ -267,7 +267,7 @@ export default function RegisterForm() {
               required
               autoComplete="new-password"
               onChange={handlePasswordChange}
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
             <div className="mt-2 grid grid-cols-2 gap-1">
               {[
@@ -291,7 +291,7 @@ export default function RegisterForm() {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-ink mb-1">
               Confirm Password *
             </label>
             <input
@@ -300,7 +300,7 @@ export default function RegisterForm() {
               type="password"
               required
               autoComplete="new-password"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
         </div>

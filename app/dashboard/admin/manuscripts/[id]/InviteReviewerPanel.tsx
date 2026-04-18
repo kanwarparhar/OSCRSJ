@@ -105,12 +105,12 @@ export default function InviteReviewerPanel({
               <tbody>
                 {invitations.map((inv) => (
                   <tr key={inv.id} className="border-b border-border/60">
-                    <td className="px-2 py-2 text-brown-dark">
+                    <td className="px-2 py-2 text-ink">
                       {[inv.reviewer_first_name, inv.reviewer_last_name]
                         .filter(Boolean)
                         .join(' ') || '—'}
                     </td>
-                    <td className="px-2 py-2 text-brown-dark">
+                    <td className="px-2 py-2 text-ink">
                       {inv.reviewer_email || '—'}
                     </td>
                     <td className="px-2 py-2">
@@ -243,7 +243,7 @@ function ApplicantRow({
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-brown-dark font-medium">
+            <p className="text-ink font-medium">
               {app.first_name} {app.last_name}
             </p>
             {match && (
@@ -272,7 +272,7 @@ function ApplicantRow({
               type="button"
               onClick={() => setOpen((v) => !v)}
               disabled={disabled || isPending}
-              className="text-sm px-3 py-1.5 rounded-lg border border-brown bg-peach-dark text-brown-dark hover:bg-peach disabled:opacity-50"
+              className="text-sm px-3 py-1.5 rounded-lg border border-brown bg-peach-dark text-ink hover:bg-peach disabled:opacity-50"
             >
               {open ? 'Cancel' : 'Invite to review'}
             </button>
@@ -290,7 +290,7 @@ function ApplicantRow({
               type="date"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
-              className="border border-border rounded-lg px-3 py-1.5 text-sm text-brown-dark bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
+              className="border border-border rounded-lg px-3 py-1.5 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
             />
           </div>
           <div>
@@ -303,7 +303,7 @@ function ApplicantRow({
               rows={3}
               maxLength={500}
               placeholder="Optional personal note included in the invitation email."
-              className="w-full border border-border rounded-lg px-3 py-2 text-sm text-brown-dark bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
+              className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
             />
             <p className="text-[11px] text-brown mt-1">
               {note.length}/500
@@ -314,7 +314,7 @@ function ApplicantRow({
               type="button"
               onClick={onSubmit}
               disabled={isPending}
-              className="text-sm px-3 py-1.5 rounded-lg border border-brown bg-peach-dark text-brown-dark hover:bg-peach disabled:opacity-50"
+              className="text-sm px-3 py-1.5 rounded-lg border border-brown bg-peach-dark text-ink hover:bg-peach disabled:opacity-50"
             >
               {isPending ? 'Sending…' : 'Send invitation'}
             </button>

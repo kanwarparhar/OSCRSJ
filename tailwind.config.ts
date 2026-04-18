@@ -18,6 +18,7 @@ const config: Config = {
           DEFAULT: '#664930',
           dark: '#3d2a18',
         },
+        ink: '#1a1410',
         dark: {
           DEFAULT: '#1c0f05',
           card: '#261609',

@@ -134,7 +134,7 @@ export default function AiInOrthopedicsLanding() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <span className="section-label">What Is This Hub?</span>
           <h2 className="section-heading mb-5">What is AI in Orthopedics?</h2>
-          <p className="text-brown-dark leading-relaxed">{AI_ORTHO_PRIMER}</p>
+          <p className="text-ink leading-relaxed">{AI_ORTHO_PRIMER}</p>
         </div>
       </section>
 
@@ -169,7 +169,7 @@ export default function AiInOrthopedicsLanding() {
                   <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">
                     {c.label}
                   </h3>
-                  <p className="text-sm text-brown-dark/80 leading-relaxed">
+                  <p className="text-sm text-ink/80 leading-relaxed">
                     {c.description}
                   </p>
                 </Link>
@@ -193,7 +193,7 @@ export default function AiInOrthopedicsLanding() {
           </div>
           {latest.length === 0 ? (
             <div className="bg-white border border-border rounded-xl p-10 text-center">
-              <p className="text-brown-dark text-base font-medium mb-1">The inaugural slate of briefs is in production.</p>
+              <p className="text-ink text-base font-medium mb-1">The inaugural slate of briefs is in production.</p>
               <p className="text-brown text-sm">Ten curated summaries across all six categories publish in the next editorial cycle.</p>
             </div>
           ) : (
@@ -213,7 +213,7 @@ export default function AiInOrthopedicsLanding() {
                       <span className="text-xs text-brown">{b.readMinutes} min read</span>
                     </div>
                     <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">{b.headline}</h3>
-                    <p className="text-sm text-brown-dark/80 leading-relaxed mb-3">{b.summary}</p>
+                    <p className="text-sm text-ink/80 leading-relaxed mb-3">{b.summary}</p>
                     <p className="text-xs text-brown">
                       {b.source.journal} &middot;{' '}
                       {new Date(b.publishedAt).toLocaleDateString('en-US', {
@@ -251,7 +251,7 @@ export default function AiInOrthopedicsLanding() {
                   {p.label}
                 </span>
                 <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">{p.title}</h3>
-                <p className="text-sm text-brown-dark/80 leading-relaxed">{p.summary}</p>
+                <p className="text-sm text-ink/80 leading-relaxed">{p.summary}</p>
               </Link>
             ))}
           </div>
@@ -263,7 +263,7 @@ export default function AiInOrthopedicsLanding() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <span className="section-label">Reference</span>
           <h2 className="section-heading mb-5">AI in Orthopedics Glossary</h2>
-          <p className="text-brown-dark leading-relaxed mb-8">
+          <p className="text-ink leading-relaxed mb-8">
             A living reference of core terms. Twenty definitions at launch, expanding to forty over the first quarter. Click a term to expand.
           </p>
           <div className="bg-white border border-border rounded-xl divide-y divide-border overflow-hidden">
@@ -279,7 +279,7 @@ export default function AiInOrthopedicsLanding() {
                   </span>
                 </summary>
                 <div className="px-6 pb-5 pt-1">
-                  <p className="text-sm text-brown-dark/90 leading-relaxed">{entry.definition}</p>
+                  <p className="text-sm text-ink/90 leading-relaxed">{entry.definition}</p>
                 </div>
               </details>
             ))}
@@ -297,7 +297,7 @@ export default function AiInOrthopedicsLanding() {
             <div className="flex-1">
               <span className="section-label">For Residents</span>
               <h3 className="font-serif text-2xl text-brown-dark leading-snug mb-2">Built for orthopedic trainees.</h3>
-              <p className="text-sm text-brown-dark/80 leading-relaxed max-w-2xl">
+              <p className="text-sm text-ink/80 leading-relaxed max-w-2xl">
                 Every brief is framed for a resident reader. No hype, no marketing, just what the research says and what it does not. The full For Students hub collects additional resources.
               </p>
             </div>
@@ -314,7 +314,7 @@ export default function AiInOrthopedicsLanding() {
           <div className="bg-white border border-border rounded-2xl p-8">
             <span className="section-label">Newsletter</span>
             <h3 className="font-serif text-xl text-brown-dark mb-2">AI in Ortho Monthly</h3>
-            <p className="text-sm text-brown-dark/80 leading-relaxed mb-5">
+            <p className="text-sm text-ink/80 leading-relaxed mb-5">
               One email, first of the month. New briefs, the Study of the Month, and a short editor\u2019s note.
             </p>
             <Link href="/subscribe" className="btn-primary-light">
@@ -324,7 +324,7 @@ export default function AiInOrthopedicsLanding() {
           <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
             <span className="section-label">For Authors</span>
             <h3 className="font-serif text-xl text-brown-dark mb-2">Publishing AI research in orthopedics?</h3>
-            <p className="text-sm text-brown-dark/80 leading-relaxed mb-5">
+            <p className="text-sm text-ink/80 leading-relaxed mb-5">
               OSCRSJ accepts case reports and series on novel AI-assisted diagnoses and surgical planning. Free to publish in 2026.
             </p>
             <Link href="/submit" className="btn-primary-light">
@@ -340,7 +340,7 @@ export default function AiInOrthopedicsLanding() {
           <div>
             <span className="section-label">Methodology</span>
             <h3 className="font-serif text-xl text-brown-dark mb-3">How we select and summarize</h3>
-            <p className="text-sm text-brown-dark/85 leading-relaxed">
+            <p className="text-sm text-ink/85 leading-relaxed">
               Briefs are drawn exclusively from peer-reviewed orthopedic journals (JBJS, JAAOS, Arthroscopy, Spine Deformity, Journal of Experimental Orthopaedics, BMC journals, and specialty-society publications) and from AAOS and related society communications. We do not cite EurekAlert, ScienceDaily, or generalist aggregators. Every brief links to the primary source and attributes authorship visibly. Summaries are two to three sentences and never verbatim. We report effect sizes honestly and include a limitations section on every brief. That transparency is our differentiator from tech-blog coverage. We do not reproduce figures from paywalled sources.
             </p>
           </div>

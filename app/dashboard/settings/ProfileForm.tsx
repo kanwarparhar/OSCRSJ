@@ -54,7 +54,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       <div className="bg-white border border-border rounded-xl p-6 space-y-4">
         {/* Email (read-only) */}
         <div>
-          <label className="block text-sm font-medium text-brown-dark mb-1">Email Address</label>
+          <label className="block text-sm font-medium text-ink mb-1">Email Address</label>
           <input
             type="email"
             value={initialData.email}
@@ -65,7 +65,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </div>
 
         <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-brown-dark mb-1">
+          <label htmlFor="fullName" className="block text-sm font-medium text-ink mb-1">
             Full Name *
           </label>
           <input
@@ -74,13 +74,13 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             type="text"
             required
             defaultValue={initialData.fullName}
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="affiliation" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="affiliation" className="block text-sm font-medium text-ink mb-1">
               Affiliation / Institution *
             </label>
             <input
@@ -89,12 +89,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               type="text"
               required
               defaultValue={initialData.affiliation}
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
           <div>
-            <label htmlFor="degrees" className="block text-sm font-medium text-brown-dark mb-1">
+            <label htmlFor="degrees" className="block text-sm font-medium text-ink mb-1">
               Degree(s)
             </label>
             <input
@@ -103,13 +103,13 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               type="text"
               defaultValue={initialData.degrees}
               placeholder="e.g., MD, PhD"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="country" className="block text-sm font-medium text-brown-dark mb-1">
+          <label htmlFor="country" className="block text-sm font-medium text-ink mb-1">
             Country *
           </label>
           <select
@@ -117,7 +117,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             name="country"
             required
             defaultValue={initialData.country}
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           >
             <option value="">Select your country</option>
             {COUNTRIES.map((c) => (
@@ -127,7 +127,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </div>
 
         <div>
-          <label htmlFor="orcidId" className="block text-sm font-medium text-brown-dark mb-1">
+          <label htmlFor="orcidId" className="block text-sm font-medium text-ink mb-1">
             ORCID iD
           </label>
           <div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               defaultValue={initialData.orcidId}
               placeholder="0000-0000-0000-0000"
               pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"
-              className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
           <p className="text-xs text-brown mt-1">
@@ -178,7 +178,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </p>
         <a
           href="/api/dashboard/export"
-          className="inline-flex items-center gap-2 text-sm px-4 py-2 border border-border rounded-lg text-brown-dark bg-white hover:border-tan transition-colors"
+          className="inline-flex items-center gap-2 text-sm px-4 py-2 border border-border rounded-lg text-ink bg-white hover:border-tan transition-colors"
         >
           <svg
             className="w-4 h-4"

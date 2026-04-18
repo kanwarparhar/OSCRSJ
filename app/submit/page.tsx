@@ -104,7 +104,7 @@ export default function SubmitPage() {
                   <span className="text-sm font-bold text-brown">{s.step}</span>
                 </div>
                 <div className="pt-2">
-                  <h3 className="font-semibold text-brown-dark">{s.title}</h3>
+                  <h3 className="font-semibold text-ink">{s.title}</h3>
                   <p className="text-sm text-brown mt-0.5">{s.desc}</p>
                 </div>
               </div>

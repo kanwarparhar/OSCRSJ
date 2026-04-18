@@ -34,7 +34,7 @@ export default function NewsPage() {
             </div>
             <Link
               href="/news/ai-in-orthopedics"
-              className="text-sm font-medium text-brown hover:text-brown-dark transition-colors"
+              className="text-sm font-medium text-brown hover:text-ink transition-colors"
             >
               Explore the hub &rarr;
             </Link>
@@ -42,7 +42,7 @@ export default function NewsPage() {
 
           {aiBriefs.length === 0 ? (
             <div className="bg-white border border-border rounded-xl p-8 text-center">
-              <p className="text-brown-dark text-sm">
+              <p className="text-ink text-sm">
                 The AI in Orthopedics hub is live. The first curated briefs publish shortly.
               </p>
               <Link
@@ -93,7 +93,7 @@ export default function NewsPage() {
             </p>
           </div>
           <div className="bg-white border border-border rounded-xl p-8 text-center">
-            <p className="text-sm text-brown-dark">
+            <p className="text-sm text-ink">
               Ortho Headlines launches alongside the first published issue of OSCRSJ.
             </p>
           </div>
@@ -109,7 +109,7 @@ export default function NewsPage() {
             </p>
           </div>
           <div className="bg-white border border-border rounded-xl p-8 text-center">
-            <p className="text-sm text-brown-dark">
+            <p className="text-sm text-ink">
               Updates will appear here once OSCRSJ begins publishing.
             </p>
           </div>

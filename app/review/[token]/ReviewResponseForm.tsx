@@ -50,7 +50,7 @@ export default function ReviewResponseForm({
   if (!choice) {
     return (
       <div className="space-y-3">
-        <p className="text-sm text-brown-dark">
+        <p className="text-sm text-ink">
           {reviewerName}, please confirm whether you are able to review this
           manuscript.
         </p>
@@ -58,14 +58,14 @@ export default function ReviewResponseForm({
           <button
             type="button"
             onClick={() => setChoice('accept')}
-            className="px-4 py-2.5 rounded-lg border border-brown bg-peach-dark text-brown-dark font-medium hover:bg-peach transition-colors"
+            className="px-4 py-2.5 rounded-lg border border-brown bg-peach-dark text-ink font-medium hover:bg-peach transition-colors"
           >
             Accept invitation
           </button>
           <button
             type="button"
             onClick={() => setChoice('decline')}
-            className="px-4 py-2.5 rounded-lg border border-border bg-white text-brown-dark hover:border-tan transition-colors"
+            className="px-4 py-2.5 rounded-lg border border-border bg-white text-ink hover:border-tan transition-colors"
           >
             Decline invitation
           </button>
@@ -78,7 +78,7 @@ export default function ReviewResponseForm({
 
   return (
     <div className="space-y-3 border border-border rounded-lg p-4 bg-cream/30">
-      <p className="text-sm text-brown-dark">
+      <p className="text-sm text-ink">
         {isAccept
           ? `You are about to accept this invitation. The editorial office will be notified and will follow up with the full manuscript and the structured review form.`
           : `You are about to decline this invitation. The editorial office will be notified and will invite another reviewer.`}
@@ -99,7 +99,7 @@ export default function ReviewResponseForm({
             rows={3}
             maxLength={500}
             placeholder="Let the editor know why, e.g. conflict of interest, outside your subspecialty, travel."
-            className="w-full border border-border rounded-lg px-3 py-2 text-sm text-brown-dark bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
+            className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
           />
           <p className="text-[11px] text-brown mt-1">{reason.length}/500</p>
         </div>
@@ -110,7 +110,7 @@ export default function ReviewResponseForm({
           type="button"
           onClick={onConfirm}
           disabled={isPending}
-          className="px-4 py-2.5 rounded-lg border border-brown bg-peach-dark text-brown-dark font-medium hover:bg-peach disabled:opacity-50 transition-colors"
+          className="px-4 py-2.5 rounded-lg border border-brown bg-peach-dark text-ink font-medium hover:bg-peach disabled:opacity-50 transition-colors"
         >
           {isPending
             ? 'Submitting…'
@@ -126,7 +126,7 @@ export default function ReviewResponseForm({
             setError(null)
           }}
           disabled={isPending}
-          className="px-4 py-2.5 rounded-lg border border-border bg-white text-brown-dark hover:border-tan disabled:opacity-50 transition-colors"
+          className="px-4 py-2.5 rounded-lg border border-border bg-white text-ink hover:border-tan disabled:opacity-50 transition-colors"
         >
           Go back
         </button>

@@ -95,7 +95,7 @@ export default function ApcPage() {
                     <p className={`text-xs font-semibold mt-0.5 ${i === 0 ? 'text-brown' : 'text-brown'}`}>{p.label}</p>
                   </div>
                 </div>
-                <p className="text-sm text-brown-dark leading-relaxed">{p.desc}</p>
+                <p className="text-sm text-ink leading-relaxed">{p.desc}</p>
               </div>
             ))}
           </div>
@@ -105,7 +105,7 @@ export default function ApcPage() {
         <section className="mb-12">
           <span className="section-label">Financial Support</span>
           <h2 className="section-heading mb-2">Waiver & Discount Policy</h2>
-          <p className="text-brown-dark text-sm mb-5">
+          <p className="text-ink text-sm mb-5">
             OSCRSJ is mission-driven. We don&apos;t want cost to be a barrier for trainees or authors from lower-income settings.
           </p>
           <div className="bg-white border border-border rounded-xl overflow-hidden">
@@ -120,7 +120,7 @@ export default function ApcPage() {
               <tbody className="divide-y divide-border">
                 {waivers.map((w) => (
                   <tr key={w.group} className="hover:bg-cream/50 transition-colors">
-                    <td className="px-5 py-3 text-brown-dark">{w.group}</td>
+                    <td className="px-5 py-3 text-ink">{w.group}</td>
                     <td className="px-5 py-3 font-semibold text-brown">{w.discount}</td>
                     <td className="px-5 py-3 text-brown hidden sm:table-cell">{w.note}</td>
                   </tr>
@@ -145,8 +145,8 @@ export default function ApcPage() {
               { q: 'How do I pay?', a: 'We accept payment via Stripe (credit/debit card). An invoice is provided for institutional reimbursement.' },
             ].map((faq) => (
               <div key={faq.q} className="bg-white border border-border rounded-xl p-6">
-                <p className="font-semibold text-brown-dark text-sm mb-1.5">{faq.q}</p>
-                <p className="text-sm text-brown-dark">{faq.a}</p>
+                <p className="font-semibold text-ink text-sm mb-1.5">{faq.q}</p>
+                <p className="text-sm text-ink">{faq.a}</p>
               </div>
             ))}
           </div>

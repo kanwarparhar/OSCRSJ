@@ -19,7 +19,7 @@ export default function AboutPage() {
           <span className="section-label">Our Mission</span>
           <h2 className="section-heading mb-4">Why OSCRSJ Exists</h2>
           <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
-            <p className="text-brown-dark leading-relaxed">
+            <p className="text-ink leading-relaxed">
               OSCRSJ exists to give medical students, residents, and fellows a credible, accessible, US-based venue to publish orthopedic case reports and case series. We believe that early-career clinicians produce important educational literature that deserves the same rigorous peer review — and lasting accessibility — as work from established researchers.
             </p>
           </div>
@@ -43,7 +43,7 @@ export default function AboutPage() {
               <div key={fact.label} className="flex items-start gap-3 bg-white border border-border rounded-xl p-6">
                 <div>
                   <p className="text-xs font-semibold text-brown uppercase tracking-widest">{fact.label}</p>
-                  <p className="text-sm font-medium text-brown-dark mt-0.5">{fact.value}</p>
+                  <p className="text-sm font-medium text-ink mt-0.5">{fact.value}</p>
                 </div>
               </div>
             ))}
@@ -54,10 +54,10 @@ export default function AboutPage() {
         <section className="mb-12">
           <span className="section-label">Scope</span>
           <h2 className="section-heading mb-4">What We Publish</h2>
-          <p className="text-brown-dark leading-relaxed mb-4">
+          <p className="text-ink leading-relaxed mb-4">
             We publish case reports and case series across all subspecialties of orthopedic surgery, including trauma and fractures, sports medicine, spine, arthroplasty, pediatric orthopedics, hand and wrist, foot and ankle, and orthopedic oncology.
           </p>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             We prioritize submissions that are instructive, novel, or that challenge current clinical thinking. Every article undergoes double-blind peer review by practicing orthopedic surgeons.
           </p>
         </section>
@@ -80,7 +80,7 @@ export default function AboutPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
                   <p className="text-sm text-brown mt-0.5">{item.desc}</p>
                 </div>
               </div>

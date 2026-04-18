@@ -67,7 +67,7 @@ export default function ArticleTypesPage() {
                 <h2 className="font-serif text-xl font-normal text-brown-dark">{t.type}</h2>
                 <span className="text-xs font-medium text-brown bg-tan/20 px-3 py-1 rounded-full">{t.guideline}</span>
               </div>
-              <p className="text-sm text-brown-dark leading-relaxed mb-5">{t.description}</p>
+              <p className="text-sm text-ink leading-relaxed mb-5">{t.description}</p>
 
               {/* Specs grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
@@ -79,7 +79,7 @@ export default function ArticleTypesPage() {
                 ].map((spec) => (
                   <div key={spec.label} className="bg-cream rounded-lg p-3">
                     <p className="text-xs text-brown uppercase tracking-wider font-medium">{spec.label}</p>
-                    <p className="text-sm text-brown-dark mt-0.5">{spec.value}</p>
+                    <p className="text-sm text-ink mt-0.5">{spec.value}</p>
                   </div>
                 ))}
               </div>

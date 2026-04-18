@@ -81,15 +81,15 @@ export default function CategoryArchive({ params }: PageProps) {
       {/* Breadcrumb */}
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <nav className="text-xs text-brown">
-          <Link href="/news" className="hover:text-brown-dark transition-colors">
+          <Link href="/news" className="hover:text-ink transition-colors">
             News
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/news/ai-in-orthopedics" className="hover:text-brown-dark transition-colors">
+          <Link href="/news/ai-in-orthopedics" className="hover:text-ink transition-colors">
             AI in Orthopedics
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-brown-dark">{cat.short}</span>
+          <span className="text-ink">{cat.short}</span>
         </nav>
       </div>
 
@@ -97,7 +97,7 @@ export default function CategoryArchive({ params }: PageProps) {
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {briefs.length === 0 ? (
           <div className="bg-white border border-border rounded-xl p-10 text-center">
-            <p className="text-brown-dark text-base font-medium mb-1">
+            <p className="text-ink text-base font-medium mb-1">
               Briefs in this category publish in the next editorial cycle.
             </p>
             <p className="text-brown text-sm max-w-md mx-auto mt-2">
@@ -107,7 +107,7 @@ export default function CategoryArchive({ params }: PageProps) {
               <Link href="/news/ai-in-orthopedics" className="btn-primary-light">
                 Back to hub
               </Link>
-              <Link href="/subscribe" className="text-sm text-brown font-medium self-center hover:text-brown-dark">
+              <Link href="/subscribe" className="text-sm text-brown font-medium self-center hover:text-ink">
                 Subscribe &rarr;
               </Link>
             </div>
@@ -129,7 +129,7 @@ export default function CategoryArchive({ params }: PageProps) {
                 <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">
                   {b.headline}
                 </h3>
-                <p className="text-sm text-brown-dark/80 leading-relaxed mb-3">
+                <p className="text-sm text-ink/80 leading-relaxed mb-3">
                   {b.summary}
                 </p>
                 <p className="text-xs text-brown">
@@ -153,7 +153,7 @@ export default function CategoryArchive({ params }: PageProps) {
               <Link
                 key={c.slug}
                 href={`/news/ai-in-orthopedics/${c.slug}`}
-                className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-brown-dark hover:border-tan hover:shadow-sm transition-all"
+                className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-ink hover:border-tan hover:shadow-sm transition-all"
               >
                 {c.label}
               </Link>

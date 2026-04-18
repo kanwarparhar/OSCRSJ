@@ -68,7 +68,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Overview</span>
           <h2 className="section-heading mb-3">About This Topic</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             {topic.desc}
           </p>
         </section>
@@ -76,7 +76,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
           <div className="text-4xl mb-4">📝</div>
           <h2 className="section-heading mb-3">Articles Coming Soon</h2>
-          <p className="text-brown-dark leading-relaxed max-w-lg mx-auto">
+          <p className="text-ink leading-relaxed max-w-lg mx-auto">
             We are currently accepting submissions in {topic.name.toLowerCase()}. Published articles in this subspecialty will appear here as they are peer-reviewed and accepted.
           </p>
         </section>
@@ -84,7 +84,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         <section className="mb-12">
           <span className="section-label">Contribute</span>
           <h2 className="section-heading mb-3">Submit Your Case</h2>
-          <p className="text-brown-dark leading-relaxed mb-4">
+          <p className="text-ink leading-relaxed mb-4">
             Have a compelling case in {topic.name.toLowerCase()}? OSCRSJ welcomes case reports and case series from medical students, residents, fellows, and attending surgeons. APCs are waived through the end of 2026.
           </p>
         </section>

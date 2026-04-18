@@ -144,7 +144,7 @@ export default async function ReviewInvitationPage({
           </h1>
         </div>
 
-        <p className="text-sm text-brown-dark">
+        <p className="text-sm text-ink">
           Hello {reviewerName || firstName}, you have been invited to peer
           review the manuscript below. Your identity will be kept confidential
           from the authors; the manuscript’s authors and affiliations are
@@ -165,7 +165,7 @@ export default async function ReviewInvitationPage({
               <dt className="text-[11px] uppercase tracking-widest text-brown">
                 Type
               </dt>
-              <dd className="text-brown-dark">
+              <dd className="text-ink">
                 {TYPE_LABELS[manuscript?.manuscript_type || ''] ||
                   manuscript?.manuscript_type ||
                   '—'}
@@ -175,7 +175,7 @@ export default async function ReviewInvitationPage({
               <dt className="text-[11px] uppercase tracking-widest text-brown">
                 Subspecialty
               </dt>
-              <dd className="text-brown-dark">
+              <dd className="text-ink">
                 {manuscript?.subspecialty || '—'}
               </dd>
             </div>
@@ -185,7 +185,7 @@ export default async function ReviewInvitationPage({
               <dt className="text-[11px] uppercase tracking-widest text-brown">
                 Response deadline
               </dt>
-              <dd className="text-brown-dark">
+              <dd className="text-ink">
                 {new Date(invitation.deadline).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -201,7 +201,7 @@ export default async function ReviewInvitationPage({
             <p className="text-[11px] uppercase tracking-widest text-brown mb-1">
               Abstract
             </p>
-            <p className="text-sm text-brown-dark whitespace-pre-wrap leading-relaxed">
+            <p className="text-sm text-ink whitespace-pre-wrap leading-relaxed">
               {manuscript.abstract}
             </p>
           </div>
@@ -237,7 +237,7 @@ function StaticMessage({
           OSCRSJ Editorial Office
         </p>
         <h1 className="font-serif text-2xl text-brown-dark">{heading}</h1>
-        <p className="text-sm text-brown-dark leading-relaxed">{body}</p>
+        <p className="text-sm text-ink leading-relaxed">{body}</p>
         <p className="text-xs text-brown pt-4 border-t border-border">
           Questions? Reply to the original invitation email.
         </p>

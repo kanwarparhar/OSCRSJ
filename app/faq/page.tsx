@@ -186,7 +186,7 @@ export default function FAQPage() {
               <a
                 key={s.label}
                 href={`#${s.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                className="text-xs text-brown-dark hover:text-brown transition-colors px-3 py-2 bg-white border border-border rounded-lg hover:border-tan font-medium"
+                className="text-xs text-ink hover:text-brown transition-colors px-3 py-2 bg-white border border-border rounded-lg hover:border-tan font-medium"
               >
                 {s.label}
               </a>
@@ -206,8 +206,8 @@ export default function FAQPage() {
             <div className="space-y-4 max-w-3xl">
               {section.questions.map((faq) => (
                 <div key={faq.q} className="bg-white border border-border rounded-xl p-6">
-                  <h3 className="font-semibold text-brown-dark mb-2 text-sm">{faq.q}</h3>
-                  <p className="text-sm text-brown-dark leading-relaxed">{faq.a}</p>
+                  <h3 className="font-semibold text-ink mb-2 text-sm">{faq.q}</h3>
+                  <p className="text-sm text-ink leading-relaxed">{faq.a}</p>
                 </div>
               ))}
             </div>
@@ -217,7 +217,7 @@ export default function FAQPage() {
         {/* CTA */}
         <div className="mt-14 bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <p className="font-semibold text-brown-dark">Still have questions?</p>
+            <p className="font-semibold text-ink">Still have questions?</p>
             <p className="text-sm text-brown mt-0.5">Our editorial team is here to help.</p>
           </div>
           <Link href="/contact" className="btn-primary-light flex-shrink-0">

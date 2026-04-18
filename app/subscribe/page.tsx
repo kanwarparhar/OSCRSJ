@@ -29,8 +29,8 @@ export default function SubscribePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                  <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
+                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -39,7 +39,7 @@ export default function SubscribePage() {
 
         <section className="mb-12 bg-white border border-border rounded-xl p-6">
           <span className="section-label">Sign Up</span>
-          <h3 className="font-semibold text-brown-dark mb-4 text-center">Join Our Mailing List</h3>
+          <h3 className="font-semibold text-ink mb-4 text-center">Join Our Mailing List</h3>
           <form className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-brown mb-1">Full Name</label>

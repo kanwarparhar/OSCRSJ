@@ -44,7 +44,7 @@ export default function PeerReviewPage() {
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Our Approach</span>
           <h2 className="section-heading mb-3">Double-Blind Peer Review</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             All manuscripts submitted to OSCRSJ undergo double-blind peer review. Neither the authors nor the reviewers know each other's identities during the review process. This ensures that every submission is evaluated solely on its scientific merit, clinical significance, and adherence to reporting standards — regardless of the author's institution, training level, or reputation.
           </p>
         </section>
@@ -67,10 +67,10 @@ export default function PeerReviewPage() {
                 </span>
                 <div className="flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
+                    <p className="font-semibold text-ink text-sm">{item.title}</p>
                     <span className="text-xs text-brown bg-cream rounded-full px-2.5 py-0.5 flex-shrink-0">{item.time}</span>
                   </div>
-                  <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
+                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -97,8 +97,8 @@ export default function PeerReviewPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                  <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
+                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -108,7 +108,7 @@ export default function PeerReviewPage() {
         <section className="mb-12">
           <span className="section-label">Recourse</span>
           <h2 className="section-heading mb-3">Appeals</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             Authors who believe their manuscript was unfairly rejected may submit a written appeal to the Editor-in-Chief at <span className="text-brown font-medium">editor@oscrsj.com</span>. Appeals must include a detailed response to each reviewer comment and a rationale for reconsideration. The editorial team will evaluate the appeal and may seek additional review. The final decision rests with the Editor-in-Chief.
           </p>
         </section>
@@ -117,7 +117,7 @@ export default function PeerReviewPage() {
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">For Reviewers</span>
           <h2 className="section-heading mb-3">Interested in Reviewing?</h2>
-          <p className="text-brown-dark leading-relaxed mb-4">
+          <p className="text-ink leading-relaxed mb-4">
             We are actively recruiting reviewers across all orthopedic subspecialties. Our comprehensive reviewer guide covers everything you need to conduct a thorough, fair, and constructive peer review, including evaluation criteria, review structure, timeline expectations, and recognition benefits.
           </p>
           <Link href="/for-reviewers" className="btn-primary-light">

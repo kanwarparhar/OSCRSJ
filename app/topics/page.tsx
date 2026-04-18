@@ -35,7 +35,7 @@ export default function TopicsPage() {
               <h2 className="font-serif text-lg font-normal text-brown-dark group-hover:text-brown transition-colors mb-2">
                 {topic.name}
               </h2>
-              <p className="text-sm text-brown-dark leading-relaxed">
+              <p className="text-sm text-ink leading-relaxed">
                 {topic.desc}
               </p>
               <span className="inline-block mt-3 text-xs font-medium text-brown">

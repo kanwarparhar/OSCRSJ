@@ -117,7 +117,7 @@ export default function Step3Info({
 
       {/* Title */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-brown-dark mb-1">
+        <label className="block text-sm font-medium text-ink mb-1">
           Title <span className="text-red-500">*</span>
         </label>
         <input
@@ -125,14 +125,14 @@ export default function Step3Info({
           value={title}
           onChange={(e) => onChange({ title: e.target.value.slice(0, 200) })}
           placeholder="Enter your manuscript title"
-          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
         />
         <p className="text-xs text-brown mt-1 text-right">{title.length}/200 characters</p>
       </div>
 
       {/* Abstract */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-brown-dark mb-1">
+        <label className="block text-sm font-medium text-ink mb-1">
           Abstract <span className="text-red-500">*</span>
         </label>
         <p className="text-xs text-brown mb-2">
@@ -143,7 +143,7 @@ export default function Step3Info({
           onChange={(e) => onChange({ abstract: e.target.value })}
           rows={8}
           placeholder="Background: ...&#10;Case Presentation: ...&#10;Discussion: ...&#10;Conclusion: ..."
-          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
         />
         <p className={`text-xs mt-1 text-right ${
           abstractWords === 0 ? 'text-brown' : abstractValid ? 'text-green-600' : 'text-red-500'
@@ -154,7 +154,7 @@ export default function Step3Info({
 
       {/* Keywords */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-brown-dark mb-1">
+        <label className="block text-sm font-medium text-ink mb-1">
           Keywords <span className="text-red-500">*</span>
         </label>
         <p className="text-xs text-brown mb-2">
@@ -167,7 +167,7 @@ export default function Step3Info({
             {keywords.map((kw, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-cream text-brown-dark text-sm rounded-full"
+                className="inline-flex items-center gap-1 px-3 py-1 bg-cream text-ink text-sm rounded-full"
               >
                 {kw}
                 <button
@@ -196,7 +196,7 @@ export default function Step3Info({
                 }
               }}
               placeholder="Type a keyword and press Enter"
-              className="flex-1 px-4 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+              className="flex-1 px-4 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
             />
             <button
               onClick={addKeyword}
@@ -213,13 +213,13 @@ export default function Step3Info({
 
       {/* Subspecialty */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-brown-dark mb-1">
+        <label className="block text-sm font-medium text-ink mb-1">
           Orthopedic Subspecialty <span className="text-red-500">*</span>
         </label>
         <select
           value={subspecialty}
           onChange={(e) => onChange({ subspecialty: e.target.value })}
-          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 bg-white"
+          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 bg-white"
         >
           <option value="">Select a subspecialty</option>
           {SUBSPECIALTIES.map(s => (
@@ -242,14 +242,14 @@ export default function Step3Info({
               value={reviewer.name}
               onChange={(e) => updateSuggestedReviewer(idx, 'name', e.target.value)}
               placeholder="Full name"
-              className="px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan"
+              className="px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan"
             />
             <input
               type="email"
               value={reviewer.email}
               onChange={(e) => updateSuggestedReviewer(idx, 'email', e.target.value)}
               placeholder="Email address"
-              className="px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan"
+              className="px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan"
             />
             <div className="flex gap-2">
               <input
@@ -257,7 +257,7 @@ export default function Step3Info({
                 value={reviewer.expertise}
                 onChange={(e) => updateSuggestedReviewer(idx, 'expertise', e.target.value)}
                 placeholder="Area of expertise"
-                className="flex-1 px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan"
+                className="flex-1 px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan"
               />
               <button
                 onClick={() => removeSuggestedReviewer(idx)}
@@ -295,7 +295,7 @@ export default function Step3Info({
               value={reviewer.name}
               onChange={(e) => updateNonPreferred(idx, 'name', e.target.value)}
               placeholder="Full name"
-              className="px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan"
+              className="px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan"
             />
             <div className="flex gap-2">
               <input
@@ -303,7 +303,7 @@ export default function Step3Info({
                 value={reviewer.reason}
                 onChange={(e) => updateNonPreferred(idx, 'reason', e.target.value)}
                 placeholder="Reason"
-                className="flex-1 px-3 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan"
+                className="flex-1 px-3 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan"
               />
               <button
                 onClick={() => removeNonPreferred(idx)}

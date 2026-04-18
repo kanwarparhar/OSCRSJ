@@ -17,7 +17,7 @@ export default function CurrentIssuePage() {
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Status</span>
           <h2 className="section-heading mb-3">Inaugural Issue Coming Soon</h2>
-          <p className="text-brown-dark leading-relaxed">
+          <p className="text-ink leading-relaxed">
             OSCRSJ is preparing to publish its first issue. We are currently accepting submissions across all orthopedic subspecialties and will publish our inaugural collection once we have assembled a strong set of peer-reviewed articles.
           </p>
         </section>
@@ -37,8 +37,8 @@ export default function CurrentIssuePage() {
                   {item.step}
                 </span>
                 <div>
-                  <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                  <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
+                  <p className="font-semibold text-ink text-sm">{item.title}</p>
+                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -48,7 +48,7 @@ export default function CurrentIssuePage() {
         <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
           <span className="section-label">Get Involved</span>
           <h2 className="section-heading mb-3">Be Part of Our First Issue</h2>
-          <p className="text-brown-dark leading-relaxed mb-5 max-w-xl mx-auto">
+          <p className="text-ink leading-relaxed mb-5 max-w-xl mx-auto">
             Publishing in a journal's inaugural issue is a unique opportunity. APCs are waived through the end of 2026. Submit your case report or case series today.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

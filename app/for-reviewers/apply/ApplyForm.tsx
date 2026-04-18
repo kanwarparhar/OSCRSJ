@@ -93,7 +93,7 @@ export default function ApplyForm() {
         <h2 className="font-serif text-2xl text-brown-dark mb-3">
           Application received
         </h2>
-        <p className="text-brown-dark leading-relaxed mb-6">
+        <p className="text-ink leading-relaxed mb-6">
           Thank you for your interest in reviewing for OSCRSJ. We have sent a
           confirmation to your email and a member of the editorial office will
           respond within 14 days.
@@ -127,7 +127,7 @@ export default function ApplyForm() {
             <div>
               <label
                 htmlFor="firstName"
-                className="block text-sm font-medium text-brown-dark mb-1"
+                className="block text-sm font-medium text-ink mb-1"
               >
                 First Name *
               </label>
@@ -138,13 +138,13 @@ export default function ApplyForm() {
                 autoComplete="given-name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
             <div>
               <label
                 htmlFor="lastName"
-                className="block text-sm font-medium text-brown-dark mb-1"
+                className="block text-sm font-medium text-ink mb-1"
               >
                 Last Name *
               </label>
@@ -155,7 +155,7 @@ export default function ApplyForm() {
                 autoComplete="family-name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function ApplyForm() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-brown-dark mb-1"
+              className="block text-sm font-medium text-ink mb-1"
             >
               Professional Email *
             </label>
@@ -175,14 +175,14 @@ export default function ApplyForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@institution.edu"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
           <div>
             <label
               htmlFor="orcidId"
-              className="block text-sm font-medium text-brown-dark mb-1"
+              className="block text-sm font-medium text-ink mb-1"
             >
               ORCID iD
             </label>
@@ -197,7 +197,7 @@ export default function ApplyForm() {
                 onChange={(e) => setOrcidId(e.target.value)}
                 placeholder="0000-0000-0000-0000"
                 pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"
-                className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
             <p className="text-xs text-brown mt-1">
@@ -216,7 +216,7 @@ export default function ApplyForm() {
           <div>
             <label
               htmlFor="affiliation"
-              className="block text-sm font-medium text-brown-dark mb-1"
+              className="block text-sm font-medium text-ink mb-1"
             >
               Institutional Affiliation *
             </label>
@@ -227,14 +227,14 @@ export default function ApplyForm() {
               value={affiliation}
               onChange={(e) => setAffiliation(e.target.value)}
               placeholder="e.g., Massachusetts General Hospital"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
           <div>
             <label
               htmlFor="country"
-              className="block text-sm font-medium text-brown-dark mb-1"
+              className="block text-sm font-medium text-ink mb-1"
             >
               Country *
             </label>
@@ -243,7 +243,7 @@ export default function ApplyForm() {
               required
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             >
               <option value="">Select your country</option>
               {COUNTRIES.map((c) => (
@@ -267,7 +267,7 @@ export default function ApplyForm() {
 
         <div className="space-y-5">
           <fieldset>
-            <legend className="block text-sm font-medium text-brown-dark mb-2">
+            <legend className="block text-sm font-medium text-ink mb-2">
               Career Stage *
             </legend>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -276,8 +276,8 @@ export default function ApplyForm() {
                   key={opt.value}
                   className={`flex items-center justify-center gap-2 px-3 py-2 border rounded-lg text-sm cursor-pointer transition-colors ${
                     careerStage === opt.value
-                      ? 'bg-peach-dark/30 border-brown text-brown-dark'
-                      : 'border-border text-brown-dark hover:bg-cream'
+                      ? 'bg-peach-dark/30 border-brown text-ink'
+                      : 'border-border text-ink hover:bg-cream'
                   }`}
                 >
                   <input
@@ -296,7 +296,7 @@ export default function ApplyForm() {
           </fieldset>
 
           <fieldset>
-            <legend className="block text-sm font-medium text-brown-dark mb-2">
+            <legend className="block text-sm font-medium text-ink mb-2">
               Subspecialty Interests *
             </legend>
             <p className="text-xs text-brown mb-2">
@@ -310,8 +310,8 @@ export default function ApplyForm() {
                     key={sub.slug}
                     className={`flex items-start gap-2 px-3 py-2 border rounded-lg text-sm cursor-pointer transition-colors ${
                       checked
-                        ? 'bg-peach-dark/30 border-brown text-brown-dark'
-                        : 'border-border text-brown-dark hover:bg-cream'
+                        ? 'bg-peach-dark/30 border-brown text-ink'
+                        : 'border-border text-ink hover:bg-cream'
                     }`}
                   >
                     <input
@@ -330,7 +330,7 @@ export default function ApplyForm() {
           <div>
             <label
               htmlFor="writingSampleUrl"
-              className="block text-sm font-medium text-brown-dark mb-1"
+              className="block text-sm font-medium text-ink mb-1"
             >
               Sample review or writing sample URL
             </label>
@@ -340,7 +340,7 @@ export default function ApplyForm() {
               value={writingSampleUrl}
               onChange={(e) => setWritingSampleUrl(e.target.value)}
               placeholder="https://…"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
             <p className="text-xs text-brown mt-1">
               Optional. Link to a published review, blog post, PubPeer comment,
@@ -351,7 +351,7 @@ export default function ApplyForm() {
           <div>
             <label
               htmlFor="heardAbout"
-              className="block text-sm font-medium text-brown-dark mb-1"
+              className="block text-sm font-medium text-ink mb-1"
             >
               How did you hear about OSCRSJ?
             </label>
@@ -361,7 +361,7 @@ export default function ApplyForm() {
               value={heardAbout}
               onChange={(e) => setHeardAbout(e.target.value)}
               placeholder="Optional — colleague, conference, LinkedIn, etc."
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
         </div>
@@ -377,7 +377,7 @@ export default function ApplyForm() {
             onChange={(e) => setConsent(e.target.checked)}
             className="mt-1 accent-brown w-4 h-4"
           />
-          <span className="text-sm text-brown-dark leading-relaxed">
+          <span className="text-sm text-ink leading-relaxed">
             I consent to OSCRSJ contacting me about reviewer opportunities and
             storing the information I have provided as described in the{' '}
             <Link

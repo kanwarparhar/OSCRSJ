@@ -141,7 +141,7 @@ export default function Step5Declarations({
 
         {/* Conflict of Interest */}
         <div>
-          <h3 className="text-sm font-semibold text-brown-dark mb-2">
+          <h3 className="text-sm font-semibold text-ink mb-2">
             Conflict of Interest <span className="text-red-500">*</span>
           </h3>
           <label className="flex items-start gap-3 cursor-pointer mb-2">
@@ -153,7 +153,7 @@ export default function Step5Declarations({
               }}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               The authors declare no conflicts of interest
             </span>
           </label>
@@ -163,14 +163,14 @@ export default function Step5Declarations({
               onChange={(e) => onChange({ conflictOfInterest: e.target.value })}
               rows={3}
               placeholder="Describe any financial or personal conflicts of interest..."
-              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
             />
           )}
         </div>
 
         {/* Funding Sources */}
         <div>
-          <h3 className="text-sm font-semibold text-brown-dark mb-2">
+          <h3 className="text-sm font-semibold text-ink mb-2">
             Funding Sources <span className="text-red-500">*</span>
           </h3>
           <label className="flex items-start gap-3 cursor-pointer mb-2">
@@ -182,7 +182,7 @@ export default function Step5Declarations({
               }}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               This work received no external funding
             </span>
           </label>
@@ -193,7 +193,7 @@ export default function Step5Declarations({
                   {fundingSources.map((source, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-cream text-brown-dark text-sm rounded-full"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-cream text-ink text-sm rounded-full"
                     >
                       {source}
                       <button
@@ -220,7 +220,7 @@ export default function Step5Declarations({
                     }
                   }}
                   placeholder="Enter funding source and press Enter"
-                  className="flex-1 px-4 py-2 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+                  className="flex-1 px-4 py-2 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
                 />
                 <button
                   onClick={addFundingSource}
@@ -236,13 +236,13 @@ export default function Step5Declarations({
 
         {/* Data Availability Statement */}
         <div>
-          <h3 className="text-sm font-semibold text-brown-dark mb-2">
+          <h3 className="text-sm font-semibold text-ink mb-2">
             Data Availability Statement <span className="text-red-500">*</span>
           </h3>
           <select
             value={dataAvailability}
             onChange={(e) => onChange({ dataAvailability: e.target.value, dataAvailabilityUrl: '' })}
-            className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 bg-white"
+            className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 bg-white"
           >
             <option value="">Select a statement</option>
             {DATA_AVAILABILITY_OPTIONS.map(opt => (
@@ -255,14 +255,14 @@ export default function Step5Declarations({
               value={dataAvailabilityUrl}
               onChange={(e) => onChange({ dataAvailabilityUrl: e.target.value })}
               placeholder="https://doi.org/..."
-              className="w-full mt-2 px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+              className="w-full mt-2 px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
             />
           )}
         </div>
 
         {/* Ethics Approval */}
         <div>
-          <h3 className="text-sm font-semibold text-brown-dark mb-2">Ethics Approval</h3>
+          <h3 className="text-sm font-semibold text-ink mb-2">Ethics Approval</h3>
           <label className="flex items-start gap-3 cursor-pointer mb-2">
             <input
               type="checkbox"
@@ -270,7 +270,7 @@ export default function Step5Declarations({
               onChange={(e) => onChange({ ethicsInvolved: e.target.checked, ethicsApprovalNumber: '' })}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               This study involved human or animal subjects
             </span>
           </label>
@@ -280,14 +280,14 @@ export default function Step5Declarations({
               value={ethicsApprovalNumber}
               onChange={(e) => onChange({ ethicsApprovalNumber: e.target.value })}
               placeholder="Ethics approval number (e.g., IRB-2026-001)"
-              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
             />
           )}
         </div>
 
         {/* Clinical Trial Registration */}
         <div>
-          <h3 className="text-sm font-semibold text-brown-dark mb-2">Clinical Trial Registration</h3>
+          <h3 className="text-sm font-semibold text-ink mb-2">Clinical Trial Registration</h3>
           <label className="flex items-start gap-3 cursor-pointer mb-2">
             <input
               type="checkbox"
@@ -295,7 +295,7 @@ export default function Step5Declarations({
               onChange={(e) => onChange({ clinicalTrial: e.target.checked, clinicalTrialId: '' })}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               This study is a registered clinical trial
             </span>
           </label>
@@ -305,14 +305,14 @@ export default function Step5Declarations({
               value={clinicalTrialId}
               onChange={(e) => onChange({ clinicalTrialId: e.target.value })}
               placeholder="Registration ID (e.g., NCT12345678)"
-              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
+              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
             />
           )}
         </div>
 
         {/* AI-Assisted Writing Disclosure */}
         <div>
-          <h3 className="text-sm font-semibold text-brown-dark mb-2">
+          <h3 className="text-sm font-semibold text-ink mb-2">
             AI-Assisted Writing Disclosure <span className="text-red-500">*</span>
           </h3>
           <label className="flex items-start gap-3 cursor-pointer mb-2">
@@ -322,7 +322,7 @@ export default function Step5Declarations({
               onChange={(e) => onChange({ aiToolsUsed: e.target.checked, aiToolsDetails: e.target.checked ? aiToolsDetails : '' })}
               className="mt-0.5 accent-brown w-4 h-4"
             />
-            <span className="text-sm text-brown-dark">
+            <span className="text-sm text-ink">
               AI writing tools were used in the preparation of this manuscript
             </span>
           </label>
@@ -333,7 +333,7 @@ export default function Step5Declarations({
               rows={3}
               maxLength={500}
               placeholder="Describe tool(s), version(s), and how they were used (e.g., 'ChatGPT-4o for grammar check on Methods'; 'Claude 3.5 Sonnet for restructuring Introduction')."
-              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
             />
           )}
           <p className="text-xs text-brown mt-2 leading-relaxed">
@@ -343,13 +343,13 @@ export default function Step5Declarations({
 
         {/* Note to Editor */}
         <div>
-          <h3 className="text-sm font-semibold text-brown-dark mb-2">Note to Editor</h3>
+          <h3 className="text-sm font-semibold text-ink mb-2">Note to Editor</h3>
           <textarea
             value={noteToEditor}
             onChange={(e) => onChange({ noteToEditor: e.target.value })}
             rows={3}
             placeholder="Optional: share any additional context with the editorial office (e.g., why the case is noteworthy, time-sensitive considerations)."
-            className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+            className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
           />
         </div>
       </div>
@@ -361,10 +361,10 @@ export default function Step5Declarations({
         {/* Step 1: Manuscript Type */}
         <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-brown-dark">Manuscript Type</h3>
+            <h3 className="text-sm font-semibold text-ink">Manuscript Type</h3>
             <button onClick={() => onGoToStep(1)} className="text-xs text-brown hover:underline">Edit</button>
           </div>
-          <p className="text-sm text-brown-dark">
+          <p className="text-sm text-ink">
             {manuscriptType ? MANUSCRIPT_TYPE_LABELS[manuscriptType] || manuscriptType : <span className="text-red-500 text-xs">Not selected</span>}
           </p>
         </div>
@@ -372,7 +372,7 @@ export default function Step5Declarations({
         {/* Step 2: Files */}
         <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-brown-dark">Uploaded Files ({files.length})</h3>
+            <h3 className="text-sm font-semibold text-ink">Uploaded Files ({files.length})</h3>
             <button onClick={() => onGoToStep(2)} className="text-xs text-brown hover:underline">Edit</button>
           </div>
           {files.length === 0 ? (
@@ -380,7 +380,7 @@ export default function Step5Declarations({
           ) : (
             <ul className="space-y-1">
               {files.map((f) => (
-                <li key={f.id} className="text-xs text-brown-dark flex items-center gap-2">
+                <li key={f.id} className="text-xs text-ink flex items-center gap-2">
                   <svg className="w-3.5 h-3.5 text-brown shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
@@ -395,10 +395,10 @@ export default function Step5Declarations({
         {/* Step 3: Manuscript Info */}
         <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-brown-dark">Manuscript Information</h3>
+            <h3 className="text-sm font-semibold text-ink">Manuscript Information</h3>
             <button onClick={() => onGoToStep(3)} className="text-xs text-brown hover:underline">Edit</button>
           </div>
-          <div className="space-y-1 text-xs text-brown-dark">
+          <div className="space-y-1 text-xs text-ink">
             <p><span className="font-medium">Title:</span> {title || <span className="text-red-500">Not provided</span>}</p>
             <p><span className="font-medium">Abstract:</span> {abstract ? `${abstract.slice(0, 120)}...` : <span className="text-red-500">Not provided</span>}</p>
             <p><span className="font-medium">Keywords:</span> {keywords.length > 0 ? keywords.join(', ') : <span className="text-red-500">Not provided</span>}</p>
@@ -409,7 +409,7 @@ export default function Step5Declarations({
         {/* Step 4: Authors */}
         <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-brown-dark">Authors ({authors.length})</h3>
+            <h3 className="text-sm font-semibold text-ink">Authors ({authors.length})</h3>
             <button onClick={() => onGoToStep(4)} className="text-xs text-brown hover:underline">Edit</button>
           </div>
           {authors.length === 0 ? (
@@ -417,7 +417,7 @@ export default function Step5Declarations({
           ) : (
             <ul className="space-y-1">
               {authors.map((a, idx) => (
-                <li key={idx} className="text-xs text-brown-dark">
+                <li key={idx} className="text-xs text-ink">
                   <span className="font-medium">{idx + 1}. {a.full_name}</span>
                   {a.is_corresponding && <span className="text-brown ml-1">(Corresponding)</span>}
                   {a.affiliation && <span className="text-brown ml-1">— {a.affiliation}</span>}
@@ -434,9 +434,9 @@ export default function Step5Declarations({
         {/* Step 5: Declarations */}
         <div className="mb-6 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-brown-dark">Declarations</h3>
+            <h3 className="text-sm font-semibold text-ink">Declarations</h3>
           </div>
-          <div className="space-y-1 text-xs text-brown-dark">
+          <div className="space-y-1 text-xs text-ink">
             <p>
               <span className="font-medium">Conflicts of Interest:</span>{' '}
               {noConflicts ? 'None declared' : (conflictOfInterest || <span className="text-red-500">Not provided</span>)}
@@ -488,7 +488,7 @@ export default function Step5Declarations({
               <button
                 onClick={() => setShowConfirmDialog(false)}
                 disabled={submitting}
-                className="text-sm text-brown hover:text-brown-dark px-4 py-2"
+                className="text-sm text-brown hover:text-ink px-4 py-2"
               >
                 Cancel
               </button>
