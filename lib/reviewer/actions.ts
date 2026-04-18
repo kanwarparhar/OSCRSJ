@@ -31,6 +31,10 @@ import {
   renderReviewSubmittedEditorNotification,
   getReviewSubmittedEditorNotificationSubject,
 } from '@/lib/email/templates/reviewSubmittedEditorNotification'
+import {
+  renderAllReviewsReceivedEditorNotification,
+  getAllReviewsReceivedEditorNotificationSubject,
+} from '@/lib/email/templates/allReviewsReceivedEditorNotification'
 import type {
   ManuscriptRow,
   ManuscriptFileRow,
@@ -861,9 +865,16 @@ export async function acceptReviewInvitation(
   }
 }
 
+export interface DeclineSuggestion {
+  name?: string | null
+  email?: string | null
+  reason?: string | null
+}
+
 export async function declineReviewInvitation(
   token: string,
-  reason?: string | null
+  reason?: string | null,
+  suggestion?: DeclineSuggestion | null
 ): Promise<InvitationResponseResult> {
   if (!token || typeof token !== 'string') {
     return { error: 'Invitation token is required.', notFound: true }
@@ -899,6 +910,28 @@ export async function declineReviewInvitation(
   const trimmedReason =
     typeof reason === 'string' ? reason.trim().slice(0, 500) || null : null
 
+  const altName =
+    suggestion && typeof suggestion.name === 'string'
+      ? suggestion.name.trim().slice(0, 200) || null
+      : null
+  const altEmailRaw =
+    suggestion && typeof suggestion.email === 'string'
+      ? suggestion.email.trim().toLowerCase().slice(0, 254) || null
+      : null
+  const altEmail =
+    altEmailRaw && isValidEmail(altEmailRaw) ? altEmailRaw : null
+  if (altEmailRaw && !altEmail) {
+    return {
+      error:
+        'The suggested alternative reviewer email looks invalid. Please double-check it or leave the field blank.',
+    }
+  }
+  const altReason =
+    suggestion && typeof suggestion.reason === 'string'
+      ? suggestion.reason.trim().slice(0, 500) || null
+      : null
+  const hasSuggestion = Boolean(altName || altEmail || altReason)
+
   const nowIso = new Date().toISOString()
   const { error: updateErr } = await (
     admin.from('review_invitations') as any
@@ -907,6 +940,9 @@ export async function declineReviewInvitation(
       status: 'declined',
       response_date: nowIso,
       declined_reason: trimmedReason,
+      suggested_alternative_name: altName,
+      suggested_alternative_email: altEmail,
+      suggested_alternative_reason: altReason,
     })
     .eq('id', invitation.id)
 
@@ -935,12 +971,33 @@ export async function declineReviewInvitation(
     // swallow
   }
 
+  if (hasSuggestion) {
+    try {
+      await (admin.from('audit_logs') as any).insert({
+        action: 'suggested_alternative_reviewer_recorded',
+        resource_type: 'review_invitation',
+        resource_id: invitation.id,
+        details: {
+          invitation_id: invitation.id,
+          has_name: Boolean(altName),
+          has_email: Boolean(altEmail),
+          has_reason: Boolean(altReason),
+        },
+      })
+    } catch {
+      // swallow
+    }
+  }
+
   await sendInvitationFollowupEmails(
     {
       ...invitation,
       status: 'declined',
       response_date: nowIso,
       declined_reason: trimmedReason,
+      suggested_alternative_name: altName,
+      suggested_alternative_email: altEmail,
+      suggested_alternative_reason: altReason,
     },
     manuscript,
     false,
@@ -1423,10 +1480,127 @@ export async function submitReview(
     // swallow
   }
 
+  // ---- Phase 2 all-reviews-received gate (Session 11) ----
+  // Fire-and-forget. Never block the reviewer's UI on the editor email.
+  triggerAllReviewsReceivedIfReady(invitation.manuscript_id).catch(
+    (err: unknown) => {
+      // Best-effort only. Observability comes from email_logs + audit.
+      console.error(
+        '[submitReview] triggerAllReviewsReceivedIfReady failed',
+        err
+      )
+    }
+  )
+
   revalidatePath(`/review/${token}`)
   revalidatePath(`/review/${token}/form`)
   revalidatePath('/dashboard/reviewer')
   return { success: true, reviewId }
+}
+
+
+// ============================================================
+// All-reviews-received helper (Session 11)
+// ============================================================
+// Called from inside submitReview after the flag-flip + invitation
+// status update + reviewer-side email fires. Fires exactly once per
+// manuscript when the count of non-draft reviews crosses ≥2,
+// gated by manuscript_metadata.all_reviews_notified_at IS NULL.
+
+async function triggerAllReviewsReceivedIfReady(
+  manuscriptId: string
+): Promise<void> {
+  const admin = createAdminClient()
+
+  // Idempotency gate first — cheap column read + short-circuit.
+  const { data: metaRow } = await admin
+    .from('manuscript_metadata')
+    .select('id, all_reviews_notified_at')
+    .eq('manuscript_id', manuscriptId)
+    .maybeSingle()
+
+  if (!metaRow) return
+  const meta = metaRow as {
+    id: string
+    all_reviews_notified_at: string | null
+  }
+  if (meta.all_reviews_notified_at) return
+
+  // Count submitted reviews.
+  const { count, error: countErr } = await admin
+    .from('reviews')
+    .select('id', { count: 'exact', head: true })
+    .eq('manuscript_id', manuscriptId)
+    .eq('is_draft', false)
+  if (countErr) return
+  const reviewCount = count || 0
+  if (reviewCount < 2) return
+
+  // Load reviews for the recommendation summary.
+  const { data: reviewsData } = await admin
+    .from('reviews')
+    .select('recommendation')
+    .eq('manuscript_id', manuscriptId)
+    .eq('is_draft', false)
+  const recCounts: Partial<Record<ReviewRecommendation, number>> = {}
+  for (const r of (reviewsData as
+    | { recommendation: ReviewRecommendation | null }[]
+    | null) || []) {
+    if (!r.recommendation) continue
+    recCounts[r.recommendation] = (recCounts[r.recommendation] || 0) + 1
+  }
+
+  // Load manuscript header.
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('id', manuscriptId)
+    .single()
+  const manuscript = (mData as ManuscriptRow | null) || null
+  const manuscriptTitle = manuscript?.title || '(untitled manuscript)'
+  const submissionId = manuscript?.submission_id || manuscriptId
+  const adminManuscriptUrl = `${siteUrl()}/dashboard/admin/manuscripts/${manuscriptId}`
+
+  const { html, text } = renderAllReviewsReceivedEditorNotification({
+    submissionId,
+    manuscriptTitle,
+    reviewCount,
+    recommendationCounts: recCounts,
+    adminManuscriptUrl,
+  })
+
+  const { error: sendErr } = await sendEmail({
+    to: INTERNAL_EDITORIAL_EMAIL,
+    subject: getAllReviewsReceivedEditorNotificationSubject(submissionId),
+    html,
+    text,
+    emailType: 'all_reviews_received_editor',
+    manuscriptId,
+  })
+
+  if (sendErr) {
+    // Do NOT set the idempotency timestamp — lets the next review
+    // submission retry the notification.
+    return
+  }
+
+  await (admin.from('manuscript_metadata') as any)
+    .update({ all_reviews_notified_at: new Date().toISOString() })
+    .eq('id', meta.id)
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      action: 'all_reviews_received_email_sent',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: {
+        manuscript_id: manuscriptId,
+        review_count: reviewCount,
+      },
+    })
+  } catch {
+    // swallow
+  }
 }
 
 

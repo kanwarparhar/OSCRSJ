@@ -87,6 +87,20 @@ export default async function AdminManuscriptDetailPage({
   const invitations = (invitationsRes.data as any[]) || []
   const activeApplications = appsRes.applications || []
 
+  // Map submitted reviews to their invitation so the invitations table
+  // can render a "View review" link only on rows that have one.
+  const { data: reviewsRows } = await admin
+    .from('reviews')
+    .select('id, review_invitation_id, is_draft')
+    .eq('manuscript_id', params.id)
+    .eq('is_draft', false)
+  const reviewByInvitation = new Map<string, string>()
+  for (const r of (reviewsRows as
+    | { id: string; review_invitation_id: string; is_draft: boolean }[]
+    | null) || []) {
+    reviewByInvitation.set(r.review_invitation_id, r.id)
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -290,7 +304,70 @@ export default async function AdminManuscriptDetailPage({
         manuscriptStatus={manuscript.status}
         invitations={invitations}
         activeApplications={activeApplications}
+        reviewByInvitation={Object.fromEntries(reviewByInvitation)}
       />
+
+      <DeclinedSuggestionsPanel invitations={invitations} />
     </div>
+  )
+}
+
+function DeclinedSuggestionsPanel({
+  invitations,
+}: {
+  invitations: any[]
+}) {
+  const withSuggestions = invitations.filter(
+    (inv) =>
+      inv.status === 'declined' &&
+      (inv.suggested_alternative_name ||
+        inv.suggested_alternative_email ||
+        inv.suggested_alternative_reason)
+  )
+  if (withSuggestions.length === 0) return null
+
+  return (
+    <section className="bg-white border border-border rounded-xl p-6 space-y-4">
+      <div>
+        <h2 className="font-serif text-lg text-brown-dark">
+          Alternative reviewers suggested on decline ({withSuggestions.length})
+        </h2>
+        <p className="text-xs text-brown mt-1">
+          Advisory only. Verify the identity and credentials before issuing an
+          invitation through the Active reviewer pool above.
+        </p>
+      </div>
+      <ul className="space-y-3 text-sm">
+        {withSuggestions.map((inv) => (
+          <li
+            key={inv.id}
+            className="border border-border rounded-lg p-3 bg-cream/30"
+          >
+            <p className="text-[11px] uppercase tracking-widest text-brown">
+              Suggested by{' '}
+              {[inv.reviewer_first_name, inv.reviewer_last_name]
+                .filter(Boolean)
+                .join(' ') || inv.reviewer_email}
+            </p>
+            <p className="text-ink font-medium mt-1">
+              {inv.suggested_alternative_name || '(no name provided)'}
+            </p>
+            <p className="text-xs text-brown">
+              {inv.suggested_alternative_email || '(no email provided)'}
+            </p>
+            {inv.suggested_alternative_reason && (
+              <p className="text-sm text-ink mt-2 italic">
+                "{inv.suggested_alternative_reason}"
+              </p>
+            )}
+            {inv.declined_reason && (
+              <p className="text-xs text-brown mt-2">
+                Decline reason: {inv.declined_reason}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }

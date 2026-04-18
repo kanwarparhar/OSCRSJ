@@ -148,6 +148,7 @@ export interface ManuscriptMetadataRow {
   co_author_disputes: CoAuthorDispute[]
   ai_tools_used: boolean
   ai_tools_details: string | null
+  all_reviews_notified_at: string | null
   created_at: string
   updated_at: string
 }
@@ -188,6 +189,12 @@ export interface ReviewInvitationRow {
   response_date: string | null
   declined_reason: string | null
   review_token: string
+  reminder_ten_day_sent_at: string | null
+  reminder_five_day_sent_at: string | null
+  reminder_overdue_sent_at: string | null
+  suggested_alternative_name: string | null
+  suggested_alternative_email: string | null
+  suggested_alternative_reason: string | null
   created_at: string
   updated_at: string
 }
@@ -391,6 +398,9 @@ export interface ReviewInvitationInsert {
   deadline?: string | null
   status?: InvitationStatus
   declined_reason?: string | null
+  suggested_alternative_name?: string | null
+  suggested_alternative_email?: string | null
+  suggested_alternative_reason?: string | null
 }
 
 export interface ReviewInsert {

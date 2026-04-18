@@ -21,6 +21,9 @@ export default function ReviewResponseForm({
   const router = useRouter()
   const [choice, setChoice] = useState<'accept' | 'decline' | null>(prefilled)
   const [reason, setReason] = useState('')
+  const [altName, setAltName] = useState('')
+  const [altEmail, setAltEmail] = useState('')
+  const [altReason, setAltReason] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
@@ -37,7 +40,17 @@ export default function ReviewResponseForm({
       })
     } else if (choice === 'decline') {
       startTransition(async () => {
-        const result = await declineReviewInvitation(token, reason || null)
+        const result = await declineReviewInvitation(
+          token,
+          reason || null,
+          altName || altEmail || altReason
+            ? {
+                name: altName || null,
+                email: altEmail || null,
+                reason: altReason || null,
+              }
+            : null
+        )
         if (result.error) {
           setError(result.error)
           return
@@ -85,24 +98,97 @@ export default function ReviewResponseForm({
       </p>
 
       {!isAccept && (
-        <div>
-          <label
-            htmlFor="decline-reason"
-            className="block text-[11px] uppercase tracking-widest text-brown mb-1"
-          >
-            Reason (optional)
-          </label>
-          <textarea
-            id="decline-reason"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            rows={3}
-            maxLength={500}
-            placeholder="Let the editor know why, e.g. conflict of interest, outside your subspecialty, travel."
-            className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
-          />
-          <p className="text-[11px] text-brown mt-1">{reason.length}/500</p>
-        </div>
+        <>
+          <div>
+            <label
+              htmlFor="decline-reason"
+              className="block text-[11px] uppercase tracking-widest text-brown mb-1"
+            >
+              Reason (optional)
+            </label>
+            <textarea
+              id="decline-reason"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              rows={3}
+              maxLength={500}
+              placeholder="Let the editor know why, e.g. conflict of interest, outside your subspecialty, travel."
+              className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
+            />
+            <p className="text-[11px] text-brown mt-1">{reason.length}/500</p>
+          </div>
+
+          <div className="border-t border-border pt-3 space-y-3">
+            <div>
+              <p className="text-[11px] uppercase tracking-widest text-brown">
+                Suggest an alternative reviewer (optional)
+              </p>
+              <p className="text-xs text-brown mt-1">
+                Their email is shared only with the OSCRSJ editorial office,
+                never with the manuscript authors. Suggestions are advisory —
+                the editor decides whether to invite.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label
+                  htmlFor="alt-name"
+                  className="block text-[11px] uppercase tracking-widest text-brown mb-1"
+                >
+                  Name
+                </label>
+                <input
+                  id="alt-name"
+                  type="text"
+                  value={altName}
+                  onChange={(e) => setAltName(e.target.value)}
+                  maxLength={200}
+                  placeholder="Dr. Jane Smith"
+                  className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="alt-email"
+                  className="block text-[11px] uppercase tracking-widest text-brown mb-1"
+                >
+                  Email
+                </label>
+                <input
+                  id="alt-email"
+                  type="email"
+                  value={altEmail}
+                  onChange={(e) => setAltEmail(e.target.value)}
+                  maxLength={254}
+                  placeholder="jane.smith@institution.edu"
+                  className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="alt-reason"
+                className="block text-[11px] uppercase tracking-widest text-brown mb-1"
+              >
+                Why this person (optional)
+              </label>
+              <textarea
+                id="alt-reason"
+                value={altReason}
+                onChange={(e) => setAltReason(e.target.value)}
+                rows={2}
+                maxLength={500}
+                placeholder="e.g. published a meta-analysis on this exact topic last year."
+                className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
+              />
+              <p className="text-[11px] text-brown mt-1">
+                {altReason.length}/500
+              </p>
+            </div>
+          </div>
+        </>
       )}
 
       <div className="flex flex-col sm:flex-row gap-3">
@@ -123,6 +209,9 @@ export default function ReviewResponseForm({
           onClick={() => {
             setChoice(null)
             setReason('')
+            setAltName('')
+            setAltEmail('')
+            setAltReason('')
             setError(null)
           }}
           disabled={isPending}

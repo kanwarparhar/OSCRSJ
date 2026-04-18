@@ -14,6 +14,8 @@ interface Props {
   manuscriptStatus: string
   invitations: ReviewInvitationRow[]
   activeApplications: ReviewerApplicationRow[]
+  /** Map of review_invitations.id → reviews.id for submitted (non-draft) reviews. */
+  reviewByInvitation: Record<string, string>
 }
 
 const INVITATION_STATUS_STYLES: Record<InvitationStatus, string> = {
@@ -38,6 +40,7 @@ export default function InviteReviewerPanel({
   manuscriptStatus,
   invitations,
   activeApplications,
+  reviewByInvitation,
 }: Props) {
   const invitable = INVITABLE_STATUSES.includes(manuscriptStatus)
   const invitedApplicationIds = useMemo(() => {
@@ -100,46 +103,64 @@ export default function InviteReviewerPanel({
                   <th className="px-2 py-2 text-[11px] uppercase tracking-widest text-brown font-medium">
                     Responded
                   </th>
+                  <th className="px-2 py-2 text-[11px] uppercase tracking-widest text-brown font-medium">
+                    Review
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {invitations.map((inv) => (
-                  <tr key={inv.id} className="border-b border-border/60">
-                    <td className="px-2 py-2 text-ink">
-                      {[inv.reviewer_first_name, inv.reviewer_last_name]
-                        .filter(Boolean)
-                        .join(' ') || '—'}
-                    </td>
-                    <td className="px-2 py-2 text-ink">
-                      {inv.reviewer_email || '—'}
-                    </td>
-                    <td className="px-2 py-2">
-                      <span
-                        className={`text-[11px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${INVITATION_STATUS_STYLES[inv.status]}`}
-                      >
-                        {inv.status}
-                      </span>
-                      {inv.status === 'declined' && inv.declined_reason && (
-                        <p className="text-xs text-brown mt-1">
-                          “{inv.declined_reason}”
-                        </p>
-                      )}
-                    </td>
-                    <td className="px-2 py-2 text-xs text-brown">
-                      {new Date(inv.invited_date).toLocaleDateString()}
-                    </td>
-                    <td className="px-2 py-2 text-xs text-brown">
-                      {inv.deadline
-                        ? new Date(inv.deadline).toLocaleDateString()
-                        : '—'}
-                    </td>
-                    <td className="px-2 py-2 text-xs text-brown">
-                      {inv.response_date
-                        ? new Date(inv.response_date).toLocaleDateString()
-                        : '—'}
-                    </td>
-                  </tr>
-                ))}
+                {invitations.map((inv) => {
+                  const reviewId = reviewByInvitation[inv.id]
+                  return (
+                    <tr key={inv.id} className="border-b border-border/60">
+                      <td className="px-2 py-2 text-ink">
+                        {[inv.reviewer_first_name, inv.reviewer_last_name]
+                          .filter(Boolean)
+                          .join(' ') || '—'}
+                      </td>
+                      <td className="px-2 py-2 text-ink">
+                        {inv.reviewer_email || '—'}
+                      </td>
+                      <td className="px-2 py-2">
+                        <span
+                          className={`text-[11px] uppercase tracking-widest px-2 py-0.5 rounded-full border ${INVITATION_STATUS_STYLES[inv.status]}`}
+                        >
+                          {inv.status}
+                        </span>
+                        {inv.status === 'declined' && inv.declined_reason && (
+                          <p className="text-xs text-brown mt-1">
+                            “{inv.declined_reason}”
+                          </p>
+                        )}
+                      </td>
+                      <td className="px-2 py-2 text-xs text-brown">
+                        {new Date(inv.invited_date).toLocaleDateString()}
+                      </td>
+                      <td className="px-2 py-2 text-xs text-brown">
+                        {inv.deadline
+                          ? new Date(inv.deadline).toLocaleDateString()
+                          : '—'}
+                      </td>
+                      <td className="px-2 py-2 text-xs text-brown">
+                        {inv.response_date
+                          ? new Date(inv.response_date).toLocaleDateString()
+                          : '—'}
+                      </td>
+                      <td className="px-2 py-2 text-xs">
+                        {reviewId ? (
+                          <a
+                            href={`/dashboard/admin/manuscripts/${manuscriptId}/reviews/${reviewId}`}
+                            className="text-ink underline underline-offset-2 hover:text-brown-dark"
+                          >
+                            View review
+                          </a>
+                        ) : (
+                          <span className="text-brown">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
