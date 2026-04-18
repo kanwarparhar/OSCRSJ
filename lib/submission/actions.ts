@@ -4,6 +4,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import type {
   ManuscriptRow,
   ManuscriptType,
+  ManuscriptStatus,
   ManuscriptMetadataRow,
   ManuscriptFileRow,
   ManuscriptAuthorRow,
@@ -19,9 +20,30 @@ import {
   getCoAuthorNotificationSubject,
 } from '@/lib/email/templates/coAuthorNotification'
 import {
+  renderWithdrawalConfirmation,
+  getWithdrawalSubject,
+  type WithdrawalRecipientRole,
+} from '@/lib/email/templates/withdrawalConfirmation'
+import {
   generateDisputeToken,
   buildDisputeUrl,
 } from '@/lib/email/disputeTokens'
+
+// Editorial inbox for system alerts. Temporarily routed to Kanwar's
+// Gmail until a proper editorial mailbox is provisioned (see commit
+// f93bf5b — GoDaddy removed free forwarding for admin@oscrsj.com).
+const EDITORIAL_NOTIFY_EMAIL = 'kanwarparhar@gmail.com'
+
+// Statuses that allow author self-service withdrawal. Anything past
+// an editorial decision (accepted, rejected, published, etc.) cannot
+// be withdrawn by the author.
+const WITHDRAWABLE_STATUSES = new Set<ManuscriptStatus>([
+  'draft',
+  'submitted',
+  'under_review',
+  'revision_requested',
+  'revision_received',
+])
 
 // ---- Types for wizard state ----
 
@@ -34,6 +56,59 @@ export interface DraftData {
 
 // ---- Create or update draft manuscript ----
 
+// Ensures a row exists in public.users for the given auth user. Older
+// signups (and any future signup where the admin-client profile insert
+// silently fails) can end up with an auth.users row but no public.users
+// row — which breaks every downstream insert that foreign-keys to
+// users.id (manuscripts.corresponding_author_id, manuscript_authors,
+// etc.). This backfill runs idempotently from signed-in server actions.
+async function ensureUserProfile(userId: string): Promise<{ error?: string }> {
+  const admin = createAdminClient()
+
+  // Fast path: profile already exists.
+  const { data: existing } = await admin
+    .from('users')
+    .select('id')
+    .eq('id', userId)
+    .maybeSingle()
+
+  if (existing) return {}
+
+  // Pull whatever metadata Supabase Auth has on record (full name,
+  // affiliation, country, etc. are all stored in raw_user_meta_data
+  // by the signUp action).
+  const { data: authData, error: authErr } = await admin.auth.admin.getUserById(userId)
+  if (authErr || !authData?.user) {
+    return { error: `Could not load auth user: ${authErr?.message || 'unknown'}` }
+  }
+
+  const authUser = authData.user
+  const meta = (authUser.user_metadata || {}) as Record<string, unknown>
+
+  const fullName = (meta.full_name as string) || authUser.email?.split('@')[0] || 'Author'
+  const affiliation = (meta.affiliation as string) || null
+  const country = (meta.country as string) || null
+  const degrees = (meta.degrees as string) || null
+  const orcidId = (meta.orcid_id as string) || null
+
+  const { error: insertErr } = await (admin.from('users') as any).insert({
+    id: userId,
+    email: authUser.email,
+    full_name: fullName,
+    affiliation,
+    country,
+    degrees,
+    orcid_id: orcidId,
+    role: 'author',
+  })
+
+  if (insertErr && !insertErr.message.includes('duplicate')) {
+    return { error: `Failed to create user profile: ${insertErr.message}` }
+  }
+
+  return {}
+}
+
 export async function createOrUpdateDraft(params: {
   manuscriptId?: string | null
   manuscriptType: ManuscriptType
@@ -45,6 +120,12 @@ export async function createOrUpdateDraft(params: {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
+  // Backfill the profile row if it's missing. Without this, the
+  // manuscripts insert below will fail with a FK violation on
+  // corresponding_author_id -> users(id).
+  const profileResult = await ensureUserProfile(user.id)
+  if (profileResult.error) return { error: profileResult.error }
+
   const { manuscriptId, manuscriptType, notUnderReview, notPreviouslyPublished, allAuthorsAgreed } = params
 
   if (manuscriptId) {
@@ -54,7 +135,7 @@ export async function createOrUpdateDraft(params: {
       .eq('id', manuscriptId)
       .eq('corresponding_author_id', user.id)
 
-    if (error) return { error: 'Failed to update draft' }
+    if (error) return { error: `Failed to update draft: ${error.message}` }
 
     // Upsert metadata
     const { data: existingMeta } = await supabase
@@ -94,18 +175,24 @@ export async function createOrUpdateDraft(params: {
     .select('id, submission_id')
     .single()
 
-  if (error || !data) return { error: 'Failed to create draft' }
+  if (error || !data) {
+    return { error: `Failed to create draft: ${error?.message || 'no row returned'}` }
+  }
 
   const row = data as { id: string; submission_id: string }
 
   // Create metadata row
-  await (supabase.from('manuscript_metadata') as any)
+  const { error: metaError } = await (supabase.from('manuscript_metadata') as any)
     .insert({
       manuscript_id: row.id,
       not_under_review_elsewhere: notUnderReview,
       not_previously_published: notPreviouslyPublished,
       all_authors_agreed: allAuthorsAgreed,
     })
+
+  if (metaError) {
+    return { error: `Failed to save confirmations: ${metaError.message}` }
+  }
 
   return { manuscriptId: row.id, submissionId: row.submission_id }
 }
@@ -561,6 +648,208 @@ export async function submitManuscript(manuscriptId: string) {
   return {
     success: true,
     submissionId: m.submission_id,
+    ...(emailWarnings.length > 0 ? { emailWarnings } : {}),
+  }
+}
+
+// ---- Withdraw manuscript ----
+//
+// Author self-service withdrawal for pre-decision manuscripts. Flips
+// status to 'withdrawn', records the optional reason + timestamp,
+// cancels any active reviewer invitations, and fires three classes of
+// email (author confirmation, editorial alert, reviewer notices). All
+// email sends are fire-and-forget: a mail failure must not roll back
+// the withdrawal.
+
+export async function withdrawManuscript(params: {
+  manuscriptId: string
+  reason?: string | null
+}) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  const { manuscriptId, reason } = params
+
+  // Load manuscript + confirm caller owns it.
+  const { data: manuscriptData } = await supabase
+    .from('manuscripts')
+    .select('*')
+    .eq('id', manuscriptId)
+    .eq('corresponding_author_id', user.id)
+    .single()
+
+  const m = manuscriptData as ManuscriptRow | null
+  if (!m) return { error: 'Manuscript not found' }
+
+  if (!WITHDRAWABLE_STATUSES.has(m.status)) {
+    return {
+      error: `Manuscripts with status "${m.status}" cannot be withdrawn.`,
+    }
+  }
+
+  const trimmedReason = reason?.trim() || null
+  const withdrawnAt = new Date().toISOString()
+
+  // Flip status.
+  const { error: updateError } = await (supabase.from('manuscripts') as any)
+    .update({
+      status: 'withdrawn',
+      withdrawal_reason: trimmedReason,
+      decision_date: withdrawnAt,
+    })
+    .eq('id', manuscriptId)
+    .eq('corresponding_author_id', user.id)
+
+  if (updateError) return { error: 'Failed to withdraw manuscript' }
+
+  // Cancel any active reviewer invitations. Use the admin client so
+  // we can also read reviewer profiles (RLS scopes invitation access
+  // to reviewers themselves otherwise).
+  const admin = createAdminClient()
+
+  const { data: invitationData } = await admin
+    .from('review_invitations')
+    .select('id, reviewer_id, status')
+    .eq('manuscript_id', manuscriptId)
+    .in('status', ['invited', 'accepted'])
+
+  const activeInvitations =
+    (invitationData as { id: string; reviewer_id: string; status: string }[] | null) || []
+
+  if (activeInvitations.length > 0) {
+    await (admin.from('review_invitations') as any)
+      .update({ status: 'cancelled', response_date: withdrawnAt })
+      .in(
+        'id',
+        activeInvitations.map((i) => i.id)
+      )
+  }
+
+  // Audit log.
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: user.id,
+      action: 'manuscript_withdrawn',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: {
+        submission_id: m.submission_id,
+        reason: trimmedReason,
+        cancelled_invitation_count: activeInvitations.length,
+      },
+    })
+  } catch {
+    // Audit log is best-effort; don't fail the withdrawal.
+  }
+
+  // ---- Fire transactional emails (fire-and-forget) ----
+  const emailWarnings: string[] = []
+
+  try {
+    // Load author list + corresponding author profile.
+    const { data: authorsList } = await supabase
+      .from('manuscript_authors')
+      .select('*')
+      .eq('manuscript_id', manuscriptId)
+      .order('author_order', { ascending: true })
+    const allAuthors = (authorsList as ManuscriptAuthorRow[] | null) || []
+
+    const { data: profileData } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+    const profile = profileData as UserRow | null
+
+    const correspondingAuthor =
+      allAuthors.find((a) => a.is_corresponding) ||
+      allAuthors.find((a) => a.author_id === user.id) ||
+      null
+
+    const correspondingName =
+      correspondingAuthor?.full_name || profile?.full_name || 'Author'
+    const correspondingEmail =
+      correspondingAuthor?.email || profile?.email || user.email || null
+
+    const sendWithdrawalEmail = async (
+      to: string,
+      recipientName: string,
+      role: WithdrawalRecipientRole
+    ) => {
+      const { html, text } = renderWithdrawalConfirmation({
+        recipientName,
+        recipientRole: role,
+        correspondingAuthorName: correspondingName,
+        submissionId: m.submission_id,
+        title: m.title || '(untitled)',
+        withdrawnAt,
+        reason: trimmedReason,
+      })
+      const result = await sendEmail({
+        to,
+        subject: getWithdrawalSubject(m.submission_id, role),
+        html,
+        text,
+        emailType: `withdrawal_${role}`,
+        manuscriptId,
+      })
+      if (result.error) {
+        emailWarnings.push(
+          `Withdrawal email (${role}) to ${to} failed: ${result.error}`
+        )
+      }
+    }
+
+    // 1. Corresponding author confirmation.
+    if (correspondingEmail) {
+      await sendWithdrawalEmail(correspondingEmail, correspondingName, 'author')
+    }
+
+    // 2. Editorial office alert.
+    await sendWithdrawalEmail(
+      EDITORIAL_NOTIFY_EMAIL,
+      'Editorial Office',
+      'editor'
+    )
+
+    // 3. Active reviewers — look up profile by reviewer_id.
+    if (activeInvitations.length > 0) {
+      const reviewerIds = Array.from(
+        new Set(activeInvitations.map((i) => i.reviewer_id))
+      )
+      const { data: reviewerData } = await admin
+        .from('users')
+        .select('id, email, full_name')
+        .in('id', reviewerIds)
+      const reviewers =
+        (reviewerData as { id: string; email: string; full_name: string }[] | null) || []
+
+      for (const reviewer of reviewers) {
+        if (!reviewer.email) continue
+        try {
+          await sendWithdrawalEmail(
+            reviewer.email,
+            reviewer.full_name || 'Reviewer',
+            'reviewer'
+          )
+        } catch (err) {
+          emailWarnings.push(
+            `Reviewer email to ${reviewer.email} threw: ${err instanceof Error ? err.message : 'unknown error'}`
+          )
+        }
+      }
+    }
+  } catch (err) {
+    emailWarnings.push(
+      `Withdrawal email pipeline error: ${err instanceof Error ? err.message : 'unknown error'}`
+    )
+  }
+
+  return {
+    success: true,
+    submissionId: m.submission_id,
+    cancelledInvitations: activeInvitations.length,
     ...(emailWarnings.length > 0 ? { emailWarnings } : {}),
   }
 }

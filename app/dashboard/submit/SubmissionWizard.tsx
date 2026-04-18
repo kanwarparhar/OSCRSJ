@@ -164,6 +164,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
   const [currentStep, setCurrentStep] = useState(() => computeInitialStep(initialStateFromDraft(draft, userProfile)))
   const [saving, setSaving] = useState(false)
   const [savedToast, setSavedToast] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -177,10 +178,19 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
   }, [])
 
   // ---- Save draft to Supabase ----
-  const saveDraft = useCallback(async (st?: WizardState) => {
+  // Returns { ok: true, manuscriptId } on success, { ok: false, error } on
+  // failure. Callers (goNext/goBack/submit) MUST check the result — we never
+  // want to advance the wizard past a failed save, because downstream steps
+  // depend on manuscriptId existing on the server.
+  const saveDraft = useCallback(async (st?: WizardState): Promise<
+    { ok: true; manuscriptId: string | null } | { ok: false; error: string }
+  > => {
     const s = st || stateRef.current
-    if (!s.manuscriptType) return
+    if (!s.manuscriptType) {
+      return { ok: true, manuscriptId: s.manuscriptId }
+    }
     setSaving(true)
+    setSaveError(null)
 
     try {
       // Save step 1 data
@@ -194,8 +204,9 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
 
       if (result.error) {
         console.error('Save failed:', result.error)
+        setSaveError(result.error)
         setSaving(false)
-        return
+        return { ok: false, error: result.error }
       }
 
       // If we just created a new draft, store the ID
@@ -246,8 +257,12 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
       }
 
       showSavedToast()
+      return { ok: true, manuscriptId: mId }
     } catch (err) {
       console.error('Save error:', err)
+      const msg = err instanceof Error ? err.message : 'Unknown save error'
+      setSaveError(msg)
+      return { ok: false, error: msg }
     } finally {
       setSaving(false)
     }
@@ -276,19 +291,27 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
 
   // ---- Step navigation ----
   const goNext = useCallback(async () => {
-    await saveDraft()
+    const result = await saveDraft()
+    // Only advance if the save succeeded. Previously the wizard would
+    // step forward even when createOrUpdateDraft errored, which left
+    // Step 2+ with a null manuscriptId and a misleading "complete Step
+    // 1 first" error on file upload.
+    if (!result.ok) return
     if (currentStep < 5) setCurrentStep(prev => prev + 1)
   }, [currentStep, saveDraft])
 
   const goBack = useCallback(async () => {
+    // Backward moves are always safe — don't block on save errors.
     await saveDraft()
     if (currentStep > 1) setCurrentStep(prev => prev - 1)
   }, [currentStep, saveDraft])
 
   const goToStep = useCallback(async (step: number) => {
-    await saveDraft()
+    const result = await saveDraft()
+    // Block forward jumps on save failure, allow backward jumps.
+    if (!result.ok && step > currentStep) return
     setCurrentStep(step)
-  }, [saveDraft])
+  }, [saveDraft, currentStep])
 
   const saveAndExit = useCallback(async () => {
     await saveDraft()
@@ -302,8 +325,13 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
     setSubmitError(null)
 
     try {
-      // Save everything first
-      await saveDraft()
+      // Save everything first. Bail if the save itself failed.
+      const saveResult = await saveDraft()
+      if (!saveResult.ok) {
+        setSubmitError(saveResult.error)
+        setSubmitting(false)
+        return
+      }
 
       const result = await submitManuscript(state.manuscriptId)
       if (result.error) {
@@ -498,6 +526,20 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
           />
         )}
       </div>
+
+      {/* Save error banner */}
+      {saveError && (
+        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-start gap-2">
+          <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <div className="flex-1">
+            <p className="font-medium">Couldn&apos;t save your draft</p>
+            <p className="mt-0.5">{saveError}</p>
+          </div>
+          <button onClick={() => setSaveError(null)} className="font-medium hover:underline">Dismiss</button>
+        </div>
+      )}
 
       {/* Navigation buttons */}
       <div className="flex items-center justify-between mt-6">
