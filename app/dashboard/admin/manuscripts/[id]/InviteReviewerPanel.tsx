@@ -244,6 +244,7 @@ function ApplicantRow({
   function onSubmit() {
     startTransition(async () => {
       const result = await inviteReviewer({
+        mode: 'application',
         manuscriptId,
         reviewerApplicationId: app.id,
         deadline: deadline

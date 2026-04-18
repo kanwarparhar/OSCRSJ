@@ -476,12 +476,23 @@ function teaseAbstract(abstract: string | null, maxLength = 900): string {
   return `${trimmed.slice(0, maxLength).trimEnd()}…`
 }
 
-export interface InviteReviewerArgs {
-  manuscriptId: string
-  reviewerApplicationId: string
-  deadline?: string | null
-  editorNote?: string | null
-}
+export type InviteReviewerArgs =
+  | {
+      mode: 'application'
+      manuscriptId: string
+      reviewerApplicationId: string
+      deadline?: string | null
+      editorNote?: string | null
+    }
+  | {
+      mode: 'email'
+      manuscriptId: string
+      reviewerEmail: string
+      reviewerFirstName: string
+      reviewerLastName: string
+      deadline?: string | null
+      editorNote?: string | null
+    }
 
 export interface InviteReviewerResult {
   success?: true
@@ -499,32 +510,60 @@ export async function inviteReviewer(
   if (!args.manuscriptId || typeof args.manuscriptId !== 'string') {
     return { error: 'Manuscript id is required.' }
   }
-  if (
-    !args.reviewerApplicationId ||
-    typeof args.reviewerApplicationId !== 'string'
-  ) {
-    return { error: 'Reviewer application id is required.' }
+  if (args.mode !== 'application' && args.mode !== 'email') {
+    return { error: 'Invalid invite mode.' }
   }
 
   const admin = createAdminClient()
 
-  // Load + validate application
-  const { data: appData, error: appErr } = await admin
-    .from('reviewer_applications')
-    .select('*')
-    .eq('id', args.reviewerApplicationId)
-    .single()
+  // ---- Resolve invitee identity from mode ----
+  let reviewerApplicationId: string | null = null
+  let reviewerEmail = ''
+  let reviewerFirstName = ''
+  let reviewerLastName = ''
 
-  if (appErr || !appData) return { error: 'Reviewer application not found.' }
-  const application = appData as ReviewerApplicationRow
-  if (application.status !== 'active') {
-    return {
-      error:
-        'Only reviewer applications with status "active" may be invited.',
+  if (args.mode === 'application') {
+    if (
+      !args.reviewerApplicationId ||
+      typeof args.reviewerApplicationId !== 'string'
+    ) {
+      return { error: 'Reviewer application id is required.' }
     }
+
+    const { data: appData, error: appErr } = await admin
+      .from('reviewer_applications')
+      .select('*')
+      .eq('id', args.reviewerApplicationId)
+      .single()
+
+    if (appErr || !appData) return { error: 'Reviewer application not found.' }
+    const application = appData as ReviewerApplicationRow
+    if (application.status !== 'active') {
+      return {
+        error:
+          'Only reviewer applications with status "active" may be invited.',
+      }
+    }
+    reviewerApplicationId = application.id
+    reviewerEmail = application.email
+    reviewerFirstName = application.first_name
+    reviewerLastName = application.last_name
+  } else {
+    // mode === 'email'
+    const firstName = normalizeString(args.reviewerFirstName, 120)
+    const lastName = normalizeString(args.reviewerLastName, 120)
+    const emailRaw = normalizeString(args.reviewerEmail, 254).toLowerCase()
+    if (!firstName) return { error: 'First name is required.' }
+    if (!lastName) return { error: 'Last name is required.' }
+    if (!emailRaw || !isValidEmail(emailRaw)) {
+      return { error: 'A valid reviewer email address is required.' }
+    }
+    reviewerEmail = emailRaw
+    reviewerFirstName = firstName
+    reviewerLastName = lastName
   }
 
-  // Load + validate manuscript
+  // ---- Load + validate manuscript ----
   const { data: mData, error: mErr } = await admin
     .from('manuscripts')
     .select('*')
@@ -543,18 +582,35 @@ export async function inviteReviewer(
     }
   }
 
-  // Idempotency: skip if a non-terminal invitation already exists for this
-  // (manuscript, application) pair.
-  const { data: existing } = await admin
-    .from('review_invitations')
-    .select('id, status')
-    .eq('manuscript_id', args.manuscriptId)
-    .eq('reviewer_application_id', args.reviewerApplicationId)
-    .in('status', ['invited', 'accepted'])
-    .limit(1)
+  // ---- Idempotency ----
+  // Application path: match on (manuscript, application_id).
+  // Email path: match on (manuscript, lower(reviewer_email)) — covers both
+  // prior email-path invites and prior application-path invites whose snapshot
+  // email matches, so we don't double-invite the same human across both paths.
+  if (args.mode === 'application' && reviewerApplicationId) {
+    const { data: existing } = await admin
+      .from('review_invitations')
+      .select('id, status')
+      .eq('manuscript_id', args.manuscriptId)
+      .eq('reviewer_application_id', reviewerApplicationId)
+      .in('status', ['invited', 'accepted'])
+      .limit(1)
 
-  if (Array.isArray(existing) && existing.length > 0) {
-    return { alreadyInvited: true, invitationId: (existing[0] as any).id }
+    if (Array.isArray(existing) && existing.length > 0) {
+      return { alreadyInvited: true, invitationId: (existing[0] as any).id }
+    }
+  } else {
+    const { data: existing } = await admin
+      .from('review_invitations')
+      .select('id, status')
+      .eq('manuscript_id', args.manuscriptId)
+      .ilike('reviewer_email', reviewerEmail)
+      .in('status', ['invited', 'accepted'])
+      .limit(1)
+
+    if (Array.isArray(existing) && existing.length > 0) {
+      return { alreadyInvited: true, invitationId: (existing[0] as any).id }
+    }
   }
 
   // Compute deadline. Default to invited_date + 21 days per §4.5 of
@@ -575,10 +631,10 @@ export async function inviteReviewer(
 
   const insertPayload: Record<string, unknown> = {
     manuscript_id: args.manuscriptId,
-    reviewer_application_id: args.reviewerApplicationId,
-    reviewer_email: application.email,
-    reviewer_first_name: application.first_name,
-    reviewer_last_name: application.last_name,
+    reviewer_application_id: reviewerApplicationId,
+    reviewer_email: reviewerEmail,
+    reviewer_first_name: reviewerFirstName,
+    reviewer_last_name: reviewerLastName,
     deadline: deadlineIso,
   }
 
@@ -605,7 +661,7 @@ export async function inviteReviewer(
   // Fire invitation email (fire-and-forget)
   try {
     const { html, text } = renderReviewerInvitation({
-      firstName: application.first_name,
+      firstName: reviewerFirstName,
       manuscriptTitle: manuscript.title || '(untitled manuscript)',
       manuscriptType:
         MANUSCRIPT_TYPE_LABELS[manuscript.manuscript_type || ''] ||
@@ -619,7 +675,7 @@ export async function inviteReviewer(
       declineUrl,
     })
     await sendEmail({
-      to: application.email,
+      to: reviewerEmail,
       subject: getReviewerInvitationSubject(
         manuscript.title || '(untitled manuscript)'
       ),
@@ -642,8 +698,9 @@ export async function inviteReviewer(
       details: {
         invitation_id: invitation.id,
         manuscript_id: args.manuscriptId,
-        reviewer_application_id: args.reviewerApplicationId,
-        reviewer_email: application.email,
+        invite_method: args.mode,
+        reviewer_application_id: reviewerApplicationId,
+        reviewer_email: reviewerEmail,
       },
     })
   } catch {

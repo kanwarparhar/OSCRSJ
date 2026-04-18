@@ -9,6 +9,8 @@ import type {
   ManuscriptMetadataRow,
 } from '@/lib/types/database'
 import InviteReviewerPanel from './InviteReviewerPanel'
+import InviteByEmailPanel from './InviteByEmailPanel'
+import AdminFileDownloadButton from './AdminFileDownloadButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -244,14 +246,11 @@ export default async function AdminManuscriptDetailPage({
                 <span className="text-xs text-brown whitespace-nowrap">
                   {formatBytes(f.file_size_bytes)}
                 </span>
+                <AdminFileDownloadButton fileId={f.id} />
               </li>
             ))}
           </ul>
         )}
-        <p className="text-xs text-brown pt-2 border-t border-border">
-          File download is deferred to Session 10 (signed URLs for blinded
-          manuscript review).
-        </p>
       </div>
 
       {metadata && (
@@ -305,6 +304,11 @@ export default async function AdminManuscriptDetailPage({
         invitations={invitations}
         activeApplications={activeApplications}
         reviewByInvitation={Object.fromEntries(reviewByInvitation)}
+      />
+
+      <InviteByEmailPanel
+        manuscriptId={manuscript.id}
+        manuscriptStatus={manuscript.status}
       />
 
       <DeclinedSuggestionsPanel invitations={invitations} />
