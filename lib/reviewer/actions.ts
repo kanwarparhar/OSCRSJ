@@ -11,7 +11,21 @@ import {
   renderReviewerApplicationInternalNotification,
   getReviewerApplicationInternalSubject,
 } from '@/lib/email/templates/reviewerApplicationInternalNotification'
+import {
+  renderReviewerInvitation,
+  getReviewerInvitationSubject,
+} from '@/lib/email/templates/reviewerInvitation'
+import {
+  renderReviewerInvitationConfirmation,
+  getReviewerInvitationConfirmationSubject,
+} from '@/lib/email/templates/reviewerInvitationConfirmation'
+import {
+  renderReviewerInvitationEditorNotification,
+  getReviewerInvitationEditorNotificationSubject,
+} from '@/lib/email/templates/reviewerInvitationEditorNotification'
 import type {
+  ManuscriptRow,
+  ReviewInvitationRow,
   ReviewerApplicationRow,
   ReviewerApplicationStatus,
 } from '@/lib/types/database'
@@ -391,4 +405,541 @@ export async function updateReviewerApplicationAdminNotes(
   if (error) return { error: error.message }
   revalidatePath('/dashboard/admin/reviewer-applications')
   return { success: true }
+}
+
+
+// ============================================================
+// Reviewer invitation workflow (Session 9, Phase 2 kickoff)
+// ============================================================
+
+const MANUSCRIPT_TYPE_LABELS: Record<string, string> = {
+  case_report: 'Case Report',
+  case_series: 'Case Series',
+  surgical_technique: 'Surgical Technique',
+  images_in_orthopedics: 'Images in Orthopedics',
+  letter_to_editor: 'Letter to the Editor',
+  review_article: 'Review Article',
+}
+
+const INVITABLE_MANUSCRIPT_STATUSES = [
+  'submitted',
+  'under_review',
+  'revision_received',
+] as const
+
+function siteUrl(): string {
+  const raw =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    'https://www.oscrsj.com'
+  return raw.replace(/\/$/, '')
+}
+
+function addDays(from: Date, days: number): Date {
+  const d = new Date(from)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d
+}
+
+function formatDeadline(iso: string | null): string {
+  if (!iso) return 'Not specified'
+  try {
+    return new Date(iso).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  } catch {
+    return iso
+  }
+}
+
+function teaseAbstract(abstract: string | null, maxLength = 900): string {
+  const trimmed = (abstract || '').trim()
+  if (!trimmed) return 'No abstract provided.'
+  if (trimmed.length <= maxLength) return trimmed
+  return `${trimmed.slice(0, maxLength).trimEnd()}…`
+}
+
+export interface InviteReviewerArgs {
+  manuscriptId: string
+  reviewerApplicationId: string
+  deadline?: string | null
+  editorNote?: string | null
+}
+
+export interface InviteReviewerResult {
+  success?: true
+  invitationId?: string
+  alreadyInvited?: true
+  error?: string
+}
+
+export async function inviteReviewer(
+  args: InviteReviewerArgs
+): Promise<InviteReviewerResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  if (!args.manuscriptId || typeof args.manuscriptId !== 'string') {
+    return { error: 'Manuscript id is required.' }
+  }
+  if (
+    !args.reviewerApplicationId ||
+    typeof args.reviewerApplicationId !== 'string'
+  ) {
+    return { error: 'Reviewer application id is required.' }
+  }
+
+  const admin = createAdminClient()
+
+  // Load + validate application
+  const { data: appData, error: appErr } = await admin
+    .from('reviewer_applications')
+    .select('*')
+    .eq('id', args.reviewerApplicationId)
+    .single()
+
+  if (appErr || !appData) return { error: 'Reviewer application not found.' }
+  const application = appData as ReviewerApplicationRow
+  if (application.status !== 'active') {
+    return {
+      error:
+        'Only reviewer applications with status "active" may be invited.',
+    }
+  }
+
+  // Load + validate manuscript
+  const { data: mData, error: mErr } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('id', args.manuscriptId)
+    .single()
+
+  if (mErr || !mData) return { error: 'Manuscript not found.' }
+  const manuscript = mData as ManuscriptRow
+  if (
+    !(INVITABLE_MANUSCRIPT_STATUSES as readonly string[]).includes(
+      manuscript.status
+    )
+  ) {
+    return {
+      error: `Manuscripts in status "${manuscript.status}" cannot have reviewer invitations issued.`,
+    }
+  }
+
+  // Idempotency: skip if a non-terminal invitation already exists for this
+  // (manuscript, application) pair.
+  const { data: existing } = await admin
+    .from('review_invitations')
+    .select('id, status')
+    .eq('manuscript_id', args.manuscriptId)
+    .eq('reviewer_application_id', args.reviewerApplicationId)
+    .in('status', ['invited', 'accepted'])
+    .limit(1)
+
+  if (Array.isArray(existing) && existing.length > 0) {
+    return { alreadyInvited: true, invitationId: (existing[0] as any).id }
+  }
+
+  // Compute deadline. Default to invited_date + 21 days per §4.5 of
+  // the Submission Portal Architecture Plan.
+  let deadlineIso: string | null = null
+  if (args.deadline && typeof args.deadline === 'string') {
+    const parsed = new Date(args.deadline)
+    if (!Number.isNaN(parsed.getTime())) deadlineIso = parsed.toISOString()
+  }
+  if (!deadlineIso) {
+    deadlineIso = addDays(new Date(), 21).toISOString()
+  }
+
+  const editorNote =
+    typeof args.editorNote === 'string'
+      ? args.editorNote.trim().slice(0, 500) || null
+      : null
+
+  const insertPayload: Record<string, unknown> = {
+    manuscript_id: args.manuscriptId,
+    reviewer_application_id: args.reviewerApplicationId,
+    reviewer_email: application.email,
+    reviewer_first_name: application.first_name,
+    reviewer_last_name: application.last_name,
+    deadline: deadlineIso,
+  }
+
+  const { data: inserted, error: insertErr } = await (
+    admin.from('review_invitations') as any
+  )
+    .insert(insertPayload)
+    .select('id, review_token')
+    .single()
+
+  if (insertErr || !inserted) {
+    return {
+      error: `Failed to create invitation: ${
+        insertErr?.message || 'unknown error'
+      }`,
+    }
+  }
+
+  const invitation = inserted as { id: string; review_token: string }
+  const base = siteUrl()
+  const acceptUrl = `${base}/review/${invitation.review_token}?action=accept`
+  const declineUrl = `${base}/review/${invitation.review_token}?action=decline`
+
+  // Fire invitation email (fire-and-forget)
+  try {
+    const { html, text } = renderReviewerInvitation({
+      firstName: application.first_name,
+      manuscriptTitle: manuscript.title || '(untitled manuscript)',
+      manuscriptType:
+        MANUSCRIPT_TYPE_LABELS[manuscript.manuscript_type || ''] ||
+        manuscript.manuscript_type ||
+        'Not specified',
+      subspecialty: manuscript.subspecialty || 'Not specified',
+      abstractTeaser: teaseAbstract(manuscript.abstract),
+      deadlineLabel: formatDeadline(deadlineIso),
+      editorNote,
+      acceptUrl,
+      declineUrl,
+    })
+    await sendEmail({
+      to: application.email,
+      subject: getReviewerInvitationSubject(
+        manuscript.title || '(untitled manuscript)'
+      ),
+      html,
+      text,
+      emailType: 'reviewer_invitation',
+      manuscriptId: args.manuscriptId,
+    })
+  } catch {
+    // fire-and-forget
+  }
+
+  // Audit log
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'invite_sent',
+      resource_type: 'review_invitation',
+      resource_id: invitation.id,
+      details: {
+        invitation_id: invitation.id,
+        manuscript_id: args.manuscriptId,
+        reviewer_application_id: args.reviewerApplicationId,
+        reviewer_email: application.email,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath(`/dashboard/admin/manuscripts/${args.manuscriptId}`)
+  return { success: true, invitationId: invitation.id }
+}
+
+// ---- List helpers used by the admin UI ----
+
+export interface ListInvitationsForManuscriptResult {
+  invitations?: ReviewInvitationRow[]
+  error?: string
+}
+
+export async function listInvitationsForManuscript(
+  manuscriptId: string
+): Promise<ListInvitationsForManuscriptResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('review_invitations')
+    .select('*')
+    .eq('manuscript_id', manuscriptId)
+    .order('invited_date', { ascending: false })
+
+  if (error) return { error: error.message }
+  return { invitations: (data || []) as ReviewInvitationRow[] }
+}
+
+// ============================================================
+// Public token-based accept / decline
+// ============================================================
+// The review_token is a gen_random_uuid()::text value (122 bits of
+// entropy) embedded in the invitation email. It is the sole
+// authentication gate for these two actions -- the invitee does not
+// need an OSCRSJ account.
+
+const INVITATION_EXPIRY_DAYS = 60
+
+function isInvitationExpired(invitedDate: string): boolean {
+  try {
+    const invited = new Date(invitedDate).getTime()
+    const now = Date.now()
+    const msPerDay = 1000 * 60 * 60 * 24
+    return now - invited > INVITATION_EXPIRY_DAYS * msPerDay
+  } catch {
+    return false
+  }
+}
+
+export interface InvitationResponseResult {
+  success?: true
+  invitationStatus?: 'accepted' | 'declined'
+  manuscriptId?: string
+  error?: string
+  alreadyResponded?: true
+  expired?: true
+  notFound?: true
+  cancelled?: true
+}
+
+async function sendInvitationFollowupEmails(
+  invitation: ReviewInvitationRow,
+  manuscript: ManuscriptRow | null,
+  accepted: boolean,
+  declinedReason: string | null
+) {
+  const firstName = invitation.reviewer_first_name || 'Reviewer'
+  const reviewerName =
+    [invitation.reviewer_first_name, invitation.reviewer_last_name]
+      .filter(Boolean)
+      .join(' ')
+      .trim() || 'Reviewer'
+  const reviewerEmail = invitation.reviewer_email || ''
+  const title = manuscript?.title || '(untitled manuscript)'
+  const submissionId = manuscript?.submission_id || manuscript?.id || '—'
+
+  if (reviewerEmail) {
+    try {
+      const { html, text } = renderReviewerInvitationConfirmation({
+        firstName,
+        manuscriptTitle: title,
+        accepted,
+        declinedReason,
+      })
+      await sendEmail({
+        to: reviewerEmail,
+        subject: getReviewerInvitationConfirmationSubject(accepted),
+        html,
+        text,
+        emailType: accepted
+          ? 'reviewer_invitation_accepted_confirmation'
+          : 'reviewer_invitation_declined_confirmation',
+        manuscriptId: invitation.manuscript_id,
+      })
+    } catch {
+      // swallow
+    }
+  }
+
+  try {
+    const { html, text } = renderReviewerInvitationEditorNotification({
+      invitationId: invitation.id,
+      manuscriptTitle: title,
+      submissionId,
+      reviewerName,
+      reviewerEmail,
+      accepted,
+      declinedReason,
+      respondedAt: new Date().toISOString(),
+    })
+    await sendEmail({
+      to: INTERNAL_EDITORIAL_EMAIL,
+      subject: getReviewerInvitationEditorNotificationSubject(
+        submissionId,
+        accepted
+      ),
+      html,
+      text,
+      emailType: accepted
+        ? 'reviewer_invitation_accepted_editor'
+        : 'reviewer_invitation_declined_editor',
+      manuscriptId: invitation.manuscript_id,
+    })
+  } catch {
+    // swallow
+  }
+}
+
+export async function acceptReviewInvitation(
+  token: string
+): Promise<InvitationResponseResult> {
+  if (!token || typeof token !== 'string') {
+    return { error: 'Invitation token is required.', notFound: true }
+  }
+
+  const admin = createAdminClient()
+  const { data: invData, error: invErr } = await admin
+    .from('review_invitations')
+    .select('*')
+    .eq('review_token', token)
+    .single()
+
+  if (invErr || !invData) return { notFound: true, error: 'Invitation not found.' }
+  const invitation = invData as ReviewInvitationRow
+
+  if (invitation.status === 'cancelled') {
+    return {
+      cancelled: true,
+      error: 'This invitation has been cancelled.',
+    }
+  }
+  if (
+    invitation.status === 'accepted' ||
+    invitation.status === 'declined' ||
+    invitation.status === 'submitted'
+  ) {
+    return {
+      alreadyResponded: true,
+      error: 'This invitation has already been responded to.',
+    }
+  }
+  if (isInvitationExpired(invitation.invited_date)) {
+    return {
+      expired: true,
+      error: 'This invitation has expired.',
+    }
+  }
+
+  const nowIso = new Date().toISOString()
+  const { error: updateErr } = await (
+    admin.from('review_invitations') as any
+  )
+    .update({ status: 'accepted', response_date: nowIso })
+    .eq('id', invitation.id)
+
+  if (updateErr) return { error: updateErr.message }
+
+  // Load manuscript for email context
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('id', invitation.manuscript_id)
+    .single()
+  const manuscript = (mData as ManuscriptRow | null) || null
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      action: 'invitation_accepted',
+      resource_type: 'review_invitation',
+      resource_id: invitation.id,
+      details: {
+        invitation_id: invitation.id,
+        manuscript_id: invitation.manuscript_id,
+        reviewer_email: invitation.reviewer_email,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  await sendInvitationFollowupEmails(
+    { ...invitation, status: 'accepted', response_date: nowIso },
+    manuscript,
+    true,
+    null
+  )
+
+  revalidatePath(`/review/${token}`)
+  return {
+    success: true,
+    invitationStatus: 'accepted',
+    manuscriptId: invitation.manuscript_id,
+  }
+}
+
+export async function declineReviewInvitation(
+  token: string,
+  reason?: string | null
+): Promise<InvitationResponseResult> {
+  if (!token || typeof token !== 'string') {
+    return { error: 'Invitation token is required.', notFound: true }
+  }
+
+  const admin = createAdminClient()
+  const { data: invData, error: invErr } = await admin
+    .from('review_invitations')
+    .select('*')
+    .eq('review_token', token)
+    .single()
+
+  if (invErr || !invData) return { notFound: true, error: 'Invitation not found.' }
+  const invitation = invData as ReviewInvitationRow
+
+  if (invitation.status === 'cancelled') {
+    return { cancelled: true, error: 'This invitation has been cancelled.' }
+  }
+  if (
+    invitation.status === 'accepted' ||
+    invitation.status === 'declined' ||
+    invitation.status === 'submitted'
+  ) {
+    return {
+      alreadyResponded: true,
+      error: 'This invitation has already been responded to.',
+    }
+  }
+  if (isInvitationExpired(invitation.invited_date)) {
+    return { expired: true, error: 'This invitation has expired.' }
+  }
+
+  const trimmedReason =
+    typeof reason === 'string' ? reason.trim().slice(0, 500) || null : null
+
+  const nowIso = new Date().toISOString()
+  const { error: updateErr } = await (
+    admin.from('review_invitations') as any
+  )
+    .update({
+      status: 'declined',
+      response_date: nowIso,
+      declined_reason: trimmedReason,
+    })
+    .eq('id', invitation.id)
+
+  if (updateErr) return { error: updateErr.message }
+
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('id', invitation.manuscript_id)
+    .single()
+  const manuscript = (mData as ManuscriptRow | null) || null
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      action: 'invitation_declined',
+      resource_type: 'review_invitation',
+      resource_id: invitation.id,
+      details: {
+        invitation_id: invitation.id,
+        manuscript_id: invitation.manuscript_id,
+        reviewer_email: invitation.reviewer_email,
+        declined_reason: trimmedReason,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  await sendInvitationFollowupEmails(
+    {
+      ...invitation,
+      status: 'declined',
+      response_date: nowIso,
+      declined_reason: trimmedReason,
+    },
+    manuscript,
+    false,
+    trimmedReason
+  )
+
+  revalidatePath(`/review/${token}`)
+  return {
+    success: true,
+    invitationStatus: 'declined',
+    manuscriptId: invitation.manuscript_id,
+  }
 }

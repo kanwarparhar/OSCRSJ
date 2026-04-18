@@ -6,7 +6,7 @@ The official website for **OSCRSJ** (Orthopedic Surgery Case Reports & Series Jo
 ---
 
 ## Current State
-A complete Next.js 14 website — **58 pages total** (35 existing + `/news` landing + `/news/ai-in-orthopedics` + 6 category archives + 2 Editor's Pick guides + 11 inaugural AI-in-Ortho briefs shipped 2026-04-16 + `/for-reviewers/apply` shipped Session 7 + `/dashboard/admin/reviewer-applications` shipped Session 8), all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, Cloudflare Turnstile CAPTCHA, and an AI in Orthopedics hub with 2 Editor's Picks + 20-term glossary + the full inaugural 11-brief slate (Imaging ×2, Surgical Planning ×2, Robotics ×2, Outcomes ×1, LLMs ×2, Research Tools ×2) now live across all six categories. **Live at https://oscrsj.com**.
+A complete Next.js 14 website — **61 pages total** (35 existing + `/news` landing + `/news/ai-in-orthopedics` + 6 category archives + 2 Editor's Pick guides + 11 inaugural AI-in-Ortho briefs shipped 2026-04-16 + `/for-reviewers/apply` shipped Session 7 + `/dashboard/admin/reviewer-applications` shipped Session 8 + `/dashboard/admin/manuscripts` list + `/dashboard/admin/manuscripts/[id]` detail + `/review/[token]` public reviewer invitation page shipped Session 9), all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, Cloudflare Turnstile CAPTCHA, and an AI in Orthopedics hub with 2 Editor's Picks + 20-term glossary + the full inaugural 11-brief slate (Imaging ×2, Surgical Planning ×2, Robotics ×2, Outcomes ×1, LLMs ×2, Research Tools ×2) now live across all six categories. **Live at https://oscrsj.com**.
 
 ### Deployment & Infrastructure
 | Item | Details |
@@ -59,6 +59,9 @@ A complete Next.js 14 website — **58 pages total** (35 existing + `/news` land
 | `/dashboard` | `app/dashboard/page.tsx` | ✅ Complete (Session 2, author submissions list) |
 | `/dashboard/settings` | `app/dashboard/settings/page.tsx` | ✅ Complete (Session 2, profile editor + Session 8 GDPR export button) |
 | `/dashboard/admin/reviewer-applications` | `app/dashboard/admin/reviewer-applications/page.tsx` | ✅ Complete (Session 8, editor/admin-only triage UI, list + inline expand + status transitions + admin notes) |
+| `/dashboard/admin/manuscripts` | `app/dashboard/admin/manuscripts/page.tsx` | ✅ Complete (Session 9, editor/admin-only list of non-draft manuscripts — submission id, title, type, subspecialty, status, corresponding author, submission date) |
+| `/dashboard/admin/manuscripts/[id]` | `app/dashboard/admin/manuscripts/[id]/page.tsx` | ✅ Complete (Session 9, manuscript detail + authors + files + declarations + `InviteReviewerPanel`) |
+| `/review/[token]` | `app/review/[token]/page.tsx` | ✅ Complete (Session 9, public token-only reviewer invitation page — accept/decline with pre-action confirmation step, `noindex`) |
 | `/dashboard/submit` | `app/dashboard/submit/page.tsx` | ✅ Complete (Session 3-4, full 5-step wizard) |
 | `/forgot-password` | `app/forgot-password/page.tsx` | ✅ Complete (Session 2, email reset request) |
 | `/reset-password` | `app/reset-password/page.tsx` | ✅ Complete (Session 2, new password form) |
@@ -106,8 +109,10 @@ A complete Next.js 14 website — **58 pages total** (35 existing + `/news` land
 - ~~No email notifications~~ ✅ Full transactional pipeline live as of Session 6 (2026-04-17): submission confirmation + co-author notification + co-author dispute + withdrawal (author/editor/reviewer variants) all confirmed delivering end-to-end via Resend. `Reply-To: kanwarparhar@gmail.com` wired on every send via `DEFAULT_REPLY_TO` in `lib/email/resend.ts` (env var `EMAIL_REPLY_TO` with Gmail fallback).
 - ~~No draft withdrawal button on dashboard~~ ✅ Shipped Session 6 (`app/dashboard/WithdrawButton.tsx` + `withdrawManuscript` server action in `lib/submission/actions.ts`). DRAFT/SUBMITTED/UNDER_REVIEW → WITHDRAWN; invited/accepted reviewers auto-cancelled on `review_invitations`.
 - Resend webhook must be registered manually in the Resend dashboard (URL `https://www.oscrsj.com/api/webhooks/resend`, events: delivered/bounced/complained/delivery_delayed) and its signing secret copied into `RESEND_WEBHOOK_SECRET` on Vercel before delivery status updates will flow.
-- Migrations 003–007 executed (003/004 in Session 5, 005 defensive RLS restore in Session 6, 006 reviewer_applications + 007 ai_disclosure in Session 7). No new migrations shipped Session 8.
+- Migrations 003–007 executed; **migration 008 (`008_review_invitation_external_reviewers.sql`) shipped in Session 9 — must be run manually in Supabase SQL Editor before the first reviewer invitation can be issued**. 008 relaxes `review_invitations.reviewer_id` to nullable, adds `reviewer_application_id` FK + `reviewer_email`/`reviewer_first_name`/`reviewer_last_name`/`declined_reason` snapshot columns, a CHECK constraint requiring at least one identity column, and RLS policies gating editor/admin writes.
 - ~~No reviewer application form~~ ✅ Shipped Session 7 (`/for-reviewers/apply`). ~~Admin approval UI~~ ✅ Shipped Session 8 (`/dashboard/admin/reviewer-applications` — editor/admin-gated list + inline row expansion + status transitions + admin notes + audit log). Detail subroute deferred; inline expansion carries the whole UI.
+- ~~No reviewer invitation workflow~~ ✅ Shipped Session 9. Editor opens `/dashboard/admin/manuscripts/[id]` → "Active reviewer pool" panel ranks applicants by subspecialty match → "Invite" button opens a modal with deadline (default +21 days) + optional note → server action creates a `review_invitations` row + fires `reviewerInvitation` email. Invitee lands on `/review/[token]` (token-only auth, 122-bit `gen_random_uuid()`), sees title/type/subspecialty/abstract only (double-blind — no authors), clicks Accept or Decline, confirms on a second step (prevents email-client preview-fetch auto-accept), and receives a confirmation email while the editorial office gets an editor-notification email. Audit log rows: `invite_sent`, `invitation_accepted`, `invitation_declined`.
+- No structured review form yet (Session 10 scope). Accepted invitations sit in `review_invitations.status = 'accepted'` awaiting the Likert-scale review form + double-blind manuscript download at `/review/[token]/manuscript`.
 - ~~No AI disclosure mechanism~~ ✅ Shipped Session 7 (Step 5 toggle + conditional textarea + reinforcement line; `getManuscriptAiDisclosure()` getter ready for the future published-article template).
 - ~~No GDPR data export~~ ✅ Shipped Session 8 (`/api/dashboard/export` returns a JSON blob of the authed user's profile + owned + co-authored manuscripts + authors + metadata + file listings + payments + any reviewer_applications by email match; download button lives at the bottom of `/dashboard/settings`; file contents from Storage are *not* embedded — only file metadata).
 - Custom auth domain `auth.oscrsj.com` — runbook shipped Session 8 at `docs/supabase-custom-auth-domain.md`. Execution blocked on Supabase Pro upgrade decision; no code change required once Kanwar runs the 5-step flow.
@@ -170,24 +175,24 @@ A complete Next.js 14 website — **58 pages total** (35 existing + `/news` land
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. **Session 8 (2026-04-18, Sushant)** shipped the admin approval UI for `reviewer_applications`, GDPR data export endpoint, and the custom auth domain runbook. Session 7 (2026-04-17) shipped `/for-reviewers/apply` reviewer intake form + AI-assisted-writing disclosure field on Step 5. Session 6 (2026-04-17) shipped withdrawal flow + Reply-To header + E2E email pipeline confirmed live. Franklin commit `14d03e3` (2026-04-17) shipped apex → www canonical cleanup + a11y tan→brown contrast pass; live on production. AI in Orthopedics hub: 11 inaugural briefs + 20-term glossary + 2 Editor's Picks live. Session 9 priorities in order:
+The site is live at oscrsj.com. **Session 9 (2026-04-18, Sushant)** shipped the reviewer invitation workflow: migration 008 + minimal admin manuscripts surface (`/dashboard/admin/manuscripts` list + `[id]` detail) + token-only public `/review/[token]` accept/decline + 3 new Resend emails (invitation, invitee confirmation, editor notification). Session 8 (2026-04-18) shipped the admin approval UI for `reviewer_applications`, GDPR data export endpoint, and the custom auth domain runbook. Session 7 (2026-04-17) shipped `/for-reviewers/apply` + AI disclosure. Session 6 (2026-04-17) shipped withdrawal flow + Reply-To header. Franklin commit `14d03e3` (2026-04-17) shipped apex → www canonical + a11y tan→brown. AI in Orthopedics hub: 11 inaugural briefs + 20-term glossary + 2 Editor's Picks live. Session 10 priorities in order:
 
-1. **AI in Orthopedics content population** (Arjun Agent scope — 6 of 10 briefs shipped 2026-04-16)
-   - ✅ Glossary v1 (20 terms) — live on landing page accordion
-   - ✅ Final 150-word primer (`AI_ORTHO_PRIMER`) — shipped
-   - ✅ Editor's Pick: Imaging Primer for Residents — live at `/news/ai-in-orthopedics/guides/imaging-primer-for-residents`
-   - ✅ Editor's Pick: LLM Guide for Trainees — live at `/news/ai-in-orthopedics/guides/llm-guide-for-trainees`
-   - ✅ 11 inaugural briefs shipped 2026-04-16 across two same-day Cowork sessions: Imaging (commercial-ai-fracture-detection-meta-analysis, deep-learning-cobb-angle-meta-analysis), Surgical Planning (ai-3d-planning-total-hip-arthroplasty-meta-analysis, ar-navigation-pedicle-screw-rct), Robotics (robot-assisted-femoral-shaft-reduction-controlled-trial, robotic-assisted-arthroscopy-hss-review), Outcomes (xgboost-tka-complications-prediction), LLMs (chatgpt-deepseek-aaos-clavicle-guidelines, chatgpt-medicine-applications-challenges-review), Research Tools (chatgpt-orthopedic-literature-review-comparison, ai-research-assistant-orthopedic-resident-review). Path (b) (uploaded PDFs → in-context extraction via `pdftotext -layout`) proved the higher-fidelity route over web fetch.
-   - ⏳ Kanwar to supply the Canva hero export per Page Plan §13 (1920×800) and drop at `/public/images/ai-in-ortho-hero.png` — `<Image>` block is already uncommented and waiting
-   - ⏳ OG image: drop 1200×630 Canva export at `/public/images/ai-in-ortho-og.png` so social previews render (metadata wired 2026-04-14)
+1. **Submission Portal Session 10: Structured review form + reviewer dashboard + double-blind manuscript access** (Sushant Agent scope)
+   - 🔨 Structured review form on `/review/[token]/form` (or a new authenticated reviewer-dashboard subroute) — 6 Likert scales (quality, novelty, rigor, data, clarity, scope) + comments-to-author + comments-to-editor + final recommendation per §4.2 of the Architecture Plan.
+   - 🔨 Reviewer dashboard (§4.4) — once an invitee accepts, give them a lightweight home showing active reviews, deadlines, submitted reviews.
+   - 🔨 Double-blind manuscript download — signed-URL access to `blinded_manuscript` Storage files on `/review/[token]/manuscript` (token gate, same as the accept/decline flow). Full manuscript only appears after the invitation is `accepted`.
+   - 🔨 "Suggest alternative reviewer" when declining (§4.4) — optional field on the decline form.
+   - 📋 Review reminder email cadence (10-day / 5-day / overdue per §4.5) — cron or Vercel scheduled function. Session 11 scope once the review form exists and reviews start arriving.
+   - ⏳ Kanwar must run migration 008 in Supabase SQL Editor before any reviewer invite is issued.
+   - ⏳ Full end-to-end auth retest — deferred from Sessions 5, 6, 7, 8, 9. Kanwar has the checklist; run on production in a clean incognito window.
+   - 📋 Stripe payment integration spec — still blocked on LLC.
+   - 📋 Custom auth domain `auth.oscrsj.com` — runbook ready at `docs/supabase-custom-auth-domain.md`; execution needs Supabase Pro upgrade decision.
+   - 📋 `EMAIL_REPLY_TO=editorial@oscrsj.com` once Workspace mailbox is provisioned.
 
-2. **Submission Portal Session 9: Reviewer invitation workflow + deferred auth retest** (Sushant Agent scope)
-   - ⏳ Full end-to-end auth retest — deferred from Sessions 5, 6, 7, and 8 (not attempted in code-only Session 8). Kanwar/Sushant to walk signup → email confirm → dashboard → reset on production.
-   - 🔨 Reviewer invitation workflow (Phase 2 kickoff) — editor picks a reviewer from the `active` reviewer_applications slate, sends an invitation email with a magic-token `/review/[token]` acceptance URL, seeds a `review_invitations` row.
-   - 📋 Stripe payment integration spec draft (still blocked on LLC for execution, but Brad can scope the APC invoice flow: ACCEPTED → AWAITING_PAYMENT → Stripe invoice → PAID).
-   - 📋 Custom auth domain `auth.oscrsj.com` — runbook ready at `docs/supabase-custom-auth-domain.md`; execution needs Supabase Pro upgrade decision + GoDaddy CNAME + email template rewrite.
-   - 📋 `EMAIL_REPLY_TO=editorial@oscrsj.com` env var set on all 3 Vercel envs once Google Workspace mailbox is provisioned. Currently falling through to the code-level `kanwarparhar@gmail.com` default.
-   - 📋 Optional admin UI polish: dedicated `/dashboard/admin/reviewer-applications/[id]` detail view (Session 8 shipped inline expand on the list row; detail route was deferred).
+2. **AI in Orthopedics content population** (Arjun Agent scope — inaugural slate complete)
+   - ✅ Glossary v1 (20 terms), final 150-word primer, 2 Editor's Picks, 11 inaugural briefs — all live
+   - ⏳ Kanwar to supply the Canva hero export (1920×800 at `/public/images/ai-in-ortho-hero.png`)
+   - ⏳ OG image (1200×630 at `/public/images/ai-in-ortho-og.png`)
 
 3. **Submit sitemap to Google Search Console**
    - Go to search.google.com/search-console → add oscrsj.com property
@@ -305,6 +310,11 @@ OSCRSJ/
 │   │   │   └── ProfileForm.tsx        ← Client component (profile editor + Session 8 GDPR export button)
 │   │   ├── admin/
 │   │   │   ├── layout.tsx             ← Server-side editor/admin role guard for every /dashboard/admin/* route (Session 8)
+│   │   │   ├── manuscripts/
+│   │   │   │   ├── page.tsx           ← Server component: list of non-draft manuscripts (Session 9)
+│   │   │   │   └── [id]/
+│   │   │   │       ├── page.tsx       ← Server component: manuscript detail + authors + files + declarations (Session 9)
+│   │   │   │       └── InviteReviewerPanel.tsx  ← Client component: current invitations + active reviewer pool + invite modal (Session 9)
 │   │   │   └── reviewer-applications/
 │   │   │       ├── page.tsx           ← Server component: list + status filter query param (Session 8)
 │   │   │       └── ReviewerApplicationsTable.tsx  ← Client component: inline expand, status transitions, admin notes (Session 8)
@@ -327,6 +337,10 @@ OSCRSJ/
 │   │       └── ApplyForm.tsx          ← Client component (10-field form + consent + dual Resend emails)
 │   ├── faq/page.tsx                    ← 27 questions, 5 categories
 │   ├── accessibility/page.tsx
+│   ├── review/
+│   │   └── [token]/
+│   │       ├── page.tsx               ← Public token-only reviewer invitation page (Session 9, noindex)
+│   │       └── ReviewResponseForm.tsx ← Client component: Accept/Decline with pre-action confirmation (Session 9)
 │   └── news/
 │       ├── page.tsx                   ← /news landing (AI feed + Ortho Headlines + Journal Updates placeholders)
 │       └── ai-in-orthopedics/
@@ -347,7 +361,7 @@ OSCRSJ/
 │   │   ├── actions.ts                 ← Server actions (signUp, signIn, signOut, resetPassword, updateProfile)
 │   │   └── orcid.ts                   ← ORCID OAuth utilities (auth URL, code exchange, profile fetch)
 │   ├── reviewer/
-│   │   └── actions.ts                 ← Server actions: submitReviewerApplication (Session 7) + Session 8 admin triage (listReviewerApplications, updateReviewerApplicationStatus, updateReviewerApplicationAdminNotes — all re-check editor/admin role, audit-log status transitions)
+│   │   └── actions.ts                 ← Server actions: submitReviewerApplication (Session 7) + Session 8 admin triage + Session 9 invitation workflow (inviteReviewer, listInvitationsForManuscript, acceptReviewInvitation, declineReviewInvitation — token-only public actions for accept/decline, editor-gated for invite, all audit-logged)
 │   ├── ai-ortho/
 │   │   └── data.ts                    ← Category list + AiOrthoBrief schema + empty AI_ORTHO_BRIEFS + landing primer
 │   ├── schema/
@@ -360,7 +374,12 @@ OSCRSJ/
 │   │       ├── shared.ts              ← Inline-styled email shell + helpers (paragraph, cta, detailsList)
 │   │       ├── submissionConfirmation.ts
 │   │       ├── coAuthorNotification.ts
-│   │       └── coAuthorDisputeNotification.ts
+│   │       ├── coAuthorDisputeNotification.ts
+│   │       ├── reviewerApplicationConfirmation.ts   ← Session 7
+│   │       ├── reviewerApplicationInternalNotification.ts  ← Session 7
+│   │       ├── reviewerInvitation.ts               ← Session 9: editor → invitee (Accept/Decline CTAs)
+│   │       ├── reviewerInvitationConfirmation.ts   ← Session 9: invitee receipt after response
+│   │       └── reviewerInvitationEditorNotification.ts  ← Session 9: editor notified on invitee response
 │   ├── submission/
 │   │   └── actions.ts                 ← Server actions (createOrUpdateDraft, saveManuscriptInfo, recordFile, deleteFile, saveAuthors, saveDeclarations, submitManuscript — submitManuscript now fires transactional emails)
 │   ├── supabase/
@@ -382,5 +401,6 @@ OSCRSJ/
         ├── 004_co_author_disputes.sql ← manuscript_metadata.co_author_disputes + audit_logs.details
         ├── 005_restore_submission_rls_policies.sql  ← Defensive INSERT/UPDATE/DELETE policy restore (Session 6)
         ├── 006_reviewer_applications.sql            ← Reviewer intake table + enums + RLS (Session 7)
-        └── 007_ai_disclosure.sql                    ← manuscript_metadata.ai_tools_used + ai_tools_details (Session 7)
+        ├── 007_ai_disclosure.sql                    ← manuscript_metadata.ai_tools_used + ai_tools_details (Session 7)
+        └── 008_review_invitation_external_reviewers.sql  ← Relax review_invitations.reviewer_id to nullable + reviewer_application_id/email/name snapshot columns + CHECK identity constraint + editor RLS policies (Session 9)
 ```

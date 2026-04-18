@@ -177,11 +177,16 @@ export interface PaymentRow {
 export interface ReviewInvitationRow {
   id: string
   manuscript_id: string
-  reviewer_id: string
+  reviewer_id: string | null
+  reviewer_application_id: string | null
+  reviewer_email: string | null
+  reviewer_first_name: string | null
+  reviewer_last_name: string | null
   invited_date: string
   deadline: string | null
   status: InvitationStatus
   response_date: string | null
+  declined_reason: string | null
   review_token: string
   created_at: string
   updated_at: string
@@ -376,9 +381,14 @@ export interface PaymentInsert {
 
 export interface ReviewInvitationInsert {
   manuscript_id: string
-  reviewer_id: string
+  reviewer_id?: string | null
+  reviewer_application_id?: string | null
+  reviewer_email?: string | null
+  reviewer_first_name?: string | null
+  reviewer_last_name?: string | null
   deadline?: string | null
   status?: InvitationStatus
+  declined_reason?: string | null
 }
 
 export interface ReviewInsert {
@@ -451,7 +461,9 @@ export type ManuscriptMetadataUpdate = Partial<Omit<ManuscriptMetadataInsert, 'm
 
 export type PaymentUpdate = Partial<Omit<PaymentInsert, 'manuscript_id'>>
 
-export type ReviewInvitationUpdate = Partial<Omit<ReviewInvitationInsert, 'manuscript_id' | 'reviewer_id'>>
+export type ReviewInvitationUpdate = Partial<Omit<ReviewInvitationInsert, 'manuscript_id'>> & {
+  response_date?: string | null
+}
 
 export type ReviewUpdate = Partial<Omit<ReviewInsert, 'review_invitation_id' | 'manuscript_id' | 'reviewer_id'>>
 

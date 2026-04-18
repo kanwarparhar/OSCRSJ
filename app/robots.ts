@@ -14,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: '/api/',
+        disallow: ['/api/', '/dashboard/', '/review/'],
       },
     ],
     sitemap: 'https://www.oscrsj.com/sitemap.xml',
