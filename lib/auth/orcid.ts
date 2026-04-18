@@ -9,6 +9,21 @@
  * 3. We exchange the code for an access token + ORCID iD
  * 4. We fetch the user's public profile from the ORCID API
  * 5. We create/link the Supabase account
+ *
+ * --- ORCID redirect URI registration notes ---
+ * The redirect URI registered at orcid.org/developer-tools MUST be the FULL path
+ * including `/auth/callback/orcid` — NOT just `/auth/callback`. The Supabase auth
+ * callback handler also lives under `/auth/callback`, so a missing `/orcid` suffix
+ * silently misroutes ORCID OAuth into the Supabase handler and looks like
+ * "partially working" before failing token exchange. (Burned us pre-launch — see
+ * Vault State 2026-04-18 AM entry.)
+ *
+ * Production ORCID apps reject `http://` URIs (HTTPS-only). Local-dev OAuth
+ * therefore requires either: (a) a separate ORCID Sandbox app with its own
+ * client_id/secret and `https://sandbox.orcid.org/...` endpoints, or (b) an
+ * HTTPS tunnel to localhost (e.g. ngrok) registered as an additional redirect
+ * URI on the production app. We have neither yet — local-dev ORCID OAuth is
+ * known-broken and must be tested only against production.
  */
 
 const ORCID_BASE = 'https://orcid.org'

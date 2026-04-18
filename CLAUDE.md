@@ -135,7 +135,7 @@ A complete Next.js 14 website — **61 pages total** (35 existing + `/news` land
 ---
 
 ## Design System
-"Neutral Elegance" palette inspired by newgenre.studio. Dark gradient hero, editorial serif typography, warm tones. All tokens in `tailwind.config.ts` and `app/globals.css`. Design system v2.0 (overhauled 2026-04-12).
+"Neutral Elegance" palette inspired by newgenre.studio. Dark gradient hero, editorial serif typography, warm tones. All tokens in `tailwind.config.ts` and `app/globals.css`. Design system **v2.1 — Clean Journal** (rollout 2026-04-18, commit `0ba6db4`) evolves v2.0 to a white body base. Hierarchy is now **dark hero → white body → cream accent sections → white cards**. Peach CTAs, dark hero, brown-dark body text, and DM Serif Display headings are unchanged. Page background is `#FFFFFF` (was `#FFF5EB`); cards and form wells sit on white without fighting a cream body. Cream (`#FFF5EB`) is now an accent band between white sections (formerly the page base). `cream-alt` is retired from layout use — any existing `bg-cream-alt` class was swept to `bg-cream`.
 
 | Token | Value | Usage |
 |---|---|---|
@@ -150,9 +150,9 @@ A complete Next.js 14 website — **61 pages total** (35 existing + `/news` land
 | `cream` | `#FFF5EB` | Main page background |
 | `cream-alt` | `#F5EAE0` | Alternating section background |
 | `white` | `#FFFFFF` | All cards, form inputs, article wells (surface tier) |
-| `border` | `rgba(153,126,103,0.12)` | Subtle borders/dividers |
+| `border` | `rgba(153,126,103,0.18)` | Subtle borders/dividers (bumped from 0.12 in v2.1 to strengthen card edges against the white body) |
 
-**4-tier visual hierarchy:** dark (#1c0f05) > cream (#FFF5EB) > cream-alt (#F5EAE0) > white (#FFFFFF)
+**3-tier visual hierarchy (v2.1):** dark (#1c0f05) → white (#FFFFFF) body → cream (#FFF5EB) accent sections → white (#FFFFFF) cards within cream. `cream-alt` retired from layout use.
 
 **Fonts:** DM Serif Display (headings) + Inter (body)
 
@@ -175,7 +175,7 @@ A complete Next.js 14 website — **61 pages total** (35 existing + `/news` land
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. **Session 9 (2026-04-18, Sushant)** shipped the reviewer invitation workflow: migration 008 + minimal admin manuscripts surface (`/dashboard/admin/manuscripts` list + `[id]` detail) + token-only public `/review/[token]` accept/decline + 3 new Resend emails (invitation, invitee confirmation, editor notification). Session 8 (2026-04-18) shipped the admin approval UI for `reviewer_applications`, GDPR data export endpoint, and the custom auth domain runbook. Session 7 (2026-04-17) shipped `/for-reviewers/apply` + AI disclosure. Session 6 (2026-04-17) shipped withdrawal flow + Reply-To header. Franklin commit `14d03e3` (2026-04-17) shipped apex → www canonical + a11y tan→brown. AI in Orthopedics hub: 11 inaugural briefs + 20-term glossary + 2 Editor's Picks live. Session 10 priorities in order:
+The site is live at oscrsj.com. **Franklin commit `0ba6db4` (2026-04-18)** shipped the Clean Journal redesign site-wide rollout: white body base + cream accent sections + border token bump (0.12 → 0.18) + final text-tan → text-brown a11y sweep; 53 files, 175/175 diff; tsc clean. Visual hierarchy shifts v2.0 → **v2.1 Clean Journal**. **Session 9 (2026-04-18, Sushant)** shipped the reviewer invitation workflow: migration 008 + minimal admin manuscripts surface (`/dashboard/admin/manuscripts` list + `[id]` detail) + token-only public `/review/[token]` accept/decline + 3 new Resend emails (invitation, invitee confirmation, editor notification). Session 8 (2026-04-18) shipped the admin approval UI for `reviewer_applications`, GDPR data export endpoint, and the custom auth domain runbook. Session 7 (2026-04-17) shipped `/for-reviewers/apply` + AI disclosure. Session 6 (2026-04-17) shipped withdrawal flow + Reply-To header. Franklin commit `14d03e3` (2026-04-17) shipped apex → www canonical + a11y tan→brown. AI in Orthopedics hub: 11 inaugural briefs + 20-term glossary + 2 Editor's Picks live. Session 10 priorities in order:
 
 1. **Submission Portal Session 10: Structured review form + reviewer dashboard + double-blind manuscript access** (Sushant Agent scope)
    - 🔨 Structured review form on `/review/[token]/form` (or a new authenticated reviewer-dashboard subroute) — 6 Likert scales (quality, novelty, rigor, data, clarity, scope) + comments-to-author + comments-to-editor + final recommendation per §4.2 of the Architecture Plan.
