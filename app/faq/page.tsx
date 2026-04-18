@@ -218,7 +218,7 @@ export default function FAQPage() {
         <div className="mt-14 bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-brown-dark">Still have questions?</p>
-            <p className="text-sm text-tan mt-0.5">Our editorial team is here to help.</p>
+            <p className="text-sm text-brown mt-0.5">Our editorial team is here to help.</p>
           </div>
           <Link href="/contact" className="btn-primary-light flex-shrink-0">
             Contact Us

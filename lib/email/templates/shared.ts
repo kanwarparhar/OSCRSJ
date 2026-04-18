@@ -30,7 +30,7 @@ const FOOTER_HTML = `
     OSCRSJ &mdash; Orthopedic Surgery Case Reports &amp; Series Journal
   </p>
   <p style="margin: 4px 0 0 0; font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 20px; color: #997E67;">
-    Editorial Office &middot; <a href="https://oscrsj.com" style="color: #664930; text-decoration: none;">oscrsj.com</a>
+    Editorial Office &middot; <a href="https://www.oscrsj.com" style="color: #664930; text-decoration: none;">oscrsj.com</a>
   </p>
 `
 
@@ -126,7 +126,7 @@ export function detailsList(items: Array<[string, string]>): string {
 }
 
 export function plainTextFooter(): string {
-  return `\n\n--\nOSCRSJ — Orthopedic Surgery Case Reports & Series Journal\nEditorial Office · https://oscrsj.com\n`
+  return `\n\n--\nOSCRSJ — Orthopedic Surgery Case Reports & Series Journal\nEditorial Office · https://www.oscrsj.com\n`
 }
 
 // Minimal HTML escaping (covers the unsafe characters; email content is

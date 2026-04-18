@@ -111,7 +111,7 @@ export default function Step3Info({
   return (
     <div>
       <h2 className="font-serif text-xl text-brown-dark mb-1">Manuscript Information</h2>
-      <p className="text-sm text-tan mb-6">
+      <p className="text-sm text-brown mb-6">
         Provide details about your manuscript. All fields marked with an asterisk are required.
       </p>
 
@@ -127,7 +127,7 @@ export default function Step3Info({
           placeholder="Enter your manuscript title"
           className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30"
         />
-        <p className="text-xs text-tan mt-1 text-right">{title.length}/200 characters</p>
+        <p className="text-xs text-brown mt-1 text-right">{title.length}/200 characters</p>
       </div>
 
       {/* Abstract */}
@@ -135,7 +135,7 @@ export default function Step3Info({
         <label className="block text-sm font-medium text-brown-dark mb-1">
           Abstract <span className="text-red-500">*</span>
         </label>
-        <p className="text-xs text-tan mb-2">
+        <p className="text-xs text-brown mb-2">
           Structured abstract: Background, Case Presentation, Discussion, Conclusion. 150 to 500 words.
         </p>
         <textarea
@@ -157,7 +157,7 @@ export default function Step3Info({
         <label className="block text-sm font-medium text-brown-dark mb-1">
           Keywords <span className="text-red-500">*</span>
         </label>
-        <p className="text-xs text-tan mb-2">
+        <p className="text-xs text-brown mb-2">
           Add 3 to 8 keywords. Type a keyword and press Enter to add.
         </p>
 
@@ -208,7 +208,7 @@ export default function Step3Info({
           </div>
         )}
 
-        <p className="text-xs text-tan mt-1">{keywords.length}/8 keywords</p>
+        <p className="text-xs text-brown mt-1">{keywords.length}/8 keywords</p>
       </div>
 
       {/* Subspecialty */}
@@ -231,7 +231,7 @@ export default function Step3Info({
       {/* Suggested Reviewers */}
       <div className="mb-6 border-t border-border pt-6">
         <h3 className="font-serif text-lg text-brown-dark mb-1">Suggested Reviewers</h3>
-        <p className="text-xs text-tan mb-4">
+        <p className="text-xs text-brown mb-4">
           Optional. Suggest up to 5 reviewers with relevant expertise. These should not be co-authors or collaborators.
         </p>
 
@@ -284,7 +284,7 @@ export default function Step3Info({
       {/* Non-Preferred Reviewers */}
       <div className="border-t border-border pt-6">
         <h3 className="font-serif text-lg text-brown-dark mb-1">Non-Preferred Reviewers</h3>
-        <p className="text-xs text-tan mb-4">
+        <p className="text-xs text-brown mb-4">
           Optional. List up to 3 reviewers you would prefer not to review this manuscript, with a brief reason.
         </p>
 

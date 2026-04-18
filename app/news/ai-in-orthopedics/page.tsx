@@ -23,16 +23,16 @@ export const metadata: Metadata = {
     'ChatGPT orthopedic residents',
     'robotic surgery orthopedics',
   ],
-  alternates: { canonical: 'https://oscrsj.com/news/ai-in-orthopedics' },
+  alternates: { canonical: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
   openGraph: {
     title: 'AI in Orthopedics | OSCRSJ',
     description:
       'Curated research, tools, and guidance for orthopedic trainees and surgeons.',
-    url: 'https://oscrsj.com/news/ai-in-orthopedics',
+    url: 'https://www.oscrsj.com/news/ai-in-orthopedics',
     type: 'website',
     images: [
       {
-        url: 'https://oscrsj.com/images/ai-in-ortho-og.png',
+        url: 'https://www.oscrsj.com/images/ai-in-ortho-og.png',
         width: 1200,
         height: 630,
         alt: 'AI in Orthopedics, OSCRSJ editorial hub',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: 'AI in Orthopedics | OSCRSJ',
     description:
       'Curated research, tools, and guidance for orthopedic trainees and surgeons.',
-    images: ['https://oscrsj.com/images/ai-in-ortho-og.png'],
+    images: ['https://www.oscrsj.com/images/ai-in-ortho-og.png'],
   },
 }
 
@@ -79,8 +79,8 @@ export default function AiInOrthopedicsLanding() {
   const latest = getLatestBriefs(10)
 
   const breadcrumbLd = buildBreadcrumbSchema([
-    { name: 'News', url: 'https://oscrsj.com/news' },
-    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+    { name: 'News', url: 'https://www.oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
   ])
 
   return (
@@ -162,7 +162,7 @@ export default function AiInOrthopedicsLanding() {
                     <span className="text-brown inline-flex items-center justify-center w-10 h-10 rounded-lg bg-cream-alt border border-border">
                       <Icon />
                     </span>
-                    <span className="text-xs text-tan">
+                    <span className="text-xs text-brown">
                       {count === 0 ? 'Coming soon' : `${count} brief${count === 1 ? '' : 's'}`}
                     </span>
                   </div>
@@ -210,11 +210,11 @@ export default function AiInOrthopedicsLanding() {
                       <span className="text-xs font-medium text-brown bg-tan/20 px-3 py-1 rounded-full">
                         {cat?.short ?? 'AI'}
                       </span>
-                      <span className="text-xs text-tan">{b.readMinutes} min read</span>
+                      <span className="text-xs text-brown">{b.readMinutes} min read</span>
                     </div>
                     <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">{b.headline}</h3>
                     <p className="text-sm text-brown-dark/80 leading-relaxed mb-3">{b.summary}</p>
-                    <p className="text-xs text-tan">
+                    <p className="text-xs text-brown">
                       {b.source.journal} &middot;{' '}
                       {new Date(b.publishedAt).toLocaleDateString('en-US', {
                         month: 'short',
@@ -284,7 +284,7 @@ export default function AiInOrthopedicsLanding() {
               </details>
             ))}
           </div>
-          <p className="text-xs text-tan leading-relaxed mt-6">
+          <p className="text-xs text-brown leading-relaxed mt-6">
             This glossary is reviewed and expanded regularly. Terms are chosen for their frequency in the orthopedic AI literature and their utility to a trainee reader. Suggest additions via the contact form.
           </p>
         </div>
@@ -346,7 +346,7 @@ export default function AiInOrthopedicsLanding() {
           </div>
           <div>
             <span className="section-label">Disclaimer</span>
-            <p className="text-xs text-tan leading-relaxed">
+            <p className="text-xs text-brown leading-relaxed">
               OSCRSJ News items are editorial summaries for educational purposes. They are not clinical recommendations, endorsements, or substitutes for the primary literature. Always consult the source paper and applicable specialty-society guidelines before changing practice.
             </p>
           </div>

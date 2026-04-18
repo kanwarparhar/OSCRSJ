@@ -78,7 +78,7 @@ export default function Header() {
               >
                 {item.label}
                 {item.dropdown && (
-                  <svg className="w-3 h-3 mt-0.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-3 h-3 mt-0.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 )}
@@ -118,8 +118,11 @@ export default function Header() {
         <button
           className="md:hidden p-2 text-peach/80"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-menu"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             {mobileOpen
               ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
@@ -129,7 +132,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden" style={{ backgroundColor: '#2a180c', borderTop: '1px solid rgba(255,219,187,0.1)' }}>
+        <div id="mobile-menu" className="md:hidden" style={{ backgroundColor: '#2a180c', borderTop: '1px solid rgba(255,219,187,0.1)' }}>
           {navItems.map((item) => (
             <div key={item.label}>
               <Link

@@ -27,14 +27,14 @@ export function generateMetadata({ params }: PageProps): Metadata {
     title: brief.headline,
     description: brief.summary,
     alternates: {
-      canonical: `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}/${brief.slug}`,
+      canonical: `https://www.oscrsj.com/news/ai-in-orthopedics/${cat.slug}/${brief.slug}`,
     },
     openGraph: {
       title: brief.headline,
       description: brief.summary,
       type: 'article',
       publishedTime: brief.publishedAt,
-      url: `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}/${brief.slug}`,
+      url: `https://www.oscrsj.com/news/ai-in-orthopedics/${cat.slug}/${brief.slug}`,
     },
   }
 }
@@ -46,7 +46,7 @@ export default function BriefPage({ params }: PageProps) {
   const brief = getBrief(params.slug as AiOrthoCategorySlug, params.brief)
   if (!brief) notFound()
 
-  const briefUrl = `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}/${brief.slug}`
+  const briefUrl = `https://www.oscrsj.com/news/ai-in-orthopedics/${cat.slug}/${brief.slug}`
   const doiUrl = brief.source.doi ? `https://doi.org/${brief.source.doi}` : brief.source.url
 
   const jsonLd = buildNewsArticleSchema({
@@ -63,9 +63,9 @@ export default function BriefPage({ params }: PageProps) {
   })
 
   const breadcrumbLd = buildBreadcrumbSchema([
-    { name: 'News', url: 'https://oscrsj.com/news' },
-    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
-    { name: cat.short, url: `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}` },
+    { name: 'News', url: 'https://www.oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
+    { name: cat.short, url: `https://www.oscrsj.com/news/ai-in-orthopedics/${cat.slug}` },
     { name: brief.headline, url: briefUrl },
   ])
 
@@ -83,7 +83,7 @@ export default function BriefPage({ params }: PageProps) {
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Breadcrumb */}
-        <nav className="text-xs text-tan mb-6">
+        <nav className="text-xs text-brown mb-6">
           <Link href="/news" className="hover:text-brown-dark transition-colors">
             News
           </Link>
@@ -105,7 +105,7 @@ export default function BriefPage({ params }: PageProps) {
           <span className="text-xs font-medium text-brown bg-tan/20 px-3 py-1 rounded-full">
             {cat.short}
           </span>
-          <span className="text-xs text-tan">{brief.readMinutes} min read</span>
+          <span className="text-xs text-brown">{brief.readMinutes} min read</span>
         </div>
 
         {/* Headline */}
@@ -117,7 +117,7 @@ export default function BriefPage({ params }: PageProps) {
         </h1>
 
         {/* Source metadata */}
-        <div className="text-sm text-tan leading-relaxed mb-8 pb-8 border-b border-border">
+        <div className="text-sm text-brown leading-relaxed mb-8 pb-8 border-b border-border">
           <p>
             <span className="text-brown-dark font-medium">Source:</span> {brief.source.journal}
             <span className="mx-2">&middot;</span>
@@ -256,7 +256,7 @@ export default function BriefPage({ params }: PageProps) {
         </div>
 
         {/* Disclaimer */}
-        <p className="text-xs text-tan leading-relaxed mt-10">
+        <p className="text-xs text-brown leading-relaxed mt-10">
           OSCRSJ News items are editorial summaries for educational purposes. They are not clinical recommendations, endorsements, or substitutes for the primary literature. Always consult the source paper and applicable specialty-society guidelines before changing practice.
         </p>
       </article>

@@ -118,7 +118,7 @@ export default function ApplyForm() {
         <h2 className="font-serif text-xl text-brown-dark mb-1">
           Personal Information
         </h2>
-        <p className="text-sm text-tan mb-5">
+        <p className="text-sm text-brown mb-5">
           Fields marked with * are required.
         </p>
 
@@ -187,7 +187,7 @@ export default function ApplyForm() {
               ORCID iD
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-tan flex-shrink-0">
+              <span className="text-sm text-brown flex-shrink-0">
                 https://orcid.org/
               </span>
               <input
@@ -200,7 +200,7 @@ export default function ApplyForm() {
                 className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
-            <p className="text-xs text-tan mt-1">
+            <p className="text-xs text-brown mt-1">
               Optional but strongly encouraged.{' '}
               <a
                 href="https://orcid.org/register"
@@ -261,7 +261,7 @@ export default function ApplyForm() {
         <h2 className="font-serif text-xl text-brown-dark mb-1">
           Career &amp; Expertise
         </h2>
-        <p className="text-sm text-tan mb-5">
+        <p className="text-sm text-brown mb-5">
           We match reviewers to manuscripts using these fields.
         </p>
 
@@ -299,7 +299,7 @@ export default function ApplyForm() {
             <legend className="block text-sm font-medium text-brown-dark mb-2">
               Subspecialty Interests *
             </legend>
-            <p className="text-xs text-tan mb-2">
+            <p className="text-xs text-brown mb-2">
               Select at least one. You may pick multiple.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -342,7 +342,7 @@ export default function ApplyForm() {
               placeholder="https://…"
               className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
-            <p className="text-xs text-tan mt-1">
+            <p className="text-xs text-brown mt-1">
               Optional. Link to a published review, blog post, PubPeer comment,
               or other writing that demonstrates your scholarly voice.
             </p>
@@ -400,7 +400,7 @@ export default function ApplyForm() {
         >
           {submitting ? 'Submitting…' : 'Submit Application'}
         </button>
-        <p className="text-xs text-tan text-center max-w-md">
+        <p className="text-xs text-brown text-center max-w-md">
           We will respond within 14 days. If you do not hear from us, please
           reply directly to editorial@oscrsj.com.
         </p>

@@ -400,7 +400,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
       <div className="mb-6">
         <h1 className="font-serif text-2xl text-brown-dark">Submit a Manuscript</h1>
         {state.submissionId && (
-          <p className="text-sm text-tan mt-1">Submission ID: {state.submissionId}</p>
+          <p className="text-sm text-brown mt-1">Submission ID: {state.submissionId}</p>
         )}
       </div>
 
@@ -568,7 +568,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
           <button
             onClick={saveAndExit}
             disabled={saving}
-            className="text-sm text-tan hover:text-brown-dark transition-colors disabled:opacity-50"
+            className="text-sm text-brown hover:text-brown-dark transition-colors disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save & Continue Later'}
           </button>

@@ -76,7 +76,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
             <div className="flex items-center gap-4">
               <div className="hidden sm:block text-right">
                 <p className="text-sm font-medium text-brown-dark">{userName}</p>
-                <p className="text-xs text-tan">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</p>
+                <p className="text-xs text-brown">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</p>
               </div>
               <div className="w-9 h-9 bg-peach-dark rounded-full flex items-center justify-center text-brown font-semibold text-sm">
                 {userName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
@@ -84,7 +84,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="text-sm text-tan hover:text-brown-dark transition-colors"
+                  className="text-sm text-brown hover:text-brown-dark transition-colors"
                 >
                   Sign Out
                 </button>
@@ -118,7 +118,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
             <div className="mt-8 border-t border-border pt-4">
               <Link
                 href="/"
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-tan hover:text-brown-dark transition-colors"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-brown hover:text-brown-dark transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -134,7 +134,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
               <div className="bg-white w-64 h-full p-4 shadow-lg" onClick={(e) => e.stopPropagation()}>
                 <div className="mb-4 pb-4 border-b border-border">
                   <p className="text-sm font-medium text-brown-dark">{userName}</p>
-                  <p className="text-xs text-tan">{userEmail}</p>
+                  <p className="text-xs text-brown">{userEmail}</p>
                 </div>
                 <nav className="space-y-1">
                   {NAV_ITEMS.map((item) => (
@@ -156,7 +156,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                 <div className="mt-6 border-t border-border pt-4">
                   <Link
                     href="/"
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-tan hover:text-brown-dark"
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-brown hover:text-brown-dark"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

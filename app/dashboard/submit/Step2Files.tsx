@@ -226,7 +226,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
   return (
     <div>
       <h2 className="font-serif text-xl text-brown-dark mb-1">Upload Files</h2>
-      <p className="text-sm text-tan mb-6">
+      <p className="text-sm text-brown mb-6">
         Upload your manuscript files below. Main manuscript and blinded manuscript are required.
       </p>
 
@@ -251,7 +251,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
                   />
                 </div>
               </div>
-              <span className="text-xs text-tan">{u.progress}%</span>
+              <span className="text-xs text-brown">{u.progress}%</span>
             </div>
           ))}
         </div>
@@ -278,7 +278,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
                     {category.label}
                     {category.required && <span className="text-red-500 ml-1">*</span>}
                   </h3>
-                  <p className="text-xs text-tan mt-0.5">{category.description}</p>
+                  <p className="text-xs text-brown mt-0.5">{category.description}</p>
                 </div>
                 {!isFull && (
                   <button
@@ -313,7 +313,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
                   <svg className="w-8 h-8 text-taupe mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                   </svg>
-                  <p className="text-xs text-tan">Drag and drop files here, or click Upload</p>
+                  <p className="text-xs text-brown">Drag and drop files here, or click Upload</p>
                 </div>
               )}
 
@@ -330,7 +330,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <span className="text-sm text-brown-dark truncate">{file.original_filename}</span>
-                        <span className="text-xs text-tan flex-shrink-0">{formatSize(file.file_size_bytes)}</span>
+                        <span className="text-xs text-brown flex-shrink-0">{formatSize(file.file_size_bytes)}</span>
                       </div>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         <button

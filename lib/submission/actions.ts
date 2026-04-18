@@ -651,7 +651,7 @@ export async function submitManuscript(manuscriptId: string) {
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ||
       process.env.NEXT_PUBLIC_APP_URL ||
-      'https://oscrsj.com'
+      'https://www.oscrsj.com'
 
     // 1. Submission confirmation to corresponding author
     if (correspondingEmail) {

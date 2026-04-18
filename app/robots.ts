@@ -17,6 +17,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: '/api/',
       },
     ],
-    sitemap: 'https://oscrsj.com/sitemap.xml',
+    sitemap: 'https://www.oscrsj.com/sitemap.xml',
   }
 }

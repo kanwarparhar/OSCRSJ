@@ -85,7 +85,7 @@ export default function HomePage() {
             <h2 className="section-heading">Recent Publications</h2>
             <Link
               href="/articles"
-              className="text-sm text-tan hover:text-brown font-medium transition-colors hidden sm:inline-flex items-center gap-1"
+              className="text-sm text-brown hover:text-brown font-medium transition-colors hidden sm:inline-flex items-center gap-1"
             >
               See all articles
               <svg className="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,15 +110,15 @@ export default function HomePage() {
                   <span className="text-xs font-medium text-brown bg-tan/20 px-2.5 py-1 rounded-full">
                     {article.type}
                   </span>
-                  <span className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full">
+                  <span className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full">
                     {article.topic}
                   </span>
                 </div>
                 <h3 className="font-serif text-lg font-normal text-brown-dark leading-snug mb-3 flex-1">
                   {article.title}
                 </h3>
-                <p className="text-xs text-tan mb-2">{article.authors}</p>
-                <p className="text-xs text-tan font-mono">{article.doi}</p>
+                <p className="text-xs text-brown mb-2">{article.authors}</p>
+                <p className="text-xs text-brown font-mono">{article.doi}</p>
                 <Link
                   href={`/articles/${article.doi}`}
                   className="mt-4 text-sm text-brown font-medium hover:text-peach transition-colors flex items-center gap-1"
@@ -153,7 +153,7 @@ export default function HomePage() {
               <Link key={s.step} href={s.href} className="card group hover:border-tan hover:shadow-md cursor-pointer block">
                 <span className="text-peach font-serif text-2xl">{s.step}</span>
                 <h3 className="font-serif text-xl text-brown-dark mt-3 mb-2 group-hover:text-brown transition-colors">{s.title}</h3>
-                <p className="text-sm text-tan leading-relaxed">{s.desc}</p>
+                <p className="text-sm text-brown leading-relaxed">{s.desc}</p>
                 <span className="mt-3 inline-flex items-center gap-1 text-sm text-brown font-medium group-hover:text-peach transition-colors">
                   Learn more
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,7 +187,7 @@ export default function HomePage() {
                 <p className="font-serif text-brown-dark leading-none" style={{ fontSize: '28px' }}>
                   {m.value}<span className="text-tan text-sm font-sans ml-1">{m.unit}</span>
                 </p>
-                <p className="text-xs text-tan mt-2 uppercase tracking-wider font-medium">{m.label}</p>
+                <p className="text-xs text-brown mt-2 uppercase tracking-wider font-medium">{m.label}</p>
               </div>
             ))}
           </div>
@@ -240,7 +240,7 @@ export default function HomePage() {
                       {item.title}
                     </p>
                   </div>
-                  <p className="text-xs text-tan mt-4">{item.date}</p>
+                  <p className="text-xs text-brown mt-4">{item.date}</p>
                 </div>
               ))}
             </div>
@@ -271,7 +271,7 @@ export default function HomePage() {
               Subscribe
             </button>
           </form>
-          <p className="text-xs text-tan mt-3">Unsubscribe at any time.</p>
+          <p className="text-xs text-brown mt-3">Unsubscribe at any time.</p>
         </div>
       </section>
 

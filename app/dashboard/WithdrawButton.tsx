@@ -82,7 +82,7 @@ export default function WithdrawButton({
             >
               Withdraw submission?
             </h2>
-            <p className="text-sm text-tan mb-4">
+            <p className="text-sm text-brown mb-4">
               You are about to withdraw{' '}
               <span className="font-medium text-brown-dark">
                 {submissionId || 'this manuscript'}
@@ -104,7 +104,7 @@ export default function WithdrawButton({
               placeholder="A short note to the editorial office. Not shown publicly."
               className="w-full border border-border rounded-md px-3 py-2 text-sm text-brown-dark placeholder-tan/70 focus:outline-none focus:ring-2 focus:ring-peach-dark mb-1"
             />
-            <p className="text-xs text-tan mb-4">{reason.length}/500</p>
+            <p className="text-xs text-brown mb-4">{reason.length}/500</p>
 
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-md px-3 py-2 mb-4">

@@ -68,7 +68,7 @@ export default function ResetPasswordForm() {
             autoComplete="new-password"
             className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
-          <p className="text-xs text-tan mt-1">At least 8 characters with one uppercase letter, one number, and one special character.</p>
+          <p className="text-xs text-brown mt-1">At least 8 characters with one uppercase letter, one number, and one special character.</p>
         </div>
 
         <div>

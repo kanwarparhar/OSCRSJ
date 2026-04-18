@@ -59,9 +59,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             type="email"
             value={initialData.email}
             disabled
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-tan bg-cream-alt/50 cursor-not-allowed"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown bg-cream-alt/50 cursor-not-allowed"
           />
-          <p className="text-xs text-tan mt-1">Email cannot be changed. Contact support if you need to update it.</p>
+          <p className="text-xs text-brown mt-1">Email cannot be changed. Contact support if you need to update it.</p>
         </div>
 
         <div>
@@ -131,7 +131,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             ORCID iD
           </label>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-tan flex-shrink-0">https://orcid.org/</span>
+            <span className="text-sm text-brown flex-shrink-0">https://orcid.org/</span>
             <input
               id="orcidId"
               name="orcidId"
@@ -142,7 +142,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
-          <p className="text-xs text-tan mt-1">
+          <p className="text-xs text-brown mt-1">
             Optional but encouraged for indexing and discoverability.{' '}
             <a href="https://orcid.org/register" target="_blank" rel="noopener noreferrer" className="text-brown hover:underline">
               Get an ORCID iD

@@ -94,7 +94,7 @@ export function buildNewsArticleSchema(
     publisher: {
       '@type': 'Organization',
       name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
-      url: 'https://oscrsj.com',
+      url: 'https://www.oscrsj.com',
     },
     author: authors,
     citation,

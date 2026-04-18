@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://oscrsj.com'),
+  metadataBase: new URL('https://www.oscrsj.com'),
   title: {
     template: '%s | OSCRSJ',
     default: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
     description:
       'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series. Serving medical students, residents, and fellows worldwide.',
-    url: 'https://oscrsj.com',
+    url: 'https://www.oscrsj.com',
     siteName: 'OSCRSJ',
     type: 'website',
     locale: 'en_US',
@@ -47,23 +47,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     '@graph': [
       {
         '@type': 'WebSite',
-        '@id': 'https://oscrsj.com/#website',
+        '@id': 'https://www.oscrsj.com/#website',
         name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
-        url: 'https://oscrsj.com',
+        url: 'https://www.oscrsj.com',
         description:
           'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series.',
-        publisher: { '@id': 'https://oscrsj.com/#organization' },
+        publisher: { '@id': 'https://www.oscrsj.com/#organization' },
         inLanguage: 'en-US',
       },
       {
         '@type': 'Organization',
-        '@id': 'https://oscrsj.com/#organization',
+        '@id': 'https://www.oscrsj.com/#organization',
         name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
         alternateName: 'OSCRSJ',
-        url: 'https://oscrsj.com',
+        url: 'https://www.oscrsj.com',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://oscrsj.com/logo.svg',
+          url: 'https://www.oscrsj.com/logo.svg',
         },
         foundingDate: '2026',
         description:
@@ -72,11 +72,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       },
       {
         '@type': 'Periodical',
-        '@id': 'https://oscrsj.com/#periodical',
+        '@id': 'https://www.oscrsj.com/#periodical',
         name: 'Orthopedic Surgery Case Reports and Series Journal',
-        abbreviation: 'OSCRSJ',
-        url: 'https://oscrsj.com',
-        publisher: { '@id': 'https://oscrsj.com/#organization' },
+        alternateName: 'OSCRSJ',
+        url: 'https://www.oscrsj.com',
+        publisher: { '@id': 'https://www.oscrsj.com/#organization' },
         inLanguage: 'en-US',
         // issn: '' — populate once Janine lands ISSN (Gate 1, post-5-articles)
       },

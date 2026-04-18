@@ -170,18 +170,18 @@ export default function ArticlesPage() {
               >
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <span className="text-xs font-semibold text-brown bg-tan/20 px-2.5 py-1 rounded-full">{article.type}</span>
-                  <Link href={`/topics/${article.topicSlug}`} className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full hover:bg-peach/20 hover:text-brown transition-colors">
+                  <Link href={`/topics/${article.topicSlug}`} className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full hover:bg-peach/20 hover:text-brown transition-colors">
                     {article.topic}
                   </Link>
-                  <span className="text-xs text-tan ml-auto">{article.date}</span>
+                  <span className="text-xs text-brown ml-auto">{article.date}</span>
                 </div>
                 <h2 className="font-serif text-xl font-normal text-brown-dark leading-snug mb-2 hover:text-brown transition-colors cursor-pointer">
                   {article.title}
                 </h2>
-                <p className="text-sm text-tan mb-3">{article.authors}</p>
+                <p className="text-sm text-brown mb-3">{article.authors}</p>
                 <p className="text-sm text-brown-dark leading-relaxed mb-4 line-clamp-3">{article.abstract}</p>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-tan font-mono">{article.doi}</p>
+                  <p className="text-xs text-brown font-mono">{article.doi}</p>
                   <Link
                     href={`/articles/${article.doi}`}
                     className="text-sm text-brown font-medium hover:text-brown transition-colors flex items-center gap-1"
@@ -195,8 +195,8 @@ export default function ArticlesPage() {
             {/* Pagination placeholder */}
             <div className="flex justify-center gap-2 pt-4">
               <span className="px-4 py-2 text-sm font-medium text-brown bg-tan/20 rounded-lg">1</span>
-              <span className="px-4 py-2 text-sm text-tan rounded-lg">2</span>
-              <span className="px-4 py-2 text-sm text-tan rounded-lg">3</span>
+              <span className="px-4 py-2 text-sm text-brown rounded-lg">2</span>
+              <span className="px-4 py-2 text-sm text-brown rounded-lg">3</span>
             </div>
           </div>
         </div>

@@ -81,7 +81,7 @@ export default function AboutPage() {
                 </svg>
                 <div>
                   <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                  <p className="text-sm text-tan mt-0.5">{item.desc}</p>
+                  <p className="text-sm text-brown mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}

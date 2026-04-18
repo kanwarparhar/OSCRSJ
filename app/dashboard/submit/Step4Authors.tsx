@@ -118,7 +118,7 @@ export default function Step4Authors({
   return (
     <div>
       <h2 className="font-serif text-xl text-brown-dark mb-1">Authors & Contributors</h2>
-      <p className="text-sm text-tan mb-6">
+      <p className="text-sm text-brown mb-6">
         List all authors in the order they should appear on the publication. The corresponding author is pre-filled from your profile.
       </p>
 
@@ -167,15 +167,15 @@ export default function Step4Authors({
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-tan mt-0.5">{author.email}</p>
+                  <p className="text-xs text-brown mt-0.5">{author.email}</p>
                   {author.affiliation && (
-                    <p className="text-xs text-tan">{author.affiliation}</p>
+                    <p className="text-xs text-brown">{author.affiliation}</p>
                   )}
                   {author.degrees && (
-                    <p className="text-xs text-tan">{author.degrees}</p>
+                    <p className="text-xs text-brown">{author.degrees}</p>
                   )}
                   {author.orcid_id && (
-                    <p className="text-xs text-tan">ORCID: {author.orcid_id}</p>
+                    <p className="text-xs text-brown">ORCID: {author.orcid_id}</p>
                   )}
                 </div>
               </div>
@@ -286,7 +286,7 @@ export default function Step4Authors({
             </button>
             <button
               onClick={resetForm}
-              className="text-sm text-tan hover:text-brown-dark"
+              className="text-sm text-brown hover:text-brown-dark"
             >
               Cancel
             </button>
@@ -364,7 +364,7 @@ export default function Step4Authors({
             </button>
             <button
               onClick={resetForm}
-              className="text-sm text-tan hover:text-brown-dark"
+              className="text-sm text-brown hover:text-brown-dark"
             >
               Cancel
             </button>
@@ -388,7 +388,7 @@ export default function Step4Authors({
       {/* ICMJE certification checkbox */}
       <div className="border-t border-border pt-6 mt-6">
         <h3 className="font-serif text-lg text-brown-dark mb-1">Author Certification</h3>
-        <p className="text-xs text-tan mb-4">
+        <p className="text-xs text-brown mb-4">
           This certification is required before submission.
         </p>
         <label className="flex items-start gap-3 cursor-pointer">

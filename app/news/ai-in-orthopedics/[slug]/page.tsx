@@ -23,7 +23,7 @@ export function generateMetadata({ params }: PageProps): Metadata {
     title: `${cat.label} | AI in Orthopedics`,
     description: cat.description,
     alternates: {
-      canonical: `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}`,
+      canonical: `https://www.oscrsj.com/news/ai-in-orthopedics/${cat.slug}`,
     },
   }
 }
@@ -36,9 +36,9 @@ export default function CategoryArchive({ params }: PageProps) {
   const Icon = cat.Icon
 
   const breadcrumbLd = buildBreadcrumbSchema([
-    { name: 'News', url: 'https://oscrsj.com/news' },
-    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
-    { name: cat.short, url: `https://oscrsj.com/news/ai-in-orthopedics/${cat.slug}` },
+    { name: 'News', url: 'https://www.oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
+    { name: cat.short, url: `https://www.oscrsj.com/news/ai-in-orthopedics/${cat.slug}` },
   ])
 
   return (
@@ -80,7 +80,7 @@ export default function CategoryArchive({ params }: PageProps) {
 
       {/* Breadcrumb */}
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <nav className="text-xs text-tan">
+        <nav className="text-xs text-brown">
           <Link href="/news" className="hover:text-brown-dark transition-colors">
             News
           </Link>
@@ -124,7 +124,7 @@ export default function CategoryArchive({ params }: PageProps) {
                   <span className="text-xs font-medium text-brown bg-tan/20 px-3 py-1 rounded-full">
                     {cat.short}
                   </span>
-                  <span className="text-xs text-tan">{b.readMinutes} min read</span>
+                  <span className="text-xs text-brown">{b.readMinutes} min read</span>
                 </div>
                 <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">
                   {b.headline}
@@ -132,7 +132,7 @@ export default function CategoryArchive({ params }: PageProps) {
                 <p className="text-sm text-brown-dark/80 leading-relaxed mb-3">
                   {b.summary}
                 </p>
-                <p className="text-xs text-tan">
+                <p className="text-xs text-brown">
                   {b.source.journal} &middot;{' '}
                   {new Date(b.publishedAt).toLocaleDateString('en-US', {
                     month: 'short',

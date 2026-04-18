@@ -86,7 +86,7 @@ export default function RegisterForm() {
         <p className="text-brown-dark leading-relaxed mb-6">
           We have sent a verification link to your email address. Please click the link to confirm your account and start submitting manuscripts.
         </p>
-        <p className="text-sm text-tan mb-6">
+        <p className="text-sm text-brown mb-6">
           Did not receive the email? Check your spam folder or try registering again.
         </p>
         <Link href="/login" className="btn-primary-light">
@@ -113,7 +113,7 @@ export default function RegisterForm() {
             </svg>
             Register with ORCID
           </a>
-          <p className="text-xs text-tan mt-2">Your name, affiliation, and ORCID iD will be auto-filled.</p>
+          <p className="text-xs text-brown mt-2">Your name, affiliation, and ORCID iD will be auto-filled.</p>
         </div>
       )}
 
@@ -141,7 +141,7 @@ export default function RegisterForm() {
       {/* Personal Information */}
       <div className="bg-white border border-border rounded-xl p-6">
         <h2 className="font-serif text-xl text-brown-dark mb-1">Personal Information</h2>
-        <p className="text-sm text-tan mb-5">Fields marked with * are required.</p>
+        <p className="text-sm text-brown mb-5">Fields marked with * are required.</p>
 
         <div className="space-y-4">
           <div>
@@ -228,7 +228,7 @@ export default function RegisterForm() {
               ORCID iD
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-tan flex-shrink-0">https://orcid.org/</span>
+              <span className="text-sm text-brown flex-shrink-0">https://orcid.org/</span>
               <input
                 id="orcidId"
                 name="orcidId"
@@ -240,7 +240,7 @@ export default function RegisterForm() {
                 className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-brown-dark bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
-            <p className="text-xs text-tan mt-1">
+            <p className="text-xs text-brown mt-1">
               Optional but encouraged.{' '}
               <a href="https://orcid.org/register" target="_blank" rel="noopener noreferrer" className="text-brown hover:underline">
                 Get an ORCID iD
@@ -253,7 +253,7 @@ export default function RegisterForm() {
       {/* Password */}
       <div className="bg-white border border-border rounded-xl p-6">
         <h2 className="font-serif text-xl text-brown-dark mb-1">Set Your Password</h2>
-        <p className="text-sm text-tan mb-5">Must be at least 8 characters with one uppercase letter, one number, and one special character.</p>
+        <p className="text-sm text-brown mb-5">Must be at least 8 characters with one uppercase letter, one number, and one special character.</p>
 
         <div className="space-y-4">
           <div>
@@ -326,14 +326,14 @@ export default function RegisterForm() {
           )}
         </button>
 
-        <p className="text-sm text-tan">
+        <p className="text-sm text-brown">
           Already have an account?{' '}
           <Link href="/login" className="text-brown hover:underline font-medium">
             Log in
           </Link>
         </p>
 
-        <p className="text-xs text-tan text-center max-w-md">
+        <p className="text-xs text-brown text-center max-w-md">
           By creating an account, you agree to our{' '}
           <Link href="/terms" className="text-brown hover:underline">Terms of Use</Link>{' '}
           and{' '}

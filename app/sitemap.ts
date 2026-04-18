@@ -11,7 +11,7 @@ const AI_ORTHO_CATEGORY_SLUGS = [
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://oscrsj.com'
+  const baseUrl = 'https://www.oscrsj.com'
 
   const aiOrthoPages: MetadataRoute.Sitemap = [
     {

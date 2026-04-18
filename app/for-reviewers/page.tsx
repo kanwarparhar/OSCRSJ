@@ -230,7 +230,7 @@ export default function ForReviewersPage() {
               ].map((d) => (
                 <div key={d.decision} className="bg-white border border-border rounded-lg p-3">
                   <p className="font-semibold text-brown-dark text-sm">{d.decision}</p>
-                  <p className="text-xs text-tan mt-0.5">{d.desc}</p>
+                  <p className="text-xs text-brown mt-0.5">{d.desc}</p>
                 </div>
               ))}
             </div>
@@ -285,7 +285,7 @@ export default function ForReviewersPage() {
         <div className="bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-brown-dark">Interested in reviewing for OSCRSJ?</p>
-            <p className="text-sm text-tan mt-0.5">We are actively recruiting reviewers across all orthopedic subspecialties.</p>
+            <p className="text-sm text-brown mt-0.5">We are actively recruiting reviewers across all orthopedic subspecialties.</p>
           </div>
           <Link href="/for-reviewers/apply" className="btn-primary-light flex-shrink-0">
             Apply to Review

@@ -16,25 +16,25 @@ export const metadata: Metadata = {
     'PACS DICOM AI',
   ],
   alternates: {
-    canonical: 'https://oscrsj.com/news/ai-in-orthopedics/guides/imaging-primer-for-residents',
+    canonical: 'https://www.oscrsj.com/news/ai-in-orthopedics/guides/imaging-primer-for-residents',
   },
   openGraph: {
     title: 'AI in Orthopedic Imaging: A 2026 Primer for Residents',
     description:
       'What AI imaging tools actually do, which applications are in clinical use, which remain in research, and how to read a validation study critically.',
-    url: 'https://oscrsj.com/news/ai-in-orthopedics/guides/imaging-primer-for-residents',
+    url: 'https://www.oscrsj.com/news/ai-in-orthopedics/guides/imaging-primer-for-residents',
     type: 'article',
   },
 }
 
 export default function ImagingPrimerForResidents() {
   const breadcrumbLd = buildBreadcrumbSchema([
-    { name: 'News', url: 'https://oscrsj.com/news' },
-    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
-    { name: 'Guides', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+    { name: 'News', url: 'https://www.oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
+    { name: 'Guides', url: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
     {
       name: 'AI in Orthopedic Imaging: A 2026 Primer for Residents',
-      url: 'https://oscrsj.com/news/ai-in-orthopedics/guides/imaging-primer-for-residents',
+      url: 'https://www.oscrsj.com/news/ai-in-orthopedics/guides/imaging-primer-for-residents',
     },
   ])
 
@@ -45,7 +45,7 @@ export default function ImagingPrimerForResidents() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       {/* Breadcrumb */}
-      <nav className="text-xs text-tan mb-6">
+      <nav className="text-xs text-brown mb-6">
         <Link href="/news" className="hover:text-brown-dark transition-colors">
           News
         </Link>
@@ -62,7 +62,7 @@ export default function ImagingPrimerForResidents() {
         <span className="text-xs font-medium text-brown bg-peach/40 px-3 py-1 rounded-full">
           Reference Primer
         </span>
-        <span className="text-xs text-tan">Last reviewed April 2026</span>
+        <span className="text-xs text-brown">Last reviewed April 2026</span>
       </div>
 
       {/* Headline */}
@@ -251,7 +251,7 @@ export default function ImagingPrimerForResidents() {
       </div>
 
       {/* Disclaimer */}
-      <p className="text-xs text-tan leading-relaxed mt-10">
+      <p className="text-xs text-brown leading-relaxed mt-10">
         This primer is an editorial reference for educational purposes. It is not a clinical recommendation, endorsement, or substitute for the primary literature or local institutional protocol. Always consult the source paper and applicable specialty-society guidelines before changing practice.
       </p>
     </article>

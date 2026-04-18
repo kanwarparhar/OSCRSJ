@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'News',
   description:
     'Curated orthopedic news from OSCRSJ: AI in orthopedics, ortho headlines, and journal updates, sourced from peer-reviewed journals and specialty societies.',
-  alternates: { canonical: 'https://oscrsj.com/news' },
+  alternates: { canonical: 'https://www.oscrsj.com/news' },
 }
 
 export default function NewsPage() {
@@ -68,7 +68,7 @@ export default function NewsPage() {
                     <h3 className="font-serif text-lg text-brown-dark leading-snug mb-2">
                       {b.headline}
                     </h3>
-                    <p className="text-xs text-tan">
+                    <p className="text-xs text-brown">
                       {new Date(b.publishedAt).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -135,7 +135,7 @@ export default function NewsPage() {
                   </span>
                   <div>
                     <p className="font-serif text-brown-dark text-base leading-snug">{c.short}</p>
-                    <p className="text-xs text-tan mt-1">{c.description}</p>
+                    <p className="text-xs text-brown mt-1">{c.description}</p>
                   </div>
                 </Link>
               )

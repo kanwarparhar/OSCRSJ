@@ -52,7 +52,7 @@ export default async function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="font-serif text-2xl text-brown-dark">My Submissions</h1>
-          <p className="text-sm text-tan mt-1">
+          <p className="text-sm text-brown mt-1">
             {hasManuscripts
               ? `${manuscripts.length} submission${manuscripts.length === 1 ? '' : 's'}`
               : 'You have not submitted any manuscripts yet.'
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
             </svg>
           </div>
           <h2 className="font-serif text-xl text-brown-dark mb-2">No Submissions Yet</h2>
-          <p className="text-sm text-tan max-w-sm mx-auto mb-6">
+          <p className="text-sm text-brown max-w-sm mx-auto mb-6">
             Ready to share your research? Start a new manuscript submission and our editorial team will guide you through the peer review process.
           </p>
           <Link href="/dashboard/submit" className="btn-primary-light">
@@ -173,7 +173,7 @@ export default async function DashboardPage() {
             ].map((card) => (
               <div key={card.title} className="bg-cream/50 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-brown-dark mb-1">{card.title}</h3>
-                <p className="text-xs text-tan mb-2">{card.desc}</p>
+                <p className="text-xs text-brown mb-2">{card.desc}</p>
                 <Link href={card.link} className="text-xs text-brown hover:underline font-medium">
                   {card.linkText} &rarr;
                 </Link>

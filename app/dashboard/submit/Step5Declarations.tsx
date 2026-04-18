@@ -132,7 +132,7 @@ export default function Step5Declarations({
   return (
     <div>
       <h2 className="font-serif text-xl text-brown-dark mb-1">Declarations & Confirmation</h2>
-      <p className="text-sm text-tan mb-6">
+      <p className="text-sm text-brown mb-6">
         Complete the required declarations, then review your entire submission before submitting.
       </p>
 
@@ -336,7 +336,7 @@ export default function Step5Declarations({
               className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
             />
           )}
-          <p className="text-xs text-tan mt-2 leading-relaxed">
+          <p className="text-xs text-brown mt-2 leading-relaxed">
             Authors remain fully responsible for the accuracy, integrity, and originality of all content, including any portions drafted with AI assistance.
           </p>
         </div>
@@ -481,14 +481,14 @@ export default function Step5Declarations({
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl">
             <h3 className="font-serif text-lg text-brown-dark mb-2">Confirm Submission</h3>
-            <p className="text-sm text-tan mb-6">
+            <p className="text-sm text-brown mb-6">
               Once submitted, you cannot edit your manuscript. The editorial team will review your submission and notify you of their decision. Are you sure you want to proceed?
             </p>
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={() => setShowConfirmDialog(false)}
                 disabled={submitting}
-                className="text-sm text-tan hover:text-brown-dark px-4 py-2"
+                className="text-sm text-brown hover:text-brown-dark px-4 py-2"
               >
                 Cancel
               </button>

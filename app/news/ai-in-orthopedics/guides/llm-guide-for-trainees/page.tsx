@@ -16,25 +16,25 @@ export const metadata: Metadata = {
     'HIPAA language model',
   ],
   alternates: {
-    canonical: 'https://oscrsj.com/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
+    canonical: 'https://www.oscrsj.com/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
   },
   openGraph: {
     title: 'Large Language Models for Orthopedic Trainees: What\u2019s Safe, What\u2019s Not',
     description:
       'Practical and ethical guidance on LLM use for research, studying, writing, and patient-facing tasks. Institutional reference by OSCRSJ.',
-    url: 'https://oscrsj.com/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
+    url: 'https://www.oscrsj.com/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
     type: 'article',
   },
 }
 
 export default function LlmGuideForTrainees() {
   const breadcrumbLd = buildBreadcrumbSchema([
-    { name: 'News', url: 'https://oscrsj.com/news' },
-    { name: 'AI in Orthopedics', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
-    { name: 'Guides', url: 'https://oscrsj.com/news/ai-in-orthopedics' },
+    { name: 'News', url: 'https://www.oscrsj.com/news' },
+    { name: 'AI in Orthopedics', url: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
+    { name: 'Guides', url: 'https://www.oscrsj.com/news/ai-in-orthopedics' },
     {
       name: 'Large Language Models for Orthopedic Trainees: What\u2019s Safe, What\u2019s Not',
-      url: 'https://oscrsj.com/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
+      url: 'https://www.oscrsj.com/news/ai-in-orthopedics/guides/llm-guide-for-trainees',
     },
   ])
 
@@ -45,7 +45,7 @@ export default function LlmGuideForTrainees() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       {/* Breadcrumb */}
-      <nav className="text-xs text-tan mb-6">
+      <nav className="text-xs text-brown mb-6">
         <Link href="/news" className="hover:text-brown-dark transition-colors">
           News
         </Link>
@@ -62,7 +62,7 @@ export default function LlmGuideForTrainees() {
         <span className="text-xs font-medium text-brown bg-peach/40 px-3 py-1 rounded-full">
           Reference Guide
         </span>
-        <span className="text-xs text-tan">Last reviewed April 2026</span>
+        <span className="text-xs text-brown">Last reviewed April 2026</span>
       </div>
 
       {/* Headline */}
@@ -233,7 +233,7 @@ export default function LlmGuideForTrainees() {
       </div>
 
       {/* Disclaimer */}
-      <p className="text-xs text-tan leading-relaxed mt-10">
+      <p className="text-xs text-brown leading-relaxed mt-10">
         This guide is an editorial reference for educational purposes. It is not legal, regulatory, or institutional compliance advice. Readers should consult their local institutional AI, research integrity, and HIPAA compliance offices before adopting new workflows.
       </p>
     </article>

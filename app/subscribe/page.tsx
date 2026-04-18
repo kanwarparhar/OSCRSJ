@@ -78,7 +78,7 @@ export default function SubscribePage() {
               Subscribe
             </button>
           </form>
-          <p className="text-xs text-tan text-center mt-3">
+          <p className="text-xs text-brown text-center mt-3">
             We respect your privacy. Unsubscribe at any time. No spam, ever.
           </p>
         </section>

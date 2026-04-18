@@ -25,7 +25,7 @@ export default async function SettingsPage() {
     <div>
       <div className="mb-6">
         <h1 className="font-serif text-2xl text-brown-dark">Profile Settings</h1>
-        <p className="text-sm text-tan mt-1">
+        <p className="text-sm text-brown mt-1">
           Update your personal information. This data is used when you submit manuscripts.
         </p>
       </div>

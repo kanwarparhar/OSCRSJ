@@ -58,7 +58,7 @@ export default function Step1Type({
   return (
     <div>
       <h2 className="font-serif text-xl text-brown-dark mb-1">Select Manuscript Type</h2>
-      <p className="text-sm text-tan mb-6">
+      <p className="text-sm text-brown mb-6">
         Choose the type that best describes your manuscript. Each type has specific formatting requirements.
       </p>
 
@@ -83,7 +83,7 @@ export default function Step1Type({
             />
             <div>
               <span className="text-sm font-semibold text-brown-dark">{type.label}</span>
-              <p className="text-xs text-tan mt-0.5">{type.description}</p>
+              <p className="text-xs text-brown mt-0.5">{type.description}</p>
             </div>
           </label>
         ))}
@@ -92,7 +92,7 @@ export default function Step1Type({
       {/* Confirmations */}
       <div className="border-t border-border pt-6">
         <h3 className="font-serif text-lg text-brown-dark mb-1">Required Confirmations</h3>
-        <p className="text-sm text-tan mb-4">
+        <p className="text-sm text-brown mb-4">
           Please confirm the following before proceeding.
         </p>
 

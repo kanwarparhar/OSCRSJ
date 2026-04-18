@@ -64,7 +64,7 @@ export default function TemplatesPage() {
                   <h2 className="font-serif text-xl font-normal text-brown-dark">{t.type}</h2>
                   <div className="flex flex-wrap gap-2 mt-2">
                     <span className="text-xs font-medium text-brown bg-tan/20 px-2.5 py-1 rounded-full">{t.guideline}</span>
-                    <span className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full">{t.wordLimit}</span>
+                    <span className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full">{t.wordLimit}</span>
                   </div>
                 </div>
                 <span className="btn-primary-light text-center cursor-default opacity-60">
@@ -76,7 +76,7 @@ export default function TemplatesPage() {
                 <p className="text-xs font-semibold text-tan uppercase tracking-widest mb-2">Required Sections</p>
                 <div className="flex flex-wrap gap-2">
                   {t.sections.map((s) => (
-                    <span key={s} className="text-xs text-tan bg-cream-alt px-2.5 py-1 rounded-full">{s}</span>
+                    <span key={s} className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full">{s}</span>
                   ))}
                 </div>
               </div>
@@ -88,7 +88,7 @@ export default function TemplatesPage() {
         <div className="bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-brown-dark">Need help preparing your manuscript?</p>
-            <p className="text-sm text-tan mt-0.5">Review our full author guidelines for detailed formatting and content requirements.</p>
+            <p className="text-sm text-brown mt-0.5">Review our full author guidelines for detailed formatting and content requirements.</p>
           </div>
           <Link href="/guide-for-authors" className="btn-primary-light flex-shrink-0">
             Guide for Authors →

@@ -26,7 +26,7 @@ export default function EditorialBoardPage() {
             </div>
             <div>
               <p className="font-semibold text-brown-dark">Position Available</p>
-              <p className="text-sm text-tan mt-0.5">Editor-in-Chief · OSCRSJ</p>
+              <p className="text-sm text-brown mt-0.5">Editor-in-Chief · OSCRSJ</p>
               <p className="text-sm text-brown-dark mt-2">
                 We are actively recruiting an Editor-in-Chief with expertise in orthopedic surgery and academic publishing. Interested?{' '}
                 <Link href="/contact" className="text-brown hover:underline">Get in touch →</Link>
@@ -62,7 +62,7 @@ export default function EditorialBoardPage() {
                   ) : (
                     <p className="text-sm font-semibold text-brown-dark">{member.name}</p>
                   )}
-                  <p className="text-xs text-tan mt-0.5">Associate Editor · {member.specialty}</p>
+                  <p className="text-xs text-brown mt-0.5">Associate Editor · {member.specialty}</p>
                 </div>
               </div>
             ))}

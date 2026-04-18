@@ -62,7 +62,7 @@ export default function SubmitPage() {
           </svg>
           <div>
             <p className="text-sm font-semibold text-brown">Free to Publish Through End of 2026</p>
-            <p className="text-sm text-tan mt-0.5">
+            <p className="text-sm text-brown mt-0.5">
               During our launch phase, all article processing charges (APCs) are waived.{' '}
               <Link href="/apc" className="text-brown hover:text-brown underline">Learn about our APC policy →</Link>
             </p>
@@ -77,10 +77,10 @@ export default function SubmitPage() {
             {articleTypes.map((t) => (
               <div key={t.type} className="bg-white border border-border rounded-xl p-6">
                 <h3 className="font-serif text-xl font-normal text-brown-dark mb-2">{t.type}</h3>
-                <p className="text-sm text-tan mb-4">{t.desc}</p>
+                <p className="text-sm text-brown mb-4">{t.desc}</p>
                 <div className="space-y-1.5">
                   {[t.maxWords, t.figures, t.refs].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-tan">
+                    <div key={item} className="flex items-center gap-2 text-xs text-brown">
                       <svg className="w-3.5 h-3.5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
@@ -105,7 +105,7 @@ export default function SubmitPage() {
                 </div>
                 <div className="pt-2">
                   <h3 className="font-semibold text-brown-dark">{s.title}</h3>
-                  <p className="text-sm text-tan mt-0.5">{s.desc}</p>
+                  <p className="text-sm text-brown mt-0.5">{s.desc}</p>
                 </div>
               </div>
             ))}

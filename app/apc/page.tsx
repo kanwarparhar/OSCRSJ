@@ -88,7 +88,7 @@ export default function ApcPage() {
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold text-tan uppercase tracking-widest">{p.phase}</p>
-                    <p className="text-xs text-tan mt-0.5">{p.period}</p>
+                    <p className="text-xs text-brown mt-0.5">{p.period}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-serif text-2xl font-bold text-brown">{p.price}</p>
@@ -128,7 +128,7 @@ export default function ApcPage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-tan mt-3">
+          <p className="text-xs text-brown mt-3">
             To apply for a waiver, email <a href="mailto:waivers@oscrsj.com" className="text-brown hover:underline">waivers@oscrsj.com</a> with your submission ID and supporting documentation.
           </p>
         </section>

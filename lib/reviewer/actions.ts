@@ -163,7 +163,7 @@ export async function submitReviewerApplication(
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    'https://oscrsj.com'
+    'https://www.oscrsj.com'
   const forReviewersUrl = `${siteUrl.replace(/\/$/, '')}/for-reviewers`
 
   try {

@@ -117,7 +117,7 @@ export default function LoginForm() {
         {/* Divider */}
         <div className="flex items-center gap-3 w-full">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-xs text-tan">or</span>
+          <span className="text-xs text-brown">or</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
@@ -134,7 +134,7 @@ export default function LoginForm() {
           Sign in with ORCID
         </a>
 
-        <p className="text-sm text-tan">
+        <p className="text-sm text-brown">
           Don&apos;t have an account?{' '}
           <Link href="/register" className="text-brown hover:underline font-medium">
             Create one
