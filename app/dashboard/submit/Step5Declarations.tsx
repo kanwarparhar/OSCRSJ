@@ -47,6 +47,8 @@ interface Step5DeclarationsProps {
   ethicsApprovalNumber: string
   clinicalTrial: boolean
   clinicalTrialId: string
+  aiToolsUsed: boolean
+  aiToolsDetails: string
   noteToEditor: string
   // Review summary data (read-only)
   manuscriptType: ManuscriptType | null
@@ -76,6 +78,8 @@ export default function Step5Declarations({
   ethicsApprovalNumber,
   clinicalTrial,
   clinicalTrialId,
+  aiToolsUsed,
+  aiToolsDetails,
   noteToEditor,
   manuscriptType,
   files,
@@ -114,8 +118,9 @@ export default function Step5Declarations({
     (dataAvailability !== 'Data available in a public repository' || dataAvailabilityUrl.trim().length > 0)
   const ethicsComplete = !ethicsInvolved || ethicsApprovalNumber.trim().length > 0
   const trialComplete = !clinicalTrial || clinicalTrialId.trim().length > 0
+  const aiToolsComplete = !aiToolsUsed || aiToolsDetails.trim().length > 0
 
-  const step5DeclarationsComplete = coiComplete && fundingComplete && dataComplete && ethicsComplete && trialComplete
+  const step5DeclarationsComplete = coiComplete && fundingComplete && dataComplete && ethicsComplete && trialComplete && aiToolsComplete
 
   // Full submission readiness
   const step1Complete = !!manuscriptType
@@ -305,6 +310,37 @@ export default function Step5Declarations({
           )}
         </div>
 
+        {/* AI-Assisted Writing Disclosure */}
+        <div>
+          <h3 className="text-sm font-semibold text-brown-dark mb-2">
+            AI-Assisted Writing Disclosure <span className="text-red-500">*</span>
+          </h3>
+          <label className="flex items-start gap-3 cursor-pointer mb-2">
+            <input
+              type="checkbox"
+              checked={aiToolsUsed}
+              onChange={(e) => onChange({ aiToolsUsed: e.target.checked, aiToolsDetails: e.target.checked ? aiToolsDetails : '' })}
+              className="mt-0.5 accent-brown w-4 h-4"
+            />
+            <span className="text-sm text-brown-dark">
+              AI writing tools were used in the preparation of this manuscript
+            </span>
+          </label>
+          {aiToolsUsed && (
+            <textarea
+              value={aiToolsDetails}
+              onChange={(e) => onChange({ aiToolsDetails: e.target.value })}
+              rows={3}
+              maxLength={500}
+              placeholder="Describe tool(s), version(s), and how they were used (e.g., 'ChatGPT-4o for grammar check on Methods'; 'Claude 3.5 Sonnet for restructuring Introduction')."
+              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+            />
+          )}
+          <p className="text-xs text-tan mt-2 leading-relaxed">
+            Authors remain fully responsible for the accuracy, integrity, and originality of all content, including any portions drafted with AI assistance.
+          </p>
+        </div>
+
         {/* Note to Editor */}
         <div>
           <h3 className="text-sm font-semibold text-brown-dark mb-2">Note to Editor</h3>
@@ -420,6 +456,12 @@ export default function Step5Declarations({
             {clinicalTrial && (
               <p><span className="font-medium">Clinical Trial:</span> {clinicalTrialId || <span className="text-red-500">Not provided</span>}</p>
             )}
+            <p>
+              <span className="font-medium">AI Tools Used:</span>{' '}
+              {aiToolsUsed
+                ? (aiToolsDetails.trim() || <span className="text-red-500">Description required</span>)
+                : 'None declared'}
+            </p>
             {noteToEditor && (
               <p><span className="font-medium">Note to Editor:</span> {noteToEditor.slice(0, 100)}{noteToEditor.length > 100 ? '...' : ''}</p>
             )}

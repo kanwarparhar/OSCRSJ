@@ -6,7 +6,7 @@ The official website for **OSCRSJ** (Orthopedic Surgery Case Reports & Series Jo
 ---
 
 ## Current State
-A complete Next.js 14 website — **56 pages total** (35 existing + `/news` landing + `/news/ai-in-orthopedics` + 6 category archives + 2 Editor's Pick guides + 11 inaugural AI-in-Ortho briefs shipped 2026-04-16), all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, Cloudflare Turnstile CAPTCHA, and an AI in Orthopedics hub with 2 Editor's Picks + 20-term glossary + the full inaugural 11-brief slate (Imaging ×2, Surgical Planning ×2, Robotics ×2, Outcomes ×1, LLMs ×2, Research Tools ×2) now live across all six categories. **Live at https://oscrsj.com**.
+A complete Next.js 14 website — **57 pages total** (35 existing + `/news` landing + `/news/ai-in-orthopedics` + 6 category archives + 2 Editor's Pick guides + 11 inaugural AI-in-Ortho briefs shipped 2026-04-16 + `/for-reviewers/apply` shipped Session 7), all TypeScript-clean, no 404s. The site includes a full auth system (register, login, password reset), author dashboard, ORCID OAuth integration, Cloudflare Turnstile CAPTCHA, and an AI in Orthopedics hub with 2 Editor's Picks + 20-term glossary + the full inaugural 11-brief slate (Imaging ×2, Surgical Planning ×2, Robotics ×2, Outcomes ×1, LLMs ×2, Research Tools ×2) now live across all six categories. **Live at https://oscrsj.com**.
 
 ### Deployment & Infrastructure
 | Item | Details |
@@ -17,7 +17,7 @@ A complete Next.js 14 website — **56 pages total** (35 existing + `/news` land
 | **Domain Registrar** | GoDaddy — DNS configured |
 | **DNS Records** | A record: `76.76.21.21` / CNAME: `cname.vercel-dns.com` |
 | **SSL** | Active — auto-provisioned by Vercel (HTTPS) |
-| **WWW redirect** | www.oscrsj.com → oscrsj.com |
+| **WWW redirect** | apex oscrsj.com → www.oscrsj.com (307). Canonical is `www`. Any webhook URL (Resend, Crossref, ORCID, Stripe) must use the `https://www.oscrsj.com/...` form — posting to the apex 307s and most services do not re-issue the body on redirect. (This was Session 5's Svix-webhook silent-failure root cause.) |
 | **Backup URL** | oscrsj.vercel.app |
 
 **How to deploy updates:** Push any commit to the `main` branch on GitHub → Vercel auto-rebuilds and goes live in ~60 seconds.
@@ -53,6 +53,7 @@ A complete Next.js 14 website — **56 pages total** (35 existing + `/news` land
 | `/article-types` | `app/article-types/page.tsx` | ✅ Complete (added 2026-04-11) |
 | `/templates` | `app/templates/page.tsx` | ✅ Complete (added 2026-04-11) |
 | `/for-reviewers` | `app/for-reviewers/page.tsx` | ✅ Complete (full reviewer guide, added 2026-04-11) |
+| `/for-reviewers/apply` | `app/for-reviewers/apply/page.tsx` | ✅ Complete (Session 7, reviewer intake form + dual Resend emails) |
 | `/faq` | `app/faq/page.tsx` | ✅ Complete (27 questions, 5 categories, added 2026-04-11) |
 | `/accessibility` | `app/accessibility/page.tsx` | ✅ Complete (added 2026-04-11) |
 | `/dashboard` | `app/dashboard/page.tsx` | ✅ Complete (Session 2, author submissions list) |
@@ -84,6 +85,10 @@ A complete Next.js 14 website — **56 pages total** (35 existing + `/news` land
 - `lib/email/templates/submissionConfirmation.ts` -- Branded receipt email to the corresponding author
 - `lib/email/templates/coAuthorNotification.ts` -- COPE-compliant co-author notice with signed "I did not agree" link
 - `lib/email/templates/coAuthorDisputeNotification.ts` -- Dispute notice to corresponding author and editorial office (forEditor flag tweaks wording)
+- `lib/email/templates/reviewerApplicationConfirmation.ts` -- Confirmation email to applicant after `/for-reviewers/apply` submission (Session 7)
+- `lib/email/templates/reviewerApplicationInternalNotification.ts` -- Internal editorial notification on new reviewer application (Session 7, routed to `kanwarparhar@gmail.com` until Workspace)
+- `lib/reviewer/actions.ts` -- `submitReviewerApplication()` server action: validates 10-field intake, inserts into `reviewer_applications`, fires confirmation + internal emails fire-and-forget
+- `app/for-reviewers/apply/page.tsx` + `ApplyForm.tsx` -- public reviewer intake form (Session 7)
 - `app/api/submissions/[id]/co-author-dispute/route.ts` -- GET handler that verifies the JWT, records the dispute, and renders a confirmation/error page
 - `app/api/webhooks/resend/route.ts` -- POST handler that verifies Svix signatures and updates `email_logs.delivery_status` on delivered/bounced/complained events
 - `components/icons/ai-ortho/` -- six inline SVG category icons (Imaging, SurgicalPlanning, Robotics, Outcomes, LLMs, ResearchTools); 24x24 viewBox, 1.5px stroke, currentColor for theme inheritance
@@ -95,12 +100,14 @@ A complete Next.js 14 website — **56 pages total** (35 existing + `/news` land
 - Search bar in header is non-functional UI
 - No real articles published (3 sample placeholders on `/articles`)
 - ~~Supabase Storage bucket~~ ✅ Created (private, 50MB max)
-- Auth system built but not yet tested on production (Vercel env vars added)
+- Auth system built but not yet tested on production (Vercel env vars added) — **Session 7 carry-over: auth retest deferred from Sessions 5 & 6**
 - File upload RLS on Supabase Storage bucket should be verified with a real upload test
-- ~~No email notifications~~ ✅ Submission confirmation + co-author notification live as of Session 5 (2026-04-14). Withdrawal email pending until Session 6 ships the dashboard withdrawal button.
-- Resend webhook must be registered manually in the Resend dashboard (URL `https://oscrsj.com/api/webhooks/resend`, events: delivered/bounced/complained/delivery_delayed) and its signing secret copied into `RESEND_WEBHOOK_SECRET` on Vercel before delivery status updates will flow.
-- Migrations 003 and 004 must be executed manually in the Supabase SQL Editor before Session 5 features work end-to-end.
-- No draft withdrawal button on dashboard -- coming Session 6
+- ~~No email notifications~~ ✅ Full transactional pipeline live as of Session 6 (2026-04-17): submission confirmation + co-author notification + co-author dispute + withdrawal (author/editor/reviewer variants) all confirmed delivering end-to-end via Resend. `Reply-To: kanwarparhar@gmail.com` wired on every send via `DEFAULT_REPLY_TO` in `lib/email/resend.ts` (env var `EMAIL_REPLY_TO` with Gmail fallback).
+- ~~No draft withdrawal button on dashboard~~ ✅ Shipped Session 6 (`app/dashboard/WithdrawButton.tsx` + `withdrawManuscript` server action in `lib/submission/actions.ts`). DRAFT/SUBMITTED/UNDER_REVIEW → WITHDRAWN; invited/accepted reviewers auto-cancelled on `review_invitations`.
+- Resend webhook must be registered manually in the Resend dashboard (URL `https://www.oscrsj.com/api/webhooks/resend`, events: delivered/bounced/complained/delivery_delayed) and its signing secret copied into `RESEND_WEBHOOK_SECRET` on Vercel before delivery status updates will flow.
+- Migrations 003 and 004 executed (Session 5). Migration 005 (defensive RLS restore) shipped Session 6 — Kanwar manual. Migrations 006 (`reviewer_applications`) and 007 (`ai_disclosure`) shipped Session 7 — **Kanwar must run both in the Supabase SQL Editor** before the reviewer form + Step 5 AI disclosure will persist.
+- ~~No reviewer application form~~ ✅ Shipped Session 7 (`/for-reviewers/apply`). Admin approval UI (`/dashboard/admin/reviewer-applications`) still pending Session 8.
+- ~~No AI disclosure mechanism~~ ✅ Shipped Session 7 (Step 5 toggle + conditional textarea + reinforcement line; `getManuscriptAiDisclosure()` getter ready for the future published-article template).
 - **AI in Orthopedics hub — inaugural slate complete**: landing has live 20-term glossary + final 150-word primer; 2 of 3 Editor's Picks live (Imaging Primer + LLM Guide). Third Editor's Pick tile (glossary) anchors to `#glossary` on the landing page. `AI_ORTHO_BRIEFS` now carries **11 of 11 inaugural briefs** — Imaging ×2, Surgical Planning ×2, Robotics ×2, Outcomes ×1, LLMs ×2, Research Tools ×2. All six category archives populated and live. First batch of 6 shipped in commit `02cc31e` on 2026-04-16; final batch of 5 (Altahtamouni, Ma, Müller, Yao, Arias Perez) shipped later the same day.
 - Hero image at `/news/ai-in-orthopedics` is a placeholder slot. Drop the Canva export at `/public/images/ai-in-ortho-hero.png` (1920×800 web hero + 1200×630 OG export per Page Plan §13) and uncomment the `<Image>` block in `app/news/ai-in-orthopedics/page.tsx` to wire it up.
 - Editor's Picks on the hub link to `#` (primer, LLM guide, glossary not yet written). The "For Students hub" link also points to `#` — `/students` doesn't exist yet.
@@ -160,7 +167,7 @@ A complete Next.js 14 website — **56 pages total** (35 existing + `/news` land
 
 ## Immediate Next Steps (for this Claude Code session)
 
-The site is live at oscrsj.com. 43 pages pushed to main. Session Franklin (2026-04-14) completed: AI in Orthopedics hub scaffolding shipped — landing, 6 category archives, brief template with NewsArticle + ScholarlyArticle JSON-LD (SSR-verified), 6 inline SVG category icons, sitemap + nav updates. Content is placeholder; Arjun owns brief population. Session 5 (2026-04-14) prior: transactional email pipeline live (Resend SDK + 4 branded templates + JWT dispute tokens + webhook). Priorities in order:
+The site is live at oscrsj.com. Session 7 (2026-04-17) shipped `/for-reviewers/apply` reviewer intake form (migration `006_reviewer_applications.sql` + two Resend templates + ApplyForm client component with 10-field intake + consent checkbox) AND AI-assisted-writing disclosure field on Step 5 of the submission wizard (migration `007_ai_disclosure.sql` + `ai_tools_used` boolean + `ai_tools_details` text + reinforcement line + published-article getter `getManuscriptAiDisclosure`). All TypeScript clean. Session 6 (2026-04-17) shipped withdrawal flow + Reply-To header + E2E email pipeline confirmed live. AI in Orthopedics hub: 11 inaugural briefs + 20-term glossary + 2 Editor's Picks live. Session 8 priorities in order:
 
 1. **AI in Orthopedics content population** (Arjun Agent scope — 6 of 10 briefs shipped 2026-04-16)
    - ✅ Glossary v1 (20 terms) — live on landing page accordion
@@ -171,33 +178,34 @@ The site is live at oscrsj.com. 43 pages pushed to main. Session Franklin (2026-
    - ⏳ Kanwar to supply the Canva hero export per Page Plan §13 (1920×800) and drop at `/public/images/ai-in-ortho-hero.png` — `<Image>` block is already uncommented and waiting
    - ⏳ OG image: drop 1200×630 Canva export at `/public/images/ai-in-ortho-og.png` so social previews render (metadata wired 2026-04-14)
 
-2. **Submission Portal Session 6: Withdrawal flow + deferred polish** (Sushant Agent scope)
-   - Dashboard withdrawal button (UI on the submissions list for pre-decision manuscripts)
-   - `withdrawManuscript` server action (DRAFT/SUBMITTED/UNDER_REVIEW → WITHDRAWN, with optional reason)
-   - Withdrawal confirmation email to author + editor + active reviewers
-   - End-to-end auth retest deferred from 2026-04-13 (signup → email → confirm → dashboard)
-   - Reply-To header on `noreply@oscrsj.com` so replies route to a real inbox
+2. **Submission Portal Session 8: Auth polish + admin UI + GDPR** (Sushant Agent scope)
    - Custom auth domain (`auth.oscrsj.com`) so Supabase confirmation links match the sending domain
-   - Stripe payment integration planning (blocked until LLC formed, but can spec)
+   - End-to-end auth retest deferred from Sessions 5, 6, and 7 (signup → email → confirm → dashboard)
+   - `EMAIL_REPLY_TO=kanwarparhar@gmail.com` env var belongs in Vercel (all 3 envs); currently relying on the code-level fallback in `lib/email/resend.ts`
+   - Canonical-domain audit (apex vs `www` — site 307s to `www`; ensure no hardcoded `oscrsj.com` webhook/return URL hits the apex)
+   - Admin approval UI for `reviewer_applications` (list view + approve/decline actions at `/dashboard/admin/reviewer-applications`)
+   - Stripe payment integration planning (still blocked on LLC, but Brad can spec invoice generation on ACCEPTED → AWAITING_PAYMENT)
+   - GDPR export endpoint (author data download on request)
+   - Kanwar manual: run migrations `006_reviewer_applications.sql` and `007_ai_disclosure.sql` in the Supabase SQL Editor
 
-2. **Submit sitemap to Google Search Console**
+3. **Submit sitemap to Google Search Console**
    - Go to search.google.com/search-console → add oscrsj.com property
    - Submit https://oscrsj.com/sitemap.xml
 
-3. **Wire up forms**
+4. **Wire up forms**
    - Contact form: connect to Resend or Next.js API route
    - Newsletter signup (`/subscribe`): integrate with Buttondown, Mailchimp, or Resend
    - Add form validation and success/error states
 
-4. **Downloadable templates & checklists**
+5. **Downloadable templates & checklists**
    - Create downloadable patient consent form template (PDF or DOCX)
    - Create author pre-submission checklist (on Guide for Authors + Submit pages)
 
-5. **Sample articles & reviewer recruitment**
+6. **Sample articles & reviewer recruitment**
    - Create 1-2 sample/template articles showing what good submissions look like
-   - Build a reviewer interest/application form
+   - Build a reviewer interest/application form (handled in Session 7, item 2 above)
 
-6. **Publish first articles & launch** (target: mid-2026)
+7. **Publish first articles & launch** (target: mid-2026)
    - Recruit 3-5 initial submissions from your network
    - Complete peer review and publish with Crossref DOIs
    - Begin monthly publication cadence (required for PubMed application)
@@ -306,7 +314,11 @@ OSCRSJ/
 │   ├── terms/page.tsx
 │   ├── article-types/page.tsx          ← 6 article type specs
 │   ├── templates/page.tsx              ← Downloadable templates (coming soon)
-│   ├── for-reviewers/page.tsx          ← Full reviewer instruction guide
+│   ├── for-reviewers/
+│   │   ├── page.tsx                   ← Full reviewer instruction guide
+│   │   └── apply/
+│   │       ├── page.tsx               ← Server wrapper for reviewer intake (Session 7)
+│   │       └── ApplyForm.tsx          ← Client component (10-field form + consent + dual Resend emails)
 │   ├── faq/page.tsx                    ← 27 questions, 5 categories
 │   ├── accessibility/page.tsx
 │   └── news/
@@ -353,7 +365,10 @@ OSCRSJ/
 └── supabase/
     └── migrations/
         ├── 001_initial_schema.sql     ← Full schema: 12 tables, enums, RLS policies, triggers
-        ├── 002_rls_policies.sql       ← RLS policy adjustments
+        ├── 002_rls_policies.sql        ← RLS policy adjustments
         ├── 003_email_logs_resend.sql  ← Resend message id, delivery event columns, enum additions
-        └── 004_co_author_disputes.sql ← manuscript_metadata.co_author_disputes + audit_logs.details
+        ├── 004_co_author_disputes.sql ← manuscript_metadata.co_author_disputes + audit_logs.details
+        ├── 005_restore_submission_rls_policies.sql  ← Defensive INSERT/UPDATE/DELETE policy restore (Session 6)
+        ├── 006_reviewer_applications.sql            ← Reviewer intake table + enums + RLS (Session 7)
+        └── 007_ai_disclosure.sql                    ← manuscript_metadata.ai_tools_used + ai_tools_details (Session 7)
 ```

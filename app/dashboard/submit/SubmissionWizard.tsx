@@ -54,6 +54,8 @@ export interface WizardState {
   ethicsApprovalNumber: string
   clinicalTrial: boolean
   clinicalTrialId: string
+  aiToolsUsed: boolean
+  aiToolsDetails: string
   noteToEditor: string
 }
 
@@ -144,6 +146,8 @@ function initialStateFromDraft(
     ethicsApprovalNumber: meta?.ethics_approval_number || '',
     clinicalTrial: !!meta?.clinical_trial_id,
     clinicalTrialId: meta?.clinical_trial_id || '',
+    aiToolsUsed: meta?.ai_tools_used || false,
+    aiToolsDetails: meta?.ai_tools_details || '',
     noteToEditor: m?.note_to_editor || '',
   }
 }
@@ -252,6 +256,8 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
           ethicsApprovalNumber: s.ethicsInvolved ? (s.ethicsApprovalNumber || null) : null,
           clinicalTrialId: s.clinicalTrial ? (s.clinicalTrialId || null) : null,
           authorConsentCertified: s.authorConsentCertified,
+          aiToolsUsed: s.aiToolsUsed,
+          aiToolsDetails: s.aiToolsUsed ? (s.aiToolsDetails.trim() || null) : null,
           noteToEditor: s.noteToEditor || null,
         })
       }
@@ -376,7 +382,8 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
     (state.dataAvailability !== 'Data available in a public repository' || state.dataAvailabilityUrl.trim().length > 0)
   const ethicsOk = !state.ethicsInvolved || state.ethicsApprovalNumber.trim().length > 0
   const trialOk = !state.clinicalTrial || state.clinicalTrialId.trim().length > 0
-  const step5Complete = coiOk && fundingOk && dataOk && ethicsOk && trialOk
+  const aiToolsOk = !state.aiToolsUsed || state.aiToolsDetails.trim().length > 0
+  const step5Complete = coiOk && fundingOk && dataOk && ethicsOk && trialOk && aiToolsOk
 
   // Can we move to the next step?
   const canProceed = (step: number) => {
@@ -509,6 +516,8 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
             ethicsApprovalNumber={state.ethicsApprovalNumber}
             clinicalTrial={state.clinicalTrial}
             clinicalTrialId={state.clinicalTrialId}
+            aiToolsUsed={state.aiToolsUsed}
+            aiToolsDetails={state.aiToolsDetails}
             noteToEditor={state.noteToEditor}
             manuscriptType={state.manuscriptType}
             files={state.files}

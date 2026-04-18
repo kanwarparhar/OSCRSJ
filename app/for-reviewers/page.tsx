@@ -287,14 +287,15 @@ export default function ForReviewersPage() {
             <p className="font-semibold text-brown-dark">Interested in reviewing for OSCRSJ?</p>
             <p className="text-sm text-tan mt-0.5">We are actively recruiting reviewers across all orthopedic subspecialties.</p>
           </div>
-          <Link href="/contact" className="btn-primary-light flex-shrink-0">
-            Contact Us
+          <Link href="/for-reviewers/apply" className="btn-primary-light flex-shrink-0">
+            Apply to Review
           </Link>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-6">
           <Link href="/peer-review" className="btn-outline">Review Process Overview</Link>
           <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
+          <Link href="/contact" className="btn-outline">Contact Editorial Office</Link>
         </div>
       </div>
     </div>

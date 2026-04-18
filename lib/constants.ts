@@ -34,3 +34,23 @@ export const COUNTRIES = [
   'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu',
   'Vatican City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe',
 ]
+
+// Orthopedic subspecialties — canonical list used on /topics, the
+// submission wizard, and the reviewer application form. Keep slug +
+// name in sync with app/topics/page.tsx and app/topics/[slug]/page.tsx.
+export interface Subspecialty {
+  slug: string
+  name: string
+}
+
+export const SUBSPECIALTIES: Subspecialty[] = [
+  { slug: 'trauma', name: 'Trauma & Fractures' },
+  { slug: 'sports', name: 'Sports Medicine' },
+  { slug: 'spine', name: 'Spine' },
+  { slug: 'arthroplasty', name: 'Arthroplasty' },
+  { slug: 'pediatrics', name: 'Pediatric Orthopedics' },
+  { slug: 'hand', name: 'Hand & Wrist' },
+  { slug: 'foot-ankle', name: 'Foot & Ankle' },
+  { slug: 'tumor', name: 'Tumor & Oncology' },
+]
+

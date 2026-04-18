@@ -476,6 +476,8 @@ export async function saveDeclarations(params: {
   ethicsApprovalNumber: string | null
   clinicalTrialId: string | null
   authorConsentCertified: boolean
+  aiToolsUsed: boolean
+  aiToolsDetails: string | null
   noteToEditor: string | null
 }) {
   const supabase = await createClient()
@@ -490,6 +492,8 @@ export async function saveDeclarations(params: {
     ethicsApprovalNumber,
     clinicalTrialId,
     authorConsentCertified,
+    aiToolsUsed,
+    aiToolsDetails,
     noteToEditor,
   } = params
 
@@ -518,6 +522,8 @@ export async function saveDeclarations(params: {
     ethics_approval_number: ethicsApprovalNumber,
     clinical_trial_id: clinicalTrialId,
     author_consent_certified: authorConsentCertified,
+    ai_tools_used: aiToolsUsed,
+    ai_tools_details: aiToolsUsed ? aiToolsDetails : null,
   }
 
   if (existingMeta) {
@@ -921,5 +927,37 @@ export async function withdrawManuscript(params: {
     submissionId: m.submission_id,
     cancelledInvitations: activeInvitations.length,
     ...(emailWarnings.length > 0 ? { emailWarnings } : {}),
+  }
+}
+
+// ---- AI disclosure getter (published-article surface) ----
+//
+// Returns the AI-assisted-writing disclosure for a given manuscript so
+// that the published-article template can reproduce it alongside the
+// COI and funding statements per `/editorial-policies`. Reads via the
+// admin client because published-article rendering runs outside the
+// author's RLS scope (reviewers, anonymous readers, search crawlers).
+
+export interface ManuscriptAiDisclosure {
+  aiToolsUsed: boolean
+  aiToolsDetails: string | null
+}
+
+export async function getManuscriptAiDisclosure(
+  manuscriptId: string
+): Promise<ManuscriptAiDisclosure | null> {
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('manuscript_metadata')
+    .select('ai_tools_used, ai_tools_details')
+    .eq('manuscript_id', manuscriptId)
+    .maybeSingle()
+
+  if (!data) return null
+
+  const row = data as { ai_tools_used: boolean | null; ai_tools_details: string | null }
+  return {
+    aiToolsUsed: !!row.ai_tools_used,
+    aiToolsDetails: row.ai_tools_details,
   }
 }

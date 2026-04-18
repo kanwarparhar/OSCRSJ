@@ -132,6 +132,8 @@ export interface ManuscriptMetadataRow {
   not_previously_published: boolean
   all_authors_agreed: boolean
   co_author_disputes: CoAuthorDispute[]
+  ai_tools_used: boolean
+  ai_tools_details: string | null
   created_at: string
   updated_at: string
 }
@@ -300,6 +302,8 @@ export interface ManuscriptMetadataInsert {
   not_under_review_elsewhere?: boolean
   not_previously_published?: boolean
   all_authors_agreed?: boolean
+  ai_tools_used?: boolean
+  ai_tools_details?: string | null
 }
 
 export interface PaymentInsert {
