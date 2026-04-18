@@ -42,6 +42,16 @@ const NAV_ITEMS = [
   },
 ]
 
+const REVIEWER_NAV_ITEM = {
+  label: 'My Reviews',
+  href: '/dashboard/reviewer',
+  icon: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+    </svg>
+  ),
+}
+
 const ADMIN_NAV_ITEMS = [
   {
     label: 'Manuscripts',
@@ -73,6 +83,11 @@ export default function DashboardShell({ userName, userEmail, userRole, children
   }
 
   const isAdmin = userRole === 'editor' || userRole === 'admin'
+  const isReviewer =
+    userRole === 'reviewer' || userRole === 'editor' || userRole === 'admin'
+  const navItems = isReviewer
+    ? [...NAV_ITEMS.slice(0, 2), REVIEWER_NAV_ITEM, ...NAV_ITEMS.slice(2)]
+    : NAV_ITEMS
 
   return (
     <div className="min-h-screen bg-white">
@@ -122,7 +137,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
           {/* Sidebar - desktop */}
           <aside className="hidden lg:block w-60 flex-shrink-0">
             <nav className="space-y-1">
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -184,7 +199,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                   <p className="text-xs text-brown">{userEmail}</p>
                 </div>
                 <nav className="space-y-1">
-                  {NAV_ITEMS.map((item) => (
+                  {navItems.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}

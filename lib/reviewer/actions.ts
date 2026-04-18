@@ -23,9 +23,20 @@ import {
   renderReviewerInvitationEditorNotification,
   getReviewerInvitationEditorNotificationSubject,
 } from '@/lib/email/templates/reviewerInvitationEditorNotification'
+import {
+  renderReviewSubmittedConfirmation,
+  getReviewSubmittedConfirmationSubject,
+} from '@/lib/email/templates/reviewSubmittedConfirmation'
+import {
+  renderReviewSubmittedEditorNotification,
+  getReviewSubmittedEditorNotificationSubject,
+} from '@/lib/email/templates/reviewSubmittedEditorNotification'
 import type {
   ManuscriptRow,
+  ManuscriptFileRow,
   ReviewInvitationRow,
+  ReviewRow,
+  ReviewRecommendation,
   ReviewerApplicationRow,
   ReviewerApplicationStatus,
 } from '@/lib/types/database'
@@ -941,5 +952,586 @@ export async function declineReviewInvitation(
     success: true,
     invitationStatus: 'declined',
     manuscriptId: invitation.manuscript_id,
+  }
+}
+
+
+// ============================================================
+// Structured review form: save draft + submit (Session 10)
+// ============================================================
+// Both actions are token-gated — the review_token in the URL IS the
+// authentication. No user account is required. The admin client
+// bypasses RLS; we re-validate the invitation state on every call.
+//
+// saveReviewDraft: UPSERT a `reviews` row with is_draft = true.
+//   Auto-save fires this every 30s. Never transitions the
+//   invitation status. Never fires emails. Silently no-ops if the
+//   invitation is not in status = 'accepted'.
+//
+// submitReview: validate all required fields, UPSERT the `reviews`
+//   row with is_draft = false + submitted_date = now(), flip
+//   `review_invitations.status` from 'accepted' → 'submitted',
+//   audit-log, fire both emails fire-and-forget.
+
+const RECOMMENDATIONS: readonly ReviewRecommendation[] = [
+  'accept',
+  'minor_revisions',
+  'major_revisions',
+  'reject',
+] as const
+
+const CONFLICT_LEVELS = ['none', 'minor', 'major'] as const
+type ConflictLevel = (typeof CONFLICT_LEVELS)[number]
+
+export interface ReviewSubmissionPayload {
+  qualityScore: number | null
+  noveltyScore: number | null
+  rigorScore: number | null
+  dataScore: number | null
+  clarityScore: number | null
+  scopeScore: number | null
+  recommendation: ReviewRecommendation | null
+  commentsToAuthor: string
+  commentsToEditor: string
+  conflictLevel: ConflictLevel | null
+  conflictDetails: string
+}
+
+export interface SaveReviewDraftResult {
+  success?: true
+  reviewId?: string
+  error?: string
+  notFound?: true
+  wrongState?: true
+}
+
+export interface SubmitReviewResult {
+  success?: true
+  reviewId?: string
+  error?: string
+  notFound?: true
+  alreadySubmitted?: true
+  wrongState?: true
+  validation?: string
+}
+
+function clampLikert(value: unknown, min: number, max: number): number | null {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null
+  const rounded = Math.round(value)
+  if (rounded < min || rounded > max) return null
+  return rounded
+}
+
+function formatConflictOfInterest(
+  level: ConflictLevel | null,
+  details: string
+): string | null {
+  if (!level) return null
+  const trimmed = details.trim().slice(0, 500)
+  if (level === 'none') return 'None declared'
+  const label = level === 'minor' ? 'Minor' : 'Major'
+  if (!trimmed) return label
+  return `${label}: ${trimmed}`
+}
+
+function normalizePayload(
+  raw: ReviewSubmissionPayload
+): ReviewSubmissionPayload {
+  return {
+    qualityScore: clampLikert(raw.qualityScore, 1, 5),
+    noveltyScore: clampLikert(raw.noveltyScore, 1, 5),
+    rigorScore: clampLikert(raw.rigorScore, 1, 5),
+    dataScore: clampLikert(raw.dataScore, 1, 5),
+    clarityScore: clampLikert(raw.clarityScore, 1, 5),
+    scopeScore: clampLikert(raw.scopeScore, 1, 4),
+    recommendation:
+      raw.recommendation && RECOMMENDATIONS.includes(raw.recommendation)
+        ? raw.recommendation
+        : null,
+    commentsToAuthor:
+      typeof raw.commentsToAuthor === 'string'
+        ? raw.commentsToAuthor.slice(0, 20000)
+        : '',
+    commentsToEditor:
+      typeof raw.commentsToEditor === 'string'
+        ? raw.commentsToEditor.slice(0, 20000)
+        : '',
+    conflictLevel:
+      raw.conflictLevel && CONFLICT_LEVELS.includes(raw.conflictLevel)
+        ? raw.conflictLevel
+        : null,
+    conflictDetails:
+      typeof raw.conflictDetails === 'string'
+        ? raw.conflictDetails.slice(0, 2000)
+        : '',
+  }
+}
+
+function countWords(text: string): number {
+  const trimmed = text.trim()
+  if (!trimmed) return 0
+  return trimmed.split(/\s+/).length
+}
+
+async function loadInvitationByToken(
+  token: string
+): Promise<ReviewInvitationRow | null> {
+  if (!token || typeof token !== 'string') return null
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('review_invitations')
+    .select('*')
+    .eq('review_token', token)
+    .maybeSingle()
+  return (data as ReviewInvitationRow | null) || null
+}
+
+async function loadExistingReviewForInvitation(
+  invitationId: string
+): Promise<ReviewRow | null> {
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('reviews')
+    .select('*')
+    .eq('review_invitation_id', invitationId)
+    .maybeSingle()
+  return (data as ReviewRow | null) || null
+}
+
+export async function saveReviewDraft(
+  token: string,
+  rawPayload: ReviewSubmissionPayload
+): Promise<SaveReviewDraftResult> {
+  const invitation = await loadInvitationByToken(token)
+  if (!invitation) return { notFound: true, error: 'Invitation not found.' }
+  if (invitation.status !== 'accepted') {
+    return {
+      wrongState: true,
+      error: 'This invitation is not in a state that accepts review drafts.',
+    }
+  }
+  if (isInvitationExpired(invitation.invited_date)) {
+    return { wrongState: true, error: 'This invitation has expired.' }
+  }
+
+  const payload = normalizePayload(rawPayload)
+  const admin = createAdminClient()
+
+  const patch = {
+    recommendation: payload.recommendation,
+    quality_score: payload.qualityScore,
+    novelty_score: payload.noveltyScore,
+    rigor_score: payload.rigorScore,
+    data_score: payload.dataScore,
+    clarity_score: payload.clarityScore,
+    scope_score: payload.scopeScore,
+    comments_to_author: payload.commentsToAuthor || null,
+    comments_to_editor: payload.commentsToEditor || null,
+    conflict_of_interest: formatConflictOfInterest(
+      payload.conflictLevel,
+      payload.conflictDetails
+    ),
+    is_draft: true,
+  }
+
+  const existing = await loadExistingReviewForInvitation(invitation.id)
+
+  if (existing) {
+    // Don't reopen a submitted review via the draft path.
+    if (!existing.is_draft) {
+      return {
+        wrongState: true,
+        error: 'This review has already been submitted.',
+      }
+    }
+    const { error } = await (admin.from('reviews') as any)
+      .update(patch)
+      .eq('id', existing.id)
+    if (error) return { error: error.message }
+    return { success: true, reviewId: existing.id }
+  }
+
+  const insertPayload = {
+    review_invitation_id: invitation.id,
+    manuscript_id: invitation.manuscript_id,
+    reviewer_id: invitation.reviewer_id,
+    review_invitation_id_snapshot_email: invitation.reviewer_email,
+    ...patch,
+  }
+
+  const { data: inserted, error: insertErr } = await (
+    admin.from('reviews') as any
+  )
+    .insert(insertPayload)
+    .select('id')
+    .single()
+
+  if (insertErr || !inserted) {
+    return {
+      error: `Failed to save draft: ${insertErr?.message || 'unknown error'}`,
+    }
+  }
+  return { success: true, reviewId: (inserted as { id: string }).id }
+}
+
+export async function submitReview(
+  token: string,
+  rawPayload: ReviewSubmissionPayload
+): Promise<SubmitReviewResult> {
+  const invitation = await loadInvitationByToken(token)
+  if (!invitation) return { notFound: true, error: 'Invitation not found.' }
+  if (invitation.status === 'submitted') {
+    return {
+      alreadySubmitted: true,
+      error: 'This review has already been submitted.',
+    }
+  }
+  if (invitation.status !== 'accepted') {
+    return {
+      wrongState: true,
+      error: 'This invitation is not in a state that accepts review submissions.',
+    }
+  }
+  if (isInvitationExpired(invitation.invited_date)) {
+    return { wrongState: true, error: 'This invitation has expired.' }
+  }
+
+  const payload = normalizePayload(rawPayload)
+
+  // ---- Server-side validation (mirror client) ----
+  if (
+    payload.qualityScore === null ||
+    payload.noveltyScore === null ||
+    payload.rigorScore === null ||
+    payload.dataScore === null ||
+    payload.clarityScore === null ||
+    payload.scopeScore === null
+  ) {
+    return {
+      validation: 'All six rating scales are required.',
+      error: 'All six rating scales are required.',
+    }
+  }
+  if (!payload.recommendation) {
+    return {
+      validation: 'A final recommendation is required.',
+      error: 'A final recommendation is required.',
+    }
+  }
+  if (countWords(payload.commentsToAuthor) < 200) {
+    return {
+      validation:
+        'Comments to the author must be at least 200 words to give meaningful feedback.',
+      error:
+        'Comments to the author must be at least 200 words to give meaningful feedback.',
+    }
+  }
+  if (!payload.commentsToEditor.trim()) {
+    return {
+      validation: 'Confidential comments to the editor are required.',
+      error: 'Confidential comments to the editor are required.',
+    }
+  }
+  if (!payload.conflictLevel) {
+    return {
+      validation: 'A conflict-of-interest disclosure is required.',
+      error: 'A conflict-of-interest disclosure is required.',
+    }
+  }
+  if (
+    (payload.conflictLevel === 'minor' || payload.conflictLevel === 'major') &&
+    !payload.conflictDetails.trim()
+  ) {
+    return {
+      validation:
+        'Please describe the conflict of interest (required for minor or major disclosures).',
+      error:
+        'Please describe the conflict of interest (required for minor or major disclosures).',
+    }
+  }
+
+  const admin = createAdminClient()
+  const nowIso = new Date().toISOString()
+
+  const conflictOfInterest = formatConflictOfInterest(
+    payload.conflictLevel,
+    payload.conflictDetails
+  )
+
+  const patch = {
+    recommendation: payload.recommendation,
+    quality_score: payload.qualityScore,
+    novelty_score: payload.noveltyScore,
+    rigor_score: payload.rigorScore,
+    data_score: payload.dataScore,
+    clarity_score: payload.clarityScore,
+    scope_score: payload.scopeScore,
+    comments_to_author: payload.commentsToAuthor,
+    comments_to_editor: payload.commentsToEditor,
+    conflict_of_interest: conflictOfInterest,
+    is_draft: false,
+    submitted_date: nowIso,
+  }
+
+  // ---- UPSERT the reviews row ----
+  const existing = await loadExistingReviewForInvitation(invitation.id)
+  let reviewId: string
+
+  if (existing) {
+    if (!existing.is_draft) {
+      return {
+        alreadySubmitted: true,
+        error: 'This review has already been submitted.',
+      }
+    }
+    const { error } = await (admin.from('reviews') as any)
+      .update(patch)
+      .eq('id', existing.id)
+    if (error) return { error: error.message }
+    reviewId = existing.id
+  } else {
+    const insertPayload = {
+      review_invitation_id: invitation.id,
+      manuscript_id: invitation.manuscript_id,
+      reviewer_id: invitation.reviewer_id,
+      review_invitation_id_snapshot_email: invitation.reviewer_email,
+      ...patch,
+    }
+    const { data: inserted, error: insertErr } = await (
+      admin.from('reviews') as any
+    )
+      .insert(insertPayload)
+      .select('id')
+      .single()
+    if (insertErr || !inserted) {
+      return {
+        error: `Failed to submit review: ${
+          insertErr?.message || 'unknown error'
+        }`,
+      }
+    }
+    reviewId = (inserted as { id: string }).id
+  }
+
+  // ---- Flip invitation status to 'submitted' ----
+  // We do NOT roll back the review if this UPDATE fails -- better to
+  // keep the reviewer's work than lose it. Log the anomaly.
+  const { error: invUpdateErr } = await (
+    admin.from('review_invitations') as any
+  )
+    .update({ status: 'submitted', response_date: nowIso })
+    .eq('id', invitation.id)
+
+  if (invUpdateErr) {
+    try {
+      await (admin.from('audit_logs') as any).insert({
+        action: 'review_invitation_status_update_failed',
+        resource_type: 'review_invitation',
+        resource_id: invitation.id,
+        details: {
+          invitation_id: invitation.id,
+          review_id: reviewId,
+          error: invUpdateErr.message,
+        },
+      })
+    } catch {
+      // swallow
+    }
+  }
+
+  // ---- Audit log ----
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      action: 'review_submitted',
+      resource_type: 'review',
+      resource_id: reviewId,
+      details: {
+        invitation_id: invitation.id,
+        manuscript_id: invitation.manuscript_id,
+        recommendation: payload.recommendation,
+        reviewer_email: invitation.reviewer_email,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  // ---- Load manuscript for email context ----
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('id', invitation.manuscript_id)
+    .single()
+  const manuscript = (mData as ManuscriptRow | null) || null
+
+  // ---- Fire emails (fire-and-forget) ----
+  const firstName = invitation.reviewer_first_name || 'Reviewer'
+  const reviewerName =
+    [invitation.reviewer_first_name, invitation.reviewer_last_name]
+      .filter(Boolean)
+      .join(' ')
+      .trim() || 'Reviewer'
+  const reviewerEmail = invitation.reviewer_email || ''
+  const manuscriptTitle = manuscript?.title || '(untitled manuscript)'
+  const submissionId = manuscript?.submission_id || manuscript?.id || '—'
+  const adminManuscriptUrl = `${siteUrl()}/dashboard/admin/manuscripts/${invitation.manuscript_id}`
+
+  if (reviewerEmail) {
+    try {
+      const { html, text } = renderReviewSubmittedConfirmation({
+        firstName,
+        manuscriptTitle,
+      })
+      await sendEmail({
+        to: reviewerEmail,
+        subject: getReviewSubmittedConfirmationSubject(manuscriptTitle),
+        html,
+        text,
+        emailType: 'review_submitted_confirmation',
+        manuscriptId: invitation.manuscript_id,
+      })
+    } catch {
+      // swallow
+    }
+  }
+
+  try {
+    const { html, text } = renderReviewSubmittedEditorNotification({
+      submissionId,
+      manuscriptId: invitation.manuscript_id,
+      manuscriptTitle,
+      reviewerName,
+      reviewerEmail,
+      recommendation: payload.recommendation,
+      qualityScore: payload.qualityScore,
+      noveltyScore: payload.noveltyScore,
+      rigorScore: payload.rigorScore,
+      dataScore: payload.dataScore,
+      clarityScore: payload.clarityScore,
+      scopeScore: payload.scopeScore,
+      adminManuscriptUrl,
+    })
+    await sendEmail({
+      to: INTERNAL_EDITORIAL_EMAIL,
+      subject: getReviewSubmittedEditorNotificationSubject(submissionId),
+      html,
+      text,
+      emailType: 'review_submitted_editor',
+      manuscriptId: invitation.manuscript_id,
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath(`/review/${token}`)
+  revalidatePath(`/review/${token}/form`)
+  revalidatePath('/dashboard/reviewer')
+  return { success: true, reviewId }
+}
+
+
+// ============================================================
+// Reviewer file download signed URL (Session 10)
+// ============================================================
+// Token-gated. Validates the invitation is accepted or submitted,
+// confirms the requested file belongs to the invitation's
+// manuscript, confirms the file_type is in the blinded-safe
+// allowlist, then returns a 30-minute Supabase Storage signed URL.
+
+const REVIEWER_SAFE_FILE_TYPES = [
+  'blinded_manuscript',
+  'figure',
+  'supplement',
+] as const
+
+const SIGNED_URL_TTL_SECONDS = 30 * 60
+
+export interface GetReviewerFileSignedUrlResult {
+  signedUrl?: string
+  fileName?: string
+  error?: string
+  notFound?: true
+  forbidden?: true
+}
+
+export async function getReviewerFileSignedUrl(
+  token: string,
+  fileId: string
+): Promise<GetReviewerFileSignedUrlResult> {
+  if (!token || typeof token !== 'string') {
+    return { notFound: true, error: 'Invitation token is required.' }
+  }
+  if (!fileId || typeof fileId !== 'string') {
+    return { notFound: true, error: 'File id is required.' }
+  }
+
+  const invitation = await loadInvitationByToken(token)
+  if (!invitation) return { notFound: true, error: 'Invitation not found.' }
+  if (
+    invitation.status !== 'accepted' &&
+    invitation.status !== 'submitted'
+  ) {
+    return {
+      forbidden: true,
+      error: 'This invitation is not in a state that allows file downloads.',
+    }
+  }
+
+  const admin = createAdminClient()
+  const { data: fData, error: fErr } = await admin
+    .from('manuscript_files')
+    .select('*')
+    .eq('id', fileId)
+    .maybeSingle()
+
+  if (fErr || !fData) return { notFound: true, error: 'File not found.' }
+  const file = fData as ManuscriptFileRow
+
+  if (file.manuscript_id !== invitation.manuscript_id) {
+    return { forbidden: true, error: 'File does not belong to this review.' }
+  }
+  if (
+    !(REVIEWER_SAFE_FILE_TYPES as readonly string[]).includes(file.file_type)
+  ) {
+    return {
+      forbidden: true,
+      error: 'This file type is not available to reviewers.',
+    }
+  }
+
+  const { data: signed, error: signErr } = await admin.storage
+    .from('submissions')
+    .createSignedUrl(file.storage_path, SIGNED_URL_TTL_SECONDS, {
+      download: file.original_filename || file.file_name,
+    })
+
+  if (signErr || !signed) {
+    return {
+      error: `Failed to generate download link: ${
+        signErr?.message || 'unknown error'
+      }`,
+    }
+  }
+
+  // Audit log — useful for future fraud detection / access review.
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      action: 'reviewer_file_downloaded',
+      resource_type: 'manuscript_file',
+      resource_id: file.id,
+      details: {
+        invitation_id: invitation.id,
+        manuscript_id: invitation.manuscript_id,
+        file_type: file.file_type,
+        reviewer_email: invitation.reviewer_email,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  return {
+    signedUrl: signed.signedUrl,
+    fileName: file.original_filename || file.file_name,
   }
 }

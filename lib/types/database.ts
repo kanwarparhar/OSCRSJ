@@ -196,7 +196,7 @@ export interface ReviewRow {
   id: string
   review_invitation_id: string
   manuscript_id: string
-  reviewer_id: string
+  reviewer_id: string | null
   recommendation: ReviewRecommendation | null
   quality_score: number | null
   novelty_score: number | null
@@ -207,6 +207,8 @@ export interface ReviewRow {
   comments_to_author: string | null
   comments_to_editor: string | null
   conflict_of_interest: string | null
+  is_draft: boolean
+  review_invitation_id_snapshot_email: string | null
   submitted_date: string | null
   created_at: string
 }
@@ -394,7 +396,7 @@ export interface ReviewInvitationInsert {
 export interface ReviewInsert {
   review_invitation_id: string
   manuscript_id: string
-  reviewer_id: string
+  reviewer_id?: string | null
   recommendation?: ReviewRecommendation | null
   quality_score?: number | null
   novelty_score?: number | null
@@ -405,6 +407,8 @@ export interface ReviewInsert {
   comments_to_author?: string | null
   comments_to_editor?: string | null
   conflict_of_interest?: string | null
+  is_draft?: boolean
+  review_invitation_id_snapshot_email?: string | null
   submitted_date?: string | null
 }
 
