@@ -73,12 +73,12 @@ export default async function DashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-cream-alt/50 border-b border-border">
-                  <th className="text-left px-4 py-3 font-medium text-tan text-xs uppercase tracking-wider">ID</th>
-                  <th className="text-left px-4 py-3 font-medium text-tan text-xs uppercase tracking-wider">Title</th>
-                  <th className="text-left px-4 py-3 font-medium text-tan text-xs uppercase tracking-wider">Status</th>
-                  <th className="text-left px-4 py-3 font-medium text-tan text-xs uppercase tracking-wider">Submitted</th>
-                  <th className="text-left px-4 py-3 font-medium text-tan text-xs uppercase tracking-wider">Actions</th>
+                <tr className="bg-cream/50 border-b border-border">
+                  <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">ID</th>
+                  <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">Title</th>
+                  <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">Status</th>
+                  <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">Submitted</th>
+                  <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
                   const date = dateStr ? new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'
 
                   return (
-                    <tr key={ms.id} className="border-b border-border last:border-0 hover:bg-cream/50 transition-colors">
+                    <tr key={ms.id} className="border-b border-border last:border-0 hover:bg-white/50 transition-colors">
                       <td className="px-4 py-3 font-mono text-xs text-brown whitespace-nowrap">
                         {ms.submission_id || '-'}
                       </td>
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
                           {badge.label}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-tan whitespace-nowrap">{date}</td>
+                      <td className="px-4 py-3 text-brown whitespace-nowrap">{date}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           {ms.status === 'draft' ? (
@@ -137,8 +137,8 @@ export default async function DashboardPage() {
       ) : (
         /* Empty state */
         <div className="bg-white border border-border rounded-xl p-12 text-center">
-          <div className="w-16 h-16 bg-cream-alt rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-tan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-16 h-16 bg-cream rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
@@ -171,7 +171,7 @@ export default async function DashboardPage() {
                 linkText: 'Peer Review Process',
               },
             ].map((card) => (
-              <div key={card.title} className="bg-cream/50 rounded-lg p-4">
+              <div key={card.title} className="bg-white/50 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-brown-dark mb-1">{card.title}</h3>
                 <p className="text-xs text-brown mb-2">{card.desc}</p>
                 <Link href={card.link} className="text-xs text-brown hover:underline font-medium">

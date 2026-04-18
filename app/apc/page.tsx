@@ -68,7 +68,7 @@ export default function ApcPage() {
         {/* Currently free banner */}
         <div className="bg-peach text-white rounded-xl p-6 mb-12">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-cream/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
+            <div className="w-10 h-10 bg-white/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
             <div>
               <p className="font-semibold text-lg">Currently Free to Publish</p>
               <p className="text-white/80 text-sm mt-1">
@@ -87,12 +87,12 @@ export default function ApcPage() {
               <div key={p.phase} className={`border rounded-xl p-6 ${i === 0 ? 'border-peach/50 bg-tan/10' : 'border-border bg-white'}`}>
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <p className="text-xs font-semibold text-tan uppercase tracking-widest">{p.phase}</p>
+                    <p className="text-xs font-semibold text-brown uppercase tracking-widest">{p.phase}</p>
                     <p className="text-xs text-brown mt-0.5">{p.period}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-serif text-2xl font-bold text-brown">{p.price}</p>
-                    <p className={`text-xs font-semibold mt-0.5 ${i === 0 ? 'text-brown' : 'text-tan'}`}>{p.label}</p>
+                    <p className={`text-xs font-semibold mt-0.5 ${i === 0 ? 'text-brown' : 'text-brown'}`}>{p.label}</p>
                   </div>
                 </div>
                 <p className="text-sm text-brown-dark leading-relaxed">{p.desc}</p>
@@ -110,19 +110,19 @@ export default function ApcPage() {
           </p>
           <div className="bg-white border border-border rounded-xl overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-cream-alt border-b border-border">
+              <thead className="bg-cream border-b border-border">
                 <tr>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-tan uppercase tracking-widest">Group</th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-tan uppercase tracking-widest">Discount</th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-tan uppercase tracking-widest hidden sm:table-cell">Notes</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest">Group</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest">Discount</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest hidden sm:table-cell">Notes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {waivers.map((w) => (
-                  <tr key={w.group} className="hover:bg-cream-alt/50 transition-colors">
+                  <tr key={w.group} className="hover:bg-cream/50 transition-colors">
                     <td className="px-5 py-3 text-brown-dark">{w.group}</td>
                     <td className="px-5 py-3 font-semibold text-brown">{w.discount}</td>
-                    <td className="px-5 py-3 text-tan hidden sm:table-cell">{w.note}</td>
+                    <td className="px-5 py-3 text-brown hidden sm:table-cell">{w.note}</td>
                   </tr>
                 ))}
               </tbody>

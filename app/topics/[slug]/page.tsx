@@ -73,7 +73,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
           </p>
         </section>
 
-        <section className="mb-12 bg-cream-alt border border-border rounded-2xl p-8 text-center">
+        <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
           <div className="text-4xl mb-4">📝</div>
           <h2 className="section-heading mb-3">Articles Coming Soon</h2>
           <p className="text-brown-dark leading-relaxed max-w-lg mx-auto">

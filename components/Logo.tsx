@@ -23,7 +23,7 @@ export default function Logo({ size = 'md', showTagline = true, href = '/', vari
   const accentColor = 'text-peach'
   const mainColor = variant === 'light' ? 'text-peach/80' : 'text-brown-dark'
   const ruleColor = variant === 'light' ? 'bg-peach/30' : 'bg-tan/30'
-  const taglineColor = variant === 'light' ? 'text-peach/50' : 'text-tan'
+  const taglineColor = variant === 'light' ? 'text-peach/50' : 'text-brown'
 
   const content = (
     <span className="group flex flex-col items-center gap-1">

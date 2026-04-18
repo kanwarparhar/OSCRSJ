@@ -18,7 +18,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-xs font-medium text-tan uppercase tracking-widest mb-4" style={{ letterSpacing: '0.12em' }}>
+            <h3 className="text-xs font-medium text-peach/60 uppercase tracking-widest mb-4" style={{ letterSpacing: '0.12em' }}>
               Quick Links
             </h3>
             <ul className="space-y-2.5">
@@ -41,7 +41,7 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-xs font-medium text-tan uppercase tracking-widest mb-4" style={{ letterSpacing: '0.12em' }}>
+            <h3 className="text-xs font-medium text-peach/60 uppercase tracking-widest mb-4" style={{ letterSpacing: '0.12em' }}>
               Legal
             </h3>
             <ul className="space-y-2.5">

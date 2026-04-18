@@ -42,7 +42,7 @@ export default function SubmitPage() {
         {/* Submit Online CTA */}
         <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 mb-12 text-center">
           <h2 className="font-serif text-2xl font-normal text-brown-dark mb-2">Submit Online</h2>
-          <p className="text-tan text-sm mb-6 max-w-lg mx-auto">
+          <p className="text-brown text-sm mb-6 max-w-lg mx-auto">
             Use our submission portal to upload your manuscript, cover letter, and supplementary files. You&apos;ll need a free author account to get started.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

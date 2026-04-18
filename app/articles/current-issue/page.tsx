@@ -33,7 +33,7 @@ export default function CurrentIssuePage() {
               { step: '4', title: 'Issue Compilation', desc: 'Once enough accepted articles are available, they will be compiled into Volume 1, Issue 1.' },
             ].map((item) => (
               <div key={item.step} className={`flex gap-4 border rounded-xl p-6 ${item.active ? 'bg-tan/10 border-peach/30' : 'bg-white border-border'}`}>
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${item.active ? 'bg-peach text-white' : 'bg-cream-alt text-tan'}`}>
+                <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${item.active ? 'bg-peach text-white' : 'bg-cream text-brown'}`}>
                   {item.step}
                 </span>
                 <div>
@@ -45,7 +45,7 @@ export default function CurrentIssuePage() {
           </div>
         </section>
 
-        <section className="mb-12 bg-cream-alt border border-border rounded-2xl p-8 text-center">
+        <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
           <span className="section-label">Get Involved</span>
           <h2 className="section-heading mb-3">Be Part of Our First Issue</h2>
           <p className="text-brown-dark leading-relaxed mb-5 max-w-xl mx-auto">

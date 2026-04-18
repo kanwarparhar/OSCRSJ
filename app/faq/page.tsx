@@ -179,8 +179,8 @@ export default function FAQPage() {
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
 
         {/* Jump links */}
-        <div className="bg-cream-alt border border-border rounded-xl p-5 mb-12">
-          <p className="text-xs font-semibold text-tan uppercase tracking-widest mb-3">Categories</p>
+        <div className="bg-cream border border-border rounded-xl p-5 mb-12">
+          <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-3">Categories</p>
           <div className="flex flex-wrap gap-2">
             {faqSections.map((s) => (
               <a

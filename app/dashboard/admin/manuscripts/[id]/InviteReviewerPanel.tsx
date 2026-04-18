@@ -264,7 +264,7 @@ function ApplicantRow({
         </div>
         <div className="flex items-center gap-2">
           {alreadyInvited ? (
-            <span className="text-xs text-brown bg-cream-alt border border-border px-2 py-1 rounded">
+            <span className="text-xs text-brown bg-cream border border-border px-2 py-1 rounded">
               Already invited
             </span>
           ) : (

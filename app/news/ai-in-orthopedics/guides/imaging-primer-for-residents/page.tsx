@@ -73,7 +73,7 @@ export default function ImagingPrimerForResidents() {
         AI in Orthopedic Imaging: A 2026 Primer for Residents
       </h1>
 
-      <p className="text-base text-tan leading-relaxed mb-10 pb-8 border-b border-border">
+      <p className="text-base text-brown leading-relaxed mb-10 pb-8 border-b border-border">
         A structured entry point to the AI-in-imaging literature for orthopedic residents, fellows, and medical students. Written in institutional voice by OSCRSJ.
       </p>
 

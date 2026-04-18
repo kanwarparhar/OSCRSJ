@@ -82,7 +82,7 @@ export default function ArticlesPage() {
               className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
                 tab.href === '/articles'
                   ? 'border-peach text-brown'
-                  : 'border-transparent text-tan hover:text-brown-dark'
+                  : 'border-transparent text-brown hover:text-brown-dark'
               }`}
             >
               {tab.label}
@@ -95,14 +95,14 @@ export default function ArticlesPage() {
           <aside className="lg:col-span-1 space-y-6">
             {/* Search */}
             <div>
-              <label className="block text-xs font-semibold text-tan uppercase tracking-widest mb-2">Search</label>
+              <label className="block text-xs font-semibold text-brown uppercase tracking-widest mb-2">Search</label>
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Keywords, authors..."
                   className="w-full text-sm pl-9 pr-3 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40"
                 />
-                <svg className="absolute left-3 top-3 w-4 h-4 text-tan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="absolute left-3 top-3 w-4 h-4 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -110,7 +110,7 @@ export default function ArticlesPage() {
 
             {/* Filter by topic */}
             <div>
-              <label className="block text-xs font-semibold text-tan uppercase tracking-widest mb-2">Topic</label>
+              <label className="block text-xs font-semibold text-brown uppercase tracking-widest mb-2">Topic</label>
               <div className="space-y-1">
                 {topics.map((topic) => (
                   topic.slug === '' ? (
@@ -125,7 +125,7 @@ export default function ArticlesPage() {
                     <Link
                       key={topic.label}
                       href={`/topics/${topic.slug}`}
-                      className="block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors text-tan hover:bg-cream-alt"
+                      className="block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors text-brown hover:bg-cream"
                     >
                       {topic.label}
                     </Link>
@@ -136,7 +136,7 @@ export default function ArticlesPage() {
 
             {/* Filter by type */}
             <div>
-              <label className="block text-xs font-semibold text-tan uppercase tracking-widest mb-2">Article Type</label>
+              <label className="block text-xs font-semibold text-brown uppercase tracking-widest mb-2">Article Type</label>
               <div className="space-y-1">
                 {articleTypes.map((type) => (
                   type.slug === '' ? (
@@ -151,7 +151,7 @@ export default function ArticlesPage() {
                     <Link
                       key={type.label}
                       href={`/article-types#${type.slug}`}
-                      className="block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors text-tan hover:bg-cream-alt"
+                      className="block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors text-brown hover:bg-cream"
                     >
                       {type.label}
                     </Link>
@@ -170,7 +170,7 @@ export default function ArticlesPage() {
               >
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <span className="text-xs font-semibold text-brown bg-tan/20 px-2.5 py-1 rounded-full">{article.type}</span>
-                  <Link href={`/topics/${article.topicSlug}`} className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full hover:bg-peach/20 hover:text-brown transition-colors">
+                  <Link href={`/topics/${article.topicSlug}`} className="text-xs text-brown bg-cream px-2.5 py-1 rounded-full hover:bg-peach/20 hover:text-brown transition-colors">
                     {article.topic}
                   </Link>
                   <span className="text-xs text-brown ml-auto">{article.date}</span>

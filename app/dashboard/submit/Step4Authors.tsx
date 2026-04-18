@@ -128,7 +128,7 @@ export default function Step4Authors({
           <div
             key={idx}
             className={`p-4 rounded-lg border ${
-              author.is_corresponding ? 'border-brown/30 bg-cream' : 'border-border bg-white'
+              author.is_corresponding ? 'border-brown/30 bg-white' : 'border-border bg-white'
             }`}
           >
             <div className="flex items-start justify-between gap-3">
@@ -138,18 +138,18 @@ export default function Step4Authors({
                   <button
                     onClick={() => moveAuthor(idx, 'up')}
                     disabled={idx === 0}
-                    className="text-tan hover:text-brown-dark disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="text-brown hover:text-brown-dark disabled:opacity-20 disabled:cursor-not-allowed"
                     title="Move up"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                     </svg>
                   </button>
-                  <span className="text-xs font-semibold text-tan w-5 text-center">{idx + 1}</span>
+                  <span className="text-xs font-semibold text-brown w-5 text-center">{idx + 1}</span>
                   <button
                     onClick={() => moveAuthor(idx, 'down')}
                     disabled={idx === authors.length - 1}
-                    className="text-tan hover:text-brown-dark disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="text-brown hover:text-brown-dark disabled:opacity-20 disabled:cursor-not-allowed"
                     title="Move down"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -218,7 +218,7 @@ export default function Step4Authors({
 
       {/* Edit form (inline) */}
       {editingIndex !== null && (
-        <div className="border border-brown/30 rounded-lg p-4 mb-6 bg-cream">
+        <div className="border border-brown/30 rounded-lg p-4 mb-6 bg-white">
           <h3 className="text-sm font-semibold text-brown-dark mb-3">
             Edit Author: {authors[editingIndex]?.full_name}
           </h3>
@@ -296,7 +296,7 @@ export default function Step4Authors({
 
       {/* Add co-author form (inline) */}
       {showAddForm && editingIndex === null && (
-        <div className="border border-border rounded-lg p-4 mb-6 bg-cream">
+        <div className="border border-border rounded-lg p-4 mb-6 bg-white">
           <h3 className="text-sm font-semibold text-brown-dark mb-3">Add Co-Author</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <div>

@@ -314,7 +314,7 @@ export default function GuideForAuthorsPage() {
               </thead>
               <tbody>
                 {comparisonRows.map((row, i) => (
-                  <tr key={row.param} className={i % 2 === 0 ? 'bg-white' : 'bg-cream-alt/50'}>
+                  <tr key={row.param} className={i % 2 === 0 ? 'bg-white' : 'bg-cream/50'}>
                     <td className="px-4 py-2.5 font-medium text-brown-dark">{row.param}</td>
                     {row.values.map((v, j) => (
                       <td key={j} className="px-3 py-2.5 text-brown-dark">{v}</td>
@@ -339,19 +339,19 @@ export default function GuideForAuthorsPage() {
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mb-6 max-w-3xl">
               {type.specs.map((s) => (
                 <div key={s.label} className="flex gap-2 py-1.5 border-b border-border">
-                  <span className="text-xs font-semibold text-tan uppercase tracking-wide whitespace-nowrap min-w-[110px]">{s.label}</span>
+                  <span className="text-xs font-semibold text-brown uppercase tracking-wide whitespace-nowrap min-w-[110px]">{s.label}</span>
                   <span className="text-sm text-brown-dark">{s.value}</span>
                 </div>
               ))}
             </div>
 
             {/* Required sections */}
-            <div className="bg-cream-alt/50 border border-border rounded-xl p-6 max-w-3xl">
-              <p className="text-xs font-semibold text-tan uppercase tracking-widest mb-3">Required Sections (in order)</p>
+            <div className="bg-cream/50 border border-border rounded-xl p-6 max-w-3xl">
+              <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-3">Required Sections (in order)</p>
               <ol className="space-y-2">
                 {type.sections.map((sec, i) => (
                   <li key={i} className="flex gap-3 text-sm text-brown-dark leading-relaxed">
-                    <span className="text-xs font-bold text-tan mt-0.5 w-5 flex-shrink-0">{i + 1}.</span>
+                    <span className="text-xs font-bold text-brown mt-0.5 w-5 flex-shrink-0">{i + 1}.</span>
                     {sec}
                   </li>
                 ))}
@@ -366,7 +366,7 @@ export default function GuideForAuthorsPage() {
           <h2 className="section-heading mb-8">General Requirements</h2>
 
           {/* Jump links */}
-          <div className="bg-cream-alt border border-border rounded-xl p-5 mb-10">
+          <div className="bg-cream border border-border rounded-xl p-5 mb-10">
             <div className="flex flex-wrap gap-2">
               {generalSections.map((s) => (
                 <a
@@ -390,7 +390,7 @@ export default function GuideForAuthorsPage() {
               <ul className="space-y-2 max-w-3xl">
                 {section.items.map((item, j) => (
                   <li key={j} className="flex gap-3 text-sm text-brown-dark leading-relaxed">
-                    <svg className="w-4 h-4 text-tan mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-4 h-4 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     {item}
@@ -398,8 +398,8 @@ export default function GuideForAuthorsPage() {
                 ))}
               </ul>
               {section.example && (
-                <div className="mt-4 bg-cream-alt border border-border rounded-lg p-4 max-w-3xl">
-                  <p className="text-xs font-semibold text-tan uppercase tracking-widest mb-2">Example</p>
+                <div className="mt-4 bg-cream border border-border rounded-lg p-4 max-w-3xl">
+                  <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Example</p>
                   <p className="text-sm text-brown-dark italic">{section.example}</p>
                 </div>
               )}

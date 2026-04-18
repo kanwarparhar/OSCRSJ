@@ -62,13 +62,13 @@ export default function PeerReviewPage() {
               { step: '6', title: 'Final Decision & Publication', desc: 'Accepted manuscripts receive copyediting, DOI assignment, and are published online.', time: '3–7 days' },
             ].map((item) => (
               <div key={item.step} className="flex gap-4 bg-white border border-border rounded-xl p-6">
-                <span className="w-8 h-8 rounded-full bg-cream-alt flex items-center justify-center text-sm font-bold text-tan flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">
                   {item.step}
                 </span>
                 <div className="flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <p className="font-semibold text-brown-dark text-sm">{item.title}</p>
-                    <span className="text-xs text-brown bg-cream-alt rounded-full px-2.5 py-0.5 flex-shrink-0">{item.time}</span>
+                    <span className="text-xs text-brown bg-cream rounded-full px-2.5 py-0.5 flex-shrink-0">{item.time}</span>
                   </div>
                   <p className="text-sm text-brown-dark mt-0.5">{item.desc}</p>
                 </div>

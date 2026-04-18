@@ -130,7 +130,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Primer */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <span className="section-label">What Is This Hub?</span>
           <h2 className="section-heading mb-5">What is AI in Orthopedics?</h2>
@@ -139,12 +139,12 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Category cards */}
-      <section className="bg-cream-alt">
+      <section className="bg-cream">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8">
             <span className="section-label">Browse</span>
             <h2 className="section-heading">Six Categories</h2>
-            <p className="text-tan text-sm max-w-xl mt-2">
+            <p className="text-brown text-sm max-w-xl mt-2">
               Every brief slots into one of six categories. Established to give the hub stable structure and clear topical authority.
             </p>
           </div>
@@ -159,7 +159,7 @@ export default function AiInOrthopedicsLanding() {
                   className="bg-white border border-border rounded-xl p-6 hover:border-tan hover:shadow-sm transition-all group"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-brown inline-flex items-center justify-center w-10 h-10 rounded-lg bg-cream-alt border border-border">
+                    <span className="text-brown inline-flex items-center justify-center w-10 h-10 rounded-lg bg-cream border border-border">
                       <Icon />
                     </span>
                     <span className="text-xs text-brown">
@@ -180,13 +180,13 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Latest briefs */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8 flex items-end justify-between flex-wrap gap-3">
             <div>
               <span className="section-label">Latest</span>
               <h2 className="section-heading">Recent Briefs</h2>
-              <p className="text-tan text-sm max-w-xl mt-2">
+              <p className="text-brown text-sm max-w-xl mt-2">
                 Reverse-chronological feed across all six categories. Each brief links to the primary source.
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function AiInOrthopedicsLanding() {
           {latest.length === 0 ? (
             <div className="bg-white border border-border rounded-xl p-10 text-center">
               <p className="text-brown-dark text-base font-medium mb-1">The inaugural slate of briefs is in production.</p>
-              <p className="text-tan text-sm">Ten curated summaries across all six categories publish in the next editorial cycle.</p>
+              <p className="text-brown text-sm">Ten curated summaries across all six categories publish in the next editorial cycle.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -231,12 +231,12 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Editor's Picks */}
-      <section className="bg-cream-alt">
+      <section className="bg-cream">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8">
             <span className="section-label">Editor&rsquo;s Picks</span>
             <h2 className="section-heading">Start Here</h2>
-            <p className="text-tan text-sm max-w-xl mt-2">
+            <p className="text-brown text-sm max-w-xl mt-2">
               Evergreen reference pieces written by OSCRSJ in institutional voice. These are our GEO anchors.
             </p>
           </div>
@@ -259,7 +259,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Glossary — 20 terms at launch, growing to 40 by Month 3 */}
-      <section id="glossary" className="bg-cream scroll-mt-20">
+      <section id="glossary" className="bg-white scroll-mt-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <span className="section-label">Reference</span>
           <h2 className="section-heading mb-5">AI in Orthopedics Glossary</h2>
@@ -269,10 +269,10 @@ export default function AiInOrthopedicsLanding() {
           <div className="bg-white border border-border rounded-xl divide-y divide-border overflow-hidden">
             {AI_ORTHO_GLOSSARY.map((entry) => (
               <details key={entry.term} className="group">
-                <summary className="flex items-center justify-between gap-4 cursor-pointer px-6 py-4 hover:bg-cream-alt transition-colors list-none">
+                <summary className="flex items-center justify-between gap-4 cursor-pointer px-6 py-4 hover:bg-cream transition-colors list-none">
                   <span className="font-serif text-base text-brown-dark">{entry.term}</span>
                   <span
-                    className="text-tan text-xl leading-none transition-transform group-open:rotate-45 select-none"
+                    className="text-brown text-xl leading-none transition-transform group-open:rotate-45 select-none"
                     aria-hidden="true"
                   >
                     +
@@ -291,7 +291,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* For Residents callout */}
-      <section className="bg-cream-alt">
+      <section className="bg-cream">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="bg-white border border-border rounded-2xl p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-6">
             <div className="flex-1">
@@ -309,7 +309,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Newsletter + Submit CTAs */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white border border-border rounded-2xl p-8">
             <span className="section-label">Newsletter</span>
@@ -335,7 +335,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Methodology + disclaimer */}
-      <section className="bg-cream-alt border-t border-border">
+      <section className="bg-cream border-t border-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-10">
           <div>
             <span className="section-label">Methodology</span>

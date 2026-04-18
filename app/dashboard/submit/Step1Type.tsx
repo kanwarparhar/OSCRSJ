@@ -69,7 +69,7 @@ export default function Step1Type({
             key={type.value}
             className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
               manuscriptType === type.value
-                ? 'border-brown/40 bg-cream shadow-sm'
+                ? 'border-brown/40 bg-white shadow-sm'
                 : 'border-border hover:border-tan hover:shadow-sm'
             }`}
           >

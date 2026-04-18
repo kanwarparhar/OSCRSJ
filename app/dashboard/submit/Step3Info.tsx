@@ -146,7 +146,7 @@ export default function Step3Info({
           className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-brown-dark placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
         />
         <p className={`text-xs mt-1 text-right ${
-          abstractWords === 0 ? 'text-tan' : abstractValid ? 'text-green-600' : 'text-red-500'
+          abstractWords === 0 ? 'text-brown' : abstractValid ? 'text-green-600' : 'text-red-500'
         }`}>
           {abstractWords} / 150-500 words
         </p>
@@ -167,12 +167,12 @@ export default function Step3Info({
             {keywords.map((kw, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-cream-alt text-brown-dark text-sm rounded-full"
+                className="inline-flex items-center gap-1 px-3 py-1 bg-cream text-brown-dark text-sm rounded-full"
               >
                 {kw}
                 <button
                   onClick={() => removeKeyword(idx)}
-                  className="text-tan hover:text-red-500 ml-0.5"
+                  className="text-brown hover:text-red-500 ml-0.5"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -201,7 +201,7 @@ export default function Step3Info({
             <button
               onClick={addKeyword}
               disabled={!keywordInput.trim()}
-              className="text-xs font-medium text-brown border border-brown/20 px-4 py-2 rounded-lg hover:bg-cream-alt transition-colors disabled:opacity-40"
+              className="text-xs font-medium text-brown border border-brown/20 px-4 py-2 rounded-lg hover:bg-cream transition-colors disabled:opacity-40"
             >
               Add
             </button>
@@ -236,7 +236,7 @@ export default function Step3Info({
         </p>
 
         {suggestedReviewers.map((reviewer, idx) => (
-          <div key={idx} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3 p-3 bg-cream rounded-lg relative">
+          <div key={idx} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3 p-3 bg-white rounded-lg relative">
             <input
               type="text"
               value={reviewer.name}
@@ -289,7 +289,7 @@ export default function Step3Info({
         </p>
 
         {nonPreferredReviewers.map((reviewer, idx) => (
-          <div key={idx} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 p-3 bg-cream rounded-lg">
+          <div key={idx} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 p-3 bg-white rounded-lg">
             <input
               type="text"
               value={reviewer.name}

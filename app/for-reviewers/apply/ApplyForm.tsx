@@ -277,7 +277,7 @@ export default function ApplyForm() {
                   className={`flex items-center justify-center gap-2 px-3 py-2 border rounded-lg text-sm cursor-pointer transition-colors ${
                     careerStage === opt.value
                       ? 'bg-peach-dark/30 border-brown text-brown-dark'
-                      : 'border-border text-brown-dark hover:bg-cream-alt'
+                      : 'border-border text-brown-dark hover:bg-cream'
                   }`}
                 >
                   <input
@@ -311,7 +311,7 @@ export default function ApplyForm() {
                     className={`flex items-start gap-2 px-3 py-2 border rounded-lg text-sm cursor-pointer transition-colors ${
                       checked
                         ? 'bg-peach-dark/30 border-brown text-brown-dark'
-                        : 'border-border text-brown-dark hover:bg-cream-alt'
+                        : 'border-border text-brown-dark hover:bg-cream'
                     }`}
                   >
                     <input

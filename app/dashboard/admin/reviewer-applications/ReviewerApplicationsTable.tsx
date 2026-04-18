@@ -112,7 +112,7 @@ function ApplicationRow({ app }: { app: ReviewerApplicationRow }) {
     <div className="bg-white border border-border rounded-xl overflow-hidden">
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="w-full text-left p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:bg-cream-alt/40 transition-colors"
+        className="w-full text-left p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:bg-cream/40 transition-colors"
       >
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -144,7 +144,7 @@ function ApplicationRow({ app }: { app: ReviewerApplicationRow }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-border p-5 space-y-5 bg-cream-alt/30">
+        <div className="border-t border-border p-5 space-y-5 bg-cream/30">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <DetailField label="Email" value={app.email} />
             <DetailField

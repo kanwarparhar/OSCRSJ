@@ -14,7 +14,7 @@ export default function InPressPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <section className="mb-12 bg-cream-alt border border-border rounded-2xl p-8 text-center">
+        <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
           <div className="text-4xl mb-4">📄</div>
           <h2 className="section-heading mb-3">No Articles in Press Yet</h2>
           <p className="text-brown-dark leading-relaxed max-w-lg mx-auto">
@@ -33,7 +33,7 @@ export default function InPressPage() {
               { title: 'Issue Publication', desc: 'Article moves to the current issue and is permanently archived.' },
             ].map((item, i) => (
               <div key={item.title} className="flex gap-4 bg-white border border-border rounded-xl p-6">
-                <span className="w-8 h-8 rounded-full bg-cream-alt flex items-center justify-center text-sm font-bold text-tan flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">
                   {i + 1}
                 </span>
                 <div>

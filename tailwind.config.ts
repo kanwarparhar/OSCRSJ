@@ -27,7 +27,7 @@ const config: Config = {
           DEFAULT: '#FFF5EB',
           alt: '#F5EAE0',
         },
-        border: 'rgba(153,126,103,0.12)',
+        border: 'rgba(153,126,103,0.18)',
       },
       fontFamily: {
         serif: ['DM Serif Display', 'Georgia', 'serif'],

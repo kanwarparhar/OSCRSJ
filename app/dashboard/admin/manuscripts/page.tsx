@@ -101,7 +101,7 @@ export default async function AdminManuscriptsPage() {
         <div className="bg-white border border-border rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-cream-alt/40 border-b border-border">
+              <thead className="bg-cream/40 border-b border-border">
                 <tr className="text-left">
                   <th className="px-4 py-3 text-[11px] uppercase tracking-widest text-brown font-medium">
                     Submission ID
@@ -131,7 +131,7 @@ export default async function AdminManuscriptsPage() {
                 {hydrated.map((m) => (
                   <tr
                     key={m.id}
-                    className="border-t border-border hover:bg-cream-alt/30"
+                    className="border-t border-border hover:bg-cream/30"
                   >
                     <td className="px-4 py-3 font-mono text-xs text-brown-dark">
                       {m.submission_id}

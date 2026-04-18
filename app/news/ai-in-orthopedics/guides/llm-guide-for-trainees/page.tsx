@@ -73,7 +73,7 @@ export default function LlmGuideForTrainees() {
         Large Language Models for Orthopedic Trainees: What&rsquo;s Safe, What&rsquo;s Not
       </h1>
 
-      <p className="text-base text-tan leading-relaxed mb-10 pb-8 border-b border-border">
+      <p className="text-base text-brown leading-relaxed mb-10 pb-8 border-b border-border">
         A reference guide by OSCRSJ for residents, fellows, and medical students on practical and ethical use of large language models in training, research, and clinical work.
       </p>
 

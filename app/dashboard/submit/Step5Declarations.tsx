@@ -193,12 +193,12 @@ export default function Step5Declarations({
                   {fundingSources.map((source, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-cream-alt text-brown-dark text-sm rounded-full"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-cream text-brown-dark text-sm rounded-full"
                     >
                       {source}
                       <button
                         onClick={() => removeFundingSource(idx)}
-                        className="text-tan hover:text-red-500 ml-0.5"
+                        className="text-brown hover:text-red-500 ml-0.5"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -225,7 +225,7 @@ export default function Step5Declarations({
                 <button
                   onClick={addFundingSource}
                   disabled={!fundingInput.trim()}
-                  className="text-xs font-medium text-brown border border-brown/20 px-4 py-2 rounded-lg hover:bg-cream-alt transition-colors disabled:opacity-40"
+                  className="text-xs font-medium text-brown border border-brown/20 px-4 py-2 rounded-lg hover:bg-cream transition-colors disabled:opacity-40"
                 >
                   Add
                 </button>
@@ -359,7 +359,7 @@ export default function Step5Declarations({
         <h2 className="font-serif text-xl text-brown-dark mb-4">Review Your Submission</h2>
 
         {/* Step 1: Manuscript Type */}
-        <div className="mb-4 p-4 bg-cream rounded-lg">
+        <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-brown-dark">Manuscript Type</h3>
             <button onClick={() => onGoToStep(1)} className="text-xs text-brown hover:underline">Edit</button>
@@ -370,7 +370,7 @@ export default function Step5Declarations({
         </div>
 
         {/* Step 2: Files */}
-        <div className="mb-4 p-4 bg-cream rounded-lg">
+        <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-brown-dark">Uploaded Files ({files.length})</h3>
             <button onClick={() => onGoToStep(2)} className="text-xs text-brown hover:underline">Edit</button>
@@ -381,7 +381,7 @@ export default function Step5Declarations({
             <ul className="space-y-1">
               {files.map((f) => (
                 <li key={f.id} className="text-xs text-brown-dark flex items-center gap-2">
-                  <svg className="w-3.5 h-3.5 text-tan shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-3.5 h-3.5 text-brown shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   <span>{f.original_filename}</span>
@@ -393,7 +393,7 @@ export default function Step5Declarations({
         </div>
 
         {/* Step 3: Manuscript Info */}
-        <div className="mb-4 p-4 bg-cream rounded-lg">
+        <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-brown-dark">Manuscript Information</h3>
             <button onClick={() => onGoToStep(3)} className="text-xs text-brown hover:underline">Edit</button>
@@ -407,7 +407,7 @@ export default function Step5Declarations({
         </div>
 
         {/* Step 4: Authors */}
-        <div className="mb-4 p-4 bg-cream rounded-lg">
+        <div className="mb-4 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-brown-dark">Authors ({authors.length})</h3>
             <button onClick={() => onGoToStep(4)} className="text-xs text-brown hover:underline">Edit</button>
@@ -419,20 +419,20 @@ export default function Step5Declarations({
               {authors.map((a, idx) => (
                 <li key={idx} className="text-xs text-brown-dark">
                   <span className="font-medium">{idx + 1}. {a.full_name}</span>
-                  {a.is_corresponding && <span className="text-tan ml-1">(Corresponding)</span>}
-                  {a.affiliation && <span className="text-tan ml-1">— {a.affiliation}</span>}
+                  {a.is_corresponding && <span className="text-brown ml-1">(Corresponding)</span>}
+                  {a.affiliation && <span className="text-brown ml-1">— {a.affiliation}</span>}
                   {a.contribution && <span className="text-taupe ml-1">| {a.contribution}</span>}
                 </li>
               ))}
             </ul>
           )}
-          <p className="text-xs mt-2 text-tan">
+          <p className="text-xs mt-2 text-brown">
             Author certification: {authorConsentCertified ? <span className="text-green-600">Confirmed</span> : <span className="text-red-500">Not confirmed</span>}
           </p>
         </div>
 
         {/* Step 5: Declarations */}
-        <div className="mb-6 p-4 bg-cream rounded-lg">
+        <div className="mb-6 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-brown-dark">Declarations</h3>
           </div>

@@ -51,14 +51,14 @@ export default function EditorialBoardPage() {
               { name: null, specialty: 'Tumor & Oncology', recruiting: true },
             ].map((member) => (
               <div key={member.specialty} className="bg-white border border-border rounded-xl p-6 flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${member.recruiting ? 'bg-cream-alt' : 'bg-peach/20'}`}>
-                  <svg className={`w-5 h-5 ${member.recruiting ? 'text-tan' : 'text-brown'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${member.recruiting ? 'bg-cream' : 'bg-peach/20'}`}>
+                  <svg className={`w-5 h-5 ${member.recruiting ? 'text-brown' : 'text-brown'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
                 <div>
                   {member.recruiting ? (
-                    <p className="text-sm font-medium text-tan italic">Recruiting</p>
+                    <p className="text-sm font-medium text-brown italic">Recruiting</p>
                   ) : (
                     <p className="text-sm font-semibold text-brown-dark">{member.name}</p>
                   )}

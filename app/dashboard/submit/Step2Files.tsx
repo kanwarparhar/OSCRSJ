@@ -241,10 +241,10 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
       {uploading.length > 0 && (
         <div className="mb-4 space-y-2">
           {uploading.map(u => (
-            <div key={u.fileName} className="flex items-center gap-3 p-3 bg-cream rounded-lg">
+            <div key={u.fileName} className="flex items-center gap-3 p-3 bg-white rounded-lg">
               <div className="flex-1">
                 <p className="text-sm text-brown-dark font-medium">{u.fileName}</p>
-                <div className="mt-1 h-1.5 bg-cream-alt rounded-full overflow-hidden">
+                <div className="mt-1 h-1.5 bg-cream rounded-full overflow-hidden">
                   <div
                     className="h-full bg-peach-dark rounded-full transition-all duration-300"
                     style={{ width: `${u.progress}%` }}
@@ -268,7 +268,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
               key={category.type}
               className={`border rounded-lg p-4 transition-all ${
                 category.required && catFiles.length === 0
-                  ? 'border-brown/30 bg-cream'
+                  ? 'border-brown/30 bg-white'
                   : 'border-border'
               }`}
             >
@@ -290,7 +290,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
                         fileInputRef.current.click()
                       }
                     }}
-                    className="text-xs font-medium text-brown border border-brown/20 px-3 py-1.5 rounded-full hover:bg-cream-alt transition-colors flex-shrink-0"
+                    className="text-xs font-medium text-brown border border-brown/20 px-3 py-1.5 rounded-full hover:bg-cream transition-colors flex-shrink-0"
                   >
                     Upload
                   </button>
@@ -323,10 +323,10 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
                   {catFiles.map(file => (
                     <div
                       key={file.id}
-                      className="flex items-center justify-between p-2.5 bg-cream rounded-lg"
+                      className="flex items-center justify-between p-2.5 bg-white rounded-lg"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <svg className="w-4 h-4 text-tan flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-4 h-4 text-brown flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <span className="text-sm text-brown-dark truncate">{file.original_filename}</span>

@@ -28,7 +28,7 @@ export default function NewsPage() {
             <div>
               <span className="section-label">Featured Hub</span>
               <h2 className="section-heading">AI in Orthopedics</h2>
-              <p className="text-tan text-sm max-w-xl mt-2">
+              <p className="text-brown text-sm max-w-xl mt-2">
                 Curated research, tools, and guidance on artificial intelligence in orthopedic practice.
               </p>
             </div>
@@ -88,7 +88,7 @@ export default function NewsPage() {
           <div className="mb-6">
             <span className="section-label">Coming Soon</span>
             <h2 className="section-heading">Ortho Headlines</h2>
-            <p className="text-tan text-sm max-w-xl mt-2">
+            <p className="text-brown text-sm max-w-xl mt-2">
               Weekly summaries of the most significant peer-reviewed orthopedic research.
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function NewsPage() {
           <div className="mb-6">
             <span className="section-label">Coming Soon</span>
             <h2 className="section-heading">Journal Updates</h2>
-            <p className="text-tan text-sm max-w-xl mt-2">
+            <p className="text-brown text-sm max-w-xl mt-2">
               Milestones, editorial board news, and indexing progress from the journal.
             </p>
           </div>

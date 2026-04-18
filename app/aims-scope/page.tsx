@@ -85,7 +85,7 @@ export default function AimsScopePage() {
                 'Submissions without appropriate patient consent or IRB documentation',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
-                  <span className="text-tan mt-1 flex-shrink-0">&#10005;</span>
+                  <span className="text-brown mt-1 flex-shrink-0">&#10005;</span>
                   <span className="text-brown-dark">{item}</span>
                 </li>
               ))}

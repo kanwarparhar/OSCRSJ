@@ -42,7 +42,7 @@ export default function SubscribePage() {
           <h3 className="font-semibold text-brown-dark mb-4 text-center">Join Our Mailing List</h3>
           <form className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-tan mb-1">Full Name</label>
+              <label htmlFor="name" className="block text-sm font-medium text-brown mb-1">Full Name</label>
               <input
                 type="text"
                 id="name"
@@ -51,7 +51,7 @@ export default function SubscribePage() {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-tan mb-1">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-brown mb-1">Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -60,10 +60,10 @@ export default function SubscribePage() {
               />
             </div>
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-tan mb-1">Role (optional)</label>
+              <label htmlFor="role" className="block text-sm font-medium text-brown mb-1">Role (optional)</label>
               <select
                 id="role"
-                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 text-tan transition"
+                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 text-brown transition"
               >
                 <option value="">Select your role</option>
                 <option value="medical-student">Medical Student</option>

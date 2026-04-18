@@ -424,7 +424,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
                         ? 'bg-green-100 text-green-700 border-2 border-green-400'
                         : isCurrent
                           ? 'bg-peach-dark text-brown border-2 border-brown/30'
-                          : 'bg-cream text-tan border-2 border-border'
+                          : 'bg-white text-brown border-2 border-border'
                     }`}
                   >
                     {isCompleted ? (
@@ -436,7 +436,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
                     )}
                   </div>
                   <span className={`text-xs mt-1.5 text-center hidden sm:block ${
-                    isCurrent ? 'text-brown-dark font-medium' : 'text-tan'
+                    isCurrent ? 'text-brown-dark font-medium' : 'text-brown'
                   }`}>
                     {step.label}
                   </span>
@@ -557,7 +557,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
             <button
               onClick={goBack}
               disabled={saving}
-              className="text-sm text-brown font-medium px-5 py-2.5 rounded-full border border-brown/20 hover:bg-cream-alt transition-colors disabled:opacity-50"
+              className="text-sm text-brown font-medium px-5 py-2.5 rounded-full border border-brown/20 hover:bg-cream transition-colors disabled:opacity-50"
             >
               Back
             </button>

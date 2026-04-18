@@ -110,7 +110,7 @@ export default function HomePage() {
                   <span className="text-xs font-medium text-brown bg-tan/20 px-2.5 py-1 rounded-full">
                     {article.type}
                   </span>
-                  <span className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full">
+                  <span className="text-xs text-brown bg-cream px-2.5 py-1 rounded-full">
                     {article.topic}
                   </span>
                 </div>
@@ -139,7 +139,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. For Authors */}
-      <section className="bg-cream" style={{ padding: '72px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">For Authors</span>
 
@@ -254,7 +254,7 @@ export default function HomePage() {
       </section>
 
       {/* 6. Newsletter */}
-      <section className="bg-cream" style={{ padding: '72px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center max-w-lg">
           <span className="section-label">Stay Updated</span>
           <h2 className="section-heading mb-2">Get notified when new issues are published</h2>

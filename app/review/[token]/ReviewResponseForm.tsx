@@ -77,7 +77,7 @@ export default function ReviewResponseForm({
   const isAccept = choice === 'accept'
 
   return (
-    <div className="space-y-3 border border-border rounded-lg p-4 bg-cream-alt/30">
+    <div className="space-y-3 border border-border rounded-lg p-4 bg-cream/30">
       <p className="text-sm text-brown-dark">
         {isAccept
           ? `You are about to accept this invitation. The editorial office will be notified and will follow up with the full manuscript and the structured review form.`

@@ -207,7 +207,7 @@ function pageShell(title: string, bodyHtml: string): string {
     body {
       margin: 0;
       padding: 0;
-      background-color: #FFF5EB;
+      background-color: #FFFFFF;
       font-family: Georgia, 'Times New Roman', serif;
       color: #3d2a18;
     }
@@ -215,7 +215,7 @@ function pageShell(title: string, bodyHtml: string): string {
       max-width: 560px;
       margin: 80px auto;
       padding: 40px;
-      background-color: #FFFFFF;
+      background-color: #FFF5EB;
       border: 1px solid rgba(153,126,103,0.18);
       border-radius: 6px;
     }

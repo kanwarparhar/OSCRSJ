@@ -100,7 +100,7 @@ export default function CategoryArchive({ params }: PageProps) {
             <p className="text-brown-dark text-base font-medium mb-1">
               Briefs in this category publish in the next editorial cycle.
             </p>
-            <p className="text-tan text-sm max-w-md mx-auto mt-2">
+            <p className="text-brown text-sm max-w-md mx-auto mt-2">
               Follow the hub or subscribe for updates. Every brief will link to the primary peer-reviewed source.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">

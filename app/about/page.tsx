@@ -26,7 +26,7 @@ export default function AboutPage() {
         </section>
 
         {/* Key facts */}
-        <section className="mb-12 bg-cream-alt rounded-2xl p-8 -mx-4 sm:-mx-6 lg:-mx-8">
+        <section className="mb-12 bg-cream rounded-2xl p-8 -mx-4 sm:-mx-6 lg:-mx-8">
           <span className="section-label">At a Glance</span>
           <h2 className="section-heading mb-6">Key Facts</h2>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -42,7 +42,7 @@ export default function AboutPage() {
             ].map((fact) => (
               <div key={fact.label} className="flex items-start gap-3 bg-white border border-border rounded-xl p-6">
                 <div>
-                  <p className="text-xs font-semibold text-tan uppercase tracking-widest">{fact.label}</p>
+                  <p className="text-xs font-semibold text-brown uppercase tracking-widest">{fact.label}</p>
                   <p className="text-sm font-medium text-brown-dark mt-0.5">{fact.value}</p>
                 </div>
               </div>

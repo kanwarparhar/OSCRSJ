@@ -153,7 +153,7 @@ export default async function AdminManuscriptDetailPage({
               {manuscript.keywords.map((k) => (
                 <span
                   key={k}
-                  className="text-xs px-2 py-0.5 bg-cream-alt text-brown-dark rounded-full border border-border"
+                  className="text-xs px-2 py-0.5 bg-cream text-brown-dark rounded-full border border-border"
                 >
                   {k}
                 </span>

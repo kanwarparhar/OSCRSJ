@@ -133,7 +133,7 @@ export default async function ReviewInvitationPage({
       : null
 
   return (
-    <div className="min-h-screen bg-cream py-12 px-4">
+    <div className="min-h-screen bg-white py-12 px-4">
       <div className="max-w-2xl mx-auto bg-white border border-border rounded-xl p-8 space-y-6">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-brown mb-1">
@@ -151,7 +151,7 @@ export default async function ReviewInvitationPage({
           hidden until you accept.
         </p>
 
-        <dl className="border border-border rounded-lg bg-cream-alt/40 p-4 text-sm space-y-2">
+        <dl className="border border-border rounded-lg bg-cream/40 p-4 text-sm space-y-2">
           <div>
             <dt className="text-[11px] uppercase tracking-widest text-brown">
               Manuscript
@@ -231,7 +231,7 @@ function StaticMessage({
   body: string
 }) {
   return (
-    <div className="min-h-screen bg-cream py-12 px-4">
+    <div className="min-h-screen bg-white py-12 px-4">
       <div className="max-w-xl mx-auto bg-white border border-border rounded-xl p-8 space-y-4">
         <p className="text-[11px] uppercase tracking-widest text-brown">
           OSCRSJ Editorial Office
