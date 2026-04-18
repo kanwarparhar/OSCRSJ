@@ -37,7 +37,7 @@ const indexingBadges = ['Scopus', 'DOAJ', 'Crossref', 'Google Scholar', 'EMBASE'
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="bg-white">
       {/* 1. Hero */}
       <section
         className="relative flex items-center justify-center text-center"
@@ -78,7 +78,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. Latest Articles */}
-      <section className="bg-cream" style={{ padding: '72px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">Latest Articles</span>
           <div className="flex items-end justify-between mb-8">
@@ -139,7 +139,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. For Authors */}
-      <section className="bg-cream-alt" style={{ padding: '72px 24px' }}>
+      <section className="bg-cream" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">For Authors</span>
 
@@ -185,7 +185,7 @@ export default function HomePage() {
                   {m.icon}
                 </div>
                 <p className="font-serif text-brown-dark leading-none" style={{ fontSize: '28px' }}>
-                  {m.value}<span className="text-tan text-sm font-sans ml-1">{m.unit}</span>
+                  {m.value}<span className="text-brown text-sm font-sans ml-1">{m.unit}</span>
                 </p>
                 <p className="text-xs text-brown mt-2 uppercase tracking-wider font-medium">{m.label}</p>
               </div>
@@ -208,7 +208,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. News */}
-      <section className="bg-cream-alt" style={{ padding: '72px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">News &amp; Updates</span>
           <h2 className="section-heading mb-8" style={{ fontSize: 'clamp(28px, 3.5vw, 36px)' }}>From the Field</h2>
@@ -247,7 +247,7 @@ export default function HomePage() {
             {/* Scroll fade hint */}
             <div
               className="absolute right-0 top-0 bottom-4 w-16 pointer-events-none hidden sm:block"
-              style={{ background: 'linear-gradient(to right, transparent, var(--cream-alt))' }}
+              style={{ background: 'linear-gradient(to right, transparent, #FFFFFF)' }}
             />
           </div>
         </div>
@@ -258,7 +258,7 @@ export default function HomePage() {
         <div className="max-w-content mx-auto text-center max-w-lg">
           <span className="section-label">Stay Updated</span>
           <h2 className="section-heading mb-2">Get notified when new issues are published</h2>
-          <p className="text-tan text-sm mb-6">
+          <p className="text-brown text-sm mb-6">
             No spam. Just orthopedic research delivered to your inbox.
           </p>
           <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
