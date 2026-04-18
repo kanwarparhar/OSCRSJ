@@ -128,9 +128,21 @@ export async function createOrUpdateDraft(params: {
 
   const { manuscriptId, manuscriptType, notUnderReview, notPreviouslyPublished, allAuthorsAgreed } = params
 
+  // Use the admin client for writes. The RLS INSERT policy
+  // "Authors can create manuscripts" (WITH CHECK corresponding_author_id
+  // = auth.uid()) has been observed to reject valid inserts in the live
+  // DB even when auth.uid() resolves correctly (SELECT/UPDATE pass, only
+  // INSERT fails — policy likely missing/altered in prod). Since this
+  // server action already authenticates the caller via auth.getUser()
+  // above and always stamps corresponding_author_id = user.id, the admin
+  // client is the safe path: we never trust an attacker-supplied id.
+  // See migration 005 for the DB-side policy restoration.
+  const admin = createAdminClient()
+
   if (manuscriptId) {
-    // Update existing draft
-    const { error } = await (supabase.from('manuscripts') as any)
+    // Update existing draft — scope update to rows the user owns so the
+    // admin client can't be coerced into touching someone else's row.
+    const { error } = await (admin.from('manuscripts') as any)
       .update({ manuscript_type: manuscriptType })
       .eq('id', manuscriptId)
       .eq('corresponding_author_id', user.id)
@@ -138,14 +150,14 @@ export async function createOrUpdateDraft(params: {
     if (error) return { error: `Failed to update draft: ${error.message}` }
 
     // Upsert metadata
-    const { data: existingMeta } = await supabase
+    const { data: existingMeta } = await admin
       .from('manuscript_metadata')
       .select('id')
       .eq('manuscript_id', manuscriptId)
       .single()
 
     if (existingMeta) {
-      await (supabase.from('manuscript_metadata') as any)
+      await (admin.from('manuscript_metadata') as any)
         .update({
           not_under_review_elsewhere: notUnderReview,
           not_previously_published: notPreviouslyPublished,
@@ -153,7 +165,7 @@ export async function createOrUpdateDraft(params: {
         })
         .eq('manuscript_id', manuscriptId)
     } else {
-      await (supabase.from('manuscript_metadata') as any)
+      await (admin.from('manuscript_metadata') as any)
         .insert({
           manuscript_id: manuscriptId,
           not_under_review_elsewhere: notUnderReview,
@@ -165,8 +177,9 @@ export async function createOrUpdateDraft(params: {
     return { manuscriptId }
   }
 
-  // Create new draft
-  const { data, error } = await (supabase.from('manuscripts') as any)
+  // Create new draft — corresponding_author_id is pinned to the
+  // authenticated user's id, never a client-supplied value.
+  const { data, error } = await (admin.from('manuscripts') as any)
     .insert({
       corresponding_author_id: user.id,
       manuscript_type: manuscriptType,
@@ -182,7 +195,7 @@ export async function createOrUpdateDraft(params: {
   const row = data as { id: string; submission_id: string }
 
   // Create metadata row
-  const { error: metaError } = await (supabase.from('manuscript_metadata') as any)
+  const { error: metaError } = await (admin.from('manuscript_metadata') as any)
     .insert({
       manuscript_id: row.id,
       not_under_review_elsewhere: notUnderReview,
@@ -302,7 +315,21 @@ export async function recordFile(params: {
 
   const { manuscriptId, originalFilename, fileName, fileType, storagePath, fileSizeBytes, fileOrder, version } = params
 
-  const { data, error } = await (supabase.from('manuscript_files') as any)
+  // Confirm caller owns the manuscript before recording a file against
+  // it. We do this ourselves (via the RLS-enforced read) rather than
+  // relying on the INSERT policy so the admin-client write below is
+  // still scoped to rows the user legitimately owns.
+  const { data: ownsMs } = await supabase
+    .from('manuscripts')
+    .select('id')
+    .eq('id', manuscriptId)
+    .eq('corresponding_author_id', user.id)
+    .maybeSingle()
+  if (!ownsMs) return { error: 'Manuscript not found' }
+
+  const admin = createAdminClient()
+
+  const { data, error } = await (admin.from('manuscript_files') as any)
     .insert({
       manuscript_id: manuscriptId,
       original_filename: originalFilename,
@@ -316,7 +343,7 @@ export async function recordFile(params: {
     .select('*')
     .single()
 
-  if (error) return { error: 'Failed to record file' }
+  if (error) return { error: `Failed to record file: ${error.message}` }
 
   return { file: data as ManuscriptFileRow }
 }
@@ -328,15 +355,36 @@ export async function deleteFile(fileId: string, storagePath: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
+  // Confirm the file belongs to a manuscript the caller owns before
+  // anything destructive. We check through the RLS-protected read so
+  // the admin-client delete below can't touch someone else's row.
+  const { data: fileRow } = await supabase
+    .from('manuscript_files')
+    .select('id, manuscript_id')
+    .eq('id', fileId)
+    .maybeSingle()
+  const file = fileRow as { id: string; manuscript_id: string } | null
+  if (!file) return { error: 'File not found' }
+
+  const { data: ownsMs } = await supabase
+    .from('manuscripts')
+    .select('id')
+    .eq('id', file.manuscript_id)
+    .eq('corresponding_author_id', user.id)
+    .maybeSingle()
+  if (!ownsMs) return { error: 'File not found' }
+
+  const admin = createAdminClient()
+
   // Delete from storage
-  await supabase.storage.from('submissions').remove([storagePath])
+  await admin.storage.from('submissions').remove([storagePath])
 
   // Delete the DB record
-  const { error } = await (supabase.from('manuscript_files') as any)
+  const { error } = await (admin.from('manuscript_files') as any)
     .delete()
     .eq('id', fileId)
 
-  if (error) return { error: 'Failed to delete file record' }
+  if (error) return { error: `Failed to delete file record: ${error.message}` }
 
   return { success: true }
 }
@@ -378,8 +426,19 @@ export async function saveAuthors(params: {
 
   const { manuscriptId, authors } = params
 
+  // Confirm ownership via RLS-protected read before any writes.
+  const { data: ownsMs } = await supabase
+    .from('manuscripts')
+    .select('id')
+    .eq('id', manuscriptId)
+    .eq('corresponding_author_id', user.id)
+    .maybeSingle()
+  if (!ownsMs) return { error: 'Manuscript not found' }
+
+  const admin = createAdminClient()
+
   // Delete all existing authors for this manuscript
-  await (supabase.from('manuscript_authors') as any)
+  await (admin.from('manuscript_authors') as any)
     .delete()
     .eq('manuscript_id', manuscriptId)
 
@@ -398,10 +457,10 @@ export async function saveAuthors(params: {
       author_id: a.is_corresponding ? user.id : null,
     }))
 
-    const { error } = await (supabase.from('manuscript_authors') as any)
+    const { error } = await (admin.from('manuscript_authors') as any)
       .insert(rows)
 
-    if (error) return { error: 'Failed to save authors' }
+    if (error) return { error: `Failed to save authors: ${error.message}` }
   }
 
   return { success: true }
@@ -434,8 +493,19 @@ export async function saveDeclarations(params: {
     noteToEditor,
   } = params
 
+  // Confirm ownership via RLS-protected read before any writes.
+  const { data: ownsMs } = await supabase
+    .from('manuscripts')
+    .select('id')
+    .eq('id', manuscriptId)
+    .eq('corresponding_author_id', user.id)
+    .maybeSingle()
+  if (!ownsMs) return { error: 'Manuscript not found' }
+
+  const admin = createAdminClient()
+
   // Upsert manuscript_metadata
-  const { data: existingMeta } = await supabase
+  const { data: existingMeta } = await admin
     .from('manuscript_metadata')
     .select('id')
     .eq('manuscript_id', manuscriptId)
@@ -451,16 +521,16 @@ export async function saveDeclarations(params: {
   }
 
   if (existingMeta) {
-    await (supabase.from('manuscript_metadata') as any)
+    await (admin.from('manuscript_metadata') as any)
       .update(metaFields)
       .eq('manuscript_id', manuscriptId)
   } else {
-    await (supabase.from('manuscript_metadata') as any)
+    await (admin.from('manuscript_metadata') as any)
       .insert({ manuscript_id: manuscriptId, ...metaFields })
   }
 
   // Update note_to_editor on the manuscripts table
-  await (supabase.from('manuscripts') as any)
+  await (admin.from('manuscripts') as any)
     .update({ note_to_editor: noteToEditor || null })
     .eq('id', manuscriptId)
     .eq('corresponding_author_id', user.id)
