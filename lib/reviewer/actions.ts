@@ -1,6 +1,7 @@
 'use server'
 
-import { createAdminClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { sendEmail } from '@/lib/email/resend'
 import {
   renderReviewerApplicationConfirmation,
@@ -10,6 +11,10 @@ import {
   renderReviewerApplicationInternalNotification,
   getReviewerApplicationInternalSubject,
 } from '@/lib/email/templates/reviewerApplicationInternalNotification'
+import type {
+  ReviewerApplicationRow,
+  ReviewerApplicationStatus,
+} from '@/lib/types/database'
 
 // Editorial triage inbox. Temporarily Kanwar's Gmail until the
 // `editorial@oscrsj.com` Google Workspace mailbox is provisioned
@@ -209,4 +214,181 @@ export async function submitReviewerApplication(
   }
 
   return { success: true, applicationId }
+}
+
+
+// ============================================================
+// Admin — list + triage
+// ============================================================
+//
+// Every admin action below re-checks editor/admin role on the
+// authenticated user before touching the admin client. The UI
+// layout at /dashboard/admin/* also gates on the same check — the
+// re-check here closes the gap for direct POSTs bypassing the UI.
+
+const REVIEWER_APPLICATION_STATUSES: readonly ReviewerApplicationStatus[] = [
+  'pending',
+  'approved',
+  'active',
+  'declined',
+  'withdrawn',
+] as const
+
+async function requireEditorOrAdmin(): Promise<
+  { userId: string } | { error: string }
+> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated.' }
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (error || !data) return { error: 'Profile not found.' }
+  const role = (data as { role: string }).role
+  if (role !== 'editor' && role !== 'admin') {
+    return { error: 'Editor or admin role required.' }
+  }
+  return { userId: user.id }
+}
+
+export interface ListReviewerApplicationsArgs {
+  status?: ReviewerApplicationStatus | 'all'
+}
+
+export interface ListReviewerApplicationsResult {
+  applications?: ReviewerApplicationRow[]
+  error?: string
+}
+
+export async function listReviewerApplications(
+  args: ListReviewerApplicationsArgs = {}
+): Promise<ListReviewerApplicationsResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  const admin = createAdminClient()
+  let query = (admin.from('reviewer_applications') as any)
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (args.status && args.status !== 'all') {
+    query = query.eq('status', args.status)
+  }
+
+  const { data, error } = await query
+  if (error) return { error: error.message }
+  return { applications: (data || []) as ReviewerApplicationRow[] }
+}
+
+export interface UpdateReviewerApplicationStatusArgs {
+  applicationId: string
+  newStatus: ReviewerApplicationStatus
+  adminNotes?: string | null
+}
+
+export interface UpdateReviewerApplicationStatusResult {
+  success?: true
+  error?: string
+}
+
+export async function updateReviewerApplicationStatus(
+  args: UpdateReviewerApplicationStatusArgs
+): Promise<UpdateReviewerApplicationStatusResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  if (!REVIEWER_APPLICATION_STATUSES.includes(args.newStatus)) {
+    return { error: 'Invalid status.' }
+  }
+  if (!args.applicationId || typeof args.applicationId !== 'string') {
+    return { error: 'Application id is required.' }
+  }
+
+  const admin = createAdminClient()
+
+  // Snapshot prior status for the audit trail.
+  const { data: prior, error: priorErr } = await (
+    admin.from('reviewer_applications') as any
+  )
+    .select('status')
+    .eq('id', args.applicationId)
+    .single()
+
+  if (priorErr || !prior) {
+    return { error: 'Application not found.' }
+  }
+
+  const patch: Record<string, unknown> = {
+    status: args.newStatus,
+    reviewed_by: gate.userId,
+    reviewed_at: new Date().toISOString(),
+  }
+  if (typeof args.adminNotes === 'string') {
+    patch.admin_notes = args.adminNotes.trim().slice(0, 4000) || null
+  }
+
+  const { error: updateErr } = await (
+    admin.from('reviewer_applications') as any
+  )
+    .update(patch)
+    .eq('id', args.applicationId)
+
+  if (updateErr) return { error: updateErr.message }
+
+  // Best-effort audit log. Never fail the action on a log error.
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'reviewer_application_status_changed',
+      resource_type: 'reviewer_application',
+      resource_id: args.applicationId,
+      details: {
+        from_status: (prior as { status: string }).status,
+        to_status: args.newStatus,
+        notes_updated: typeof args.adminNotes === 'string',
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath('/dashboard/admin/reviewer-applications')
+  return { success: true }
+}
+
+export interface UpdateReviewerApplicationAdminNotesArgs {
+  applicationId: string
+  notes: string
+}
+
+export async function updateReviewerApplicationAdminNotes(
+  args: UpdateReviewerApplicationAdminNotesArgs
+): Promise<UpdateReviewerApplicationStatusResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  if (!args.applicationId || typeof args.applicationId !== 'string') {
+    return { error: 'Application id is required.' }
+  }
+
+  const admin = createAdminClient()
+  const trimmed = (args.notes || '').trim().slice(0, 4000)
+
+  const { error } = await (admin.from('reviewer_applications') as any)
+    .update({
+      admin_notes: trimmed.length > 0 ? trimmed : null,
+      reviewed_by: gate.userId,
+      reviewed_at: new Date().toISOString(),
+    })
+    .eq('id', args.applicationId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/dashboard/admin/reviewer-applications')
+  return { success: true }
 }

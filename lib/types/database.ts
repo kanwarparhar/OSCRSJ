@@ -57,6 +57,20 @@ export type EmailDeliveryStatus =
   | 'complained'
   | 'failed'
 
+export type CareerStage =
+  | 'med_student'
+  | 'resident'
+  | 'fellow'
+  | 'attending'
+  | 'other'
+
+export type ReviewerApplicationStatus =
+  | 'pending'
+  | 'approved'
+  | 'active'
+  | 'declined'
+  | 'withdrawn'
+
 
 // ---- Row Types (what you get back from a SELECT) ----
 
@@ -227,6 +241,47 @@ export interface EmailLogRow {
   delivered_at: string | null
   bounced_at: string | null
   created_at: string
+}
+
+export interface ReviewerApplicationRow {
+  id: string
+  created_at: string
+  first_name: string
+  last_name: string
+  email: string
+  orcid_id: string | null
+  affiliation: string
+  country: string
+  career_stage: CareerStage
+  subspecialty_interests: string[]
+  writing_sample_url: string | null
+  heard_about: string | null
+  status: ReviewerApplicationStatus
+  reviewed_by: string | null
+  reviewed_at: string | null
+  admin_notes: string | null
+}
+
+export interface ReviewerApplicationInsert {
+  first_name: string
+  last_name: string
+  email: string
+  orcid_id?: string | null
+  affiliation: string
+  country: string
+  career_stage: CareerStage
+  subspecialty_interests?: string[]
+  writing_sample_url?: string | null
+  heard_about?: string | null
+  status?: ReviewerApplicationStatus
+}
+
+export type ReviewerApplicationUpdate = Partial<
+  Omit<ReviewerApplicationInsert, 'email'>
+> & {
+  reviewed_by?: string | null
+  reviewed_at?: string | null
+  admin_notes?: string | null
 }
 
 export interface AuditLogRow {
@@ -477,6 +532,11 @@ export interface Database {
         Insert: AuditLogInsert
         Update: Partial<AuditLogInsert>
       }
+      reviewer_applications: {
+        Row: ReviewerApplicationRow
+        Insert: ReviewerApplicationInsert
+        Update: ReviewerApplicationUpdate
+      }
     }
     Functions: {
       generate_submission_id: {
@@ -495,6 +555,8 @@ export interface Database {
       review_recommendation: ReviewRecommendation
       editorial_decision_type: EditorialDecisionType
       email_delivery_status: EmailDeliveryStatus
+      career_stage: CareerStage
+      reviewer_application_status: ReviewerApplicationStatus
     }
   }
 }

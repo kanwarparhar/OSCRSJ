@@ -158,6 +158,44 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       >
         {loading ? 'Saving...' : 'Save Changes'}
       </button>
+
+      <div className="bg-white border border-border rounded-xl p-6 mt-8">
+        <h2 className="font-serif text-lg text-brown-dark mb-2">
+          Your data (GDPR)
+        </h2>
+        <p className="text-sm text-brown mb-4 max-w-prose">
+          Download a JSON file of every record OSCRSJ stores for your
+          account — profile, manuscripts, co-author entries, metadata,
+          file listings, payments, and any reviewer application. File
+          contents from storage are not embedded; contact{' '}
+          <a
+            href="mailto:editorial@oscrsj.com"
+            className="underline underline-offset-2"
+          >
+            editorial@oscrsj.com
+          </a>{' '}
+          if you need raw file exports.
+        </p>
+        <a
+          href="/api/dashboard/export"
+          className="inline-flex items-center gap-2 text-sm px-4 py-2 border border-border rounded-lg text-brown-dark bg-white hover:border-tan transition-colors"
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+            />
+          </svg>
+          Export my data
+        </a>
+      </div>
     </form>
   )
 }
