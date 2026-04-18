@@ -104,7 +104,7 @@ export default function HomePage() {
                   className={`w-full rounded-lg mb-4 flex items-center justify-center ${i === 0 ? 'h-48' : 'h-32'}`}
                   style={{ background: 'linear-gradient(135deg, var(--cream-alt) 0%, var(--taupe) 100%)' }}
                 >
-                  <span className="text-tan/60 text-xs uppercase tracking-widest">Radiograph</span>
+                  <span className="text-brown/70 text-xs uppercase tracking-widest">Radiograph</span>
                 </div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xs font-medium text-brown bg-tan/20 px-2.5 py-1 rounded-full">
@@ -265,7 +265,7 @@ export default function HomePage() {
             <input
               type="email"
               placeholder="your@email.com"
-              className="flex-1 text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-peach/40 placeholder:text-tan transition"
+              className="flex-1 text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-peach/40 placeholder:text-brown transition"
             />
             <button type="submit" className="btn-primary-light justify-center">
               Subscribe

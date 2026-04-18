@@ -156,7 +156,7 @@ export default function RegisterForm() {
               autoComplete="name"
               defaultValue={orcidPrefill?.full_name || ''}
               placeholder="e.g., John A. Smith"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
@@ -171,7 +171,7 @@ export default function RegisterForm() {
               required
               autoComplete="email"
               placeholder="you@institution.edu"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
@@ -187,7 +187,7 @@ export default function RegisterForm() {
                 required
                 defaultValue={orcidPrefill?.affiliation || ''}
                 placeholder="e.g., Massachusetts General Hospital"
-                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
 
@@ -200,7 +200,7 @@ export default function RegisterForm() {
                 name="degrees"
                 type="text"
                 placeholder="e.g., MD, PhD"
-                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
           </div>
@@ -237,7 +237,7 @@ export default function RegisterForm() {
                 readOnly={!!orcidPrefill?.orcid_id}
                 placeholder="0000-0000-0000-0000"
                 pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"
-                className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+                className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
               />
             </div>
             <p className="text-xs text-brown mt-1">
@@ -267,7 +267,7 @@ export default function RegisterForm() {
               required
               autoComplete="new-password"
               onChange={handlePasswordChange}
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
             <div className="mt-2 grid grid-cols-2 gap-1">
               {[
@@ -300,7 +300,7 @@ export default function RegisterForm() {
               type="password"
               required
               autoComplete="new-password"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
         </div>

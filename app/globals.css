@@ -67,7 +67,7 @@ a {
   }
 
   .section-label {
-    @apply text-tan uppercase font-medium mb-3 block;
+    @apply text-brown uppercase font-medium mb-3 block;
     font-size: 11px;
     letter-spacing: 0.12em;
   }

@@ -47,7 +47,7 @@ export default function SubscribePage() {
                 type="text"
                 id="name"
                 placeholder="Dr. Jane Smith"
-                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-tan transition"
+                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-brown transition"
               />
             </div>
             <div>
@@ -56,7 +56,7 @@ export default function SubscribePage() {
                 type="email"
                 id="email"
                 placeholder="jane.smith@hospital.edu"
-                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-tan transition"
+                className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 placeholder:text-brown transition"
               />
             </div>
             <div>

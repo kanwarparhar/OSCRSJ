@@ -74,7 +74,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             type="text"
             required
             defaultValue={initialData.fullName}
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
           />
         </div>
 
@@ -89,7 +89,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               type="text"
               required
               defaultValue={initialData.affiliation}
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
 
@@ -103,7 +103,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               type="text"
               defaultValue={initialData.degrees}
               placeholder="e.g., MD, PhD"
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
         </div>
@@ -139,7 +139,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               defaultValue={initialData.orcidId}
               placeholder="0000-0000-0000-0000"
               pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"
-              className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-tan/60 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
+              className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
           </div>
           <p className="text-xs text-brown mt-1">

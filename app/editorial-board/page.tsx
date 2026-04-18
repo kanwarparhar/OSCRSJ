@@ -1,12 +1,22 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
+import {
+  BOARD_MEMBERS,
+  buildEditorialBoardSchema,
+} from '@/lib/schema/editorialBoard'
 
 export const metadata: Metadata = { title: 'Editorial Board' }
 
 export default function EditorialBoardPage() {
+  const personSchema = buildEditorialBoardSchema(BOARD_MEMBERS)
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
       <PageHeader
         label="Our Team"
         title="Editorial Board"
