@@ -525,6 +525,48 @@ export async function submitEditorialDecision(
 }
 
 // ============================================================
+// Bulk decision initiation audit-log (Session 14)
+// ============================================================
+// Records editor intent at the start of a bulk decision run so
+// the audit trail captures the batch even if the editor navigates
+// away mid-run. Per-manuscript audit rows are still written by
+// submitEditorialDecision as each decision commits.
+
+export interface LogBulkDecisionInitiatedArgs {
+  manuscriptIds: string[]
+  decision: EditorialDecisionType
+  letterLength: number
+}
+
+export async function logBulkDecisionInitiated(
+  args: LogBulkDecisionInitiatedArgs
+): Promise<{ ok: boolean; error?: string }> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { ok: false, error: gate.error }
+  if (!Array.isArray(args.manuscriptIds) || args.manuscriptIds.length === 0) {
+    return { ok: false, error: 'No manuscripts selected.' }
+  }
+  const admin = createAdminClient()
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'editorial_decision_bulk_initiated',
+      resource_type: 'manuscript',
+      resource_id: null,
+      details: {
+        manuscript_ids: args.manuscriptIds,
+        count: args.manuscriptIds.length,
+        decision: args.decision,
+        letter_length: args.letterLength,
+      },
+    })
+  } catch {
+    // swallow — don't block the batch on a log failure
+  }
+  return { ok: true }
+}
+
+// ============================================================
 // Decision rescind 15-min window (Session 13)
 // ============================================================
 // Editor-only undo of an editorial decision they themselves issued
