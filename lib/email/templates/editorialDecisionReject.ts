@@ -1,10 +1,14 @@
 // ============================================================
 // Editorial decision — Reject (post-review or desk reject)
 // ============================================================
-// Manuscripts.status flips to 'desk_rejected' for both post-review
-// reject and desk reject in v1 (enum split deferred to Phase 3.5).
-// Letter framing is respectful and evidence-grounded. No CTA to
-// resubmit — rejections are terminal.
+// Session 13 split (migration 011) restored the COPE-aligned
+// distinction:
+//   - post_review_reject → manuscripts.status = 'rejected'
+//   - desk_reject        → manuscripts.status = 'desk_rejected'
+// Both share this template; the `isDeskReject` flag tweaks the
+// lead paragraph + heading framing. Letter framing is respectful
+// and evidence-grounded. No CTA to resubmit — rejections are
+// terminal.
 // ============================================================
 
 import {

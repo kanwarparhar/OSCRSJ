@@ -21,6 +21,7 @@ export type ManuscriptStatus =
   | 'draft'
   | 'submitted'
   | 'desk_rejected'
+  | 'rejected'
   | 'withdrawn'
   | 'under_review'
   | 'revision_requested'
@@ -48,7 +49,13 @@ export type InvitationStatus = 'invited' | 'accepted' | 'declined' | 'submitted'
 
 export type ReviewRecommendation = 'accept' | 'minor_revisions' | 'major_revisions' | 'reject'
 
-export type EditorialDecisionType = 'accept' | 'reject' | 'major_revisions' | 'minor_revisions' | 'desk_reject'
+export type EditorialDecisionType =
+  | 'accept'
+  | 'reject'
+  | 'post_review_reject'
+  | 'major_revisions'
+  | 'minor_revisions'
+  | 'desk_reject'
 
 export type EmailDeliveryStatus =
   | 'sent'
@@ -149,6 +156,7 @@ export interface ManuscriptMetadataRow {
   ai_tools_used: boolean
   ai_tools_details: string | null
   all_reviews_notified_at: string | null
+  revision_reminder_sent_at: string | null
   created_at: string
   updated_at: string
 }
@@ -228,6 +236,8 @@ export interface EditorialDecisionRow {
   decision_letter: string | null
   revision_deadline: string | null
   decision_date: string
+  rescinded_at: string | null
+  rescinded_reason: string | null
   created_at: string
 }
 

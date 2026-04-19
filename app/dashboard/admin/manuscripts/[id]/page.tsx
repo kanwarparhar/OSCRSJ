@@ -1,18 +1,33 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { listReviewerApplications } from '@/lib/reviewer/actions'
 import type {
   ManuscriptRow,
   ManuscriptAuthorRow,
   ManuscriptFileRow,
   ManuscriptMetadataRow,
+  EditorialDecisionRow,
+  EditorialDecisionType,
 } from '@/lib/types/database'
 import InviteReviewerPanel from './InviteReviewerPanel'
 import InviteByEmailPanel from './InviteByEmailPanel'
 import AdminFileDownloadButton from './AdminFileDownloadButton'
-import DecisionComposerPanel from './DecisionComposerPanel'
+import DecisionComposerPanel, {
+  type RescindableDecision,
+} from './DecisionComposerPanel'
 import DecisionHistoryPanel from './DecisionHistoryPanel'
+
+const RESCIND_WINDOW_MS = 15 * 60 * 1000
+
+const DECISION_LABEL_FOR_RESCIND: Record<EditorialDecisionType, string> = {
+  accept: 'Accept',
+  minor_revisions: 'Minor Revisions',
+  major_revisions: 'Major Revisions',
+  post_review_reject: 'Reject',
+  reject: 'Reject',
+  desk_reject: 'Desk Reject',
+}
 
 export const dynamic = 'force-dynamic'
 
@@ -35,6 +50,7 @@ const STATUS_STYLES: Record<string, string> = {
   in_production: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   published: 'bg-emerald-100 text-emerald-800 border-emerald-200',
   desk_rejected: 'bg-red-100 text-red-800 border-red-200',
+  rejected: 'bg-red-100 text-red-800 border-red-200',
   withdrawn: 'bg-neutral-200 text-neutral-700 border-neutral-300',
   draft: 'bg-gray-100 text-gray-700 border-gray-200',
 }
@@ -90,6 +106,43 @@ export default async function AdminManuscriptDetailPage({
   const metadata = (metadataRes.data as ManuscriptMetadataRow | null) || null
   const invitations = (invitationsRes.data as any[]) || []
   const activeApplications = appsRes.applications || []
+
+  // Resolve currently-authed user (for the rescind ownership gate).
+  const supabase = await createClient()
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser()
+
+  // Find the most recent non-rescinded editorial decision; if it
+  // was issued by the current user within the last 15 min, expose
+  // an Undo affordance in the composer.
+  const { data: latestDecisionData } = await admin
+    .from('editorial_decisions')
+    .select('*')
+    .eq('manuscript_id', params.id)
+    .is('rescinded_at', null)
+    .order('decision_date', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  let rescindable: RescindableDecision | null = null
+  const latestDecision = (latestDecisionData as EditorialDecisionRow | null) || null
+  if (latestDecision && currentUser && latestDecision.editor_id === currentUser.id) {
+    const issuedAtMs = new Date(latestDecision.decision_date).getTime()
+    const elapsed = Date.now() - issuedAtMs
+    if (elapsed < RESCIND_WINDOW_MS) {
+      rescindable = {
+        id: latestDecision.id,
+        decisionDateIso: latestDecision.decision_date,
+        decisionLabel:
+          DECISION_LABEL_FOR_RESCIND[latestDecision.decision] ||
+          latestDecision.decision,
+        rescindWindowEndsIso: new Date(
+          issuedAtMs + RESCIND_WINDOW_MS
+        ).toISOString(),
+      }
+    }
+  }
 
   // Map submitted reviews to their invitation so the invitations table
   // can render a "View review" link only on rows that have one.
@@ -321,6 +374,7 @@ export default async function AdminManuscriptDetailPage({
         submissionId={manuscript.submission_id}
         title={manuscript.title || '(untitled manuscript)'}
         reviewCount={reviewByInvitation.size}
+        rescindable={rescindable}
       />
 
       <DecisionHistoryPanel manuscriptId={manuscript.id} />

@@ -14,6 +14,7 @@ const DECISION_LABELS: Record<EditorialDecisionType, string> = {
   accept: 'Accepted',
   minor_revisions: 'Minor Revisions',
   major_revisions: 'Major Revisions',
+  post_review_reject: 'Rejected',
   reject: 'Rejected',
   desk_reject: 'Desk Rejected',
 }
@@ -22,6 +23,7 @@ const DECISION_PILLS: Record<EditorialDecisionType, string> = {
   accept: 'bg-green-100 text-green-800 border-green-200',
   minor_revisions: 'bg-amber-100 text-amber-800 border-amber-200',
   major_revisions: 'bg-orange-100 text-orange-800 border-orange-200',
+  post_review_reject: 'bg-red-100 text-red-800 border-red-200',
   reject: 'bg-red-100 text-red-800 border-red-200',
   desk_reject: 'bg-red-100 text-red-800 border-red-200',
 }
@@ -148,20 +150,39 @@ export default async function DecisionHistoryPanel({ manuscriptId }: Props) {
   )
 }
 
+function rescindMinutesAfter(decisionDate: string, rescindedAt: string): number {
+  try {
+    const d = new Date(decisionDate).getTime()
+    const r = new Date(rescindedAt).getTime()
+    return Math.max(0, Math.round((r - d) / 60000))
+  } catch {
+    return 0
+  }
+}
+
 function DecisionRow({ entry }: { entry: TimelineDecision }) {
   const deadlineLabel = formatDeadline(entry.row.revision_deadline)
   const pillClass = DECISION_PILLS[entry.row.decision] || ''
   const letter = entry.row.decision_letter || ''
+  const isRescinded = Boolean(entry.row.rescinded_at)
   return (
-    <li className="border border-border rounded-lg p-4 bg-cream/20">
+    <li
+      className={`border border-border rounded-lg p-4 ${
+        isRescinded ? 'bg-neutral-50' : 'bg-cream/20'
+      }`}
+    >
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <span
-            className={`text-[11px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded-full border ${pillClass}`}
+            className={`text-[11px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded-full border ${pillClass} ${
+              isRescinded ? 'line-through opacity-60' : ''
+            }`}
           >
             {DECISION_LABELS[entry.row.decision]}
           </span>
-          <span className="text-xs text-brown">
+          <span
+            className={`text-xs text-brown ${isRescinded ? 'line-through opacity-60' : ''}`}
+          >
             {formatDate(entry.row.decision_date)}
           </span>
         </div>
@@ -169,8 +190,21 @@ function DecisionRow({ entry }: { entry: TimelineDecision }) {
           {entry.editorName ? `by ${entry.editorName}` : ''}
         </span>
       </div>
+      {isRescinded && entry.row.rescinded_at && (
+        <p className="mt-2 text-[11px] uppercase tracking-widest text-amber-800 bg-amber-50 border border-amber-200 inline-block px-2 py-0.5 rounded-full">
+          Rescinded {rescindMinutesAfter(entry.row.decision_date, entry.row.rescinded_at)} min after issue
+        </p>
+      )}
+      {isRescinded && entry.row.rescinded_reason && (
+        <p className="text-xs text-brown mt-2 italic">
+          Reason: {entry.row.rescinded_reason.slice(0, 200)}
+          {entry.row.rescinded_reason.length > 200 ? '…' : ''}
+        </p>
+      )}
       {deadlineLabel && (
-        <p className="text-xs text-brown mt-2">
+        <p
+          className={`text-xs text-brown mt-2 ${isRescinded ? 'opacity-60' : ''}`}
+        >
           Revision deadline: <span className="text-ink">{deadlineLabel}</span>
         </p>
       )}
@@ -184,7 +218,11 @@ function DecisionRow({ entry }: { entry: TimelineDecision }) {
               Hide letter
             </span>
           </summary>
-          <pre className="mt-2 p-3 bg-white border border-border rounded font-mono text-xs text-ink whitespace-pre-wrap break-words">
+          <pre
+            className={`mt-2 p-3 bg-white border border-border rounded font-mono text-xs whitespace-pre-wrap break-words ${
+              isRescinded ? 'text-brown opacity-70' : 'text-ink'
+            }`}
+          >
             {letter}
           </pre>
         </details>

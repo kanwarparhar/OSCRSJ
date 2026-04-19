@@ -19,6 +19,7 @@ const STATUS_BADGES: Record<ManuscriptStatus, { label: string; className: string
   draft: { label: 'Draft', className: 'bg-gray-100 text-gray-700' },
   submitted: { label: 'Submitted', className: 'bg-blue-100 text-blue-700' },
   desk_rejected: { label: 'Desk Rejected', className: 'bg-red-100 text-red-700' },
+  rejected: { label: 'Rejected', className: 'bg-red-100 text-red-700' },
   withdrawn: { label: 'Withdrawn', className: 'bg-gray-100 text-gray-500' },
   under_review: { label: 'Under Review', className: 'bg-yellow-100 text-yellow-800' },
   revision_requested: { label: 'Revisions Requested', className: 'bg-orange-100 text-orange-700' },

@@ -14,6 +14,7 @@ const LISTABLE_STATUSES: ManuscriptStatus[] = [
   'in_production',
   'published',
   'desk_rejected',
+  'rejected',
   'withdrawn',
 ]
 
@@ -27,6 +28,7 @@ const STATUS_STYLES: Record<string, string> = {
   in_production: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   published: 'bg-emerald-100 text-emerald-800 border-emerald-200',
   desk_rejected: 'bg-red-100 text-red-800 border-red-200',
+  rejected: 'bg-red-100 text-red-800 border-red-200',
   withdrawn: 'bg-neutral-200 text-neutral-700 border-neutral-300',
   draft: 'bg-gray-100 text-gray-700 border-gray-200',
 }

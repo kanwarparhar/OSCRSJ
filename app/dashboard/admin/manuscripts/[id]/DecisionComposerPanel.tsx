@@ -1,12 +1,32 @@
 'use client'
 
-import { useState, useTransition, useMemo } from 'react'
+import { useState, useTransition, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { submitEditorialDecision } from '@/lib/admin/actions'
+import {
+  submitEditorialDecision,
+  rescindEditorialDecision,
+} from '@/lib/admin/actions'
 import type {
   EditorialDecisionType,
   ManuscriptStatus,
 } from '@/lib/types/database'
+
+// Session 13 — passed in from the server page when the most recent
+// editorial_decisions row on this manuscript:
+//   - was issued by the currently-authed editor
+//   - is within the 15-min rescind window
+//   - has rescinded_at IS NULL
+// When all three are true, the composer renders an "Undo decision"
+// affordance directly above the form.
+export interface RescindableDecision {
+  id: string
+  decisionDateIso: string
+  decisionLabel: string
+  // ISO time when the rescind window expires (decision_date + 15min).
+  // Used by the client to show a live countdown and auto-hide the
+  // button once it passes.
+  rescindWindowEndsIso: string
+}
 
 interface Props {
   manuscriptId: string
@@ -14,13 +34,20 @@ interface Props {
   submissionId: string
   title: string
   reviewCount: number
+  rescindable?: RescindableDecision | null
 }
 
+const MIN_RESCIND_REASON = 50
+
+// Composer-side decision union. Maps to EditorialDecisionType when
+// submitting — `post_review_reject` is the new Session 13 enum value
+// for rejections issued after external review (distinct from
+// `desk_reject` for pre-review rejections).
 type ComposerDecision =
   | 'accept'
   | 'minor_revisions'
   | 'major_revisions'
-  | 'reject'
+  | 'post_review_reject'
 
 const DECIDABLE_STATUSES: ManuscriptStatus[] = [
   'submitted',
@@ -32,14 +59,14 @@ const DECISION_LABELS: Record<ComposerDecision, string> = {
   accept: 'Accept',
   minor_revisions: 'Minor Revisions',
   major_revisions: 'Major Revisions',
-  reject: 'Reject',
+  post_review_reject: 'Reject (post-review)',
 }
 
 const DECISION_TARGET_STATUS: Record<ComposerDecision, string> = {
   accept: 'accepted',
   minor_revisions: 'revision_requested',
   major_revisions: 'revision_requested',
-  reject: 'desk_rejected',
+  post_review_reject: 'rejected',
 }
 
 const MIN_LETTER_LENGTH = 120
@@ -73,6 +100,8 @@ function fillTemplate(
 }
 
 const TEMPLATES: Record<ComposerDecision, string> = {
+  // post_review_reject template lives at the bottom of this object —
+  // copy mirrors the prior `reject` template; only the label changed.
   accept: `Dear Authors,
 
 It is my pleasure to inform you that your manuscript "{{title}}" (submission {{submission_id}}) has been accepted for publication in the Orthopedic Surgery Case Reports & Series Journal.
@@ -105,7 +134,7 @@ Substantive changes to the manuscript — including to the data, analysis, or co
 
 Sincerely,
 The OSCRSJ Editorial Office`,
-  reject: `Dear Authors,
+  post_review_reject: `Dear Authors,
 
 Thank you for submitting "{{title}}" (submission {{submission_id}}) to the Orthopedic Surgery Case Reports & Series Journal. After careful consideration of the peer reviews and editorial assessment, I regret to inform you that we are unable to accept the manuscript for publication.
 
@@ -134,6 +163,7 @@ export default function DecisionComposerPanel({
   submissionId,
   title,
   reviewCount,
+  rescindable,
 }: Props) {
   const router = useRouter()
   const decidable = DECIDABLE_STATUSES.includes(manuscriptStatus)
@@ -144,11 +174,21 @@ export default function DecisionComposerPanel({
   const [letter, setLetter] = useState('')
   const [deadline, setDeadline] = useState(defaultDeadline())
   const [confirmed, setConfirmed] = useState(false)
+  const [reInviteReviewers, setReInviteReviewers] = useState(false)
   const [deskRejectMode, setDeskRejectMode] = useState(false)
   const [deskRejectConfirmOpen, setDeskRejectConfirmOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<string | null>(null)
   const [isError, setIsError] = useState(false)
+
+  // ---- Rescind window state ----
+  const [rescindOpen, setRescindOpen] = useState(false)
+  const [rescindReason, setRescindReason] = useState('')
+  const [isRescinding, startRescind] = useTransition()
+  const [rescindWindowExpired, setRescindWindowExpired] = useState(() => {
+    if (!rescindable) return true
+    return Date.now() >= new Date(rescindable.rescindWindowEndsIso).getTime()
+  })
 
   const requiresDeadline =
     !deskRejectMode &&
@@ -232,15 +272,47 @@ export default function DecisionComposerPanel({
         revisionDeadline: requiresDeadline
           ? new Date(`${deadline}T23:59:59Z`).toISOString()
           : null,
+        reInviteOriginalReviewers:
+          decision === 'major_revisions' &&
+          !deskRejectMode &&
+          reInviteReviewers,
       })
       if (!result.ok) {
         flash(result.error || 'Failed to submit decision.', true)
         return
       }
-      flash('Decision recorded and author notified.')
+      const reInviteLine =
+        result.reInvited && result.reInvited > 0
+          ? ` ${result.reInvited} reviewer${result.reInvited === 1 ? '' : 's'} re-invited for round 2.`
+          : ''
+      flash(`Decision recorded and author notified.${reInviteLine}`)
       setLetter('')
       setConfirmed(false)
       setDeskRejectMode(false)
+      setReInviteReviewers(false)
+      router.refresh()
+    })
+  }
+
+  function onRescindConfirm() {
+    if (!rescindable) return
+    const trimmed = rescindReason.trim()
+    if (trimmed.length < MIN_RESCIND_REASON) return
+    startRescind(async () => {
+      const result = await rescindEditorialDecision({
+        decisionId: rescindable.id,
+        reason: trimmed,
+      })
+      if (!result.ok) {
+        flash(result.error || 'Failed to rescind decision.', true)
+        return
+      }
+      const restored = result.restoredStatus
+        ? ` Status reverted to "${result.restoredStatus.replace(/_/g, ' ')}".`
+        : ''
+      flash(`Decision rescinded.${restored}`)
+      setRescindOpen(false)
+      setRescindReason('')
       router.refresh()
     })
   }
@@ -265,6 +337,18 @@ export default function DecisionComposerPanel({
           </span>
         )}
       </div>
+
+      {rescindable && !rescindWindowExpired && (
+        <RescindBanner
+          rescindable={rescindable}
+          onOpenModal={() => {
+            setRescindReason('')
+            setRescindOpen(true)
+          }}
+          onWindowExpired={() => setRescindWindowExpired(true)}
+          isPending={isRescinding}
+        />
+      )}
 
       {decidable && reviewCount === 0 && !deskRejectMode && (
         <div className="text-xs text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded">
@@ -296,7 +380,14 @@ export default function DecisionComposerPanel({
             Decision type
           </legend>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {(['accept', 'minor_revisions', 'major_revisions', 'reject'] as ComposerDecision[]).map(
+            {(
+              [
+                'accept',
+                'minor_revisions',
+                'major_revisions',
+                'post_review_reject',
+              ] as ComposerDecision[]
+            ).map(
               (d) => (
                 <label
                   key={d}
@@ -329,6 +420,13 @@ export default function DecisionComposerPanel({
               )
             )}
           </div>
+          {decision === 'post_review_reject' && (
+            <p className="text-[11px] text-brown mt-1 italic">
+              For decisions before any external review, use the
+              &ldquo;Desk reject without review&rdquo; button below
+              instead.
+            </p>
+          )}
         </fieldset>
       )}
 
@@ -351,6 +449,28 @@ export default function DecisionComposerPanel({
             and on their dashboard.
           </p>
         </div>
+      )}
+
+      {!deskRejectMode && decision === 'major_revisions' && (
+        <label className="flex items-start gap-2 text-sm text-ink bg-cream/40 border border-border rounded-lg p-3">
+          <input
+            type="checkbox"
+            checked={reInviteReviewers}
+            onChange={(e) => setReInviteReviewers(e.target.checked)}
+            disabled={!decidable || isPending}
+            className="mt-0.5"
+          />
+          <span>
+            <span className="font-medium">
+              Re-invite original reviewers for round 2
+            </span>
+            <span className="block text-[11px] text-brown mt-0.5">
+              Reviewers who completed round 1 will receive a fresh invitation
+              with a 21-day deadline and a &ldquo;Round 2&rdquo; note. Reviewers
+              who already have a post-decision invitation will be skipped.
+            </span>
+          </span>
+        </label>
       )}
 
       <div>
@@ -480,6 +600,117 @@ export default function DecisionComposerPanel({
           </div>
         </div>
       )}
+
+      {rescindOpen && rescindable && (
+        <div className="fixed inset-0 z-40 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl border border-border shadow-lg max-w-lg w-full p-6 space-y-4">
+            <h3 className="font-serif text-lg text-brown-dark">
+              Undo {rescindable.decisionLabel.toLowerCase()} decision?
+            </h3>
+            <p className="text-sm text-ink">
+              The manuscript status will revert to its pre-decision state and
+              the corresponding author will receive an email asking them to
+              disregard the prior letter. The rescinded decision stays in the
+              manuscript history for audit purposes.
+            </p>
+            <div>
+              <label className="block text-[11px] uppercase tracking-widest text-brown mb-1">
+                Reason for rescission (visible to the author)
+              </label>
+              <textarea
+                value={rescindReason}
+                onChange={(e) => setRescindReason(e.target.value)}
+                rows={4}
+                disabled={isRescinding}
+                placeholder="e.g. Decision was issued in error before all reviewer reports had been considered."
+                className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark disabled:opacity-50"
+              />
+              <p
+                className={`text-[11px] mt-1 ${
+                  rescindReason.trim().length >= MIN_RESCIND_REASON
+                    ? 'text-brown'
+                    : 'text-amber-700'
+                }`}
+              >
+                {rescindReason.trim().length} characters &middot; minimum{' '}
+                {MIN_RESCIND_REASON}
+              </p>
+            </div>
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setRescindOpen(false)}
+                disabled={isRescinding}
+                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={onRescindConfirm}
+                disabled={
+                  isRescinding ||
+                  rescindReason.trim().length < MIN_RESCIND_REASON
+                }
+                className="text-sm px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {isRescinding ? 'Rescinding…' : 'Rescind decision'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
+
+// Live countdown banner. Renders the time remaining in the 15-min
+// rescind window and the Undo button. Self-removes via
+// onWindowExpired() when the deadline passes.
+function RescindBanner({
+  rescindable,
+  onOpenModal,
+  onWindowExpired,
+  isPending,
+}: {
+  rescindable: RescindableDecision
+  onOpenModal: () => void
+  onWindowExpired: () => void
+  isPending: boolean
+}) {
+  const [now, setNow] = useState(Date.now())
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(id)
+  }, [])
+
+  const endsAt = new Date(rescindable.rescindWindowEndsIso).getTime()
+  const msRemaining = endsAt - now
+  if (msRemaining <= 0) {
+    queueMicrotask(onWindowExpired)
+    return null
+  }
+  const totalSec = Math.ceil(msRemaining / 1000)
+  const min = Math.floor(totalSec / 60)
+  const sec = totalSec % 60
+  const label = `${min}:${sec.toString().padStart(2, '0')}`
+
+  return (
+    <div className="text-xs bg-amber-50 border border-amber-200 text-amber-900 rounded-lg px-3 py-2 flex items-center justify-between gap-3 flex-wrap">
+      <span>
+        <strong>Just issued:</strong> {rescindable.decisionLabel}. You can
+        undo this decision for the next <code className="font-mono">{label}</code>.
+      </span>
+      <button
+        type="button"
+        onClick={onOpenModal}
+        disabled={isPending}
+        className="text-xs border border-amber-400 bg-white text-amber-900 px-2 py-1 rounded hover:bg-amber-100 disabled:opacity-50"
+      >
+        Undo decision
+      </button>
+    </div>
+  )
+}
+
