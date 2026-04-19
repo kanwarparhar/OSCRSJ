@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="900" height="500" role="img" aria-label="OSCRSJ — Orthopedic Surgery Case Reports &amp; Series Journal">
+  <title>OSCRSJ Masthead (Dark)</title>
+  <defs>
+    <style>
+      .serif    { font-family: 'DM Serif Display', 'Playfair Display', Georgia, 'Times New Roman', serif; }
+      .serif-it { font-family: 'DM Serif Display', 'Playfair Display', Georgia, 'Times New Roman', serif; font-style: italic; }
+      .sans     { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; }
+    </style>
+  </defs>
+  <rect width="900" height="500" fill="#3d2a18"></rect>
+  <g text-anchor="middle">
+    <text x="450" y="140" class="sans" fill="#F0C49A" font-size="18" letter-spacing="8" font-weight="600">PEER REVIEWED  ·  QUARTERLY</text>
+    <text x="450" y="280" class="serif" fill="#FFDBBB" font-size="192" letter-spacing="-6">OSCRSJ</text>
+    <line x1="280" y1="330" x2="410" y2="330" stroke="#997E67" stroke-width="1.2"></line>
+    <rect x="445" y="325" width="10" height="10" transform="rotate(45 450 330)" fill="#997E67"></rect>
+    <line x1="490" y1="330" x2="620" y2="330" stroke="#997E67" stroke-width="1.2"></line>
+    <text x="450" y="372" class="serif-it" fill="#FFDBBB" font-size="28" letter-spacing="0.6">Orthopedic Surgery Case Reports</text>
+    <text x="450" y="408" class="serif-it" fill="#FFDBBB" font-size="28" letter-spacing="0.6">&amp; Series Journal</text>
+  </g>
+</svg>

@@ -1,0 +1,514 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>OSCRSJ — Journal Cover</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --peach: #FFDBBB;
+    --peach-dk: #F0C49A;
+    --brown: #664930;
+    --brown-dk: #3d2a18;
+    --tan: #997E67;
+    --taupe: #CCBEB1;
+    --cream: #FAF3EA;
+    --cream-dk: #F4EADC;
+  }
+  html, body { margin: 0; padding: 0; background: #d9d4cc; font-family: 'Inter', sans-serif; }
+  .stage { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 56px 24px; box-sizing: border-box; }
+  .cover {
+    width: 680px; aspect-ratio: 8.5 / 11;
+    background: var(--cream); color: var(--brown-dk);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 24px 60px rgba(0,0,0,0.18);
+    display: flex; flex-direction: column;
+    padding: 56px 56px 40px;
+    box-sizing: border-box;
+    position: relative;
+    font-size: 14px;
+  }
+  .cover.dark { background: var(--brown-dk); color: var(--peach); }
+  .cover.dark .rule, .cover.dark .rule-t { background: var(--tan); }
+  .cover.dark .muted { color: var(--peach-dk); }
+  .cover.dark .tan-ink { color: var(--peach-dk); }
+  .cover.dark .hairline { border-color: rgba(255,219,187,0.25); }
+  .cover.dark .art-placeholder { background: #2a1a0c; border-color: rgba(255,219,187,0.2); color: var(--peach-dk); }
+  .cover.dark .toc-title { color: var(--peach); }
+
+  /* ── Header strip ── */
+  .header-strip {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    font-family: 'Inter', sans-serif; font-size: 9px;
+    letter-spacing: 2.4px; font-weight: 600; text-transform: uppercase;
+    color: var(--brown);
+    margin-bottom: 36px;
+  }
+  .cover.dark .header-strip { color: var(--peach-dk); }
+  .header-strip .col { display: flex; flex-direction: column; gap: 3px; }
+  .header-strip .right { text-align: right; align-items: flex-end; }
+
+  /* ── Masthead ── */
+  .masthead { text-align: center; }
+  .eyebrow {
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 4.4px; text-transform: uppercase;
+    color: var(--brown); margin-bottom: 14px;
+  }
+  .cover.dark .eyebrow { color: var(--peach-dk); }
+  .wordmark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 112px; line-height: 0.88;
+    letter-spacing: -3.2px;
+    color: var(--brown-dk);
+  }
+  .cover.dark .wordmark { color: var(--peach); }
+  .diamond-rule {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin: 16px auto 12px; width: 62%;
+  }
+  .diamond-rule .rule { flex: 1; height: 1px; background: var(--tan); }
+  .diamond-rule .dia { width: 6px; height: 6px; background: var(--tan); transform: rotate(45deg); }
+  .tagline {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 17px; line-height: 1.35;
+    color: var(--brown-dk);
+  }
+  .cover.dark .tagline { color: var(--peach); }
+
+  /* ── Cover art ── */
+  .art-wrap { margin: 32px 0 20px; }
+  .art-placeholder {
+    aspect-ratio: 4 / 3;
+    background: var(--cream-dk);
+    border: 1px solid rgba(102,73,48,0.18);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .art-placeholder::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent 0 14px,
+      rgba(102,73,48,0.05) 14px 15px
+    );
+  }
+  .cover.dark .art-placeholder::before {
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent 0 14px,
+      rgba(255,219,187,0.06) 14px 15px
+    );
+  }
+  .art-placeholder .art-label {
+    position: relative; z-index: 1;
+    font-family: 'Inter', monospace;
+    font-size: 10px; letter-spacing: 2.4px;
+    text-transform: uppercase; color: var(--brown);
+    font-weight: 600;
+  }
+  .cover.dark .art-placeholder .art-label { color: var(--peach-dk); }
+  .art-caption {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 11.5px; color: var(--brown);
+    margin-top: 8px; text-align: center; line-height: 1.4;
+  }
+  .cover.dark .art-caption { color: var(--peach-dk); }
+
+  /* ── TOC ── */
+  .toc-wrap { flex: 1; display: flex; flex-direction: column; margin-top: 8px; }
+  .toc-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
+  }
+  .toc-header .rule-t { flex: 1; height: 1px; background: var(--tan); }
+  .toc-title {
+    font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--brown);
+    white-space: nowrap;
+  }
+  .toc { display: flex; flex-direction: column; gap: 11px; }
+  .toc-item { display: grid; grid-template-columns: 28px 1fr 34px; gap: 10px; align-items: baseline; }
+  .toc-item .pg {
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 1.4px; color: var(--tan); text-align: right;
+  }
+  .toc-item .num-col {
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 1.4px; color: var(--tan);
+  }
+  .toc-item .title {
+    font-family: 'DM Serif Display', serif; font-size: 14px; line-height: 1.3;
+    color: var(--brown-dk);
+  }
+  .cover.dark .toc-item .title { color: var(--peach); }
+  .toc-item .authors {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    color: var(--brown); margin-top: 2px; letter-spacing: 0.2px;
+  }
+  .cover.dark .toc-item .authors { color: var(--peach-dk); }
+
+  /* ── Footer strip ── */
+  .footer {
+    margin-top: auto; padding-top: 18px;
+    border-top: 1px solid var(--tan);
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 9px; letter-spacing: 2px; font-weight: 600;
+    text-transform: uppercase; color: var(--brown);
+  }
+  .cover.dark .footer { color: var(--peach-dk); border-top-color: var(--tan); }
+  .footer .col { display: flex; flex-direction: column; gap: 3px; }
+  .footer .right { text-align: right; align-items: flex-end; }
+  .footer .signature {
+    font-family: 'DM Serif Display', serif; font-size: 13px;
+    font-style: italic; letter-spacing: 0; text-transform: none;
+    font-weight: 400; color: var(--brown-dk);
+  }
+  .cover.dark .footer .signature { color: var(--peach); }
+
+  /* badges row */
+  .badges {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+    justify-content: flex-end;
+  }
+  .badge {
+    font-family: 'Inter', sans-serif; font-size: 8px;
+    letter-spacing: 1.6px; font-weight: 600; text-transform: uppercase;
+    padding: 4px 8px; border: 1px solid var(--brown);
+    color: var(--brown); background: transparent;
+    white-space: nowrap;
+  }
+  .cover.dark .badge { border-color: var(--peach-dk); color: var(--peach-dk); }
+  .badge.solid { background: var(--brown); color: var(--cream); border-color: var(--brown); }
+  .cover.dark .badge.solid { background: var(--peach); color: var(--brown-dk); border-color: var(--peach); }
+
+  /* ── Tweaks panel ── */
+  .tweaks {
+    position: fixed; top: 16px; right: 16px; width: 340px;
+    max-height: calc(100vh - 32px);
+    background: white; border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+    font-family: 'Inter', sans-serif; font-size: 12px; color: #333;
+    display: none; flex-direction: column; overflow: hidden;
+    z-index: 10;
+  }
+  .tweaks.visible { display: flex; }
+  .tweaks header {
+    padding: 12px 16px; border-bottom: 1px solid #eee;
+    font-weight: 600; font-size: 13px; letter-spacing: 0.3px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: #f7f5f2;
+  }
+  .tweaks .body { overflow-y: auto; padding: 12px 16px 18px; }
+  .tweaks .group { margin-bottom: 16px; }
+  .tweaks .group-title {
+    font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: #999; font-weight: 600; margin-bottom: 8px;
+  }
+  .tweaks label { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; font-size: 11px; color: #555; }
+  .tweaks input[type=text], .tweaks textarea {
+    font-family: 'Inter', sans-serif; font-size: 12px; padding: 6px 8px;
+    border: 1px solid #ddd; border-radius: 3px; color: #222;
+    background: white;
+  }
+  .tweaks textarea { min-height: 48px; resize: vertical; }
+  .tweaks .toggle { flex-direction: row; align-items: center; gap: 8px; }
+  .tweaks .toggle input { margin: 0; }
+  .tweaks .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+</style>
+
+  <style>
+    @page { size: Letter; margin: 0; }
+    @media print {
+      html, body { background: #3d2a18; }
+      .stage { padding: 0 !important; min-height: auto !important; }
+      .cover {
+        width: 8.5in !important; height: 11in !important;
+        aspect-ratio: auto !important;
+        box-shadow: none !important;
+        padding: 0.65in 0.65in 0.45in !important;
+        font-size: 11pt;
+      }
+      .tweaks { display: none !important; }
+    }
+    .tweaks { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="cover" id="cover">
+
+    <!-- HEADER STRIP: ISSN, DOI, volume line -->
+    <div class="header-strip" id="header-strip">
+      <div class="col">
+        <span data-field="header_left_1"></span>
+        <span data-field="header_left_2"></span>
+      </div>
+      <div class="col right">
+        <span data-field="header_right_1"></span>
+        <span data-field="header_right_2"></span>
+      </div>
+    </div>
+
+    <!-- MASTHEAD -->
+    <div class="masthead">
+      <div class="eyebrow" data-field="eyebrow"></div>
+      <div class="wordmark">OSCRSJ</div>
+      <div class="diamond-rule">
+        <div class="rule"></div>
+        <div class="dia"></div>
+        <div class="rule"></div>
+      </div>
+      <div class="tagline" data-field="tagline"></div>
+    </div>
+
+    <!-- COVER ART -->
+    <div class="art-wrap" id="art-wrap">
+      <div class="art-placeholder">
+        <div class="art-label" data-field="art_label"></div>
+      </div>
+      <div class="art-caption" data-field="art_caption"></div>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc-wrap">
+      <div class="toc-header">
+        <div class="rule-t"></div>
+        <div class="toc-title" data-field="toc_title"></div>
+        <div class="rule-t"></div>
+      </div>
+      <div class="toc" id="toc"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="col">
+        <span data-field="footer_left_1"></span>
+        <span data-field="footer_left_2"></span>
+        <span data-field="footer_left_3"></span>
+      </div>
+      <div class="col right">
+        <span class="signature" data-field="signature"></span>
+        <div class="badges" id="badges"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// Editable cover state — every cover field lives here.
+// The EDITMODE-BEGIN/END block is persisted to disk on change.
+// ════════════════════════════════════════════════════════════
+const STATE = /*EDITMODE-BEGIN*/{
+  "dark_mode": true,
+  "eyebrow": "Peer Reviewed  ·  Quarterly  ·  Open Access",
+  "tagline": "Orthopedic Surgery Case Reports & Series Journal",
+
+  "volume": "Volume I",
+  "issue": "Number 1",
+  "month_year": "April 2026",
+  "page_range": "pp. 1–48",
+
+  "issn_print": "ISSN 0000-0000",
+  "issn_electronic": "eISSN 0000-000X",
+  "doi": "doi.org/10.00000/oscrsj.v1i1",
+  "show_doi": true,
+
+  "publisher": "Published by the OSCRSJ Editorial Collective",
+  "society": "In affiliation with the Orthopedic Case Review Society",
+  "website": "oscrsj.org",
+  "editor": "Editor-in-Chief · A. R. Alvarez, MD",
+  "frequency": "Published Quarterly",
+  "signature": "OSCRSJ",
+
+  "art_enabled": false,
+  "art_label": "Cover Plate · drop image here",
+  "art_caption": "Plate I. Intraoperative view — revision knee arthroplasty.",
+
+  "toc_title": "In This Issue",
+  "toc": [
+    { "page": "03", "title": "Two-Stage Revision Arthroplasty Following Chronic Periprosthetic Infection", "authors": "Chen · Alvarez · Okafor" },
+    { "page": "11", "title": "Open Reduction and Internal Fixation of Complex Scapular Fractures: A Case Series", "authors": "Hall · Weber" },
+    { "page": "21", "title": "Pediatric Femoral Shaft Fractures: A Five-Year Institutional Series", "authors": "Tanaka · Rossi · Patel" },
+    { "page": "33", "title": "Bilateral Tibial Plateau Fractures in Low-Energy Mechanism: Report of Three Cases", "authors": "Nguyen · Castellanos" }
+  ],
+
+  "show_open_access": true,
+  "show_peer_reviewed": true,
+  "indexing_badges": "PubMed · DOAJ"
+};/*EDITMODE-END*/
+
+// ────────────────────────────────────────────────────────────
+// Render
+// ────────────────────────────────────────────────────────────
+function render() {
+  const cover = document.getElementById('cover');
+  cover.classList.toggle('dark', !!STATE.dark_mode);
+
+  // Header strip — compose two lines per side
+  setField('header_left_1', `${STATE.volume} · ${STATE.issue}`);
+  setField('header_left_2', `${STATE.month_year} · ${STATE.page_range}`);
+  setField('header_right_1', STATE.issn_print);
+  setField('header_right_2', STATE.show_doi ? STATE.doi : STATE.issn_electronic);
+
+  setField('eyebrow', STATE.eyebrow);
+  setField('tagline', STATE.tagline);
+
+  // Art
+  const artWrap = document.getElementById('art-wrap');
+  artWrap.style.display = STATE.art_enabled ? '' : 'none';
+  setField('art_label', STATE.art_label);
+  setField('art_caption', STATE.art_caption);
+
+  // TOC
+  setField('toc_title', STATE.toc_title);
+  const toc = document.getElementById('toc');
+  toc.innerHTML = '';
+  STATE.toc.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'toc-item';
+    row.innerHTML = `
+      <div class="pg">P.${item.page}</div>
+      <div>
+        <div class="title">${escapeHtml(item.title)}</div>
+        <div class="authors">${escapeHtml(item.authors)}</div>
+      </div>
+      <div></div>
+    `;
+    toc.appendChild(row);
+  });
+
+  // Footer
+  setField('footer_left_1', STATE.publisher);
+  setField('footer_left_2', STATE.society);
+  setField('footer_left_3', `${STATE.website} · ${STATE.frequency}`);
+  setField('signature', STATE.editor);
+
+  // Badges
+  const badges = document.getElementById('badges');
+  badges.innerHTML = '';
+  if (STATE.show_peer_reviewed) addBadge(badges, 'Peer Reviewed', false);
+  if (STATE.show_open_access) addBadge(badges, 'Open Access', true);
+  if (STATE.indexing_badges) {
+    STATE.indexing_badges.split('·').map(s => s.trim()).filter(Boolean).forEach(b => {
+      addBadge(badges, b, false);
+    });
+  }
+}
+
+function setField(name, value) {
+  document.querySelectorAll(`[data-field="${name}"]`).forEach(el => {
+    el.textContent = value || '';
+  });
+}
+
+function addBadge(parent, text, solid) {
+  const b = document.createElement('div');
+  b.className = 'badge' + (solid ? ' solid' : '');
+  b.textContent = text;
+  parent.appendChild(b);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
+  );
+}
+
+// ────────────────────────────────────────────────────────────
+// Tweaks panel
+// ────────────────────────────────────────────────────────────
+function buildTweaks() {}
+function buildField(f) {
+  const label = document.createElement('label');
+  if (f.type === 'toggle') {
+    label.className = 'toggle';
+    label.innerHTML = `<input type="checkbox" ${STATE[f.k] ? 'checked' : ''}> <span>${f.label}</span>`;
+    label.querySelector('input').addEventListener('change', e => update(f.k, e.target.checked));
+  } else if (f.type === 'textarea') {
+    label.innerHTML = `<span>${f.label}</span>`;
+    const ta = document.createElement('textarea');
+    ta.value = STATE[f.k] || '';
+    ta.addEventListener('input', e => update(f.k, e.target.value));
+    label.appendChild(ta);
+  } else if (f.type === 'toc') {
+    label.innerHTML = `<span>${f.label} <span style="color:#aaa; font-weight:400;">(page · title · authors)</span></span>`;
+    const wrap = document.createElement('div');
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.gap = '10px';
+    STATE.toc.forEach((item, idx) => {
+      const row = document.createElement('div');
+      row.style.display = 'grid';
+      row.style.gridTemplateColumns = '44px 1fr';
+      row.style.gap = '6px';
+      row.innerHTML = `
+        <input type="text" value="${item.page}" data-tk="page" data-ti="${idx}" placeholder="p.">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <input type="text" value="${escapeAttr(item.title)}" data-tk="title" data-ti="${idx}" placeholder="Title">
+          <input type="text" value="${escapeAttr(item.authors)}" data-tk="authors" data-ti="${idx}" placeholder="Authors">
+        </div>
+      `;
+      row.querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('input', e => {
+          const i = +e.target.dataset.ti;
+          const k = e.target.dataset.tk;
+          const next = [...STATE.toc];
+          next[i] = { ...next[i], [k]: e.target.value };
+          update('toc', next);
+        });
+      });
+      wrap.appendChild(row);
+    });
+    label.appendChild(wrap);
+  } else {
+    label.innerHTML = `<span>${f.label}</span>`;
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.value = STATE[f.k] || '';
+    inp.addEventListener('input', e => update(f.k, e.target.value));
+    label.appendChild(inp);
+  }
+  return label;
+}
+
+function escapeAttr(s) {
+  return String(s).replace(/"/g, '&quot;');
+}
+
+function update(key, value) {
+  STATE[key] = value;
+  render();
+  try {
+    window.parent.postMessage({
+      type: '__edit_mode_set_keys',
+      edits: { [key]: value }
+    }, '*');
+  } catch (e) {}
+}
+
+// ────────────────────────────────────────────────────────────
+// Edit mode host protocol (register listener, then announce)
+// ────────────────────────────────────────────────────────────
+window.addEventListener('message', (e) => {
+  if (!e.data || typeof e.data !== 'object') return;
+  if (e.data.type === '__activate_edit_mode') {
+    document.getElementById('tweaks').classList.add('visible');
+  } else if (e.data.type === '__deactivate_edit_mode') {
+    document.getElementById('tweaks').classList.remove('visible');
+  }
+});
+try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) {}
+
+// Boot
+render();
+</script>
+
+</body>
+</html>

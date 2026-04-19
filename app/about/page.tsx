@@ -14,6 +14,18 @@ export default function AboutPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        {/* Seal — brand anchor */}
+        <section className="mb-12 flex justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/seal-cream.svg"
+            alt="OSCRSJ journal seal — est. MMXXVI"
+            width={220}
+            height={220}
+            className="w-[180px] h-[180px] md:w-[220px] md:h-[220px]"
+          />
+        </section>
+
         {/* Mission */}
         <section className="mb-12">
           <span className="section-label">Our Mission</span>

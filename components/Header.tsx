@@ -58,8 +58,15 @@ export default function Header() {
     <header className="w-full sticky top-0 z-50" style={{ backgroundColor: 'var(--dark)' }}>
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link href="/" className="font-serif text-xl text-peach tracking-tight" style={{ letterSpacing: '-0.025em' }}>
-          OSCRSJ
+        <Link href="/" aria-label="OSCRSJ — Home" className="flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/wordmark-peach.svg"
+            alt="OSCRSJ — Orthopedic Surgery Case Reports & Series Journal"
+            width={210}
+            height={28}
+            className="h-7 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}

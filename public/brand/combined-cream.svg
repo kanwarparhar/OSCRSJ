@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" role="img" aria-label="OSCRSJ — Orthopedic Surgery Case Reports &amp; Series Journal">
-  <title>OSCRSJ — Orthopedic Surgery Case Reports &amp; Series Journal</title>
+  <title>OSCRSJ Combined Lockup</title>
   <defs>
     <style>
       .serif    { font-family: 'DM Serif Display', 'Playfair Display', Georgia, 'Times New Roman', serif; }
@@ -11,6 +11,7 @@
   </defs>
   <rect width="1100" height="400" fill="#FAF3EA"></rect>
 
+  
   <g transform="translate(220 200)">
     <circle r="122" fill="none" stroke="#664930" stroke-width="1.4"></circle>
     <circle r="116" fill="none" stroke="#664930" stroke-width="0.7"></circle>
@@ -27,8 +28,10 @@
   <text x="220" y="218" text-anchor="middle" fill="#3d2a18" class="serif" font-size="84" letter-spacing="-4">OS</text>
   <text x="220" y="252" text-anchor="middle" fill="#3d2a18" class="sans" font-size="8.4" letter-spacing="3.4" font-weight="600">CRSJ · MMXXVI</text>
 
+  
   <line x1="380" y1="90" x2="380" y2="310" stroke="#997E67" stroke-width="1"></line>
 
+  
   <g>
     <text x="420" y="142" class="sans" fill="#664930" font-size="14" letter-spacing="5.6" font-weight="600">PEER REVIEWED  ·  QUARTERLY</text>
     <text x="420" y="232" class="serif" fill="#3d2a18" font-size="112" letter-spacing="-3.8">OSCRSJ</text>

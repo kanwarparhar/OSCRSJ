@@ -38,25 +38,56 @@ const indexingBadges = ['Scopus', 'DOAJ', 'Crossref', 'Google Scholar', 'EMBASE'
 export default function HomePage() {
   return (
     <div className="bg-white">
-      {/* 1. Hero */}
+      {/* 1. Hero — brand masthead lockup (eyebrow → OSCRSJ wordmark → diamond rule → italic subtitle) */}
       <section
         className="relative flex items-center justify-center text-center"
         style={{
           background: 'radial-gradient(ellipse at 50% 40%, var(--brown) 0%, var(--dark) 70%)',
-          minHeight: '440px',
-          padding: '80px 24px',
+          minHeight: '520px',
+          padding: '96px 24px',
         }}
       >
         <div className="max-w-content mx-auto">
+          {/* Eyebrow */}
+          <p
+            className="text-peach-dark mb-6"
+            style={{
+              fontSize: '13px',
+              letterSpacing: '0.6em',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+            }}
+          >
+            Peer Reviewed · Quarterly
+          </p>
+          {/* Wordmark — serif, same rhythm as masthead-dark.svg */}
           <h1
-            className="font-serif text-peach leading-tight mb-2"
-            style={{ fontSize: 'clamp(36px, 5vw, 52px)', letterSpacing: '-0.02em' }}
+            className="font-serif text-peach leading-none mb-5"
+            style={{
+              fontSize: 'clamp(64px, 11vw, 144px)',
+              letterSpacing: '-0.05em',
+              fontWeight: 400,
+            }}
           >
             OSCRSJ
           </h1>
+          {/* Diamond rule */}
+          <div className="flex items-center justify-center gap-3 mb-6" aria-hidden="true">
+            <span className="inline-block" style={{ width: '120px', height: '1px', background: 'var(--tan)' }} />
+            <span
+              className="inline-block"
+              style={{ width: '10px', height: '10px', background: 'var(--tan)', transform: 'rotate(45deg)' }}
+            />
+            <span className="inline-block" style={{ width: '120px', height: '1px', background: 'var(--tan)' }} />
+          </div>
+          {/* Italic subtitle */}
           <p
-            className="font-serif text-peach/80 leading-tight mb-6"
-            style={{ fontSize: 'clamp(18px, 2.5vw, 26px)', letterSpacing: '-0.01em' }}
+            className="font-serif text-peach leading-snug mb-8"
+            style={{
+              fontSize: 'clamp(20px, 2.6vw, 30px)',
+              fontStyle: 'italic',
+              letterSpacing: '0.01em',
+            }}
           >
             Orthopedic Surgery Case Reports &amp; Series Journal
           </p>

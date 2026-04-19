@@ -7,7 +7,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* About */}
           <div>
-            <h2 className="font-serif text-lg text-peach mb-4">OSCRSJ</h2>
+            <Link href="/" aria-label="OSCRSJ — Home" className="inline-block mb-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/wordmark-peach.svg"
+                alt="OSCRSJ — Orthopedic Surgery Case Reports & Series Journal"
+                width={240}
+                height={32}
+                className="h-8 w-auto"
+              />
+            </Link>
             <p className="text-sm text-peach/50 leading-relaxed">
               An independent, peer-reviewed, open-access journal advancing orthopedic education and research for trainees worldwide.
             </p>
@@ -29,6 +38,7 @@ export default function Footer() {
                 { label: 'Editorial Board', href: '/editorial-board' },
                 { label: 'About', href: '/about' },
                 { label: 'Contact', href: '/contact' },
+                { label: 'Press Kit', href: '/media' },
               ].map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-sm text-peach/50 hover:text-peach transition-colors">
