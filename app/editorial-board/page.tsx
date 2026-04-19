@@ -57,6 +57,26 @@ export default function EditorialBoardPage() {
           </div>
         </section>
 
+        {/* Founding Editor */}
+        <section className="mb-12">
+          <span className="section-label">Leadership</span>
+          <h2 className="section-heading mb-4">Founding Editor</h2>
+          <div className="bg-white border border-border rounded-xl p-6 flex items-start gap-5">
+            <div className="w-14 h-14 rounded-full bg-peach/20 flex-shrink-0 flex items-center justify-center">
+              <svg className="w-7 h-7 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-semibold text-ink">Kanwar Parhar, MD</p>
+              <p className="text-sm text-brown mt-0.5">Founding Editor · OSCRSJ</p>
+              <p className="text-sm text-ink mt-2">
+                Founded OSCRSJ in 2026 to give early-career orthopedic surgeons a rigorous, fast, and genuinely supportive venue for case reports and case series. Oversees editorial operations, journal development, and day-to-day management during the launch phase.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Associate Editors */}
         <section className="mb-12">
           <span className="section-label">Subspecialty Editors</span>

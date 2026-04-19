@@ -28,6 +28,15 @@ export interface BoardMember {
 // Update this roster as members are confirmed.
 export const BOARD_MEMBERS: BoardMember[] = [
   {
+    name: 'Kanwar Parhar, MD',
+    givenName: 'Kanwar',
+    familyName: 'Parhar',
+    honorificSuffix: 'MD',
+    jobTitle: 'Founding Editor',
+    medicalSpecialty: 'Orthopedic Surgery',
+    // affiliation + sameAs to be populated when ready
+  },
+  {
     name: 'Nathaniel Schaffer, MD',
     givenName: 'Nathaniel',
     familyName: 'Schaffer',
