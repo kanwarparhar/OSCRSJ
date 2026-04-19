@@ -3,17 +3,35 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ManuscriptRow, ManuscriptMetadataRow, ManuscriptFileRow, ManuscriptAuthorRow, ManuscriptType } from '@/lib/types/database'
-import { createOrUpdateDraft, saveManuscriptInfo, saveAuthors, saveDeclarations, submitManuscript } from '@/lib/submission/actions'
+import {
+  createOrUpdateDraft,
+  saveManuscriptInfo,
+  saveAuthors,
+  saveDeclarations,
+  submitManuscript,
+  submitRevision,
+  type AnonymisedReview,
+} from '@/lib/submission/actions'
 import Step1Type from './Step1Type'
 import Step2Files from './Step2Files'
 import Step3Info from './Step3Info'
 import Step4Authors from './Step4Authors'
 import type { AuthorEntry } from './Step4Authors'
 import Step5Declarations from './Step5Declarations'
+import RevisionStep0 from './RevisionStep0'
 
 // ---- Step definitions ----
 
-const STEPS = [
+const STEPS_BASE = [
+  { number: 1, label: 'Type & Confirmations' },
+  { number: 2, label: 'Upload Files' },
+  { number: 3, label: 'Manuscript Info' },
+  { number: 4, label: 'Authors' },
+  { number: 5, label: 'Declarations' },
+]
+
+const STEPS_REVISING = [
+  { number: 0, label: 'Decision & Comments' },
   { number: 1, label: 'Type & Confirmations' },
   { number: 2, label: 'Upload Files' },
   { number: 3, label: 'Manuscript Info' },
@@ -59,6 +77,15 @@ export interface WizardState {
   noteToEditor: string
 }
 
+export interface RevisionContextClient {
+  revisionNumber: number
+  decisionLetter: string | null
+  decisionType: string | null
+  decisionDate: string | null
+  revisionDeadline: string | null
+  reviews: AnonymisedReview[]
+}
+
 interface SubmissionWizardProps {
   draft: {
     manuscript: ManuscriptRow | null
@@ -73,6 +100,7 @@ interface SubmissionWizardProps {
     orcid_id: string | null
     degrees: string | null
   } | null
+  revisionContext?: RevisionContextClient
 }
 
 function authorsFromDraft(draftAuthors: ManuscriptAuthorRow[]): AuthorEntry[] {
@@ -162,10 +190,20 @@ function computeInitialStep(state: WizardState): number {
   return 5
 }
 
-export default function SubmissionWizard({ draft, userProfile }: SubmissionWizardProps) {
+export default function SubmissionWizard({ draft, userProfile, revisionContext }: SubmissionWizardProps) {
   const router = useRouter()
-  const [state, setState] = useState<WizardState>(() => initialStateFromDraft(draft, userProfile))
-  const [currentStep, setCurrentStep] = useState(() => computeInitialStep(initialStateFromDraft(draft, userProfile)))
+  const isRevising = !!revisionContext
+  const STEPS = isRevising ? STEPS_REVISING : STEPS_BASE
+  const [state, setState] = useState<WizardState>(() => {
+    const base = initialStateFromDraft(draft, userProfile)
+    // In revising mode, the note_to_editor field starts blank —
+    // it belongs to the revision, not the original manuscript.
+    return isRevising ? { ...base, noteToEditor: '' } : base
+  })
+  const [revisionResponse, setRevisionResponse] = useState('')
+  const [currentStep, setCurrentStep] = useState(() =>
+    isRevising ? 0 : computeInitialStep(initialStateFromDraft(draft, userProfile))
+  )
   const [saving, setSaving] = useState(false)
   const [savedToast, setSavedToast] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
@@ -197,48 +235,53 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
     setSaveError(null)
 
     try {
-      // Save step 1 data
-      const result = await createOrUpdateDraft({
-        manuscriptId: s.manuscriptId,
-        manuscriptType: s.manuscriptType,
-        notUnderReview: s.notUnderReview,
-        notPreviouslyPublished: s.notPreviouslyPublished,
-        allAuthorsAgreed: s.allAuthorsAgreed,
-      })
+      let mId: string | null = s.manuscriptId
 
-      if (result.error) {
-        console.error('Save failed:', result.error)
-        setSaveError(result.error)
-        setSaving(false)
-        return { ok: false, error: result.error }
-      }
-
-      // If we just created a new draft, store the ID
-      if (result.manuscriptId && !s.manuscriptId) {
-        setState(prev => ({
-          ...prev,
-          manuscriptId: result.manuscriptId!,
-          submissionId: result.submissionId || prev.submissionId,
-        }))
-      }
-
-      const mId = result.manuscriptId || s.manuscriptId
-
-      // Save step 3 data if we have a manuscript ID and title
-      if (mId && s.title) {
-        await saveManuscriptInfo({
-          manuscriptId: mId,
-          title: s.title,
-          abstract: s.abstract,
-          keywords: s.keywords,
-          subspecialty: s.subspecialty,
-          suggestedReviewers: s.suggestedReviewers,
-          nonPreferredReviewers: s.nonPreferredReviewers,
-          noteToEditor: s.noteToEditor || undefined,
+      if (!isRevising) {
+        // ---- Regular draft flow: upsert draft row + manuscript info. ----
+        const result = await createOrUpdateDraft({
+          manuscriptId: s.manuscriptId,
+          manuscriptType: s.manuscriptType,
+          notUnderReview: s.notUnderReview,
+          notPreviouslyPublished: s.notPreviouslyPublished,
+          allAuthorsAgreed: s.allAuthorsAgreed,
         })
+
+        if (result.error) {
+          console.error('Save failed:', result.error)
+          setSaveError(result.error)
+          setSaving(false)
+          return { ok: false, error: result.error }
+        }
+
+        if (result.manuscriptId && !s.manuscriptId) {
+          setState(prev => ({
+            ...prev,
+            manuscriptId: result.manuscriptId!,
+            submissionId: result.submissionId || prev.submissionId,
+          }))
+        }
+
+        mId = result.manuscriptId || s.manuscriptId
+
+        if (mId && s.title) {
+          await saveManuscriptInfo({
+            manuscriptId: mId,
+            title: s.title,
+            abstract: s.abstract,
+            keywords: s.keywords,
+            subspecialty: s.subspecialty,
+            suggestedReviewers: s.suggestedReviewers,
+            nonPreferredReviewers: s.nonPreferredReviewers,
+            noteToEditor: s.noteToEditor || undefined,
+          })
+        }
       }
 
-      // Save step 4 data (authors)
+      // Authors + declarations save through both flows (admin-client
+      // writes are status-agnostic). In revising mode, title /
+      // abstract / keywords / note_to_editor are held in-memory and
+      // persisted by submitRevision on final submit; see below.
       if (mId && s.authors.length > 0) {
         await saveAuthors({
           manuscriptId: mId,
@@ -246,7 +289,6 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
         })
       }
 
-      // Save step 5 data (declarations)
       if (mId) {
         await saveDeclarations({
           manuscriptId: mId,
@@ -258,7 +300,10 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
           authorConsentCertified: s.authorConsentCertified,
           aiToolsUsed: s.aiToolsUsed,
           aiToolsDetails: s.aiToolsUsed ? (s.aiToolsDetails.trim() || null) : null,
-          noteToEditor: s.noteToEditor || null,
+          // Omit noteToEditor in revising mode — the revision's note
+          // lives on manuscript_revisions, not the original
+          // manuscript.
+          ...(isRevising ? {} : { noteToEditor: s.noteToEditor || null }),
         })
       }
 
@@ -272,7 +317,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
     } finally {
       setSaving(false)
     }
-  }, [showSavedToast])
+  }, [showSavedToast, isRevising])
 
   // ---- Auto-save on 30s debounced timer ----
   const scheduleAutoSave = useCallback(() => {
@@ -296,7 +341,13 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
   }, [scheduleAutoSave])
 
   // ---- Step navigation ----
+  const minStep = isRevising ? 0 : 1
   const goNext = useCallback(async () => {
+    // Step 0 in revising mode is read-only — no save on advance.
+    if (isRevising && currentStep === 0) {
+      setCurrentStep(1)
+      return
+    }
     const result = await saveDraft()
     // Only advance if the save succeeded. Previously the wizard would
     // step forward even when createOrUpdateDraft errored, which left
@@ -304,20 +355,28 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
     // 1 first" error on file upload.
     if (!result.ok) return
     if (currentStep < 5) setCurrentStep(prev => prev + 1)
-  }, [currentStep, saveDraft])
+  }, [currentStep, saveDraft, isRevising])
 
   const goBack = useCallback(async () => {
     // Backward moves are always safe — don't block on save errors.
+    if (isRevising && currentStep === 1) {
+      setCurrentStep(0)
+      return
+    }
     await saveDraft()
-    if (currentStep > 1) setCurrentStep(prev => prev - 1)
-  }, [currentStep, saveDraft])
+    if (currentStep > minStep) setCurrentStep(prev => prev - 1)
+  }, [currentStep, saveDraft, isRevising, minStep])
 
   const goToStep = useCallback(async (step: number) => {
+    if (isRevising && step === 0) {
+      setCurrentStep(0)
+      return
+    }
     const result = await saveDraft()
     // Block forward jumps on save failure, allow backward jumps.
     if (!result.ok && step > currentStep) return
     setCurrentStep(step)
-  }, [saveDraft, currentStep])
+  }, [saveDraft, currentStep, isRevising])
 
   const saveAndExit = useCallback(async () => {
     await saveDraft()
@@ -339,6 +398,24 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
         return
       }
 
+      if (isRevising) {
+        const result = await submitRevision({
+          manuscriptId: state.manuscriptId,
+          title: state.title,
+          abstract: state.abstract,
+          keywords: state.keywords,
+          responseToReviewers: revisionResponse,
+          noteToEditor: state.noteToEditor || null,
+        })
+        if (result.error) {
+          setSubmitError(result.error)
+          setSubmitting(false)
+          return
+        }
+        router.push('/dashboard?revised=true')
+        return
+      }
+
       const result = await submitManuscript(state.manuscriptId)
       if (result.error) {
         setSubmitError(result.error)
@@ -353,7 +430,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
       setSubmitError('An unexpected error occurred. Please try again.')
       setSubmitting(false)
     }
-  }, [state.manuscriptId, saveDraft, router])
+  }, [state.manuscriptId, state.title, state.abstract, state.keywords, state.noteToEditor, saveDraft, router, isRevising, revisionResponse])
 
   // ---- Step completion checks ----
   const step1Complete = !!(
@@ -398,7 +475,11 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
     <div>
       {/* Page heading */}
       <div className="mb-6">
-        <h1 className="font-serif text-2xl text-brown-dark">Submit a Manuscript</h1>
+        <h1 className="font-serif text-2xl text-brown-dark">
+          {isRevising
+            ? `Submit Revision v${revisionContext!.revisionNumber}`
+            : 'Submit a Manuscript'}
+        </h1>
         {state.submissionId && (
           <p className="text-sm text-brown mt-1">Submission ID: {state.submissionId}</p>
         )}
@@ -408,7 +489,9 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
       <div className="bg-white border border-border rounded-xl p-4 sm:p-6 mb-6">
         <div className="flex items-center justify-between">
           {STEPS.map((step, idx) => {
-            const isCompleted = (step.number === 1 && step1Complete && currentStep > 1) ||
+            const isCompleted =
+              (step.number === 0 && currentStep > 0) ||
+              (step.number === 1 && step1Complete && currentStep > 1) ||
               (step.number === 2 && step2Complete && currentStep > 2) ||
               (step.number === 3 && step3Complete && currentStep > 3) ||
               (step.number === 4 && step4Complete && currentStep > 4)
@@ -466,6 +549,17 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
 
       {/* Step content */}
       <div className="bg-white border border-border rounded-xl p-4 sm:p-8">
+        {isRevising && currentStep === 0 && (
+          <RevisionStep0
+            revisionNumber={revisionContext!.revisionNumber}
+            decisionLetter={revisionContext!.decisionLetter}
+            decisionType={revisionContext!.decisionType}
+            decisionDate={revisionContext!.decisionDate}
+            revisionDeadline={revisionContext!.revisionDeadline}
+            reviews={revisionContext!.reviews}
+          />
+        )}
+
         {currentStep === 1 && (
           <Step1Type
             manuscriptType={state.manuscriptType}
@@ -473,6 +567,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
             notPreviouslyPublished={state.notPreviouslyPublished}
             allAuthorsAgreed={state.allAuthorsAgreed}
             onChange={updateState}
+            manuscriptTypeLocked={isRevising}
           />
         )}
 
@@ -481,6 +576,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
             manuscriptId={state.manuscriptId}
             files={state.files}
             onFilesChange={(files) => updateState({ files })}
+            revisionNumber={isRevising ? revisionContext!.revisionNumber : undefined}
           />
         )}
 
@@ -493,6 +589,8 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
             suggestedReviewers={state.suggestedReviewers}
             nonPreferredReviewers={state.nonPreferredReviewers}
             onChange={updateState}
+            subspecialtyLocked={isRevising}
+            hideReviewerSuggestions={isRevising}
           />
         )}
 
@@ -532,6 +630,9 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
             onSubmit={handleSubmit}
             submitting={submitting}
             submitError={submitError}
+            isRevising={isRevising}
+            revisionResponse={revisionResponse}
+            onRevisionResponseChange={setRevisionResponse}
           />
         )}
       </div>
@@ -553,7 +654,7 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
       {/* Navigation buttons */}
       <div className="flex items-center justify-between mt-6">
         <div>
-          {currentStep > 1 && (
+          {currentStep > minStep && (
             <button
               onClick={goBack}
               disabled={saving}
@@ -576,7 +677,10 @@ export default function SubmissionWizard({ draft, userProfile }: SubmissionWizar
           {currentStep < 5 && (
             <button
               onClick={goNext}
-              disabled={saving || !canProceed(currentStep)}
+              disabled={
+                saving ||
+                (currentStep >= 1 && !canProceed(currentStep))
+              }
               className="btn-primary-light disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Next

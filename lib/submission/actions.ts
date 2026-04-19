@@ -25,6 +25,14 @@ import {
   type WithdrawalRecipientRole,
 } from '@/lib/email/templates/withdrawalConfirmation'
 import {
+  renderRevisionReceivedAuthor,
+  getRevisionReceivedAuthorSubject,
+} from '@/lib/email/templates/revisionReceivedAuthor'
+import {
+  renderRevisionReceivedEditor,
+  getRevisionReceivedEditorSubject,
+} from '@/lib/email/templates/revisionReceivedEditor'
+import {
   generateDisputeToken,
   buildDisputeUrl,
 } from '@/lib/email/disputeTokens'
@@ -478,7 +486,7 @@ export async function saveDeclarations(params: {
   authorConsentCertified: boolean
   aiToolsUsed: boolean
   aiToolsDetails: string | null
-  noteToEditor: string | null
+  noteToEditor?: string | null
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -535,11 +543,17 @@ export async function saveDeclarations(params: {
       .insert({ manuscript_id: manuscriptId, ...metaFields })
   }
 
-  // Update note_to_editor on the manuscripts table
-  await (admin.from('manuscripts') as any)
-    .update({ note_to_editor: noteToEditor || null })
-    .eq('id', manuscriptId)
-    .eq('corresponding_author_id', user.id)
+  // Update note_to_editor on the manuscripts table only when the
+  // caller supplied it. In revising mode the wizard omits this
+  // field so the original submission's note_to_editor stays intact
+  // and the revision's note is written separately to
+  // manuscript_revisions.note_to_editor via submitRevision.
+  if (noteToEditor !== undefined) {
+    await (admin.from('manuscripts') as any)
+      .update({ note_to_editor: noteToEditor || null })
+      .eq('id', manuscriptId)
+      .eq('corresponding_author_id', user.id)
+  }
 
   return { success: true }
 }
@@ -959,5 +973,420 @@ export async function getManuscriptAiDisclosure(
   return {
     aiToolsUsed: !!row.ai_tools_used,
     aiToolsDetails: row.ai_tools_details,
+  }
+}
+
+// ============================================================
+// Revision submission (Session 12)
+// ============================================================
+// Author-side flow triggered from /dashboard/submit?revising={id}.
+// Writes a manuscript_revisions row, flips the manuscript status
+// from 'revision_requested' → 'revision_received', re-saves
+// mutable manuscript fields (title/abstract/keywords), and fires
+// two fire-and-forget emails (author receipt + editorial office).
+//
+// Files, authors, and declarations are expected to have been
+// persisted already via the existing recordFile / saveAuthors /
+// saveDeclarations server actions during the revising wizard.
+// Those actions all route through the admin client and accept
+// non-draft manuscripts.
+
+export interface SubmitRevisionArgs {
+  manuscriptId: string
+  title: string
+  abstract: string
+  keywords: string[]
+  responseToReviewers: string
+  noteToEditor: string | null
+}
+
+export interface SubmitRevisionResult {
+  success?: true
+  revisionNumber?: number
+  error?: string
+  emailWarnings?: string[]
+}
+
+export async function submitRevision(
+  args: SubmitRevisionArgs
+): Promise<SubmitRevisionResult> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  const { manuscriptId } = args
+
+  // Load manuscript + confirm ownership + gate on status.
+  const { data: manuscriptData } = await supabase
+    .from('manuscripts')
+    .select('*')
+    .eq('id', manuscriptId)
+    .eq('corresponding_author_id', user.id)
+    .maybeSingle()
+
+  const m = manuscriptData as ManuscriptRow | null
+  if (!m) return { error: 'Manuscript not found' }
+  if (m.status !== 'revision_requested') {
+    return {
+      error: `Revisions can only be submitted on manuscripts in "revision_requested" status (current: "${m.status}").`,
+    }
+  }
+
+  const title = (args.title || '').trim()
+  const abstract = (args.abstract || '').trim()
+  const keywords = Array.isArray(args.keywords)
+    ? args.keywords.map((k) => (k || '').trim()).filter(Boolean)
+    : []
+  const response = (args.responseToReviewers || '').trim()
+  const noteToEditor = (args.noteToEditor || '').trim() || null
+
+  if (!title) return { error: 'Title is required.' }
+  if (!abstract) return { error: 'Abstract is required.' }
+  if (keywords.length < 3) {
+    return { error: 'At least 3 keywords are required.' }
+  }
+  if (response.length < 50) {
+    return {
+      error:
+        'A short response summarising how the reviewer comments were addressed is required (minimum 50 characters).',
+    }
+  }
+
+  const admin = createAdminClient()
+
+  // Validate revised files are present. The admin client bypasses
+  // RLS for read; the policy would allow the author to see these
+  // anyway.
+  const { data: fileData } = await admin
+    .from('manuscript_files')
+    .select('file_type')
+    .eq('manuscript_id', manuscriptId)
+
+  const fileTypes = (fileData as { file_type: string }[] | null) || []
+  const hasFileType = (t: string) => fileTypes.some((f) => f.file_type === t)
+  if (!hasFileType('manuscript')) {
+    return { error: 'Revised manuscript file is required.' }
+  }
+  if (!hasFileType('blinded_manuscript')) {
+    return { error: 'Revised blinded manuscript file is required.' }
+  }
+  if (!hasFileType('tracked_changes')) {
+    return {
+      error:
+        'A tracked-changes file is required so the editor can see every edit.',
+    }
+  }
+  if (!hasFileType('response_to_reviewers')) {
+    return {
+      error:
+        'A response-to-reviewers letter (uploaded as a file) is required.',
+    }
+  }
+
+  // Compute revision_number = count(prior revisions) + 1.
+  // Race-mitigation: compute inside the same write window. A UNIQUE
+  // constraint on (manuscript_id, revision_number) is a Phase 3.5
+  // add.
+  const { data: priorRevisionsData } = await admin
+    .from('manuscript_revisions')
+    .select('id')
+    .eq('manuscript_id', manuscriptId)
+  const priorCount = Array.isArray(priorRevisionsData)
+    ? priorRevisionsData.length
+    : 0
+  const revisionNumber = priorCount + 1
+
+  // Insert the manuscript_revisions row.
+  const { error: insertErr } = await (
+    admin.from('manuscript_revisions') as any
+  ).insert({
+    manuscript_id: manuscriptId,
+    revision_number: revisionNumber,
+    response_to_reviewers: response,
+    note_to_editor: noteToEditor,
+  })
+
+  if (insertErr) {
+    return { error: `Failed to record revision: ${insertErr.message}` }
+  }
+
+  // Update the manuscript: re-save mutable fields + flip status.
+  const { error: updErr } = await (admin.from('manuscripts') as any)
+    .update({
+      title,
+      abstract,
+      keywords,
+      status: 'revision_received',
+    })
+    .eq('id', manuscriptId)
+
+  if (updErr) {
+    return {
+      error: `Revision recorded but manuscript update failed: ${updErr.message}`,
+    }
+  }
+
+  // Audit log.
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: user.id,
+      action: 'revision_submitted',
+      resource_type: 'manuscript_revision',
+      resource_id: manuscriptId,
+      details: {
+        manuscript_id: manuscriptId,
+        submission_id: m.submission_id,
+        revision_number: revisionNumber,
+        response_length: response.length,
+        file_count: fileTypes.length,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  // Fire-and-forget emails.
+  const emailWarnings: string[] = []
+  try {
+    const { data: authorsList } = await admin
+      .from('manuscript_authors')
+      .select('*')
+      .eq('manuscript_id', manuscriptId)
+      .order('author_order', { ascending: true })
+    const allAuthors = (authorsList as ManuscriptAuthorRow[] | null) || []
+
+    const { data: profileData } = await admin
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .maybeSingle()
+    const profile = profileData as UserRow | null
+
+    const correspondingAuthor =
+      allAuthors.find((a) => a.is_corresponding) ||
+      allAuthors.find((a) => a.author_id === user.id) ||
+      null
+
+    const correspondingName =
+      correspondingAuthor?.full_name || profile?.full_name || 'Author'
+    const correspondingEmail =
+      correspondingAuthor?.email || profile?.email || user.email || null
+
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      'https://www.oscrsj.com'
+    const base = siteUrl.replace(/\/$/, '')
+
+    // 1. Author confirmation.
+    if (correspondingEmail) {
+      const { html, text } = renderRevisionReceivedAuthor({
+        authorName: correspondingName,
+        submissionId: m.submission_id,
+        title,
+        revisionNumber,
+        dashboardUrl: `${base}/dashboard`,
+      })
+      const result = await sendEmail({
+        to: correspondingEmail,
+        subject: getRevisionReceivedAuthorSubject(
+          m.submission_id,
+          revisionNumber
+        ),
+        html,
+        text,
+        emailType: 'revision_received_author',
+        manuscriptId,
+      })
+      if (result.error) {
+        emailWarnings.push(
+          `Author confirmation to ${correspondingEmail} failed: ${result.error}`
+        )
+      }
+    }
+
+    // 2. Editorial office notification.
+    const { html, text } = renderRevisionReceivedEditor({
+      correspondingAuthorName: correspondingName,
+      correspondingAuthorEmail: correspondingEmail || '(unknown)',
+      submissionId: m.submission_id,
+      title,
+      revisionNumber,
+      adminUrl: `${base}/dashboard/admin/manuscripts/${manuscriptId}`,
+      noteToEditor,
+    })
+    const editorResult = await sendEmail({
+      to: EDITORIAL_NOTIFY_EMAIL,
+      subject: getRevisionReceivedEditorSubject(
+        m.submission_id,
+        revisionNumber
+      ),
+      html,
+      text,
+      emailType: 'revision_received_editor',
+      manuscriptId,
+    })
+    if (editorResult.error) {
+      emailWarnings.push(
+        `Editor notification to ${EDITORIAL_NOTIFY_EMAIL} failed: ${editorResult.error}`
+      )
+    }
+  } catch (err) {
+    emailWarnings.push(
+      `Revision email pipeline error: ${
+        err instanceof Error ? err.message : 'unknown error'
+      }`
+    )
+  }
+
+  return {
+    success: true,
+    revisionNumber,
+    ...(emailWarnings.length > 0 ? { emailWarnings } : {}),
+  }
+}
+
+// ---- Load revision context (for the revising wizard) ----
+//
+// Returns the manuscript, its latest editorial decision, and all
+// submitted (non-draft) reviews — with reviewer identities
+// stripped. Reviews are returned as ordered "Reviewer A / B /..."
+// slots so the author-facing Step 0 cannot leak reviewer names or
+// emails. Filter happens here (server-side), not in the client, to
+// satisfy the brief's double-blind accountability rule (§12, risk
+// #4).
+
+export interface AnonymisedReview {
+  label: string
+  recommendation: string | null
+  quality_score: number | null
+  novelty_score: number | null
+  rigor_score: number | null
+  data_score: number | null
+  clarity_score: number | null
+  scope_score: number | null
+  comments_to_author: string | null
+  submitted_date: string | null
+}
+
+export interface RevisionContext {
+  manuscript: ManuscriptRow
+  authors: ManuscriptAuthorRow[]
+  metadata: ManuscriptMetadataRow | null
+  files: ManuscriptFileRow[]
+  revisionNumber: number
+  decisionLetter: string | null
+  decisionType: string | null
+  decisionDate: string | null
+  revisionDeadline: string | null
+  reviews: AnonymisedReview[]
+}
+
+export async function loadRevisionContext(
+  manuscriptId: string
+): Promise<RevisionContext | { error: string }> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  const admin = createAdminClient()
+
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('id', manuscriptId)
+    .eq('corresponding_author_id', user.id)
+    .maybeSingle()
+  const manuscript = (mData as ManuscriptRow | null) || null
+  if (!manuscript) return { error: 'Manuscript not found' }
+  if (manuscript.status !== 'revision_requested') {
+    return {
+      error: `Revisions can only be submitted on manuscripts in "revision_requested" status (current: "${manuscript.status}").`,
+    }
+  }
+
+  const [authorsRes, metadataRes, filesRes, priorRevRes, decisionsRes, reviewsRes] =
+    await Promise.all([
+      admin
+        .from('manuscript_authors')
+        .select('*')
+        .eq('manuscript_id', manuscriptId)
+        .order('author_order', { ascending: true }),
+      admin
+        .from('manuscript_metadata')
+        .select('*')
+        .eq('manuscript_id', manuscriptId)
+        .maybeSingle(),
+      admin
+        .from('manuscript_files')
+        .select('*')
+        .eq('manuscript_id', manuscriptId)
+        .order('file_order', { ascending: true }),
+      admin
+        .from('manuscript_revisions')
+        .select('id')
+        .eq('manuscript_id', manuscriptId),
+      admin
+        .from('editorial_decisions')
+        .select('*')
+        .eq('manuscript_id', manuscriptId)
+        .order('decision_date', { ascending: false })
+        .limit(1),
+      admin
+        .from('reviews')
+        .select(
+          'id, recommendation, quality_score, novelty_score, rigor_score, data_score, clarity_score, scope_score, comments_to_author, submitted_date, is_draft'
+        )
+        .eq('manuscript_id', manuscriptId)
+        .eq('is_draft', false)
+        .order('submitted_date', { ascending: true }),
+    ])
+
+  const authors = (authorsRes.data as ManuscriptAuthorRow[] | null) || []
+  const metadata = (metadataRes.data as ManuscriptMetadataRow | null) || null
+  const files = (filesRes.data as ManuscriptFileRow[] | null) || []
+  const priorCount = Array.isArray(priorRevRes.data)
+    ? priorRevRes.data.length
+    : 0
+
+  const latestDecisionRow =
+    Array.isArray(decisionsRes.data) && decisionsRes.data.length > 0
+      ? (decisionsRes.data[0] as {
+          decision: string
+          decision_letter: string | null
+          decision_date: string
+          revision_deadline: string | null
+        })
+      : null
+
+  const rawReviews = Array.isArray(reviewsRes.data) ? reviewsRes.data : []
+  const reviews: AnonymisedReview[] = rawReviews.map((r: any, idx: number) => ({
+    label: `Reviewer ${String.fromCharCode(65 + idx)}`,
+    recommendation: r.recommendation,
+    quality_score: r.quality_score,
+    novelty_score: r.novelty_score,
+    rigor_score: r.rigor_score,
+    data_score: r.data_score,
+    clarity_score: r.clarity_score,
+    scope_score: r.scope_score,
+    comments_to_author: r.comments_to_author,
+    submitted_date: r.submitted_date,
+  }))
+
+  return {
+    manuscript,
+    authors,
+    metadata,
+    files,
+    revisionNumber: priorCount + 1,
+    decisionLetter: latestDecisionRow?.decision_letter || null,
+    decisionType: latestDecisionRow?.decision || null,
+    decisionDate: latestDecisionRow?.decision_date || null,
+    revisionDeadline: latestDecisionRow?.revision_deadline || null,
+    reviews,
   }
 }

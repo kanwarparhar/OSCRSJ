@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -46,6 +46,35 @@ export default async function DashboardPage() {
 
   const hasManuscripts = manuscripts.length > 0
 
+  // Fetch latest revision deadline for each manuscript in
+  // revision_requested state. Admin client is required because
+  // editorial_decisions is editor-RLS-only for SELECT from the
+  // author's session; the deadline is the author's own data
+  // (they received it in an email) so surfacing it here is safe.
+  const revisionRequestedIds = manuscripts
+    .filter((m) => m.status === 'revision_requested')
+    .map((m) => m.id)
+  const deadlineByManuscript = new Map<string, string>()
+  if (revisionRequestedIds.length > 0) {
+    const admin = createAdminClient()
+    const { data: latestDecisions } = await admin
+      .from('editorial_decisions')
+      .select('manuscript_id, revision_deadline, decision_date')
+      .in('manuscript_id', revisionRequestedIds)
+      .not('revision_deadline', 'is', null)
+      .order('decision_date', { ascending: false })
+    const rows =
+      (latestDecisions as
+        | { manuscript_id: string; revision_deadline: string | null }[]
+        | null) || []
+    for (const r of rows) {
+      // First hit wins because we ordered by decision_date desc.
+      if (r.revision_deadline && !deadlineByManuscript.has(r.manuscript_id)) {
+        deadlineByManuscript.set(r.manuscript_id, r.revision_deadline)
+      }
+    }
+  }
+
   return (
     <div>
       {/* Page header with action */}
@@ -86,14 +115,72 @@ export default async function DashboardPage() {
                   const badge = STATUS_BADGES[ms.status as ManuscriptStatus] || { label: ms.status, className: 'bg-gray-100 text-gray-700' }
                   const dateStr = ms.submission_date || ms.created_at
                   const date = dateStr ? new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'
+                  const deadlineIso =
+                    ms.status === 'revision_requested'
+                      ? deadlineByManuscript.get(ms.id) || null
+                      : null
+                  const daysLeft = deadlineIso
+                    ? Math.ceil(
+                        (new Date(deadlineIso).getTime() - Date.now()) /
+                          (1000 * 60 * 60 * 24)
+                      )
+                    : null
+                  const deadlineLabel = deadlineIso
+                    ? new Date(deadlineIso).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })
+                    : null
+                  const urgentBanner = daysLeft !== null && daysLeft < 10
 
                   return (
                     <tr key={ms.id} className="border-b border-border last:border-0 hover:bg-white/50 transition-colors">
                       <td className="px-4 py-3 font-mono text-xs text-brown whitespace-nowrap">
                         {ms.submission_id || '-'}
                       </td>
-                      <td className="px-4 py-3 text-ink max-w-xs truncate">
-                        {ms.title || 'Untitled manuscript'}
+                      <td className="px-4 py-3 text-ink max-w-xs">
+                        <div className="truncate">
+                          {ms.title || 'Untitled manuscript'}
+                        </div>
+                        {ms.status === 'revision_requested' && (
+                          <div
+                            className={`mt-1.5 text-[11px] border rounded px-2 py-1 inline-flex items-center gap-2 ${
+                              urgentBanner
+                                ? 'bg-red-50 border-red-200 text-red-800'
+                                : 'bg-amber-50 border-amber-200 text-amber-800'
+                            }`}
+                          >
+                            <svg
+                              className="w-3.5 h-3.5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                              />
+                            </svg>
+                            <span>
+                              Revision requested
+                              {deadlineLabel
+                                ? ` — respond by ${deadlineLabel}`
+                                : ''}
+                              {daysLeft !== null && daysLeft >= 0
+                                ? ` (${daysLeft}d left)`
+                                : ''}
+                            </span>
+                            <Link
+                              href={`/dashboard/submit?revising=${ms.id}`}
+                              className="font-semibold underline underline-offset-2"
+                            >
+                              Submit revision →
+                            </Link>
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badge.className}`}>
@@ -109,6 +196,13 @@ export default async function DashboardPage() {
                               className="text-brown hover:underline text-xs font-medium"
                             >
                               Resume
+                            </Link>
+                          ) : ms.status === 'revision_requested' ? (
+                            <Link
+                              href={`/dashboard/submit?revising=${ms.id}`}
+                              className="text-brown hover:underline text-xs font-medium"
+                            >
+                              Submit revision
                             </Link>
                           ) : (
                             <Link

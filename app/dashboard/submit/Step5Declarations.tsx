@@ -65,6 +65,10 @@ interface Step5DeclarationsProps {
   onSubmit: () => void
   submitting: boolean
   submitError: string | null
+  // Revising mode
+  isRevising?: boolean
+  revisionResponse?: string
+  onRevisionResponseChange?: (value: string) => void
 }
 
 export default function Step5Declarations({
@@ -94,6 +98,9 @@ export default function Step5Declarations({
   onSubmit,
   submitting,
   submitError,
+  isRevising,
+  revisionResponse,
+  onRevisionResponseChange,
 }: Step5DeclarationsProps) {
   const [fundingInput, setFundingInput] = useState('')
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
@@ -124,10 +131,23 @@ export default function Step5Declarations({
 
   // Full submission readiness
   const step1Complete = !!manuscriptType
-  const step2Complete = files.some(f => f.file_type === 'manuscript') && files.some(f => f.file_type === 'blinded_manuscript')
+  const step2Complete = isRevising
+    ? files.some(f => f.file_type === 'manuscript') &&
+      files.some(f => f.file_type === 'blinded_manuscript') &&
+      files.some(f => f.file_type === 'tracked_changes') &&
+      files.some(f => f.file_type === 'response_to_reviewers')
+    : files.some(f => f.file_type === 'manuscript') && files.some(f => f.file_type === 'blinded_manuscript')
   const step3Complete = !!(title && abstract && keywords.length >= 3 && subspecialty)
   const step4Complete = authors.length >= 1 && authorConsentCertified
-  const allComplete = step1Complete && step2Complete && step3Complete && step4Complete && step5DeclarationsComplete
+  const revisionResponseComplete =
+    !isRevising || (revisionResponse || '').trim().length >= 50
+  const allComplete =
+    step1Complete &&
+    step2Complete &&
+    step3Complete &&
+    step4Complete &&
+    step5DeclarationsComplete &&
+    revisionResponseComplete
 
   return (
     <div>
@@ -341,14 +361,48 @@ export default function Step5Declarations({
           </p>
         </div>
 
+        {/* Revision — Response to Reviewers (only in revising mode) */}
+        {isRevising && (
+          <div>
+            <h3 className="text-sm font-semibold text-ink mb-2">
+              Response to Reviewers <span className="text-red-500">*</span>
+            </h3>
+            <p className="text-xs text-brown mb-2">
+              Brief summary of how you addressed each reviewer&rsquo;s comments.
+              The full point-by-point response belongs in the uploaded
+              response-to-reviewers file on Step 2; this is a short cover
+              note for the editor (min 50 characters).
+            </p>
+            <textarea
+              value={revisionResponse || ''}
+              onChange={(e) =>
+                onRevisionResponseChange &&
+                onRevisionResponseChange(e.target.value)
+              }
+              rows={5}
+              placeholder="E.g., 'We thank the reviewers for their constructive feedback. Reviewer A raised concerns about figure quality — we have re-rendered all radiographs at 600 DPI. Reviewer B asked for a longer discussion of alternative approaches; §Discussion now includes two paragraphs on conservative management...'"
+              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+            />
+            <p className="text-[11px] text-brown mt-1">
+              {(revisionResponse || '').trim().length} / 50 characters minimum
+            </p>
+          </div>
+        )}
+
         {/* Note to Editor */}
         <div>
-          <h3 className="text-sm font-semibold text-ink mb-2">Note to Editor</h3>
+          <h3 className="text-sm font-semibold text-ink mb-2">
+            {isRevising ? 'Note to Editor (this revision)' : 'Note to Editor'}
+          </h3>
           <textarea
             value={noteToEditor}
             onChange={(e) => onChange({ noteToEditor: e.target.value })}
             rows={3}
-            placeholder="Optional: share any additional context with the editorial office (e.g., why the case is noteworthy, time-sensitive considerations)."
+            placeholder={
+              isRevising
+                ? 'Optional: context for the handling editor about this revision.'
+                : 'Optional: share any additional context with the editorial office (e.g., why the case is noteworthy, time-sensitive considerations).'
+            }
             className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
           />
         </div>
@@ -500,7 +554,11 @@ export default function Step5Declarations({
                 disabled={submitting}
                 className="btn-primary-light disabled:opacity-50"
               >
-                {submitting ? 'Submitting...' : 'Yes, Submit Manuscript'}
+                {submitting
+                  ? 'Submitting...'
+                  : isRevising
+                    ? 'Yes, Submit Revision'
+                    : 'Yes, Submit Manuscript'}
               </button>
             </div>
           </div>
@@ -522,7 +580,7 @@ export default function Step5Declarations({
             Submitting...
           </span>
         ) : (
-          'Submit Manuscript'
+          isRevising ? 'Submit Revision' : 'Submit Manuscript'
         )}
       </button>
 

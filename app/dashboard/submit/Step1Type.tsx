@@ -46,6 +46,7 @@ interface Step1TypeProps {
     notPreviouslyPublished?: boolean
     allAuthorsAgreed?: boolean
   }) => void
+  manuscriptTypeLocked?: boolean
 }
 
 export default function Step1Type({
@@ -54,12 +55,17 @@ export default function Step1Type({
   notPreviouslyPublished,
   allAuthorsAgreed,
   onChange,
+  manuscriptTypeLocked,
 }: Step1TypeProps) {
   return (
     <div>
-      <h2 className="font-serif text-xl text-brown-dark mb-1">Select Manuscript Type</h2>
+      <h2 className="font-serif text-xl text-brown-dark mb-1">
+        {manuscriptTypeLocked ? 'Manuscript Type' : 'Select Manuscript Type'}
+      </h2>
       <p className="text-sm text-brown mb-6">
-        Choose the type that best describes your manuscript. Each type has specific formatting requirements.
+        {manuscriptTypeLocked
+          ? 'Manuscript type cannot be changed on revision. Please re-affirm the required confirmations below.'
+          : 'Choose the type that best describes your manuscript. Each type has specific formatting requirements.'}
       </p>
 
       {/* Manuscript type radio group */}
@@ -79,7 +85,8 @@ export default function Step1Type({
               value={type.value}
               checked={manuscriptType === type.value}
               onChange={() => onChange({ manuscriptType: type.value })}
-              className="mt-1 accent-brown"
+              disabled={manuscriptTypeLocked}
+              className="mt-1 accent-brown disabled:opacity-60"
             />
             <div>
               <span className="text-sm font-semibold text-ink">{type.label}</span>

@@ -17,7 +17,7 @@ interface FileCategory {
   description: string
 }
 
-const FILE_CATEGORIES: FileCategory[] = [
+const BASE_CATEGORIES: FileCategory[] = [
   {
     type: 'manuscript',
     label: 'Main Manuscript',
@@ -74,10 +74,68 @@ const FILE_CATEGORIES: FileCategory[] = [
   },
 ]
 
+const REVISION_CATEGORIES: FileCategory[] = [
+  {
+    type: 'manuscript',
+    label: 'Revised Manuscript',
+    required: true,
+    accept: '.docx,.pdf',
+    maxSizeMB: 50,
+    maxFiles: 1,
+    description: 'Clean revised manuscript with all author information. Accepted formats: .docx or .pdf (max 50 MB).',
+  },
+  {
+    type: 'blinded_manuscript',
+    label: 'Revised Blinded Manuscript',
+    required: true,
+    accept: '.docx,.pdf',
+    maxSizeMB: 50,
+    maxFiles: 1,
+    description: 'Revised manuscript with identifying information removed. Accepted formats: .docx or .pdf (max 50 MB).',
+  },
+  {
+    type: 'tracked_changes',
+    label: 'Tracked Changes',
+    required: true,
+    accept: '.docx,.pdf',
+    maxSizeMB: 50,
+    maxFiles: 1,
+    description: 'Revised manuscript with edits visible (Word track-changes or PDF compare). Accepted formats: .docx or .pdf (max 50 MB).',
+  },
+  {
+    type: 'response_to_reviewers',
+    label: 'Response to Reviewers',
+    required: true,
+    accept: '.docx,.pdf',
+    maxSizeMB: 20,
+    maxFiles: 1,
+    description: 'Point-by-point response to each reviewer comment. Accepted formats: .docx or .pdf (max 20 MB).',
+  },
+  {
+    type: 'figure',
+    label: 'Revised Figures & Tables',
+    required: false,
+    accept: '.jpeg,.jpg,.png,.tiff,.tif',
+    maxSizeMB: 10,
+    maxFiles: 10,
+    description: 'Revised or additional figures. Accepted formats: .jpeg, .png, .tiff (max 10 MB each).',
+  },
+  {
+    type: 'ethics_approval',
+    label: 'Ethics Approval (if updated)',
+    required: false,
+    accept: '.pdf',
+    maxSizeMB: 10,
+    maxFiles: 1,
+    description: 'Updated ethics approval if protocol changed. Accepted format: .pdf (max 10 MB).',
+  },
+]
+
 interface Step2FilesProps {
   manuscriptId: string | null
   files: ManuscriptFileRow[]
   onFilesChange: (files: ManuscriptFileRow[]) => void
+  revisionNumber?: number
 }
 
 interface UploadProgress {
@@ -86,13 +144,21 @@ interface UploadProgress {
   category: FileType
 }
 
-export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2FilesProps) {
+export default function Step2Files({ manuscriptId, files, onFilesChange, revisionNumber }: Step2FilesProps) {
+  const isRevising = typeof revisionNumber === 'number' && revisionNumber >= 2
+  const FILE_CATEGORIES = isRevising ? REVISION_CATEGORIES : BASE_CATEGORIES
+  // Revision mode hides prior-version files from the per-category
+  // slot count so upload-required gates are against the current
+  // version's tiles only.
+  const currentVersion = isRevising ? revisionNumber! : 1
+  const currentVersionFiles = files.filter((f) => f.version === currentVersion)
   const [uploading, setUploading] = useState<UploadProgress[]>([])
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [activeCategory, setActiveCategory] = useState<FileType | null>(null)
 
-  const getFilesForCategory = (type: FileType) => files.filter(f => f.file_type === type)
+  const getFilesForCategory = (type: FileType) =>
+    currentVersionFiles.filter((f) => f.file_type === type)
 
   const handleUpload = useCallback(async (inputFiles: FileList, category: FileCategory) => {
     if (!manuscriptId) {
@@ -131,11 +197,14 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
         }
       }
 
-      // Build storage path
+      // Build storage path. v1 files land at a flat path to preserve
+      // the existing Session 1–11 layout; v2+ revisions land in a
+      // v{n}/ subfolder so every revision is addressable without
+      // migrating historical files.
       const seq = existingCount + newFiles.length + 1
       const ext = file.name.split('.').pop()
-      const storageName = `${manuscriptId}_v1_${category.type}_${seq}.${ext}`
-      const storagePath = `${manuscriptId}/v1/${storageName}`
+      const storageName = `${manuscriptId}_v${currentVersion}_${category.type}_${seq}.${ext}`
+      const storagePath = `${manuscriptId}/v${currentVersion}/${storageName}`
 
       // Track progress
       const progressEntry: UploadProgress = {
@@ -178,7 +247,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
           storagePath,
           fileSizeBytes: file.size,
           fileOrder: existingCount + newFiles.length,
-          version: 1,
+          version: currentVersion,
         })
 
         if (result.error) {
@@ -225,9 +294,15 @@ export default function Step2Files({ manuscriptId, files, onFilesChange }: Step2
 
   return (
     <div>
-      <h2 className="font-serif text-xl text-brown-dark mb-1">Upload Files</h2>
+      <h2 className="font-serif text-xl text-brown-dark mb-1">
+        {isRevising ? `Upload Revised Files (v${currentVersion})` : 'Upload Files'}
+      </h2>
       <p className="text-sm text-brown mb-6">
-        Upload your manuscript files below. Main manuscript and blinded manuscript are required.
+        {isRevising
+          ? 'Upload the revised manuscript set. Original v1 files stay on record — new uploads land in the v' +
+            currentVersion +
+            '/ folder. Revised manuscript, revised blinded manuscript, tracked-changes file, and response-to-reviewers are required.'
+          : 'Upload your manuscript files below. Main manuscript and blinded manuscript are required.'}
       </p>
 
       {error && (

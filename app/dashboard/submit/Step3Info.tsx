@@ -39,6 +39,8 @@ interface Step3InfoProps {
     suggestedReviewers?: SuggestedReviewer[]
     nonPreferredReviewers?: NonPreferredReviewer[]
   }) => void
+  subspecialtyLocked?: boolean
+  hideReviewerSuggestions?: boolean
 }
 
 export default function Step3Info({
@@ -49,6 +51,8 @@ export default function Step3Info({
   suggestedReviewers,
   nonPreferredReviewers,
   onChange,
+  subspecialtyLocked,
+  hideReviewerSuggestions,
 }: Step3InfoProps) {
   const [keywordInput, setKeywordInput] = useState('')
 
@@ -219,16 +223,25 @@ export default function Step3Info({
         <select
           value={subspecialty}
           onChange={(e) => onChange({ subspecialty: e.target.value })}
-          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 bg-white"
+          disabled={subspecialtyLocked}
+          className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 bg-white disabled:opacity-70 disabled:cursor-not-allowed"
         >
           <option value="">Select a subspecialty</option>
           {SUBSPECIALTIES.map(s => (
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
+        {subspecialtyLocked && (
+          <p className="text-[11px] text-brown mt-1">
+            Subspecialty cannot change on revision — this preserves reviewer
+            match relevance.
+          </p>
+        )}
       </div>
 
       {/* Suggested Reviewers */}
+      {!hideReviewerSuggestions && (
+      <>
       <div className="mb-6 border-t border-border pt-6">
         <h3 className="font-serif text-lg text-brown-dark mb-1">Suggested Reviewers</h3>
         <p className="text-xs text-brown mb-4">
@@ -326,6 +339,8 @@ export default function Step3Info({
           </button>
         )}
       </div>
+      </>
+      )}
     </div>
   )
 }
