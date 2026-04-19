@@ -11,6 +11,8 @@ import type {
 import InviteReviewerPanel from './InviteReviewerPanel'
 import InviteByEmailPanel from './InviteByEmailPanel'
 import AdminFileDownloadButton from './AdminFileDownloadButton'
+import DecisionComposerPanel from './DecisionComposerPanel'
+import DecisionHistoryPanel from './DecisionHistoryPanel'
 
 export const dynamic = 'force-dynamic'
 
@@ -312,6 +314,16 @@ export default async function AdminManuscriptDetailPage({
       />
 
       <DeclinedSuggestionsPanel invitations={invitations} />
+
+      <DecisionComposerPanel
+        manuscriptId={manuscript.id}
+        manuscriptStatus={manuscript.status}
+        submissionId={manuscript.submission_id}
+        title={manuscript.title || '(untitled manuscript)'}
+        reviewCount={reviewByInvitation.size}
+      />
+
+      <DecisionHistoryPanel manuscriptId={manuscript.id} />
     </div>
   )
 }
