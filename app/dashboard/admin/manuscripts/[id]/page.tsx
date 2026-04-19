@@ -17,6 +17,7 @@ import DecisionComposerPanel, {
   type RescindableDecision,
 } from './DecisionComposerPanel'
 import DecisionHistoryPanel from './DecisionHistoryPanel'
+import RevisionsPanel from './RevisionsPanel'
 
 const RESCIND_WINDOW_MS = 15 * 60 * 1000
 
@@ -376,6 +377,8 @@ export default async function AdminManuscriptDetailPage({
         reviewCount={reviewByInvitation.size}
         rescindable={rescindable}
       />
+
+      <RevisionsPanel manuscriptId={manuscript.id} />
 
       <DecisionHistoryPanel manuscriptId={manuscript.id} />
     </div>
