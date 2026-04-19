@@ -1,11 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 56" width="420" height="56" role="img" aria-label="OSCRSJ — Orthopedic Surgery Case Reports &amp; Series Journal">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 42" width="150" height="42" role="img" aria-label="OSCRSJ">
   <title>OSCRSJ</title>
   <defs>
     <style>
-      .serif    { font-family: 'DM Serif Display', 'Playfair Display', Georgia, 'Times New Roman', serif; }
-      .serif-it { font-family: 'DM Serif Display', 'Playfair Display', Georgia, 'Times New Roman', serif; font-style: italic; }
+      .serif { font-family: 'DM Serif Display', 'Playfair Display', Georgia, 'Times New Roman', serif; }
     </style>
   </defs>
-  <text x="0" y="34" class="serif" fill="#3d2a18" font-size="34" letter-spacing="-1.2">OSCRSJ</text>
-  <text x="150" y="34" class="serif-it" fill="#664930" font-size="13" letter-spacing="0.3">Orthopedic Surgery Case Reports &amp; Series</text>
+  <text x="0" y="32" class="serif" fill="#3d2a18" font-size="34" letter-spacing="-1.2">OSCRSJ</text>
 </svg>
