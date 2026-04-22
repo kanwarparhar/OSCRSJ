@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -85,39 +85,6 @@ a {
     color: var(--peach);
   }
 
-  /* Journal reading mode — Design System v2.3.
-     Apply `.journal-prose` to a wrapping container on long-form content
-     pages (policies, guides, news briefs, articles). Cascades Source
-     Serif 4 to paragraphs, lists, blockquotes, and table cells. Uses
-     `:where()` so specificity stays at 0,1,0 — any Tailwind utility
-     (`text-xs`, `text-sm`, `text-lg`, `font-sans`, `font-serif`) on a
-     child element still wins, which keeps metadata badges / fact-card
-     labels / UI chrome visually unchanged. Headings stay DM Serif
-     Display + brown-dark (OSCRSJ signature). */
-  .journal-prose :where(p, li, blockquote, dd, dt, td) {
-    font-family: 'Source Serif 4', Charter, Georgia, serif;
-    font-size: 17px;
-    line-height: 1.72;
-    font-feature-settings: 'kern', 'liga', 'onum';
-  }
-  .journal-prose :where(p + p) {
-    margin-top: 1em;
-  }
-  .journal-prose :where(blockquote) {
-    font-style: italic;
-    border-left: 2px solid var(--tan);
-    padding-left: 20px;
-    color: var(--brown);
-  }
-  .journal-prose :where(a:not(.btn-primary):not(.btn-primary-light):not(.btn-outline):not(.btn-ghost)) {
-    color: var(--brown);
-    text-decoration: underline;
-    text-decoration-color: rgba(153, 126, 103, 0.35);
-    text-underline-offset: 2px;
-  }
-  .journal-prose :where(a:not(.btn-primary):not(.btn-primary-light):not(.btn-outline):not(.btn-ghost)):hover {
-    text-decoration-color: var(--brown);
-  }
 }
 
 /* Scroll reveal */

@@ -81,7 +81,7 @@ export default function BriefPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 journal-prose">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Breadcrumb */}
         <nav className="text-xs text-brown mb-6">
           <Link href="/news" className="hover:text-ink transition-colors">

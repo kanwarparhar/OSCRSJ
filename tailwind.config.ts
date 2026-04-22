@@ -32,7 +32,6 @@ const config: Config = {
       },
       fontFamily: {
         serif: ['DM Serif Display', 'Georgia', 'serif'],
-        'serif-body': ['Source Serif 4', 'Charter', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       maxWidth: {

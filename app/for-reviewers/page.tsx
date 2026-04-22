@@ -91,7 +91,7 @@ export default function ForReviewersPage() {
         subtitle="Everything you need to conduct a thorough, fair, and constructive peer review."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 journal-prose">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
 
         {/* ---- Welcome ---- */}
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">

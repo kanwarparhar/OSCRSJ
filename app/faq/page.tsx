@@ -176,7 +176,7 @@ export default function FAQPage() {
         subtitle="Common questions about submitting, peer review, fees, and publication at OSCRSJ."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 journal-prose">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
 
         {/* Jump links */}
         <div className="bg-cream border border-border rounded-xl p-5 mb-12">

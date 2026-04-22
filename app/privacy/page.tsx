@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         subtitle="Last updated: April 2026"
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 journal-prose">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="space-y-12 text-sm leading-relaxed">
 
           <section>
