@@ -24,7 +24,7 @@ export default function TopicsPage() {
         subtitle="Explore case reports and series across all orthopedic subspecialties"
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid sm:grid-cols-2 gap-4">
           {topics.map((topic) => (
             <Link

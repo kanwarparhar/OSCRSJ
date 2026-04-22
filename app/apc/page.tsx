@@ -64,7 +64,7 @@ export default function ApcPage() {
         subtitle="OSCRSJ is fully open access. APCs support our operations — peer review coordination, DOI registration, and hosting."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {/* Currently free banner */}
         <div className="bg-peach text-white rounded-xl p-6 mb-12">
           <div className="flex items-start gap-3">

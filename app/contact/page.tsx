@@ -35,7 +35,7 @@ export default function ContactPage() {
         subtitle="We aim to respond to all inquiries within 2 business days."
       />
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {/* Contact cards */}
         <section className="mb-12">
           <span className="section-label">Departments</span>

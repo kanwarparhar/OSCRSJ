@@ -38,7 +38,7 @@ export default function SubmitPage() {
         subtitle="We welcome case reports and case series from medical students, residents, fellows, and attending surgeons."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {/* Submit Online CTA */}
         <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 mb-12 text-center">
           <h2 className="font-serif text-2xl font-normal text-brown-dark mb-2">Submit Online</h2>

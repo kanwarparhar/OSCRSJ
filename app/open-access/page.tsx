@@ -13,7 +13,7 @@ export default function OpenAccessPage() {
         subtitle="Free to read, share, and build upon — for everyone"
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Our Commitment</span>
           <h2 className="section-heading mb-3">Fully Open Access</h2>
