@@ -13,7 +13,7 @@ export default function PastIssuesPage() {
         subtitle="Archive of all published issues"
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
           <div className="text-4xl mb-4">📁</div>
           <h2 className="section-heading mb-3">No Past Issues Yet</h2>

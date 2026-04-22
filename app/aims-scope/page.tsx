@@ -9,7 +9,7 @@ export default function AimsScopePage() {
     <div>
       <PageHeader label="Journal Information" title="Aims & Scope" />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="prose-like space-y-8 text-sm leading-relaxed">
 
           <section className="mb-12">

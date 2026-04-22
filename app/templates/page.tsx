@@ -47,7 +47,7 @@ export default function TemplatesPage() {
         subtitle="Download structured templates to prepare your manuscript for submission to OSCRSJ."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Intro */}
         <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 mb-12">
           <p className="text-ink leading-relaxed">

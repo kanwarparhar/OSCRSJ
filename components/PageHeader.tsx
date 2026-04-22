@@ -9,12 +9,9 @@ export default function PageHeader({ label, title, subtitle }: PageHeaderProps) 
     <section
       className="relative flex items-center justify-center text-center"
       style={{
-        /* v2.3 Clinical-Tight: minHeight 280→220, padding 80→56.
-           Headers sit at ~220px + 56px top = same visual weight but less
-           acreage before content enters the viewport. */
         background: 'radial-gradient(ellipse at 50% 40%, var(--brown) 0%, var(--dark) 70%)',
-        minHeight: '220px',
-        padding: '56px 24px',
+        minHeight: '280px',
+        padding: '80px 24px',
       }}
     >
       <div className="max-w-content mx-auto">

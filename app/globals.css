@@ -29,10 +29,8 @@ body {
   background-color: #FFFFFF;
   color: #1a1410;
   font-family: 'Inter', system-ui, sans-serif;
-  /* Design System v2.3 Clinical-Tight: NEJM/JBJS reading rhythm.
-     Body 15px / line-height 1.55 matches top-tier clinical journals. */
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -58,19 +56,13 @@ a {
     @apply border border-peach/60 text-peach font-medium px-5 py-2 rounded-full transition-all duration-200 inline-flex items-center gap-1.5 text-sm bg-transparent hover:bg-peach hover:text-brown;
   }
 
-  /* v2.3: page-title + section-heading run on tight leading so clinical-tight
-     body rhythm isn't undercut by loose display-serif heading stacks. */
   .page-title {
-    @apply font-serif font-normal text-brown-dark mb-1;
-    font-size: clamp(30px, 3.4vw, 38px);
-    line-height: 1.08;
+    @apply font-serif text-4xl font-normal text-brown-dark mb-1;
     letter-spacing: -0.02em;
   }
 
   .section-heading {
-    @apply font-serif font-normal text-brown-dark mb-1;
-    font-size: clamp(24px, 2.6vw, 30px);
-    line-height: 1.1;
+    @apply font-serif text-3xl font-normal text-brown-dark mb-1;
     letter-spacing: -0.02em;
   }
 
@@ -81,24 +73,7 @@ a {
   }
 
   .card {
-    /* v2.3: p-6 (24) → p-5 (20). Tighter card interior is the clinical-tight
-       signature — NEJM TOC cards, Lancet case tiles, JBJS abstract blocks
-       all run at ~20px internal padding. */
-    @apply bg-white border border-border rounded-xl p-5 transition-all duration-200;
-  }
-
-  /* v2.3 new utility: thin 1px brown rule between sections replaces the
-     cream-alt background swap that v2.1 already retired. Pairs with the
-     `section-tight` padding rhythm below. */
-  .section-rule {
-    border-top: 1px solid rgba(102, 73, 48, 0.12);
-  }
-
-  /* v2.3 new utility: canonical internal-page section padding. Replaces
-     ad-hoc py-20 (80px) across 35 internal pages. NEJM/JBJS run sections
-     at 48–56px vertical; py-14 = 56px is our top end. */
-  .section-tight {
-    @apply py-14 px-4 sm:px-6 lg:px-8;
+    @apply bg-white border border-border rounded-xl p-6 transition-all duration-200;
   }
 
   .nav-link {
@@ -110,10 +85,6 @@ a {
     color: var(--peach);
   }
 }
-
-/* v2.3: typography hooks for long-form article body — applied to
-   <p> / <li> inside .prose-clinical wrappers when we introduce a reading
-   surface. For now, body default inherits from html{} above. */
 
 /* Scroll reveal */
 .reveal {

@@ -13,7 +13,7 @@ export default function SubscribePage() {
         subtitle="Stay updated on new articles, journal news, and calls for submissions"
       />
 
-      <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Benefits</span>
           <h2 className="section-heading mb-5 text-center">What Subscribers Receive</h2>

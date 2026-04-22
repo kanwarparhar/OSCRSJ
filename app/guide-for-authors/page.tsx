@@ -294,7 +294,7 @@ export default function GuideForAuthorsPage() {
         subtitle="Everything you need to prepare and submit a manuscript to OSCRSJ."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
 
         {/* ---- Quick‑reference comparison table ---- */}
         <section id="comparison" className="mb-16">

@@ -96,7 +96,7 @@ export default function AiInOrthopedicsLanding() {
           background: 'radial-gradient(ellipse at 50% 40%, var(--brown) 0%, var(--dark) 70%)',
         }}
       >
-        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-7">
             <span
               className="uppercase font-medium mb-3 block text-peach/60"
@@ -140,7 +140,7 @@ export default function AiInOrthopedicsLanding() {
 
       {/* Category cards */}
       <section className="bg-cream">
-        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8">
             <span className="section-label">Browse</span>
             <h2 className="section-heading">Six Categories</h2>
@@ -181,7 +181,7 @@ export default function AiInOrthopedicsLanding() {
 
       {/* Latest briefs */}
       <section className="bg-white">
-        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8 flex items-end justify-between flex-wrap gap-3">
             <div>
               <span className="section-label">Latest</span>
@@ -232,7 +232,7 @@ export default function AiInOrthopedicsLanding() {
 
       {/* Editor's Picks */}
       <section className="bg-cream">
-        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8">
             <span className="section-label">Editor&rsquo;s Picks</span>
             <h2 className="section-heading">Start Here</h2>
@@ -260,7 +260,7 @@ export default function AiInOrthopedicsLanding() {
 
       {/* Glossary — 20 terms at launch, growing to 40 by Month 3 */}
       <section id="glossary" className="bg-white scroll-mt-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <span className="section-label">Reference</span>
           <h2 className="section-heading mb-5">AI in Orthopedics Glossary</h2>
           <p className="text-ink leading-relaxed mb-8">
@@ -310,7 +310,7 @@ export default function AiInOrthopedicsLanding() {
 
       {/* Newsletter + Submit CTAs */}
       <section className="bg-white">
-        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white border border-border rounded-2xl p-8">
             <span className="section-label">Newsletter</span>
             <h3 className="font-serif text-xl text-brown-dark mb-2">AI in Ortho Monthly</h3>

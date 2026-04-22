@@ -21,7 +21,7 @@ export default function NewsPage() {
         subtitle="Curated orthopedic news for trainees and attendings, sourced from peer-reviewed journals and specialty societies."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-16">
         {/* AI in Orthopedics — featured feed */}
         <section>
           <div className="flex items-end justify-between mb-6 flex-wrap gap-3">

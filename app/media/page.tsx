@@ -95,7 +95,7 @@ export default function MediaPage() {
         subtitle="Official OSCRSJ brand assets, colors, and boilerplate copy for press, institutional partners, and contributors. All assets are free to use with attribution."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Seal anchor */}
         <section className="mb-16 flex justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}

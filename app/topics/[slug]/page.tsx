@@ -58,7 +58,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         title={topic.name}
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="mb-4">
           <Link href="/topics" className="text-sm text-brown hover:text-brown transition-colors font-medium">
             &larr; All Topics

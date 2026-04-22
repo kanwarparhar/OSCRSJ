@@ -40,7 +40,7 @@ export default function PeerReviewPage() {
         subtitle="Rigorous, fair, and timely evaluation of every submission"
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <section className="mb-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
           <span className="section-label">Our Approach</span>
           <h2 className="section-heading mb-3">Double-Blind Peer Review</h2>

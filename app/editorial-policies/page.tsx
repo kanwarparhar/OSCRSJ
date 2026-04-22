@@ -13,7 +13,7 @@ export default function EditorialPoliciesPage() {
         subtitle="Standards of integrity, transparency, and ethical publishing"
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="space-y-12">
 
           <section>

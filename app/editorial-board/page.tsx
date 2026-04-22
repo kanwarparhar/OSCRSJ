@@ -23,7 +23,7 @@ export default function EditorialBoardPage() {
         subtitle="OSCRSJ is guided by an editorial board of practicing orthopedic surgeons and researchers committed to rigorous, fair peer review."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Seal — anchors the Est. MMXXVI mood for the board page */}
         <section className="mb-12 flex justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -72,7 +72,7 @@ export default function ArticlesPage() {
         subtitle="Browse peer-reviewed case reports and case series in orthopedic surgery."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Filter tabs */}
         <div className="flex gap-1 mb-8 border-b border-border overflow-x-auto">
           {tabs.map((tab) => (

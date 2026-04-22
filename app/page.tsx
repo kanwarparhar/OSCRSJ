@@ -38,24 +38,21 @@ const indexingBadges = ['Scopus', 'DOAJ', 'Crossref', 'Google Scholar', 'EMBASE'
 export default function HomePage() {
   return (
     <div className="bg-white">
-      {/* 1. Hero — brand masthead lockup (eyebrow → OSCRSJ wordmark → diamond rule → italic subtitle)
-          v2.3 Clinical-Tight: minHeight 520→400, padding 96→64, wordmark clamp upper 144→96.
-          Goal — latest articles strip enters the viewport above the fold at 1366×768 desktop
-          and 390×844 iPhone. We keep the masthead moment but trade luxury for density. */}
+      {/* 1. Hero — brand masthead lockup (eyebrow → OSCRSJ wordmark → diamond rule → italic subtitle) */}
       <section
         className="relative flex items-center justify-center text-center"
         style={{
           background: 'radial-gradient(ellipse at 50% 40%, var(--brown) 0%, var(--dark) 70%)',
-          minHeight: '400px',
-          padding: '64px 24px',
+          minHeight: '520px',
+          padding: '96px 24px',
         }}
       >
         <div className="max-w-content mx-auto">
           {/* Eyebrow */}
           <p
-            className="text-peach-dark mb-4"
+            className="text-peach-dark mb-6"
             style={{
-              fontSize: '12px',
+              fontSize: '13px',
               letterSpacing: '0.6em',
               fontWeight: 600,
               textTransform: 'uppercase',
@@ -63,13 +60,11 @@ export default function HomePage() {
           >
             Peer Reviewed · Quarterly
           </p>
-          {/* Wordmark — serif, same rhythm as masthead-dark.svg
-              v2.3: clamp upper bound 144→96. Still reads as a masthead moment,
-              but no longer dominates the viewport on widescreens. */}
+          {/* Wordmark — serif, same rhythm as masthead-dark.svg */}
           <h1
-            className="font-serif text-peach leading-none mb-4"
+            className="font-serif text-peach leading-none mb-5"
             style={{
-              fontSize: 'clamp(52px, 8vw, 96px)',
+              fontSize: 'clamp(64px, 11vw, 144px)',
               letterSpacing: '-0.05em',
               fontWeight: 400,
             }}
@@ -77,29 +72,29 @@ export default function HomePage() {
             OSCRSJ
           </h1>
           {/* Diamond rule */}
-          <div className="flex items-center justify-center gap-3 mb-4" aria-hidden="true">
-            <span className="inline-block" style={{ width: '96px', height: '1px', background: 'var(--tan)' }} />
+          <div className="flex items-center justify-center gap-3 mb-6" aria-hidden="true">
+            <span className="inline-block" style={{ width: '120px', height: '1px', background: 'var(--tan)' }} />
             <span
               className="inline-block"
-              style={{ width: '8px', height: '8px', background: 'var(--tan)', transform: 'rotate(45deg)' }}
+              style={{ width: '10px', height: '10px', background: 'var(--tan)', transform: 'rotate(45deg)' }}
             />
-            <span className="inline-block" style={{ width: '96px', height: '1px', background: 'var(--tan)' }} />
+            <span className="inline-block" style={{ width: '120px', height: '1px', background: 'var(--tan)' }} />
           </div>
           {/* Italic subtitle */}
           <p
-            className="font-serif text-peach leading-snug mb-6"
+            className="font-serif text-peach leading-snug mb-8"
             style={{
-              fontSize: 'clamp(18px, 2.2vw, 24px)',
+              fontSize: 'clamp(20px, 2.6vw, 30px)',
               fontStyle: 'italic',
               letterSpacing: '0.01em',
             }}
           >
             Orthopedic Surgery Case Reports &amp; Series Journal
           </p>
-          <p className="text-peach/60 text-sm max-w-2xl mx-auto mb-6 leading-relaxed">
+          <p className="text-peach/60 text-base max-w-2xl mx-auto mb-8 leading-relaxed">
             A peer-reviewed, open-access journal dedicated to the publication of case reports and case series in all subspecialties of orthopedic surgery and musculoskeletal medicine.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/submit" className="btn-primary">
               Submit Your Manuscript
             </Link>
@@ -114,7 +109,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. Latest Articles */}
-      <section className="bg-white" style={{ padding: '56px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">Latest Articles</span>
           <div className="flex items-end justify-between mb-8">
@@ -175,7 +170,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. For Authors */}
-      <section className="bg-white" style={{ padding: '56px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">For Authors</span>
 
@@ -244,7 +239,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. News */}
-      <section className="bg-white" style={{ padding: '56px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label">News &amp; Updates</span>
           <h2 className="section-heading mb-8" style={{ fontSize: 'clamp(28px, 3.5vw, 36px)' }}>From the Field</h2>
@@ -290,7 +285,7 @@ export default function HomePage() {
       </section>
 
       {/* 6. Newsletter */}
-      <section className="bg-white" style={{ padding: '56px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center max-w-lg">
           <span className="section-label">Stay Updated</span>
           <h2 className="section-heading mb-2">Get notified when new issues are published</h2>
@@ -312,7 +307,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. CTA */}
-      <section style={{ backgroundColor: 'var(--dark)', padding: '56px 24px' }}>
+      <section style={{ backgroundColor: 'var(--dark)', padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center">
           <h2
             className="font-serif text-peach leading-tight mb-6"
