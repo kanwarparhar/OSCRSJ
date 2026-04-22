@@ -162,7 +162,7 @@ A complete Next.js 14 website — **66 pages total** (35 existing + `/news` land
 ---
 
 ## Design System
-"Neutral Elegance" palette inspired by newgenre.studio. Dark gradient hero, editorial serif typography, warm tones with journal-grade reading ink. All tokens in `tailwind.config.ts` and `app/globals.css`. Design system **v2.2 — Journal Ink** (rollout 2026-04-18, this session) evolves v2.1 by introducing a new `ink` token (#1a1410, warm near-black) as the default body/paragraph text color while headings stay in `brown-dark`. This is the editorial-journal reading-mode choice — body text on white surfaces now reads at NEJM/JAMA/JBJS contrast levels without sacrificing brand warmth, because headings remain serif + brown-dark (OSCRSJ signature) and cream-accent surfaces retain their mood through the surface color itself. Mental model: **white surfaces = reading mode (ink body + brown-dark headings) · cream surfaces = editorial accent · dark surfaces = brand mode.** Design system v2.1 — Clean Journal (commit `0ba6db4`, 2026-04-18 earlier same day) shipped the white body base.
+"Neutral Elegance" palette inspired by newgenre.studio. Dark gradient hero, editorial serif typography, warm tones with journal-grade reading ink. All tokens in `tailwind.config.ts` and `app/globals.css`. Design system **v2.3 — Reading Mode** (rollout 2026-04-21, Session 16 Franklin Cowork) is the NEJM-tight recalibration: `cream` moves from #FFF5EB (visibly warm) to `#FDFBF8` (barely-warm near-white, ~99% luminance) so the main page background reads as editorial white at first glance; `ink` moves from #1a1410 to `#120D08` (warmer near-black — hint of brown retained); and a new `serif-body` font family (`Source Serif 4`, fallback Charter → Georgia) is imported alongside DM Serif Display + Inter. A new `.journal-prose` component class cascades Source Serif 4 at 17px / 1.72 line-height to paragraphs, lists, blockquotes, dd/dt, and table cells inside any wrapping element that carries the class. The rule uses `:where()` so its specificity stays at 0,1,0 — any Tailwind sizing or font utility (`text-xs`, `text-sm`, `text-lg`, `font-sans`, `font-serif`) on a child element still wins, which keeps metadata badges, fact-card labels, and UI chrome visually unchanged on pages that opt in. Applied in Session 16 to 17 long-form reading pages: `/about`, `/aims-scope`, `/accessibility`, `/apc`, `/article-types`, `/editorial-policies`, `/faq`, `/for-reviewers`, `/guide-for-authors`, `/indexing`, `/open-access`, `/peer-review`, `/privacy`, `/terms`, `/news/ai-in-orthopedics/[slug]/[brief]`, `/news/ai-in-orthopedics/guides/imaging-primer-for-residents`, `/news/ai-in-orthopedics/guides/llm-guide-for-trainees`. Dashboard / admin / review / submit / form surfaces deliberately opt out (they're UI-heavy, not reading-heavy). Design system **v2.2 — Journal Ink** (rollout 2026-04-18) had introduced the `ink` token; v2.3 keeps the token, just retunes its value. Design system **v2.1 — Clean Journal** (commit `0ba6db4`, 2026-04-18 earlier same day) shipped the white body base.
 
 | Token | Value | Usage |
 |---|---|---|
@@ -172,21 +172,26 @@ A complete Next.js 14 website — **66 pages total** (35 existing + `/news` land
 | `tan` | `#997E67` | Hover border on interactive cards, decorative dividers. **Banned from text classes** site-wide as of commit `14d03e3` (2026-04-17) — 3.53:1 contrast on cream fails WCAG AA for normal text. Use `text-brown` (7.62:1) for metadata. |
 | `brown` | `#664930` | Accent text on light bg, button text |
 | `brown-dark` | `#3d2a18` | **Headings only** (h1–h6 + `.page-title` + `.section-heading`). Serif + brown-dark = OSCRSJ signature. Also nav (`.nav-link`) for brand identity on dropdowns. |
-| `ink` | `#1a1410` | **Primary body/paragraph text** (all `<p>`, `<li>`, `<span>`, `<td>` on white and cream surfaces). Warm near-black, 17:1 contrast on white. Set as HTML body default in `globals.css` so inherited text also resolves to ink. |
+| `ink` | `#120D08` | **Primary body/paragraph text** (all `<p>`, `<li>`, `<span>`, `<td>` on white and cream surfaces). Warmer near-black as of v2.3 — ~19:1 contrast on the new `cream` (#FDFBF8), ~20:1 on pure white. Retains a barely-perceptible brown warmth so it doesn't read cold next to peach accents. Set as HTML body default in `globals.css`. |
 | `dark` | `#1c0f05` | Hero bg, nav bg, footer bg |
 | `dark-card` | `#261609` | Dark card backgrounds |
-| `cream` | `#FFF5EB` | Main page background |
-| `cream-alt` | `#F5EAE0` | Alternating section background |
+| `cream` | `#FDFBF8` | Main page background — **reading mode** as of v2.3 (was #FFF5EB). ~99% luminance, barely-warm tint. Reads as editorial white against white cards, only visibly warm next to pure white. |
+| `cream-alt` | `#F8F4ED` | Alternating section background (v2.3 retune — was #F5EAE0). `cream-alt` remains retired from layout use per v2.1; token kept for legacy callers. |
 | `white` | `#FFFFFF` | All cards, form inputs, article wells (surface tier) |
 | `border` | `rgba(153,126,103,0.18)` | Subtle borders/dividers (bumped from 0.12 in v2.1 to strengthen card edges against the white body) |
 
-**3-tier visual hierarchy (v2.1):** dark (#1c0f05) → white (#FFFFFF) body → cream (#FFF5EB) accent sections → white (#FFFFFF) cards within cream. `cream-alt` retired from layout use.
+**3-tier visual hierarchy (v2.3):** dark (#1c0f05) → cream (#FDFBF8) body (reads as near-white) → white (#FFFFFF) cards within the body. Cards now contrast through the subtle cream→white step instead of the old cream→white warmth jump.
 
-**Text color rule (v2.2):** Body/paragraph elements → `text-ink` (or inherited from body default). Headings → `text-brown-dark` (always paired with `font-serif`). Metadata → `text-brown`. Never use `text-tan` for text.
+**Text color rule (v2.3):** Body/paragraph elements → `text-ink` (#120D08, or inherited from body default). Headings → `text-brown-dark` (always paired with `font-serif`). Metadata → `text-brown`. Never use `text-tan` for text.
 
-**Fonts:** DM Serif Display (headings) + Inter (body)
+**Fonts (v2.3):**
+- **Display serif** (`font-serif`) — DM Serif Display, Georgia fallback. Used for hero + page titles + section headings. Unchanged from v2.2.
+- **Body serif** (`font-serif-body`, or cascaded via `.journal-prose`) — Source Serif 4, Charter → Georgia fallback. Used for long-form reading: `<p>`, `<li>`, `<blockquote>`, `<dd>`, `<dt>`, `<td>` inside `.journal-prose` wrappers. 17px / 1.72 line-height with onum numerals. Source Serif 4 is loaded from Google Fonts with variable-weight axes 400/600/700 (upright + italic 400/600).
+- **UI / metadata** (`font-sans`) — Inter. Used for nav, buttons, form controls, metadata badges, fact cards, dashboard chrome. Unchanged from v2.2.
 
-**Component classes in `globals.css`:** `.btn-primary` (peach, for dark bg), `.btn-primary-light` (peach-dark + brown border, for light bg), `.btn-outline`, `.btn-ghost`, `.card` (white bg, no hover), `.section-heading`, `.section-label`, `.nav-link`
+**`.journal-prose` opt-in rule:** apply the class to the main content wrapper on a reading-heavy page (typically the `<div className="max-w-content mx-auto ...">` or `<article ...>` that contains the page's prose). The class cascades Source Serif 4 to prose elements, styles block-quotes with a tan left-border + brown color, and restyles `<a>` tags (non-button) with a subtle underline in brown. Because the rule uses `:where()`, any child element carrying an explicit `text-xs`/`text-sm`/`font-sans` utility still wins — so fact-card labels and metadata chips stay as Inter small text.
+
+**Component classes in `globals.css`:** `.btn-primary` (peach, for dark bg), `.btn-primary-light` (peach-dark + brown border, for light bg), `.btn-outline`, `.btn-ghost`, `.card` (white bg, no hover), `.section-heading`, `.section-label`, `.nav-link`, `.journal-prose` (v2.3 — body-serif cascade).
 
 **Card hover rules:** Interactive cards get `hover:border-tan hover:shadow-sm` (no bg change). Static info cards get no hover.
 

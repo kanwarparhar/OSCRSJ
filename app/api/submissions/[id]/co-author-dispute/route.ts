@@ -215,7 +215,7 @@ function pageShell(title: string, bodyHtml: string): string {
       max-width: 560px;
       margin: 80px auto;
       padding: 40px;
-      background-color: #FFF5EB;
+      background-color: #FDFBF8;
       border: 1px solid rgba(153,126,103,0.18);
       border-radius: 6px;
     }

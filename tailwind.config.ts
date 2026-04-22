@@ -18,20 +18,21 @@ const config: Config = {
           DEFAULT: '#664930',
           dark: '#3d2a18',
         },
-        ink: '#1a1410',
+        ink: '#120D08',
         dark: {
           DEFAULT: '#1c0f05',
           card: '#261609',
           mid: '#2e1a0b',
         },
         cream: {
-          DEFAULT: '#FFF5EB',
-          alt: '#F5EAE0',
+          DEFAULT: '#FDFBF8',
+          alt: '#F8F4ED',
         },
         border: 'rgba(153,126,103,0.18)',
       },
       fontFamily: {
         serif: ['DM Serif Display', 'Georgia', 'serif'],
+        'serif-body': ['Source Serif 4', 'Charter', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       maxWidth: {

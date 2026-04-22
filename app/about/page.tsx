@@ -13,7 +13,7 @@ export default function AboutPage() {
         subtitle="An independent, peer-reviewed orthopedic journal for medical students, residents, and fellows."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 journal-prose">
         {/* Seal — brand anchor */}
         <section className="mb-12 flex justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}

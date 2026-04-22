@@ -16,7 +16,7 @@ export default function AccessibilityPage() {
         subtitle="Our commitment to making OSCRSJ accessible to all readers and authors."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 journal-prose">
         <section className="mb-12">
           <span className="section-label">Our Commitment</span>
           <h2 className="section-heading mb-4">Accessibility at OSCRSJ</h2>

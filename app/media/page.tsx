@@ -81,9 +81,9 @@ const COLORS = [
   { name: 'Brown', hex: '#664930', rgb: '102, 73, 48', usage: 'Accent text on light, button ink' },
   { name: 'Brown Dark', hex: '#3d2a18', rgb: '61, 42, 24', usage: 'Headings, nav, seal backdrop' },
   { name: 'Tan', hex: '#997E67', rgb: '153, 126, 103', usage: 'Decorative dividers only (never text)' },
-  { name: 'Ink', hex: '#1a1410', rgb: '26, 20, 16', usage: 'Body paragraph text on light' },
+  { name: 'Ink', hex: '#120D08', rgb: '18, 13, 8', usage: 'Body paragraph text on light (v2.3)' },
   { name: 'Dark', hex: '#1c0f05', rgb: '28, 15, 5', usage: 'Hero bg, nav bg, footer bg' },
-  { name: 'Cream', hex: '#FFF5EB', rgb: '255, 245, 235', usage: 'Main page background' },
+  { name: 'Cream', hex: '#FDFBF8', rgb: '253, 251, 248', usage: 'Main page background — reading mode (v2.3)' },
 ]
 
 export default function MediaPage() {
@@ -152,7 +152,7 @@ export default function MediaPage() {
                   style={{
                     background: asset.filename.includes('dark') || asset.filename.includes('peach')
                       ? '#3d2a18'
-                      : '#FFF5EB',
+                      : '#FDFBF8',
                     minHeight: '140px',
                   }}
                 >

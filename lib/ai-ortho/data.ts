@@ -489,14 +489,14 @@ export const AI_ORTHO_BRIEFS: AiOrthoBrief[] = [
       journal: 'Archives of Bone and Joint Surgery',
       paperPublishedAt: '2025',
       doi: '10.22038/ABJS.2025.84896.3874',
-      url: 'https://doi.org/10.22038/ABJS.2025.84896.3874',
+      url: 'https://pubmed.ncbi.nlm.nih.gov/40951516/',
       openAccess: true,
     },
     keyFigure: {
       label: 'Tables 2 and 3',
       description:
         'Head-to-head comparison of ChatGPT search and screening performance against five JBJS systematic reviews, reporting captured article counts, sensitivity, and precision for each review.',
-      url: 'https://doi.org/10.22038/ABJS.2025.84896.3874',
+      url: 'https://pubmed.ncbi.nlm.nih.gov/40951516/',
     },
     citation:
       'Yao JJ, Lopez RD, Rizk AA, Aggarwal M, Namdari S. Evaluation of a popular large language model in orthopedic literature review: comparison to previously published reviews. Arch Bone Jt Surg. 2025;13(7):460-469. doi:10.22038/ABJS.2025.84896.3874',

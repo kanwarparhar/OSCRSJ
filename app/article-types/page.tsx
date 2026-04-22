@@ -59,7 +59,7 @@ export default function ArticleTypesPage() {
         subtitle="Understand what we publish and the requirements for each manuscript type."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 journal-prose">
         <div className="space-y-8">
           {articleTypes.map((t) => (
             <section key={t.type} className="bg-white border border-border rounded-xl p-6">

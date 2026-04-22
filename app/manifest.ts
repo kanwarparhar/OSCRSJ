@@ -11,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
       'An independent, peer-reviewed, open-access orthopedic journal publishing case reports, case series, surgical techniques, and images in orthopedics for trainees worldwide.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#FFF5EB',
+    background_color: '#FDFBF8',
     theme_color: '#3d2a18',
     orientation: 'portrait',
     icons: [
