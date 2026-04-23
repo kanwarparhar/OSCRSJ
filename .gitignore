@@ -1,0 +1,38 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# build
+tsconfig.tsbuildinfo
+
+# misc
+.DS_Store
+*.pem
+
+# financial/sensitive
+OSCRSJ Financial Tracker.xlsx
+OSCRSJ_CREDENTIALS.md
+
+# env files
+.env
+.env*.local
+
+# vercel
+.vercel
+node_modules
+
+# session artifacts / working docs
+claude-code-prompt-session1.md
+claude-code-session1-portal-foundation.md
+claude-code-session2-cleanup-prompt.md
+claude-code-session*.md
+SESSION_*_BRIEF.md
+docs/session-*-brief.md
+OSCRSJ_Publish_Section_Report.docx
+
+# FUSE filesystem ephemera (sandbox mount artifacts)
+.fuse_hidden*
+**/.fuse_hidden*
