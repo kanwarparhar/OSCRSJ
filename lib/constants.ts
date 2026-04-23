@@ -35,9 +35,14 @@ export const COUNTRIES = [
   'Vatican City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe',
 ]
 
-// Orthopedic subspecialties — canonical list used on /topics, the
-// submission wizard, and the reviewer application form. Keep slug +
-// name in sync with app/topics/page.tsx and app/topics/[slug]/page.tsx.
+// Orthopedic subspecialties — canonical internal list. Slugs here are
+// the short form used by the submission wizard, the reviewer application
+// form, and anything persisted to Supabase. The /articles filter UI maps
+// these to descriptive URL slugs at display time (e.g. 'sports' →
+// 'sports-medicine') — see app/articles/page.tsx::topicFilters.
+// The old /topics/[slug] pages were retired 2026-04-23 in favor of the
+// in-page filter on /articles; legacy /topics/* URLs 301 to
+// /articles?topic=<descriptive-slug> via next.config.js.
 export interface Subspecialty {
   slug: string
   name: string
