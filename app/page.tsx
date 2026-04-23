@@ -111,12 +111,12 @@ export default function HomePage() {
       {/* 2. Latest Articles */}
       <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
-          <span className="section-label">Latest Articles</span>
+          <span className="section-label text-ink">Latest Articles</span>
           <div className="flex items-end justify-between mb-8">
-            <h2 className="section-heading">Recent Publications</h2>
+            <h2 className="section-heading text-black">Recent Publications</h2>
             <Link
               href="/articles"
-              className="text-sm text-brown hover:text-brown font-medium transition-colors hidden sm:inline-flex items-center gap-1"
+              className="text-sm text-ink hover:text-black font-medium transition-colors hidden sm:inline-flex items-center gap-1"
             >
               See all articles
               <svg className="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,24 +135,24 @@ export default function HomePage() {
                   className={`w-full rounded-lg mb-4 flex items-center justify-center ${i === 0 ? 'h-48' : 'h-32'}`}
                   style={{ background: 'linear-gradient(135deg, var(--cream-alt) 0%, var(--taupe) 100%)' }}
                 >
-                  <span className="text-brown/70 text-xs uppercase tracking-widest">Radiograph</span>
+                  <span className="text-ink/50 text-xs uppercase tracking-widest">Radiograph</span>
                 </div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-medium text-brown bg-tan/20 px-2.5 py-1 rounded-full">
+                  <span className="text-xs font-medium text-ink bg-tan/20 px-2.5 py-1 rounded-full">
                     {article.type}
                   </span>
-                  <span className="text-xs text-brown bg-cream px-2.5 py-1 rounded-full">
+                  <span className="text-xs text-ink bg-black/5 px-2.5 py-1 rounded-full">
                     {article.topic}
                   </span>
                 </div>
-                <h3 className="font-serif text-lg font-normal text-brown-dark leading-snug mb-3 flex-1">
+                <h3 className="font-serif text-lg font-normal text-black leading-snug mb-3 flex-1">
                   {article.title}
                 </h3>
-                <p className="text-xs text-brown mb-2">{article.authors}</p>
-                <p className="text-xs text-brown font-mono">{article.doi}</p>
+                <p className="text-xs text-ink mb-2">{article.authors}</p>
+                <p className="text-xs text-ink font-mono">{article.doi}</p>
                 <Link
                   href={`/articles/${article.doi}`}
-                  className="mt-4 text-sm text-brown font-medium hover:text-peach transition-colors flex items-center gap-1"
+                  className="mt-4 text-sm text-ink font-medium hover:text-black transition-colors flex items-center gap-1"
                 >
                   Read article
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,7 +172,7 @@ export default function HomePage() {
       {/* 3. For Authors */}
       <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
-          <span className="section-label">For Authors</span>
+          <span className="section-label text-ink">For Authors</span>
 
           {/* Process steps */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
@@ -182,10 +182,10 @@ export default function HomePage() {
               { step: '03', title: 'Author FAQ', desc: 'Answers to common questions about peer review, APCs, timelines, and more.', href: '/faq' },
             ].map((s) => (
               <Link key={s.step} href={s.href} className="card group hover:border-tan hover:shadow-md cursor-pointer block">
-                <span className="text-peach font-serif text-2xl">{s.step}</span>
-                <h3 className="font-serif text-xl text-brown-dark mt-3 mb-2 group-hover:text-brown transition-colors">{s.title}</h3>
-                <p className="text-sm text-brown leading-relaxed">{s.desc}</p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm text-brown font-medium group-hover:text-peach transition-colors">
+                <span className="text-peach-dark font-serif text-2xl">{s.step}</span>
+                <h3 className="font-serif text-xl text-black mt-3 mb-2 transition-colors">{s.title}</h3>
+                <p className="text-sm text-ink leading-relaxed">{s.desc}</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-sm text-ink font-medium group-hover:text-black transition-colors">
                   Learn more
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -212,13 +212,13 @@ export default function HomePage() {
               )},
             ].map((m) => (
               <div key={m.label} className="bg-white border border-border rounded-xl p-5 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-peach/20 text-brown mb-3">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-peach/20 text-ink mb-3">
                   {m.icon}
                 </div>
-                <p className="font-serif text-brown-dark leading-none" style={{ fontSize: '28px' }}>
-                  {m.value}<span className="text-brown text-sm font-sans ml-1">{m.unit}</span>
+                <p className="font-serif text-black leading-none" style={{ fontSize: '28px' }}>
+                  {m.value}<span className="text-ink text-sm font-sans ml-1">{m.unit}</span>
                 </p>
-                <p className="text-xs text-brown mt-2 uppercase tracking-wider font-medium">{m.label}</p>
+                <p className="text-xs text-ink mt-2 uppercase tracking-wider font-medium">{m.label}</p>
               </div>
             ))}
           </div>
@@ -228,8 +228,8 @@ export default function HomePage() {
             {indexingBadges.map((badge) => (
               <span
                 key={badge}
-                className="text-xs font-medium text-brown px-4 py-2 rounded-full"
-                style={{ backgroundColor: 'rgba(153,126,103,0.12)' }}
+                className="text-xs font-medium text-ink px-4 py-2 rounded-full"
+                style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
               >
                 {badge}
               </span>
@@ -241,8 +241,8 @@ export default function HomePage() {
       {/* 5. News */}
       <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
-          <span className="section-label">News &amp; Updates</span>
-          <h2 className="section-heading mb-8" style={{ fontSize: 'clamp(28px, 3.5vw, 36px)' }}>From the Field</h2>
+          <span className="section-label text-ink">News &amp; Updates</span>
+          <h2 className="section-heading text-black mb-8" style={{ fontSize: 'clamp(28px, 3.5vw, 36px)' }}>From the Field</h2>
 
           <div className="relative">
             <div
@@ -260,18 +260,18 @@ export default function HomePage() {
                       <span
                         className="text-xs font-medium px-2.5 py-1 rounded-full"
                         style={{
-                          backgroundColor: item.tag === 'Journal' ? 'rgba(255,219,187,0.3)' : item.tag === 'Orthopedics' ? 'rgba(153,126,103,0.12)' : 'rgba(102,73,48,0.1)',
-                          color: 'var(--brown)',
+                          backgroundColor: item.tag === 'Journal' ? 'rgba(255,219,187,0.3)' : item.tag === 'Orthopedics' ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.04)',
+                          color: 'var(--ink)',
                         }}
                       >
                         {item.tag}
                       </span>
                     </div>
-                    <p className="font-serif text-brown-dark leading-snug" style={{ fontSize: '16px' }}>
+                    <p className="font-serif text-black leading-snug" style={{ fontSize: '16px' }}>
                       {item.title}
                     </p>
                   </div>
-                  <p className="text-xs text-brown mt-4">{item.date}</p>
+                  <p className="text-xs text-ink mt-4">{item.date}</p>
                 </div>
               ))}
             </div>
@@ -287,22 +287,22 @@ export default function HomePage() {
       {/* 6. Newsletter */}
       <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center max-w-lg">
-          <span className="section-label">Stay Updated</span>
-          <h2 className="section-heading mb-2">Get notified when new issues are published</h2>
-          <p className="text-brown text-sm mb-6">
+          <span className="section-label text-ink">Stay Updated</span>
+          <h2 className="section-heading text-black mb-2">Get notified when new issues are published</h2>
+          <p className="text-ink text-sm mb-6">
             No spam. Just orthopedic research delivered to your inbox.
           </p>
           <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
               placeholder="your@email.com"
-              className="flex-1 text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-peach/40 placeholder:text-brown transition"
+              className="flex-1 text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-peach/40 placeholder:text-ink/50 text-ink transition"
             />
             <button type="submit" className="btn-primary-light justify-center">
               Subscribe
             </button>
           </form>
-          <p className="text-xs text-brown mt-3">Unsubscribe at any time.</p>
+          <p className="text-xs text-ink mt-3">Unsubscribe at any time.</p>
         </div>
       </section>
 
