@@ -29,11 +29,8 @@ export const metadata: Metadata = {
       'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series. Serving medical students, residents, and fellows worldwide.',
   },
   icons: {
-    icon: [
-      { url: '/favicon/favicon.ico', sizes: 'any' },
-      { url: '/favicon/favicon-mark.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/favicon/favicon-mark-180.png',
+    icon: '/favicon.png',
+    apple: '/apple-icon',
   },
   robots: {
     index: true,

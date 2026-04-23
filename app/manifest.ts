@@ -16,28 +16,27 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: 'portrait',
     icons: [
       {
-        src: '/favicon/favicon-mark-192.png',
-        sizes: '192x192',
+        src: '/icon',
+        sizes: '32x32',
         type: 'image/png',
-        purpose: 'any',
       },
       {
-        src: '/favicon/favicon-mark-512.png',
-        sizes: '512x512',
-        type: 'image/png',
-        purpose: 'any',
-      },
-      {
-        src: '/favicon/favicon-mark-180.png',
+        src: '/apple-icon',
         sizes: '180x180',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/favicon/favicon-mark.svg',
+        src: '/brand/seal-cream.svg',
         sizes: 'any',
         type: 'image/svg+xml',
         purpose: 'any',
+      },
+      {
+        src: '/brand/seal-dark.svg',
+        sizes: 'any',
+        type: 'image/svg+xml',
+        purpose: 'maskable',
       },
     ],
     categories: ['medical', 'education', 'science'],
