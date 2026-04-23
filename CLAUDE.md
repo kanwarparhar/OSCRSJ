@@ -1,5 +1,21 @@
 # OSCRSJ Website — Claude Code Context
 
+## Git Safety — READ BEFORE ANY COMMIT OR PUSH
+
+**Background.** On 2026-04-22 a routine favicon-push session accidentally deleted 195 files from `origin/main`. The broken commits (`c46d818` → tree of 2 files, `57c236b` → tree of 4 files) were pushed to GitHub before anyone noticed. The live site kept serving only because Vercel's build of the broken tree failed and it stayed on the prior good deploy. Recovery shipped 2026-04-23 in commits `1f29795` (file restore by a parallel push) + `5150550` (the transparent-favicon change layered on top). Root cause: a `git add -A && commit && push` ran against a corrupted index that thought most project files didn't exist.
+
+**Sanity checks before every commit:**
+
+1. `git ls-tree -r HEAD --name-only | wc -l` — healthy OSCRSJ tree should be ~196-200 files. If HEAD's tree is dramatically smaller than the working tree, **STOP**. The index or HEAD is corrupted; do not commit.
+2. `git diff --cached --stat | tail -1` — most feature commits touch 1-15 files. A staged set of 100+ files, especially mostly `new file:` entries, is a **red flag**, not a normal commit. Investigate before pushing.
+3. **Never `git add -A` or `git add .` blindly.** Stage by explicit path: `git add app/foo.tsx public/bar.png`. Bulk-staging against a corrupted index is exactly what caused the 2026-04-22 incident.
+4. **Never `git reset --hard` or `git push --force` (incl. `--force-with-lease`) without explicit Kanwar approval.** Recovery on 2026-04-23 was only possible because the working tree on disk still had all 197 files; a `git reset --hard` after the destruction would have made recovery require a fresh clone.
+5. **If local `main` and `origin/main` diverge in ways you don't fully understand, FETCH and inspect** — `git log HEAD..origin/main` and `git ls-tree -r <SHA> --name-only | wc -l` for each side. Never merge or push until you've explained the divergence in your own words to Kanwar.
+
+**Recovery cheat-sheet:** the pre-destruction commit is usually findable in `git reflog`. Compare tree sizes with `git ls-tree -r <SHA> --name-only | wc -l` to identify the last healthy commit. Restore by adding back the missing files in a single fast-forward commit titled `fix(repo): restore N source files erroneously deleted by <broken-SHA>`. **Never force-push.** If the FUSE mount between Kanwar's Mac and the Cowork sandbox blocks local git operations with stale lock files (`.git/index.lock`, `.git/HEAD.lock`, `.git/refs/heads/main.lock` that can't be `rm`'d from inside the sandbox — `mv` works around `unlink` failures), do a fresh `git clone` into `/sessions/.../OSCRSJ-push-workspace/`, apply the fix there, push from that clone. After pushing, Kanwar runs `rm -f .git/*.lock .git/refs/heads/*.lock && git fetch && git reset --hard origin/main` from his Mac Terminal to resync the local working copy.
+
+---
+
 ## What This Project Is
 The official website for **OSCRSJ** (Orthopedic Surgery Case Reports & Series Journal) — Kanwar's independent, open-access orthopedic research journal business targeting medical students, residents, and fellows. Domain: **OSCRSJ.com**. Pre-launch as of April 2026.
 
