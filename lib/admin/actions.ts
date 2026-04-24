@@ -76,6 +76,36 @@ async function requireEditorOrAdmin(): Promise<
   return { userId: user.id }
 }
 
+// Strict admin-only gate — editors do NOT pass. Used by Phase 4
+// publishing-pipeline surfaces (render-report viewer, Renderer.app
+// asset uploads) that are scoped to Kanwar + any future admin-role
+// accounts. See Submission Portal Architecture Plan §6.1 decision 1
+// ("Admin-only feature. Publishing pipeline surfaces are visible
+// to the `admin` role only. Editors, authors, and reviewers do not
+// see the render-status panel.").
+async function requireAdminOnly(): Promise<
+  { userId: string } | { error: string }
+> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated.' }
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (error || !data) return { error: 'Profile not found.' }
+  const role = (data as { role: string }).role
+  if (role !== 'admin') {
+    return { error: 'Admin role required.' }
+  }
+  return { userId: user.id }
+}
+
 export interface GetAdminFileSignedUrlResult {
   signedUrl?: string
   fileName?: string
@@ -146,6 +176,168 @@ export async function getAdminFileSignedUrl(
   return {
     signedUrl: signed.signedUrl,
     fileName: file.original_filename || file.file_name,
+  }
+}
+
+// ============================================================
+// Phase 4: published asset download (Session 16)
+// ============================================================
+// Published assets (the PDF + its render-report.json) are NOT
+// rows in manuscript_files — their storage paths live directly
+// on the manuscripts row (`published_pdf_storage_path`,
+// `render_report_storage_path`). This action generates a
+// short-lived signed URL keyed by (manuscriptId, which) so the
+// admin-only Published PDF panel and /render-report viewer can
+// offer downloads. Gated by requireAdminOnly per §6.1 decision 1.
+
+export type PublishedAssetKind = 'pdf' | 'report'
+
+export interface GetPublishedAssetSignedUrlResult {
+  signedUrl?: string
+  fileName?: string
+  error?: string
+  notFound?: true
+  forbidden?: true
+}
+
+export async function getPublishedAssetSignedUrl(
+  manuscriptId: string,
+  which: PublishedAssetKind
+): Promise<GetPublishedAssetSignedUrlResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { forbidden: true, error: gate.error }
+
+  if (!manuscriptId || typeof manuscriptId !== 'string') {
+    return { notFound: true, error: 'Manuscript id is required.' }
+  }
+  if (which !== 'pdf' && which !== 'report') {
+    return { notFound: true, error: 'Unknown asset kind.' }
+  }
+
+  const admin = createAdminClient()
+
+  const { data: mData, error: mErr } = await admin
+    .from('manuscripts')
+    .select(
+      'id, submission_id, published_pdf_storage_path, render_report_storage_path'
+    )
+    .eq('id', manuscriptId)
+    .maybeSingle()
+
+  if (mErr || !mData) {
+    return { notFound: true, error: 'Manuscript not found.' }
+  }
+
+  const m = mData as {
+    id: string
+    submission_id: string
+    published_pdf_storage_path: string | null
+    render_report_storage_path: string | null
+  }
+
+  const storagePath =
+    which === 'pdf'
+      ? m.published_pdf_storage_path
+      : m.render_report_storage_path
+  if (!storagePath) {
+    return {
+      notFound: true,
+      error:
+        which === 'pdf'
+          ? 'No published PDF is attached to this manuscript yet.'
+          : 'No render report is attached to this manuscript yet.',
+    }
+  }
+
+  const downloadName =
+    which === 'pdf'
+      ? `${m.submission_id}.pdf`
+      : `${m.submission_id}_render-report.json`
+
+  const { data: signed, error: signErr } = await admin.storage
+    .from('submissions')
+    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, {
+      download: downloadName,
+    })
+
+  if (signErr || !signed) {
+    return {
+      error: `Failed to generate download link: ${
+        signErr?.message || 'unknown error'
+      }`,
+    }
+  }
+
+  // Audit log — best-effort.
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'admin_published_asset_downloaded',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: {
+        which,
+        admin_id: gate.userId,
+        manuscript_id: manuscriptId,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  return { signedUrl: signed.signedUrl, fileName: downloadName }
+}
+
+// Server-side fetch of the render-report.json content. Used by the
+// /render-report viewer route which needs to parse + render the
+// JSON (not just offer a download). Returns the parsed object or
+// an error; admin-only like the signed-URL action.
+export interface FetchRenderReportResult {
+  report?: unknown
+  error?: string
+  notFound?: true
+  forbidden?: true
+}
+
+export async function fetchRenderReport(
+  manuscriptId: string
+): Promise<FetchRenderReportResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { forbidden: true, error: gate.error }
+
+  const admin = createAdminClient()
+
+  const { data: mData, error: mErr } = await admin
+    .from('manuscripts')
+    .select('id, render_report_storage_path')
+    .eq('id', manuscriptId)
+    .maybeSingle()
+
+  if (mErr || !mData) {
+    return { notFound: true, error: 'Manuscript not found.' }
+  }
+  const path = (mData as { render_report_storage_path: string | null })
+    .render_report_storage_path
+  if (!path) {
+    return { notFound: true, error: 'No render report is attached.' }
+  }
+
+  const { data: blob, error: dlErr } = await admin.storage
+    .from('submissions')
+    .download(path)
+  if (dlErr || !blob) {
+    return {
+      error: `Failed to read render report: ${dlErr?.message || 'unknown error'}`,
+    }
+  }
+
+  try {
+    const text = await blob.text()
+    const report = JSON.parse(text)
+    return { report }
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'Parse error'
+    return { error: `Render report is not valid JSON: ${msg}` }
   }
 }
 

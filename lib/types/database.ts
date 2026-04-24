@@ -108,6 +108,34 @@ export interface ManuscriptRow {
   note_to_editor: string | null
   submission_date: string | null
   decision_date: string | null
+  // Phase 4 publishing pipeline columns (migration 013). Nullable
+  // because every pre-Phase-4 manuscript row predates these columns.
+  elocation_id: string | null
+  accepted_date: string | null
+  published_date: string | null
+  running_title: string | null
+  published_pdf_storage_path: string | null
+  render_report_storage_path: string | null
+  doi: string | null
+  created_at: string
+  updated_at: string
+}
+
+// manuscript_affiliations row (migration 013). Normalises authors'
+// free-text affiliations out of users.affiliation / manuscript_authors.affiliation
+// and supports the PMC evidence packet (RoR IDs, department-level
+// granularity, multi-affiliation authors, country-of-record).
+export interface ManuscriptAffiliationRow {
+  id: string
+  manuscript_id: string
+  author_id: string | null
+  manuscript_author_id: string | null
+  affiliation_order: number
+  affiliation_name: string
+  department: string | null
+  city: string | null
+  country: string | null
+  ror_id: string | null
   created_at: string
   updated_at: string
 }
@@ -251,6 +279,63 @@ export interface PreRevisionSnapshot {
   keywords: string[] | null
   subspecialty: string | null
   authors: SnapshotAuthor[]
+}
+
+// ----------------------------------------------------------------
+// Phase 4: published PDF render-report.json (Submission Portal
+// Architecture Plan §6.11). One JSON file ships alongside every
+// published PDF in Supabase Storage; the admin /render-report
+// viewer parses it and displays it collapsibly. Janine attaches
+// this file (or subset) to ISSN / Crossref / DOAJ / PMC
+// applications as technical-conformance provenance.
+// ----------------------------------------------------------------
+
+export interface RenderReport {
+  schemaVersion: string
+  manuscriptId: string
+  submissionId: string
+  renderedAt: string
+  pipelineVersion: string
+  toolVersions: Record<string, string>
+  input: {
+    sourceDocxSha256: string
+    sourceDocxBytes: number
+    splitReferencesCount: number
+  }
+  cleanupPass: {
+    durationSeconds: number
+    diffSummary: {
+      linesAdded: number
+      linesRemoved: number
+      charactersChanged: number
+    }
+    diffPatch?: string
+  }
+  verapdf: {
+    conformance: string
+    result: 'pass' | 'fail' | 'warn'
+    warnings: string[]
+    failures: string[]
+    rawOutput?: string
+  }
+  fontEmbedCheck: {
+    allFontsEmbedded: boolean
+    fonts: Array<{
+      family: string
+      subset?: boolean
+      embedded?: boolean
+      rasterized?: boolean
+      note?: string
+    }>
+  }
+  sanityTests: Record<string, boolean | number>
+  xmpPacket?: string
+  output: {
+    pdfSha256: string
+    pdfBytes: number
+    pdfStoragePath: string
+  }
+  wallclockSeconds: number
 }
 
 export interface EditorialDecisionRow {

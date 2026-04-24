@@ -18,6 +18,7 @@ import DecisionComposerPanel, {
 } from './DecisionComposerPanel'
 import DecisionHistoryPanel from './DecisionHistoryPanel'
 import RevisionsPanel from './RevisionsPanel'
+import PublishedPdfPanel from './PublishedPdfPanel'
 
 const RESCIND_WINDOW_MS = 15 * 60 * 1000
 
@@ -379,6 +380,8 @@ export default async function AdminManuscriptDetailPage({
       />
 
       <RevisionsPanel manuscriptId={manuscript.id} />
+
+      <PublishedPdfPanel manuscriptId={manuscript.id} />
 
       <DecisionHistoryPanel manuscriptId={manuscript.id} />
     </div>
