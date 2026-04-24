@@ -139,7 +139,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Category cards */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8">
             <span className="section-label">Browse</span>
@@ -159,7 +159,7 @@ export default function AiInOrthopedicsLanding() {
                   className="bg-white border border-border rounded-xl p-6 hover:border-tan hover:shadow-sm transition-all group"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-brown inline-flex items-center justify-center w-10 h-10 rounded-lg bg-cream border border-border">
+                    <span className="text-brown inline-flex items-center justify-center w-10 h-10 rounded-lg bg-cream-alt border border-border">
                       <Icon />
                     </span>
                     <span className="text-xs text-brown">
@@ -231,7 +231,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Editor's Picks */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="mb-8">
             <span className="section-label">Editor&rsquo;s Picks</span>
@@ -269,7 +269,7 @@ export default function AiInOrthopedicsLanding() {
           <div className="bg-white border border-border rounded-xl divide-y divide-border overflow-hidden">
             {AI_ORTHO_GLOSSARY.map((entry) => (
               <details key={entry.term} className="group">
-                <summary className="flex items-center justify-between gap-4 cursor-pointer px-6 py-4 hover:bg-cream transition-colors list-none">
+                <summary className="flex items-center justify-between gap-4 cursor-pointer px-6 py-4 hover:bg-cream-alt transition-colors list-none">
                   <span className="font-serif text-base text-brown-dark">{entry.term}</span>
                   <span
                     className="text-brown text-xl leading-none transition-transform group-open:rotate-45 select-none"
@@ -291,7 +291,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* For Residents callout */}
-      <section className="bg-cream">
+      <section className="bg-white">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="bg-white border border-border rounded-2xl p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-6">
             <div className="flex-1">
@@ -335,7 +335,7 @@ export default function AiInOrthopedicsLanding() {
       </section>
 
       {/* Methodology + disclaimer */}
-      <section className="bg-cream border-t border-border">
+      <section className="bg-white border-t border-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-10">
           <div>
             <span className="section-label">Methodology</span>

@@ -64,7 +64,7 @@ export default function TemplatesPage() {
                   <h2 className="font-serif text-xl font-normal text-brown-dark">{t.type}</h2>
                   <div className="flex flex-wrap gap-2 mt-2">
                     <span className="text-xs font-medium text-brown bg-tan/20 px-2.5 py-1 rounded-full">{t.guideline}</span>
-                    <span className="text-xs text-brown bg-cream px-2.5 py-1 rounded-full">{t.wordLimit}</span>
+                    <span className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full">{t.wordLimit}</span>
                   </div>
                 </div>
                 <span className="btn-primary-light text-center cursor-default opacity-60">
@@ -76,7 +76,7 @@ export default function TemplatesPage() {
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Required Sections</p>
                 <div className="flex flex-wrap gap-2">
                   {t.sections.map((s) => (
-                    <span key={s} className="text-xs text-brown bg-cream px-2.5 py-1 rounded-full">{s}</span>
+                    <span key={s} className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full">{s}</span>
                   ))}
                 </div>
               </div>

@@ -14,7 +14,7 @@ export default function MostReadPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <section className="mb-12 bg-cream border border-border rounded-2xl p-8 text-center">
+        <section className="mb-12 bg-cream-alt border border-border rounded-2xl p-8 text-center">
           <div className="text-4xl mb-4">📊</div>
           <h2 className="section-heading mb-3">Coming Soon</h2>
           <p className="text-ink leading-relaxed max-w-lg mx-auto">

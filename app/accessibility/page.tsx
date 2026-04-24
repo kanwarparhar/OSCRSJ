@@ -59,7 +59,7 @@ export default function AccessibilityPage() {
           <p className="text-ink leading-relaxed mb-4">
             We welcome feedback on the accessibility of OSCRSJ. If you encounter any barriers or have suggestions for improvement, please contact us:
           </p>
-          <div className="bg-cream border border-border rounded-xl p-6">
+          <div className="bg-cream-alt border border-border rounded-xl p-6">
             <p className="text-sm text-ink mb-1"><strong>Email:</strong> accessibility@oscrsj.com</p>
             <p className="text-sm text-ink"><strong>Response time:</strong> We aim to respond to accessibility feedback within 5 business days.</p>
           </div>

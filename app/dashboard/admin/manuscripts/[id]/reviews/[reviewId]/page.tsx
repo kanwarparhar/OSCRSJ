@@ -93,7 +93,7 @@ function LikertBar({ value, max }: { value: number | null; max: number }) {
   const pct = value === null ? 0 : (value / max) * 100
   return (
     <div className="flex items-center gap-3">
-      <div className="flex-1 h-2 bg-cream border border-border rounded-full overflow-hidden">
+      <div className="flex-1 h-2 bg-cream-alt border border-border rounded-full overflow-hidden">
         {value !== null && (
           <div
             className="h-full bg-peach-dark"

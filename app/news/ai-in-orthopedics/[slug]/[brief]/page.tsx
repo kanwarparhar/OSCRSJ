@@ -223,7 +223,7 @@ export default function BriefPage({ params }: PageProps) {
         {/* Full citation */}
         <div className="mt-12 pt-8 border-t border-border">
           <span className="section-label">Citation</span>
-          <p className="text-sm text-ink leading-relaxed bg-cream border border-border rounded-lg p-4">
+          <p className="text-sm text-ink leading-relaxed bg-cream-alt border border-border rounded-lg p-4">
             {brief.citation}
           </p>
         </div>

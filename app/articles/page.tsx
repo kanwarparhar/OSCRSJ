@@ -182,7 +182,7 @@ function ArticlesBrowser() {
                       className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
                         isActive
                           ? 'bg-tan/20 text-brown font-medium'
-                          : 'text-brown hover:bg-cream'
+                          : 'text-brown hover:bg-cream-alt'
                       }`}
                       aria-pressed={isActive}
                     >
@@ -254,7 +254,7 @@ function ArticlesBrowser() {
                     <button
                       type="button"
                       onClick={() => setActiveTopic(article.topicSlug)}
-                      className="text-xs text-brown bg-cream px-2.5 py-1 rounded-full hover:bg-peach/20 hover:text-brown transition-colors"
+                      className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full hover:bg-peach/20 hover:text-brown transition-colors"
                       aria-label={`Filter by ${article.topic}`}
                     >
                       {article.topic}

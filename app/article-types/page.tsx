@@ -77,7 +77,7 @@ export default function ArticleTypesPage() {
                   { label: 'Figures', value: t.figures },
                   { label: 'References', value: t.references },
                 ].map((spec) => (
-                  <div key={spec.label} className="bg-cream rounded-lg p-3">
+                  <div key={spec.label} className="bg-cream-alt rounded-lg p-3">
                     <p className="text-xs text-brown uppercase tracking-wider font-medium">{spec.label}</p>
                     <p className="text-sm text-ink mt-0.5">{spec.value}</p>
                   </div>
@@ -89,7 +89,7 @@ export default function ArticleTypesPage() {
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Required Structure</p>
                 <div className="flex flex-wrap gap-2">
                   {t.structure.map((s) => (
-                    <span key={s} className="text-xs text-brown bg-cream px-2.5 py-1 rounded-full">{s}</span>
+                    <span key={s} className="text-xs text-brown bg-cream-alt px-2.5 py-1 rounded-full">{s}</span>
                   ))}
                 </div>
               </div>

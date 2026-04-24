@@ -103,7 +103,7 @@ export default async function DashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-cream/50 border-b border-border">
+                <tr className="bg-cream-alt/50 border-b border-border">
                   <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">ID</th>
                   <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">Title</th>
                   <th className="text-left px-4 py-3 font-medium text-brown text-xs uppercase tracking-wider">Status</th>
@@ -232,7 +232,7 @@ export default async function DashboardPage() {
       ) : (
         /* Empty state */
         <div className="bg-white border border-border rounded-xl p-12 text-center">
-          <div className="w-16 h-16 bg-cream rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-cream-alt rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>

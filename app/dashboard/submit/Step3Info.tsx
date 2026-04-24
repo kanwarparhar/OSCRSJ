@@ -171,7 +171,7 @@ export default function Step3Info({
             {keywords.map((kw, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-cream text-ink text-sm rounded-full"
+                className="inline-flex items-center gap-1 px-3 py-1 bg-cream-alt text-ink text-sm rounded-full"
               >
                 {kw}
                 <button
@@ -205,7 +205,7 @@ export default function Step3Info({
             <button
               onClick={addKeyword}
               disabled={!keywordInput.trim()}
-              className="text-xs font-medium text-brown border border-brown/20 px-4 py-2 rounded-lg hover:bg-cream transition-colors disabled:opacity-40"
+              className="text-xs font-medium text-brown border border-brown/20 px-4 py-2 rounded-lg hover:bg-cream-alt transition-colors disabled:opacity-40"
             >
               Add
             </button>

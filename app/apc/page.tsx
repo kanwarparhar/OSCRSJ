@@ -110,7 +110,7 @@ export default function ApcPage() {
           </p>
           <div className="bg-white border border-border rounded-xl overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-cream border-b border-border">
+              <thead className="bg-cream-alt border-b border-border">
                 <tr>
                   <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest">Group</th>
                   <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest">Discount</th>
@@ -119,7 +119,7 @@ export default function ApcPage() {
               </thead>
               <tbody className="divide-y divide-border">
                 {waivers.map((w) => (
-                  <tr key={w.group} className="hover:bg-cream/50 transition-colors">
+                  <tr key={w.group} className="hover:bg-cream-alt/50 transition-colors">
                     <td className="px-5 py-3 text-ink">{w.group}</td>
                     <td className="px-5 py-3 font-semibold text-brown">{w.discount}</td>
                     <td className="px-5 py-3 text-brown hidden sm:table-cell">{w.note}</td>

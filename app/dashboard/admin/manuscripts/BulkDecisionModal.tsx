@@ -290,7 +290,7 @@ export default function BulkDecisionModal({
                     key={d}
                     className={`flex items-start gap-2 border rounded-lg p-3 cursor-pointer transition-colors ${
                       decision === d
-                        ? 'border-brown bg-cream/60'
+                        ? 'border-brown bg-cream-alt/60'
                         : 'border-border hover:border-tan'
                     }`}
                   >
@@ -395,7 +395,7 @@ export default function BulkDecisionModal({
           )}
 
           {(isPending || runComplete) && (
-            <div className="border border-border rounded-lg bg-cream/40">
+            <div className="border border-border rounded-lg bg-cream-alt/40">
               <div className="px-3 py-2 border-b border-border flex items-center justify-between text-xs text-brown">
                 <span className="uppercase tracking-widest">
                   Per-manuscript progress
@@ -457,7 +457,7 @@ export default function BulkDecisionModal({
                 type="button"
                 onClick={handleClose}
                 disabled={isPending}
-                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream disabled:opacity-50"
+                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream-alt disabled:opacity-50"
               >
                 Cancel
               </button>

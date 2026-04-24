@@ -34,7 +34,7 @@ export default function IndexingPage() {
               { title: 'Scopus', status: 'Planned — Year 2–3', desc: 'Scopus evaluates journals based on editorial quality, citedness, regularity of publication, and online availability. Application follows PubMed.', done: false },
             ].map((item) => (
               <div key={item.title} className={`flex gap-4 border rounded-xl p-6 ${item.done ? 'bg-tan/10 border-peach/30' : 'bg-white border-border'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-peach text-white' : 'bg-cream text-brown'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-peach text-white' : 'bg-cream-alt text-brown'}`}>
                   {item.done ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -46,7 +46,7 @@ export default function IndexingPage() {
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-semibold text-ink text-sm">{item.title}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${item.done ? 'bg-tan/20 text-brown font-medium' : 'bg-cream text-brown'}`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${item.done ? 'bg-tan/20 text-brown font-medium' : 'bg-cream-alt text-brown'}`}>
                       {item.status}
                     </span>
                   </div>

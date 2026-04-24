@@ -59,7 +59,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             type="email"
             value={initialData.email}
             disabled
-            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown bg-cream/50 cursor-not-allowed"
+            className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-brown bg-cream-alt/50 cursor-not-allowed"
           />
           <p className="text-xs text-brown mt-1">Email cannot be changed. Contact support if you need to update it.</p>
         </div>

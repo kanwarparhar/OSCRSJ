@@ -246,7 +246,7 @@ export default function MediaPage() {
 
         {/* Contact */}
         <section>
-          <div className="bg-cream rounded-2xl p-8 text-center">
+          <div className="bg-cream-alt rounded-2xl p-8 text-center">
             <span className="section-label">Press Inquiries</span>
             <h2 className="section-heading mb-4">Need Something Custom?</h2>
             <p className="text-ink leading-relaxed max-w-2xl mx-auto mb-6">

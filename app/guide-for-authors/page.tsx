@@ -314,7 +314,7 @@ export default function GuideForAuthorsPage() {
               </thead>
               <tbody>
                 {comparisonRows.map((row, i) => (
-                  <tr key={row.param} className={i % 2 === 0 ? 'bg-white' : 'bg-cream/50'}>
+                  <tr key={row.param} className={i % 2 === 0 ? 'bg-white' : 'bg-cream-alt/50'}>
                     <td className="px-4 py-2.5 font-medium text-ink">{row.param}</td>
                     {row.values.map((v, j) => (
                       <td key={j} className="px-3 py-2.5 text-ink">{v}</td>
@@ -346,7 +346,7 @@ export default function GuideForAuthorsPage() {
             </div>
 
             {/* Required sections */}
-            <div className="bg-cream/50 border border-border rounded-xl p-6 max-w-3xl">
+            <div className="bg-cream-alt/50 border border-border rounded-xl p-6 max-w-3xl">
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-3">Required Sections (in order)</p>
               <ol className="space-y-2">
                 {type.sections.map((sec, i) => (
@@ -366,7 +366,7 @@ export default function GuideForAuthorsPage() {
           <h2 className="section-heading mb-8">General Requirements</h2>
 
           {/* Jump links */}
-          <div className="bg-cream border border-border rounded-xl p-5 mb-10">
+          <div className="bg-cream-alt border border-border rounded-xl p-5 mb-10">
             <div className="flex flex-wrap gap-2">
               {generalSections.map((s) => (
                 <a
@@ -398,7 +398,7 @@ export default function GuideForAuthorsPage() {
                 ))}
               </ul>
               {section.example && (
-                <div className="mt-4 bg-cream border border-border rounded-lg p-4 max-w-3xl">
+                <div className="mt-4 bg-cream-alt border border-border rounded-lg p-4 max-w-3xl">
                   <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Example</p>
                   <p className="text-sm text-ink italic">{section.example}</p>
                 </div>

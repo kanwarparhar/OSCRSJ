@@ -658,7 +658,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             <button
               onClick={goBack}
               disabled={saving}
-              className="text-sm text-brown font-medium px-5 py-2.5 rounded-full border border-brown/20 hover:bg-cream transition-colors disabled:opacity-50"
+              className="text-sm text-brown font-medium px-5 py-2.5 rounded-full border border-brown/20 hover:bg-cream-alt transition-colors disabled:opacity-50"
             >
               Back
             </button>

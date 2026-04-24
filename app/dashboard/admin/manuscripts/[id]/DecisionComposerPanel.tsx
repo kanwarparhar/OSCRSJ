@@ -393,7 +393,7 @@ export default function DecisionComposerPanel({
                   key={d}
                   className={`flex items-start gap-2 border rounded-lg p-3 cursor-pointer transition-colors ${
                     decision === d
-                      ? 'border-brown bg-cream/60'
+                      ? 'border-brown bg-cream-alt/60'
                       : 'border-border hover:border-tan'
                   }`}
                 >
@@ -452,7 +452,7 @@ export default function DecisionComposerPanel({
       )}
 
       {!deskRejectMode && decision === 'major_revisions' && (
-        <label className="flex items-start gap-2 text-sm text-ink bg-cream/40 border border-border rounded-lg p-3">
+        <label className="flex items-start gap-2 text-sm text-ink bg-cream-alt/40 border border-border rounded-lg p-3">
           <input
             type="checkbox"
             checked={reInviteReviewers}
@@ -482,7 +482,7 @@ export default function DecisionComposerPanel({
             type="button"
             onClick={loadTemplate}
             disabled={!decidable || isPending}
-            className="text-[11px] text-brown border border-brown/20 px-2 py-1 rounded hover:bg-cream disabled:opacity-50"
+            className="text-[11px] text-brown border border-brown/20 px-2 py-1 rounded hover:bg-cream-alt disabled:opacity-50"
           >
             Load template
           </button>
@@ -506,7 +506,7 @@ export default function DecisionComposerPanel({
         </p>
       </div>
 
-      <div className="bg-cream/50 border border-border rounded-lg p-3 text-xs text-ink">
+      <div className="bg-cream-alt/50 border border-border rounded-lg p-3 text-xs text-ink">
         <p className="mb-1">
           <span className="text-[11px] uppercase tracking-widest text-brown">
             Status transition
@@ -585,7 +585,7 @@ export default function DecisionComposerPanel({
               <button
                 type="button"
                 onClick={() => setDeskRejectConfirmOpen(false)}
-                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream"
+                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream-alt"
               >
                 Cancel
               </button>
@@ -641,7 +641,7 @@ export default function DecisionComposerPanel({
                 type="button"
                 onClick={() => setRescindOpen(false)}
                 disabled={isRescinding}
-                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream disabled:opacity-50"
+                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream-alt disabled:opacity-50"
               >
                 Cancel
               </button>

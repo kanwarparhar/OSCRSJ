@@ -149,7 +149,7 @@ export default async function ReviewFormPage({
             confidential.
           </p>
 
-          <div className="border border-border rounded-lg bg-cream/40 p-4 text-sm space-y-2">
+          <div className="border border-border rounded-lg bg-cream-alt/40 p-4 text-sm space-y-2">
             <div>
               <p className="text-[11px] uppercase tracking-widest text-brown">
                 Manuscript

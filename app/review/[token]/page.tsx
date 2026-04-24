@@ -151,7 +151,7 @@ export default async function ReviewInvitationPage({
           hidden until you accept.
         </p>
 
-        <dl className="border border-border rounded-lg bg-cream/40 p-4 text-sm space-y-2">
+        <dl className="border border-border rounded-lg bg-cream-alt/40 p-4 text-sm space-y-2">
           <div>
             <dt className="text-[11px] uppercase tracking-widest text-brown">
               Manuscript

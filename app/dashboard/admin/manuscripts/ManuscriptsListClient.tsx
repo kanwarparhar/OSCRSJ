@@ -88,7 +88,7 @@ export default function ManuscriptsListClient({
       <div className="bg-white border border-border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-cream/40 border-b border-border">
+            <thead className="bg-cream-alt/40 border-b border-border">
               <tr className="text-left">
                 <th className="px-3 py-3 w-10">
                   <input
@@ -132,8 +132,8 @@ export default function ManuscriptsListClient({
                 return (
                   <tr
                     key={m.id}
-                    className={`border-t border-border hover:bg-cream/30 ${
-                      checked ? 'bg-cream/50' : ''
+                    className={`border-t border-border hover:bg-cream-alt/30 ${
+                      checked ? 'bg-cream-alt/50' : ''
                     }`}
                   >
                     <td className="px-3 py-3">
@@ -193,7 +193,7 @@ export default function ManuscriptsListClient({
       </div>
 
       {selectedIds.size > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-cream shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-cream-alt shadow-lg">
           <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
             <p className="text-sm text-ink">
               <strong>{selectedIds.size}</strong> manuscript

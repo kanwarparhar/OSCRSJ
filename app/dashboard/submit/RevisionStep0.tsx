@@ -100,7 +100,7 @@ export default function RevisionStep0({
         identities are not disclosed.
       </p>
 
-      <div className="bg-cream/50 border border-border rounded-lg p-4 mb-5 space-y-2">
+      <div className="bg-cream-alt/50 border border-border rounded-lg p-4 mb-5 space-y-2">
         <div className="flex items-center flex-wrap gap-2 text-xs">
           <span className="inline-flex items-center px-2 py-0.5 rounded-full border bg-white text-ink">
             Revision v{revisionNumber}
@@ -161,7 +161,7 @@ export default function RevisionStep0({
                     {review.label}
                   </h4>
                   {review.recommendation && (
-                    <span className="text-[11px] uppercase tracking-widest font-semibold text-brown bg-cream px-2 py-0.5 rounded-full border border-border">
+                    <span className="text-[11px] uppercase tracking-widest font-semibold text-brown bg-cream-alt px-2 py-0.5 rounded-full border border-border">
                       Recommendation:{' '}
                       {RECOMMENDATION_LABELS[review.recommendation] ||
                         review.recommendation}
@@ -183,7 +183,7 @@ export default function RevisionStep0({
                     <p className="text-[11px] uppercase tracking-widest text-brown mb-1">
                       Comments to author
                     </p>
-                    <pre className="p-3 bg-cream/40 border border-border rounded font-mono text-xs text-ink whitespace-pre-wrap break-words">
+                    <pre className="p-3 bg-cream-alt/40 border border-border rounded font-mono text-xs text-ink whitespace-pre-wrap break-words">
                       {review.comments_to_author}
                     </pre>
                   </div>

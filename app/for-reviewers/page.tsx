@@ -137,7 +137,7 @@ export default function ForReviewersPage() {
               { label: 'Complete Your Review', time: '14 days', desc: 'From the date you accept the invitation' },
               { label: 'Extension Available', time: 'Up to 7 days', desc: 'Contact the editorial office before your deadline' },
             ].map((item) => (
-              <div key={item.label} className="bg-cream border border-border rounded-xl p-5 text-center">
+              <div key={item.label} className="bg-cream-alt border border-border rounded-xl p-5 text-center">
                 <p className="text-2xl font-serif text-brown-dark">{item.time}</p>
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest mt-1">{item.label}</p>
                 <p className="text-xs text-ink mt-2">{item.desc}</p>
@@ -161,7 +161,7 @@ export default function ForReviewersPage() {
               { step: '3', title: 'Write Your Review', desc: 'Organize your feedback using the structure described in the "Structuring Your Review" section below. Separate confidential comments to the editor from comments to the authors.' },
             ].map((item) => (
               <div key={item.step} className="flex gap-4 bg-white border border-border rounded-xl p-6">
-                <span className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-cream-alt flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">
                   {item.step}
                 </span>
                 <div>
@@ -210,7 +210,7 @@ export default function ForReviewersPage() {
               { heading: 'Recommendation', desc: 'Select one of the four editorial decisions described below.' },
             ].map((item, i) => (
               <div key={item.heading} className="flex gap-4 bg-white border border-border rounded-xl p-6">
-                <span className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">{i + 1}</span>
+                <span className="w-8 h-8 rounded-full bg-cream-alt flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">{i + 1}</span>
                 <div>
                   <p className="font-semibold text-ink text-sm">{item.heading}</p>
                   <p className="text-sm text-ink mt-1">{item.desc}</p>
@@ -219,7 +219,7 @@ export default function ForReviewersPage() {
             ))}
           </div>
 
-          <div className="mt-6 max-w-3xl bg-cream/50 border border-border rounded-xl p-6">
+          <div className="mt-6 max-w-3xl bg-cream-alt/50 border border-border rounded-xl p-6">
             <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-3">Decision Options</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
@@ -273,7 +273,7 @@ export default function ForReviewersPage() {
               { title: 'Editorial Opportunities', desc: 'Priority consideration for Associate Editor and Editorial Board positions.' },
               { title: 'CME Credit', desc: 'Continuing medical education credit for peer review activity (planned for Year 2).' },
             ].map((item) => (
-              <div key={item.title} className="bg-cream border border-border rounded-xl p-5">
+              <div key={item.title} className="bg-cream-alt border border-border rounded-xl p-5">
                 <p className="font-semibold text-ink text-sm">{item.title}</p>
                 <p className="text-xs text-ink mt-1">{item.desc}</p>
               </div>

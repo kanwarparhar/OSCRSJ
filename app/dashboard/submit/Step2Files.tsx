@@ -319,7 +319,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
             <div key={u.fileName} className="flex items-center gap-3 p-3 bg-white rounded-lg">
               <div className="flex-1">
                 <p className="text-sm text-ink font-medium">{u.fileName}</p>
-                <div className="mt-1 h-1.5 bg-cream rounded-full overflow-hidden">
+                <div className="mt-1 h-1.5 bg-cream-alt rounded-full overflow-hidden">
                   <div
                     className="h-full bg-peach-dark rounded-full transition-all duration-300"
                     style={{ width: `${u.progress}%` }}
@@ -365,7 +365,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
                         fileInputRef.current.click()
                       }
                     }}
-                    className="text-xs font-medium text-brown border border-brown/20 px-3 py-1.5 rounded-full hover:bg-cream transition-colors flex-shrink-0"
+                    className="text-xs font-medium text-brown border border-brown/20 px-3 py-1.5 rounded-full hover:bg-cream-alt transition-colors flex-shrink-0"
                   >
                     Upload
                   </button>

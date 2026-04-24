@@ -99,7 +99,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 text-ink hover:bg-cream rounded-lg"
+                className="lg:hidden p-2 text-ink hover:bg-cream-alt rounded-lg"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
@@ -144,7 +144,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive(item.href)
                       ? 'bg-peach-dark/20 text-ink'
-                      : 'text-brown hover:bg-cream hover:text-ink'
+                      : 'text-brown hover:bg-cream-alt hover:text-ink'
                   }`}
                 >
                   {item.icon}
@@ -166,7 +166,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                         isActive(item.href)
                           ? 'bg-peach-dark/20 text-ink'
-                          : 'text-brown hover:bg-cream hover:text-ink'
+                          : 'text-brown hover:bg-cream-alt hover:text-ink'
                       }`}
                     >
                       {item.icon}
@@ -207,7 +207,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                         isActive(item.href)
                           ? 'bg-peach-dark/20 text-ink'
-                          : 'text-brown hover:bg-cream hover:text-ink'
+                          : 'text-brown hover:bg-cream-alt hover:text-ink'
                       }`}
                     >
                       {item.icon}
@@ -229,7 +229,7 @@ export default function DashboardShell({ userName, userEmail, userRole, children
                           className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                             isActive(item.href)
                               ? 'bg-peach-dark/20 text-ink'
-                              : 'text-brown hover:bg-cream hover:text-ink'
+                              : 'text-brown hover:bg-cream-alt hover:text-ink'
                           }`}
                         >
                           {item.icon}
