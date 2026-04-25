@@ -100,7 +100,7 @@ const faqSections = [
     questions: [
       {
         q: 'What file format should I use for submission?',
-        a: 'Microsoft Word (.docx) for the manuscript. Figures should be submitted as separate high-resolution files (TIFF, PNG, or JPEG, minimum 300 DPI) in addition to being embedded in the manuscript.',
+        a: 'Microsoft Word (.docx). A typical submission consists of a separate Title Page (with author info), the blinded manuscript (which begins at the Abstract — no author info inside), a Tables.docx file if your manuscript has tables, and each figure as a separate high-resolution image file (TIFF, PNG, or JPEG; minimum 300 DPI; 600 DPI recommended). Do NOT embed figures or tables inside the manuscript file. Use the article-type-matched templates at oscrsj.com/templates — they have the correct format pre-applied (Times New Roman 12pt, double-spaced, line numbering on, italic-only headings, hard page break before References).',
       },
       {
         q: 'Do I need to follow a specific reference style?',
@@ -112,7 +112,7 @@ const faqSections = [
       },
       {
         q: 'How should I handle patient consent?',
-        a: 'Written informed consent for publication must be obtained from the patient (or their legal guardian). You may use your institution\'s consent form or the OSCRSJ consent template (available on our Guide for Authors page). The consent statement must appear in the manuscript, but do not upload the signed consent form unless requested by the editor.',
+        a: 'Written informed consent for publication must be obtained from the patient (or their legal guardian, or next of kin if the patient is deceased) before submission. The canonical OSCRSJ consent statements (5 variants — adult, pediatric, deceased, verbal-witnessed, IRB waiver) are at oscrsj.com/templates#consent. Copy the variant matching your patient situation verbatim into your manuscript at the appropriate point (typically near the end of the Case Presentation section, or in the Methods of a case series). Do not paraphrase. You may use your institution\'s own consent form to obtain the consent itself; do not upload the signed consent form unless requested by the editor.',
       },
       {
         q: 'What are the word limits for each article type?',
