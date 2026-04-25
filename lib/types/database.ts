@@ -40,6 +40,8 @@ export type FileType =
   | 'ethics_approval'
   | 'response_to_reviewers'
   | 'tracked_changes'
+  | 'title_page'  // Session 19 (2026-04-25) — v1.1 multi-file submissions
+  | 'tables'      // Session 19 (2026-04-25) — v1.1 multi-file submissions
 
 export type WaiverType = 'none' | 'full' | 'trainee' | 'first_pub' | 'custom'
 

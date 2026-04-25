@@ -23,6 +23,8 @@ const MANUSCRIPT_TYPE_LABELS: Record<string, string> = {
 const FILE_TYPE_LABELS: Record<string, string> = {
   manuscript: 'Main Manuscript',
   blinded_manuscript: 'Blinded Manuscript',
+  title_page: 'Title Page',
+  tables: 'Tables Document',
   figure: 'Figure',
   supplement: 'Supplementary Material',
   cover_letter: 'Cover Letter',

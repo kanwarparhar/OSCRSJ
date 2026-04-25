@@ -36,3 +36,10 @@ OSCRSJ_Publish_Section_Report.docx
 # FUSE filesystem ephemera (sandbox mount artifacts)
 .fuse_hidden*
 **/.fuse_hidden*
+
+# Word lock files (~$Filename.docx) — never commit
+**/~$*
+
+# personal reference library — third-party case-report PDFs Kanwar studies
+# locally to draft OSCRSJ sample articles. NEVER shipped to GitHub or Vercel.
+_sample-articles-reference/
