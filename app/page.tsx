@@ -33,8 +33,6 @@ const newsItems = [
   { date: 'February 2026', title: 'Rising interest in AI-assisted fracture classification tools', tag: 'Orthopedics' },
 ]
 
-const indexingBadges = ['Scopus', 'DOAJ', 'Crossref', 'Google Scholar', 'EMBASE', 'EBSCO', 'Web of Science', 'COPE Member']
-
 export default function HomePage() {
   return (
     <div className="bg-white">
@@ -108,7 +106,130 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Latest Articles */}
+      {/* 2. For Authors — 3-column journal layout */}
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
+        <div className="max-w-content mx-auto">
+          <span className="section-label text-ink">For Authors</span>
+          <h2 className="section-heading text-black mb-10">Submit to OSCRSJ</h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+            {/* LEFT — Journal cover */}
+            <div className="lg:col-span-4 flex justify-center lg:justify-start">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/cover-cream.png"
+                alt="OSCRSJ inaugural issue cover — Volume 1, Number 1, April 2026"
+                width={924}
+                height={540}
+                className="w-full max-w-[320px] h-auto rounded-md shadow-md"
+                style={{ border: '1px solid var(--border)' }}
+              />
+            </div>
+
+            {/* MIDDLE — Action buttons */}
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              {[
+                { label: 'Submit Article', href: '/submit', external: true },
+                { label: 'Guide for Authors', href: '/guide-for-authors' },
+                { label: 'Author FAQ', href: '/faq' },
+              ].map((b) => (
+                <Link
+                  key={b.href}
+                  href={b.href}
+                  className="group flex items-center justify-between gap-4 px-6 py-5 bg-white border border-border rounded-lg hover:border-brown-dark hover:shadow-md transition-all"
+                >
+                  <span className="font-serif text-black" style={{ fontSize: '20px' }}>
+                    {b.label}
+                  </span>
+                  {b.external ? (
+                    <svg className="w-4 h-4 text-brown group-hover:text-brown-dark transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4 text-brown group-hover:text-brown-dark transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  )}
+                </Link>
+              ))}
+            </div>
+
+            {/* RIGHT — Journal Insights + indexing/standards */}
+            <div className="lg:col-span-4">
+              <p className="font-serif text-black mb-5" style={{ fontSize: '22px' }}>
+                Journal Insights
+              </p>
+
+              {/* Two key turnaround stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-cream-alt/50 rounded-lg p-4">
+                  <p className="font-serif text-brown-dark leading-none mb-2" style={{ fontSize: '36px' }}>
+                    7<span className="text-ink text-sm font-sans ml-1">days</span>
+                  </p>
+                  <p className="text-xs text-ink leading-snug">
+                    From submission to first decision
+                  </p>
+                </div>
+                <div className="bg-cream-alt/50 rounded-lg p-4">
+                  <p className="font-serif text-brown-dark leading-none mb-2" style={{ fontSize: '36px' }}>
+                    30<span className="text-ink text-sm font-sans ml-1">days</span>
+                  </p>
+                  <p className="text-xs text-ink leading-snug">
+                    From acceptance to publication
+                  </p>
+                </div>
+              </div>
+
+              {/* Standards rows */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-peach/20 flex items-center justify-center mt-0.5">
+                    <svg className="w-4 h-4 text-brown-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-black mb-1">Indexing</p>
+                    <p className="text-xs text-ink leading-snug">
+                      Crossref-registered DOIs. Active applications: DOAJ, Google Scholar, EBSCO. PubMed pathway underway.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-peach/20 flex items-center justify-center mt-0.5">
+                    <svg className="w-4 h-4 text-brown-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-black mb-1">COPE Standards</p>
+                    <p className="text-xs text-ink leading-snug">
+                      Editorial policies aligned with the Committee on Publication Ethics. Double-blind peer review.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-peach/20 flex items-center justify-center mt-0.5">
+                    <svg className="w-4 h-4 text-brown-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-black mb-1">Open Access</p>
+                    <p className="text-xs text-ink leading-snug">
+                      All articles published under CC BY 4.0. Authors retain copyright. APCs waived for 2026.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Latest Articles */}
       <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label text-ink">Latest Articles</span>
@@ -165,75 +286,6 @@ export default function HomePage() {
 
           <div className="mt-8 text-center sm:hidden">
             <Link href="/articles" className="btn-primary-light">See all articles</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. For Authors */}
-      <section className="bg-white" style={{ padding: '72px 24px' }}>
-        <div className="max-w-content mx-auto">
-          <span className="section-label text-ink">For Authors</span>
-
-          {/* Process steps */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-            {[
-              { step: '01', title: 'Submit', desc: 'Upload your manuscript with clinical images and patient consent documentation.', href: '/submit' },
-              { step: '02', title: 'Guide for Authors', desc: 'Everything you need to know about formatting, structure, and submission requirements.', href: '/guide-for-authors' },
-              { step: '03', title: 'Author FAQ', desc: 'Answers to common questions about peer review, APCs, timelines, and more.', href: '/faq' },
-            ].map((s) => (
-              <Link key={s.step} href={s.href} className="card group hover:border-tan hover:shadow-md cursor-pointer block">
-                <span className="text-peach-dark font-serif text-2xl">{s.step}</span>
-                <h3 className="font-serif text-xl text-black mt-3 mb-2 transition-colors">{s.title}</h3>
-                <p className="text-sm text-ink leading-relaxed">{s.desc}</p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm text-ink font-medium group-hover:text-black transition-colors">
-                  Learn more
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </Link>
-            ))}
-          </div>
-
-          {/* Metrics row */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-            {[
-              { value: '21', unit: 'days', label: 'First Decision', icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              )},
-              { value: '14', unit: 'days', label: 'To Publication', icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              )},
-              { value: '100%', unit: '', label: 'Open Access', icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" /></svg>
-              )},
-              { value: 'COPE', unit: '', label: 'Ethical Standards', icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
-              )},
-            ].map((m) => (
-              <div key={m.label} className="bg-white border border-border rounded-xl p-5 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-peach/20 text-ink mb-3">
-                  {m.icon}
-                </div>
-                <p className="font-serif text-black leading-none" style={{ fontSize: '28px' }}>
-                  {m.value}<span className="text-ink text-sm font-sans ml-1">{m.unit}</span>
-                </p>
-                <p className="text-xs text-ink mt-2 uppercase tracking-wider font-medium">{m.label}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Indexing badges */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {indexingBadges.map((badge) => (
-              <span
-                key={badge}
-                className="text-xs font-medium text-ink px-4 py-2 rounded-full"
-                style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
-              >
-                {badge}
-              </span>
-            ))}
           </div>
         </div>
       </section>
