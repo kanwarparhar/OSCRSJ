@@ -197,14 +197,18 @@ const generalSections = [
     label: 'Formatting',
     title: 'Formatting Requirements',
     items: [
-      'File Format: Microsoft Word (.docx)',
-      'Font: Times New Roman or Arial, 12-point',
-      'Spacing: double-spaced throughout',
-      'Line Numbers: continuous line numbering required',
-      'Margins: 1 inch (2.54 cm) on all sides',
-      'Page Numbers: bottom center of each page',
-      'Figures: submit as separate high-resolution files (TIFF, PNG, or JPEG, minimum 300 DPI) in addition to embedding in the manuscript. All patient identifiers must be removed. Faces must be masked unless explicit consent is provided. Use arrows or annotations to highlight pathology.',
-      'Tables: editable tables within the manuscript file (not images)',
+      'File Format: Microsoft Word (.docx). Use the OSCRSJ manuscript templates available at /templates — they have the correct format pre-applied.',
+      'Font: Times New Roman, 12-point. All text in black.',
+      'Style: no bold and no underline anywhere; headings render in italic only.',
+      'Spacing: double-spaced throughout.',
+      'Line Numbers: continuous line numbering, on every page.',
+      'Margins: 1 inch (2.54 cm) on all sides.',
+      'Page Numbers: bottom center of each page.',
+      'Headings: use Heading 1 (italic ALL CAPS), Heading 2 (italic Title Case), and Heading 3 (italic sentence case) only. Do not use Heading 4 or deeper.',
+      'References: Vancouver style with manual [1], [2], [3] numbering. References must sit on a separate page after a hard page break — do not use Word’s auto-numbered list feature.',
+      'Figures: submit each figure as a separate high-resolution image file (TIFF, PNG, or JPEG; minimum 300 DPI; 600 DPI recommended). Do NOT embed figures in the manuscript file. Add the figure legend in the Figure Legends section at the end of the manuscript and indicate placement with [Insert Figure 1 here] callouts in the body. Remove all patient identifiers; mask faces unless explicit consent is provided.',
+      'Tables: submit all tables in a single Tables.docx file (use the Tables template at /templates), one table per page, real Word tables (not images). Do NOT embed tables in the manuscript file. Indicate placement with [Insert Table 1 here] callouts in the body.',
+      'Title Page: separate document containing the manuscript title, running title, author byline, affiliations, and corresponding author block. The blinded manuscript file does NOT contain author-identifying information.',
     ],
   },
   {
@@ -224,11 +228,11 @@ const generalSections = [
     label: 'Ethics',
     title: 'Ethical Requirements',
     items: [
-      'Written patient consent for publication is required for all case-based submissions. You may use your institution\'s consent form or the OSCRSJ consent template.',
+      'Written patient consent for publication is required for all case-based submissions. The canonical OSCRSJ consent statements (5 variants — adult, pediatric, deceased, verbal-witnessed, IRB waiver) are at /templates#consent. Copy the variant matching your patient situation verbatim into your manuscript.',
+      'IRB approval or exemption must be documented for case series and review articles. The canonical OSCRSJ statements (2 branches — approved or exempt) are at /templates#irb. Copy the branch matching your institution’s determination verbatim.',
       'Research involving human subjects must comply with the Declaration of Helsinki.',
-      'IRB approval or exemption must be documented for case series and review articles.',
-      'All authors must disclose conflicts of interest.',
-      'CARE checklist is mandatory for case reports. JBI checklist is mandatory for case series.',
+      'All authors must disclose conflicts of interest. Disclosures live on the Title Page or in the submission portal’s Step 5 — not in the blinded manuscript.',
+      'CARE checklist is mandatory for case reports. JBI critical appraisal checklist is mandatory for case series. PRISMA recommended for systematic review articles.',
     ],
   },
   {
@@ -348,6 +352,9 @@ export default function GuideForAuthorsPage() {
             {/* Required sections */}
             <div className="bg-cream-alt/50 border border-border rounded-xl p-6 max-w-3xl">
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-3">Required Sections (in order)</p>
+              <p className="text-xs text-brown italic mb-3 leading-relaxed">
+                The Title Page is a <strong>separate document</strong> from the blinded manuscript — it contains the title, author byline, affiliations, and corresponding-author block. The blinded manuscript file begins at the Abstract. Patient consent and IRB statements are copied verbatim from <Link href="/templates#consent" className="text-brown-dark underline">/templates</Link>. Conflict of Interest, Funding, CRediT, and AI disclosures live on the Title Page or in the submission portal’s Step 5 — not in the blinded manuscript.
+              </p>
               <ol className="space-y-2">
                 {type.sections.map((sec, i) => (
                   <li key={i} className="flex gap-3 text-sm text-ink leading-relaxed">
