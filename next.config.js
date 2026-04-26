@@ -19,6 +19,11 @@ const nextConfig = {
       { source: '/topics/:slug', destination: '/articles?topic=:slug', permanent: true },
       // /topics index page also retired.
       { source: '/topics', destination: '/articles', permanent: true },
+      // /article-types retired 2026-04-26 in favor of consolidated specs on
+      // /guide-for-authors. Single source of truth for word counts, abstract
+      // limits, figure/table counts, and reporting checklists. Anchor link
+      // lands at the article-type comparison table.
+      { source: '/article-types', destination: '/guide-for-authors#article-types', permanent: true },
     ]
   },
 }

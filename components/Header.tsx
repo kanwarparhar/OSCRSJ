@@ -21,7 +21,6 @@ const navItems = [
     dropdown: [
       { label: 'Submit Article', href: '/submit' },
       { label: 'Guide for Authors', href: '/guide-for-authors' },
-      { label: 'Article Types', href: '/article-types' },
       { label: 'Templates', href: '/templates' },
       { label: 'For Reviewers', href: '/for-reviewers' },
       { label: 'Author FAQ', href: '/faq' },
