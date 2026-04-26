@@ -1,24 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
+import DiscountInquiryForm from './DiscountInquiryForm'
 
 export const metadata: Metadata = { title: 'APC & Fees' }
-
-const phases = [
-  { phase: 'Phase 1', period: 'Months 1–6 (2026)', price: '$0', label: 'Free', desc: 'Launch phase — all APCs waived. Build volume, attract early authors, establish the journal.' },
-  { phase: 'Phase 2', period: 'Months 7–18', price: '$299', label: 'Founding Rate', desc: 'Soft introduction of fees. Authors in this phase are "founding authors" and receive this rate for their next submission too.' },
-  { phase: 'Phase 3', period: 'Year 2–3', price: '$499', label: 'Standard Rate', desc: 'Competitive with comparable open-access orthopedic journals. Best value in the market.' },
-  { phase: 'Phase 4', period: 'Post-PubMed Indexing', price: '$699', label: 'Post-Indexing', desc: 'Once PubMed indexed, pricing steps up to reflect credibility — still well below major publishers.' },
-]
-
-const waivers = [
-  { group: 'Low-income country authors', discount: '100% waiver', note: 'World Bank low-income country list, updated annually' },
-  { group: 'Lower-middle-income country authors', discount: '50% discount', note: 'World Bank classification' },
-  { group: 'PGY-1 and PGY-2 residents', discount: '50% discount', note: 'Verification required' },
-  { group: 'Medical students (first author)', discount: '50% discount', note: 'Enrolled student verification required' },
-  { group: 'First-ever publication (any author)', discount: '25% discount', note: 'For authors with no prior publications' },
-  { group: 'Financial hardship', discount: 'Case-by-case', note: 'Apply via the waiver request form' },
-]
 
 export default function ApcPage() {
   const faqData = {
@@ -30,15 +15,15 @@ export default function ApcPage() {
         name: 'How much does it cost to publish in OSCRSJ?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ is currently offering free article processing for all manuscripts submitted before August 1, 2026. After this launch window, APCs will begin at $299.',
+          text: 'OSCRSJ is currently free to publish for all manuscripts submitted before August 1, 2026. After this launch window, the article processing charge is $499 per accepted manuscript.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Does OSCRSJ offer APC waivers?',
+        name: 'Does OSCRSJ offer discounts on the APC?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. OSCRSJ offers 100% waivers for authors from low-income countries, 50% for lower-middle-income countries and PGY-1/2 residents or medical students, and 25% for first-time published authors.',
+          text: 'Yes. We review discount requests on a case-by-case basis for medical students, trainees, and authors from lower-income settings. We do not want cost to be a barrier to publication — please use the discount inquiry form on our APC page to start the conversation.',
         },
       },
       {
@@ -65,71 +50,39 @@ export default function ApcPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Currently free banner */}
-        <div className="bg-peach text-white rounded-xl p-6 mb-12">
+        {/* Currently free banner — dark editorial brown */}
+        <div className="bg-brown-dark text-cream rounded-xl p-6 mb-12">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
+            <div className="w-10 h-10 bg-peach/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
             <div>
-              <p className="font-semibold text-lg">Free to Publish — Submit Before August 1, 2026</p>
-              <p className="text-white/80 text-sm mt-1">
+              <p className="font-semibold text-lg text-cream">Free to Publish — Submit Before August 1, 2026</p>
+              <p className="text-cream/80 text-sm mt-1">
                 All APCs are waived for manuscripts submitted before August 1, 2026. Submit now and publish at no cost during our launch window.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Pricing timeline */}
+        {/* Standard APC — single rate */}
         <section className="mb-12">
           <span className="section-label">Pricing</span>
-          <h2 className="section-heading mb-5">Pricing Roadmap</h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {phases.map((p, i) => (
-              <div key={p.phase} className={`border rounded-xl p-6 ${i === 0 ? 'border-peach/50 bg-tan/10' : 'border-border bg-white'}`}>
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <p className="text-xs font-semibold text-brown uppercase tracking-widest">{p.phase}</p>
-                    <p className="text-xs text-brown mt-0.5">{p.period}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-serif text-2xl font-bold text-brown">{p.price}</p>
-                    <p className={`text-xs font-semibold mt-0.5 ${i === 0 ? 'text-brown' : 'text-brown'}`}>{p.label}</p>
-                  </div>
-                </div>
-                <p className="text-sm text-ink leading-relaxed">{p.desc}</p>
+          <h2 className="section-heading mb-5">Standard Article Processing Charge</h2>
+          <div className="bg-white border border-border rounded-xl p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold text-brown uppercase tracking-widest">Per Accepted Manuscript</p>
+                <p className="text-sm text-ink mt-2 max-w-xl leading-relaxed">
+                  After August 1, 2026, OSCRSJ charges a flat article processing charge per accepted manuscript. The fee covers editorial coordination, peer review management, DOI registration, indexing submissions, hosting, and long-term preservation.
+                </p>
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Waivers */}
-        <section className="mb-12">
-          <span className="section-label">Financial Support</span>
-          <h2 className="section-heading mb-2">Waiver & Discount Policy</h2>
-          <p className="text-ink text-sm mb-5">
-            OSCRSJ is mission-driven. We don&apos;t want cost to be a barrier for trainees or authors from lower-income settings.
-          </p>
-          <div className="bg-white border border-border rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-cream-alt border-b border-border">
-                <tr>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest">Group</th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest">Discount</th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-brown uppercase tracking-widest hidden sm:table-cell">Notes</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {waivers.map((w) => (
-                  <tr key={w.group} className="hover:bg-cream-alt/50 transition-colors">
-                    <td className="px-5 py-3 text-ink">{w.group}</td>
-                    <td className="px-5 py-3 font-semibold text-brown">{w.discount}</td>
-                    <td className="px-5 py-3 text-brown hidden sm:table-cell">{w.note}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              <div className="text-left sm:text-right">
+                <p className="font-serif text-5xl font-bold text-brown-dark leading-none">$499</p>
+                <p className="text-xs text-brown mt-2">Charged on acceptance</p>
+              </div>
+            </div>
           </div>
           <p className="text-xs text-brown mt-3">
-            To apply for a waiver, email <a href="mailto:waivers@oscrsj.com" className="text-brown hover:underline">waivers@oscrsj.com</a> with your submission ID and supporting documentation.
+            Authors are never charged before acceptance. If your manuscript is rejected, there is no fee.
           </p>
         </section>
 
@@ -150,6 +103,16 @@ export default function ApcPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Discount Inquiry */}
+        <section className="mb-12">
+          <span className="section-label">Financial Support</span>
+          <h2 className="section-heading mb-3">Request a Discount</h2>
+          <p className="text-ink text-sm mb-6 max-w-2xl leading-relaxed">
+            We are committed to supporting authors who would otherwise face a financial barrier to publication — particularly medical students and authors from lower-income settings. We do not want cost to stand between rigorous orthopedic scholarship and the readers who need it. Tell us a little about your situation and our editorial team will follow up directly.
+          </p>
+          <DiscountInquiryForm />
         </section>
 
         <div className="text-center">

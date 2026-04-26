@@ -4,7 +4,7 @@ import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
   title: 'Author FAQ - OSCRSJ',
-  description: 'Frequently asked questions about submitting to OSCRSJ, peer review timelines, APCs, waivers, formatting, and publication.',
+  description: 'Frequently asked questions about submitting to OSCRSJ, peer review timelines, APCs, discounts, formatting, and publication.',
 }
 
 /* ------------------------------------------------------------------ */
@@ -79,11 +79,11 @@ const faqSections = [
       },
       {
         q: 'What is the Article Processing Charge (APC)?',
-        a: 'During our launch year (2026), the APC is waived entirely. Starting in 2027, the APC will be $299 per accepted article. See our APC page for the full fee schedule and future pricing.',
+        a: 'All manuscripts submitted before August 1, 2026 publish at no cost during our launch window. After that, the APC is a flat $499 per accepted manuscript. See our APC page for full details.',
       },
       {
-        q: 'Are APC waivers available?',
-        a: 'Yes. We offer: 100% waiver for authors from low-income countries (World Bank classification), 50% waiver for authors from lower-middle-income countries or PGY-1/PGY-2 residents and medical students, and 25% discount for authors publishing their first-ever peer-reviewed article. Waiver requests must be submitted at the time of manuscript submission.',
+        q: 'Are discounts on the APC available?',
+        a: 'Yes. We review discount requests on a case-by-case basis for medical students, trainees, and authors from lower-income settings. We do not want cost to be a barrier to publication — submit the discount inquiry form on our APC page or email waivers@oscrsj.com to start the conversation.',
       },
       {
         q: 'Is OSCRSJ open access?',
