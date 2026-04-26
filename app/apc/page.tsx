@@ -46,7 +46,7 @@ export default function ApcPage() {
         name: 'Is OSCRSJ open access?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. All articles published in OSCRSJ are immediately and permanently free to read, download, and share under a Creative Commons license.',
+          text: 'Yes. All articles published in OSCRSJ are immediately and permanently free to read, download, and share for non-commercial purposes under a Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND 4.0) license.',
         },
       },
     ],

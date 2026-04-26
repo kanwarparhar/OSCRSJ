@@ -235,7 +235,7 @@ export default function HomePage() {
                   <div>
                     <p className="text-sm font-medium text-black mb-1">Open Access</p>
                     <p className="text-xs text-ink leading-snug">
-                      All articles published under CC BY 4.0. Authors retain copyright. APCs waived for 2026.
+                      All articles published under CC BY-NC-ND 4.0. Authors retain copyright. APCs waived for 2026.
                     </p>
                   </div>
                 </div>

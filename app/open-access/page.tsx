@@ -26,14 +26,13 @@ export default function OpenAccessPage() {
           <span className="section-label">Licensing</span>
           <h2 className="section-heading mb-5">Creative Commons License</h2>
           <div className="bg-white border border-border rounded-xl p-6 mb-4">
-            <p className="font-semibold text-ink text-sm mb-2">CC BY 4.0 — Creative Commons Attribution 4.0 International</p>
+            <p className="font-semibold text-ink text-sm mb-2">CC BY-NC-ND 4.0 — Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International</p>
             <p className="text-sm text-ink leading-relaxed">
-              All articles are published under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. This means anyone is free to:
+              All articles are published under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0) license. Under this license, anyone is free to:
             </p>
             <ul className="mt-3 space-y-2 pl-4">
               {[
-                'Share — copy and redistribute the material in any medium or format',
-                'Adapt — remix, transform, and build upon the material for any purpose, including commercially',
+                'Share — copy and redistribute the material in any medium or format for non-commercial purposes',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-ink text-sm leading-relaxed">
                   <span className="text-brown mt-1 flex-shrink-0">&rarr;</span>
@@ -42,7 +41,7 @@ export default function OpenAccessPage() {
               ))}
             </ul>
             <p className="text-sm text-ink leading-relaxed mt-3">
-              The only requirement is appropriate credit — users must give proper attribution to the original authors and indicate if changes were made.
+              Under the following terms: appropriate credit must be given to the original authors with a link to the license, the material may not be used for commercial purposes, and if the material is remixed, transformed, or built upon, the modified material may not be distributed.
             </p>
           </div>
         </section>
@@ -55,8 +54,8 @@ export default function OpenAccessPage() {
               { title: 'Global Reach', desc: 'Your case report is accessible to surgeons, residents, and medical students worldwide — not just those at institutions with journal subscriptions.' },
               { title: 'Higher Visibility', desc: 'Open-access articles are read, downloaded, and cited more frequently than paywalled articles, increasing the impact of your work.' },
               { title: 'Educational Impact', desc: 'Trainees at community programs, international institutions, and under-resourced hospitals can access the same literature as those at academic medical centers.' },
-              { title: 'Funder Compliance', desc: 'Many funding agencies (NIH, NSF, Wellcome Trust) require open-access publication. CC BY 4.0 satisfies Plan S and other open-access mandates.' },
-              { title: 'Author Rights', desc: 'Authors retain copyright of their work. You can share, present, and reuse your article without seeking publisher permission.' },
+              { title: 'Author Rights', desc: 'Authors retain copyright of their work and the right to reuse their article in their own teaching, presentations, theses, and subsequent research without seeking publisher permission.' },
+              { title: 'Content Integrity', desc: 'The NoDerivatives clause means your work cannot be republished in altered or excerpted form, protecting the integrity of your clinical reporting and your professional reputation.' },
             ].map((item) => (
               <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">

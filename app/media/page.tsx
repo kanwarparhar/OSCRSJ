@@ -131,7 +131,7 @@ export default function MediaPage() {
                 The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is an independent, peer-reviewed, open-access journal founded in 2026 to give early-career orthopedic clinicians a credible, US-based venue for scholarly publication. OSCRSJ publishes case reports, case series, surgical techniques, images in orthopedics, letters to the editor, and invited review articles across every musculoskeletal subspecialty — trauma, sports medicine, spine, adult reconstruction, pediatric orthopedics, hand and wrist, foot and ankle, and orthopedic oncology.
               </p>
               <p className="text-ink leading-relaxed">
-                Every article receives a Crossref DOI at acceptance, is published open access under a CC-BY license, and is indexed in Google Scholar with an active pathway toward PubMed indexing. The journal operates a double-blind peer review process, publishes monthly, and waives article processing charges for trainees and authors in low-income countries. OSCRSJ is a COPE member committed to the highest standards of publication ethics.
+                Every article receives a Crossref DOI at acceptance, is published open access under a CC BY-NC-ND 4.0 license, and is indexed in Google Scholar with an active pathway toward PubMed indexing. The journal operates a double-blind peer review process, publishes monthly, and waives article processing charges for trainees and authors in low-income countries. OSCRSJ is a COPE member committed to the highest standards of publication ethics.
               </p>
             </div>
           </div>

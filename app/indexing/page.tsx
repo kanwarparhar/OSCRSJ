@@ -63,7 +63,7 @@ export default function IndexingPage() {
           <div className="grid sm:grid-cols-2 gap-4">
             {[
               { label: 'DOI Provider', value: 'Crossref' },
-              { label: 'License', value: 'CC BY 4.0 (Open Access)' },
+              { label: 'License', value: 'CC BY-NC-ND 4.0 (Open Access)' },
               { label: 'Publication Frequency', value: 'Monthly' },
               { label: 'Impact Factor', value: 'Not yet eligible (requires 2+ years of indexing)' },
               { label: 'Acceptance Rate', value: 'To be reported after first year' },

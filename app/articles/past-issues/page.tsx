@@ -33,7 +33,7 @@ export default function PastIssuesPage() {
               { label: 'Publication Frequency', value: 'Monthly issues' },
               { label: 'Format', value: 'Online, open access' },
               { label: 'Archiving', value: 'Permanent digital archive with DOIs' },
-              { label: 'Access', value: 'Free to read, download, and share (CC BY 4.0)' },
+              { label: 'Access', value: 'Free to read, download, and share for non-commercial purposes (CC BY-NC-ND 4.0)' },
             ].map((fact) => (
               <div key={fact.label} className="bg-white border border-border rounded-xl p-6">
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest">{fact.label}</p>

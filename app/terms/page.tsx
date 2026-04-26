@@ -36,14 +36,15 @@ export default function TermsPage() {
             <span className="section-label">Intellectual Property</span>
             <h2 className="section-heading mb-3">Copyright & Licensing</h2>
             <p className="text-ink mb-3">
-              All articles published in OSCRSJ are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). This means:
+              All articles published in OSCRSJ are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0). This means:
             </p>
             <ul className="space-y-2 pl-4 mb-3">
               {[
                 'Authors retain copyright of their published work',
-                'Anyone may read, download, share, and adapt published articles',
+                'Anyone may read, download, and share published articles for non-commercial purposes',
                 'Proper attribution to the original authors must be given',
-                'Commercial use is permitted under CC BY 4.0',
+                'Commercial use of the article is not permitted without the authors’ written permission',
+                'The article may not be remixed, transformed, or built upon (no derivative works)',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">&rarr;</span>
@@ -68,7 +69,7 @@ export default function TermsPage() {
                 'The manuscript is not under consideration by another journal',
                 'All authors have read and approved the final manuscript',
                 'Appropriate patient consent and ethical approvals have been obtained',
-                'Upon acceptance, the article will be published under CC BY 4.0',
+                'Upon acceptance, the article will be published under CC BY-NC-ND 4.0',
                 'Article processing charges (APCs) will be paid according to the current fee schedule',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
