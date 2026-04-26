@@ -107,7 +107,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. For Authors — 3-column journal layout (no section heading; equal-height columns) */}
-      <section className="bg-white" style={{ padding: '72px 24px' }}>
+      <section className="bg-white" style={{ padding: '72px 24px 28px' }}>
         <div className="max-w-content mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
             {/* LEFT — Journal cover (portrait, edge-to-edge cream) */}
@@ -116,8 +116,8 @@ export default function HomePage() {
               <img
                 src="/brand/cover-cream.png"
                 alt="OSCRSJ inaugural issue cover — Volume 1, Number 1, April 2026"
-                width={790}
-                height={1034}
+                width={1360}
+                height={1760}
                 className="w-full max-w-[300px] h-auto rounded-md shadow-md"
                 style={{ border: '1px solid var(--border)' }}
               />
@@ -224,7 +224,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. Latest Articles */}
-      <section className="bg-white" style={{ padding: '72px 24px' }}>
+      <section className="bg-white" style={{ padding: '28px 24px 72px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label text-ink">Latest Articles</span>
           <div className="flex items-end justify-between mb-8">
