@@ -106,39 +106,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. For Authors — 3-column journal layout */}
+      {/* 2. For Authors — 3-column journal layout (no section heading; equal-height columns) */}
       <section className="bg-white" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
-          <span className="section-label text-ink">For Authors</span>
-          <h2 className="section-heading text-black mb-10">Submit to OSCRSJ</h2>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-            {/* LEFT — Journal cover */}
-            <div className="lg:col-span-4 flex justify-center lg:justify-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
+            {/* LEFT — Journal cover (portrait, edge-to-edge cream) */}
+            <div className="lg:col-span-4 flex items-center justify-center lg:justify-start">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/brand/cover-cream.png"
                 alt="OSCRSJ inaugural issue cover — Volume 1, Number 1, April 2026"
-                width={924}
-                height={540}
-                className="w-full max-w-[320px] h-auto rounded-md shadow-md"
+                width={790}
+                height={1034}
+                className="w-full max-w-[300px] h-auto rounded-md shadow-md"
                 style={{ border: '1px solid var(--border)' }}
               />
             </div>
 
-            {/* MIDDLE — Action buttons */}
-            <div className="lg:col-span-4 flex flex-col gap-4">
+            {/* MIDDLE — Action buttons (4 buttons, slightly compact) */}
+            <div className="lg:col-span-4 flex flex-col justify-center gap-3">
               {[
                 { label: 'Submit Article', href: '/submit', external: true },
                 { label: 'Guide for Authors', href: '/guide-for-authors' },
                 { label: 'Author FAQ', href: '/faq' },
+                { label: 'All Articles', href: '/articles' },
               ].map((b) => (
                 <Link
                   key={b.href}
                   href={b.href}
-                  className="group flex items-center justify-between gap-4 px-6 py-5 bg-white border border-border rounded-lg hover:border-brown-dark hover:shadow-md transition-all"
+                  className="group flex items-center justify-between gap-4 px-5 py-4 bg-white border border-border rounded-lg hover:border-brown-dark hover:shadow-md transition-all"
                 >
-                  <span className="font-serif text-black" style={{ fontSize: '20px' }}>
+                  <span className="font-serif text-black" style={{ fontSize: '18px' }}>
                     {b.label}
                   </span>
                   {b.external ? (
@@ -154,12 +152,8 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* RIGHT — Journal Insights + indexing/standards */}
-            <div className="lg:col-span-4">
-              <p className="font-serif text-black mb-5" style={{ fontSize: '22px' }}>
-                Journal Insights
-              </p>
-
+            {/* RIGHT — Indexing / standards / open access (no heading) */}
+            <div className="lg:col-span-4 flex flex-col justify-center">
               {/* Two key turnaround stats */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-cream-alt/50 rounded-lg p-4">
