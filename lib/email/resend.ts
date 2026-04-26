@@ -48,6 +48,11 @@ export interface SendEmailParams {
   text?: string
   emailType: string
   manuscriptId?: string | null
+  // Optional override for the Reply-To header. When omitted, defaults to
+  // DEFAULT_REPLY_TO (the editorial Reply-To inbox). Set to the original
+  // sender's address on internal-notification emails so editorial replies
+  // route directly back to the visitor / author / inquirer.
+  replyTo?: string
 }
 
 export interface SendEmailResult {
@@ -58,7 +63,7 @@ export interface SendEmailResult {
 export async function sendEmail(
   params: SendEmailParams
 ): Promise<SendEmailResult> {
-  const { to, subject, html, text, emailType, manuscriptId } = params
+  const { to, subject, html, text, emailType, manuscriptId, replyTo } = params
 
   let messageId: string | null = null
   let sendError: string | null = null
@@ -70,7 +75,7 @@ export async function sendEmail(
       to,
       subject,
       html,
-      replyTo: DEFAULT_REPLY_TO,
+      replyTo: replyTo || DEFAULT_REPLY_TO,
       ...(text ? { text } : {}),
     })
 

@@ -1,6 +1,7 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, useTransition } from 'react'
+import { submitDiscountInquiry } from '@/lib/inquiry/actions'
 
 const CAREER_STAGES = [
   'Medical student',
@@ -20,26 +21,50 @@ export default function DiscountInquiryForm() {
   const [affiliation, setAffiliation] = useState('')
   const [submissionId, setSubmissionId] = useState('')
   const [message, setMessage] = useState('')
-  const [sent, setSent] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const subject = `Discount inquiry — ${firstName} ${lastName}`.trim()
-    const body = [
-      `Name: ${firstName} ${lastName}`,
-      `Email: ${email}`,
-      `Country: ${country}`,
-      `Career stage: ${careerStage}`,
-      `Affiliation: ${affiliation || '—'}`,
-      `Submission ID (if any): ${submissionId || '—'}`,
-      '',
-      'Reason for request:',
-      message,
-    ].join('\n')
+    setErrorMessage(null)
 
-    const mailto = `mailto:waivers@oscrsj.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    window.location.href = mailto
-    setSent(true)
+    startTransition(async () => {
+      const result = await submitDiscountInquiry({
+        firstName,
+        lastName,
+        email,
+        country,
+        careerStage,
+        affiliation: affiliation || null,
+        submissionId: submissionId || null,
+        message,
+      })
+
+      if (result.error) {
+        setErrorMessage(result.error)
+        return
+      }
+      setSuccess(true)
+    })
+  }
+
+  if (success) {
+    return (
+      <div className="bg-white border border-border rounded-2xl p-8">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 mx-auto bg-peach/30 rounded-full flex items-center justify-center">
+            <svg className="w-6 h-6 text-brown-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="font-serif text-xl text-brown-dark">Inquiry received</h3>
+          <p className="text-sm text-ink leading-relaxed max-w-md mx-auto">
+            Thank you. A confirmation email is on its way to <strong>{email}</strong>, and a member of the editorial office will respond within 2 business days.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -140,6 +165,7 @@ export default function DiscountInquiryForm() {
           <textarea
             rows={5}
             required
+            minLength={20}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40 resize-none"
@@ -147,16 +173,19 @@ export default function DiscountInquiryForm() {
           />
         </div>
 
-        <button type="submit" className="btn-primary-light w-full justify-center">
-          Send Discount Inquiry
-        </button>
-
-        {sent && (
-          <p className="text-xs text-brown text-center mt-2">
-            Your email client should now be open with your message ready to send. If nothing happened, write to{' '}
-            <a href="mailto:waivers@oscrsj.com" className="underline">waivers@oscrsj.com</a> directly.
+        {errorMessage && (
+          <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            {errorMessage}
           </p>
         )}
+
+        <button
+          type="submit"
+          disabled={isPending}
+          className="btn-primary-light w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {isPending ? 'Sending…' : 'Send Discount Inquiry'}
+        </button>
 
         <p className="text-xs text-brown/80 text-center">
           Or email us directly at{' '}
