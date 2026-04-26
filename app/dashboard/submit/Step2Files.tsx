@@ -136,7 +136,7 @@ const REVISION_CATEGORIES: FileCategory[] = [
     accept: '.docx',
     maxSizeMB: 10,
     maxFiles: 1,
-    description: 'Updated Tables document if tables changed during revision. Single Word document, one table per page, real editable Word tables (not images). Accepted format: .docx (max 10 MB).',
+    description: 'Updated Tables file if tables changed during revision. Single Tables.docx, one table per page, real editable Word tables (not images). Accepted format: .docx (max 10 MB).',
   },
   {
     type: 'response_to_reviewers',
