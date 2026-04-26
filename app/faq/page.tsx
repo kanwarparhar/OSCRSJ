@@ -37,7 +37,7 @@ const faqSections = [
       },
       {
         q: 'How do I submit my manuscript?',
-        a: 'Currently, manuscripts can be submitted via email to submit@oscrsj.com. Include your manuscript (.docx), cover letter, figures as separate files, and any required checklists (CARE or JBI). Our online submission portal is under development.',
+        a: 'All submissions are handled through our online submission portal. Visit oscrsj.com/submit, register for a free author account (or sign in with your ORCID iD), and follow the 5-step submission wizard: choose your article type, upload your files (title page, blinded manuscript, figures, tables, reporting checklist), enter your manuscript details and keywords, add your co-authors and ICMJE contributions, and complete the declarations (conflicts of interest, funding, ethics, patient consent). Your draft is auto-saved at every step and you can return to finish later. The portal accepts .docx for manuscripts and TIFF/PNG/JPEG (≥300 DPI) for figures.',
       },
     ],
   },
