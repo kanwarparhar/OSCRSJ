@@ -352,7 +352,25 @@ export async function recordFile(params: {
     .select('*')
     .single()
 
-  if (error) return { error: `Failed to record file: ${error.message}` }
+  if (error) {
+    // The Storage write already succeeded on the client side. If the DB
+    // insert fails (most commonly: a file_type enum value that isn't
+    // present in the DB yet — e.g. title_page / tables before migration
+    // 014 was run), clean up the orphaned Storage object so the user's
+    // retry doesn't 409 with "The resource already exists" and so we
+    // don't accumulate dead bytes on the bucket. Best-effort: a cleanup
+    // failure is logged but not re-surfaced — the UI shows the original
+    // DB error which is the actionable one.
+    try {
+      await admin.storage.from('submissions').remove([storagePath])
+    } catch (cleanupErr) {
+      console.error(
+        '[recordFile] Storage cleanup after DB insert failure failed:',
+        cleanupErr
+      )
+    }
+    return { error: `Failed to record file: ${error.message}` }
+  }
 
   return { file: data as ManuscriptFileRow }
 }

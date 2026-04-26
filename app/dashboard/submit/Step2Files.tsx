@@ -47,21 +47,21 @@ const BASE_CATEGORIES: FileCategory[] = [
   },
   {
     type: 'tables',
-    label: 'Tables Document',
+    label: 'Tables',
     required: false,
     accept: '.docx',
     maxSizeMB: 10,
-    maxFiles: 1,
-    description: 'Separate document containing all manuscript tables (one table per page). Required only if your manuscript has tables. Use the OSCRSJ Tables template (download from /templates). Accepted format: .docx (max 10 MB).',
+    maxFiles: 10,
+    description: 'Upload one .docx file per table (one table per document). Required only if your manuscript has tables. Use the OSCRSJ Tables template (download from /templates). Up to 10 files, max 10 MB each.',
   },
   {
     type: 'figure',
-    label: 'Figures (image files)',
+    label: 'Figures',
     required: false,
-    accept: '.jpeg,.jpg,.png,.tiff,.tif',
+    accept: '.docx',
     maxSizeMB: 10,
     maxFiles: 10,
-    description: 'High-resolution figure images, one file per figure. For tables, use the separate Tables Document slot above. Accepted formats: .jpeg, .png, .tiff (max 10 MB each, up to 10 files).',
+    description: 'Upload one .docx file per figure (one figure per document, with caption). Required only if your manuscript has figures. Up to 10 files, max 10 MB each.',
   },
   {
     type: 'supplement',
@@ -131,12 +131,12 @@ const REVISION_CATEGORIES: FileCategory[] = [
   },
   {
     type: 'tables',
-    label: 'Revised Tables Document',
+    label: 'Revised Tables',
     required: false,
     accept: '.docx',
     maxSizeMB: 10,
-    maxFiles: 1,
-    description: 'Updated Tables document if tables changed during revision. Accepted format: .docx (max 10 MB).',
+    maxFiles: 10,
+    description: 'Updated Tables documents if any tables changed during revision. Upload one .docx per table. Up to 10 files, max 10 MB each.',
   },
   {
     type: 'response_to_reviewers',
@@ -149,12 +149,12 @@ const REVISION_CATEGORIES: FileCategory[] = [
   },
   {
     type: 'figure',
-    label: 'Revised Figures (image files)',
+    label: 'Revised Figures',
     required: false,
-    accept: '.jpeg,.jpg,.png,.tiff,.tif',
+    accept: '.docx',
     maxSizeMB: 10,
     maxFiles: 10,
-    description: 'Revised or additional figure images, one file per figure. For revised tables, use the separate Revised Tables Document slot above. Accepted formats: .jpeg, .png, .tiff (max 10 MB each).',
+    description: 'Revised or additional figure documents. Upload one .docx per figure (one figure per document, with caption). Up to 10 files, max 10 MB each.',
   },
   {
     type: 'ethics_approval',
@@ -257,11 +257,18 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
           prev.map(p => p.fileName === file.name ? { ...p, progress: 50 } : p)
         )
 
+        // Storage path is unique per (manuscript, version, file_type, seq).
+        // upsert: true protects against the failure mode where a previous
+        // attempt orphaned an object at this path (e.g. Storage write
+        // succeeded then recordFile failed — the typical cause is a
+        // missing enum value before migration 014 was run for the
+        // title_page / tables types). Retries cleanly overwrite the
+        // orphan instead of 409'ing with "The resource already exists".
         const { error: uploadError } = await supabase.storage
           .from('submissions')
           .upload(storagePath, file, {
             cacheControl: '3600',
-            upsert: false,
+            upsert: true,
           })
 
         if (uploadError) {
