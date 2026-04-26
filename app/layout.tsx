@@ -11,12 +11,12 @@ export const metadata: Metadata = {
     default: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
   },
   description:
-    'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series. Serving medical students, residents, and fellows worldwide.',
+    'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
   keywords: ['orthopedic surgery', 'case reports', 'open access', 'medical journal', 'orthopedics'],
   openGraph: {
     title: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
     description:
-      'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series. Serving medical students, residents, and fellows worldwide.',
+      'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
     url: 'https://www.oscrsj.com',
     siteName: 'OSCRSJ',
     type: 'website',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
     description:
-      'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series. Serving medical students, residents, and fellows worldwide.',
+      'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
   },
   icons: {
     icon: '/favicon.png',
@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
         foundingDate: '2026',
         description:
-          'Independent, peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series. Serves medical students, residents, and fellows worldwide.',
+          'Independent, peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
         // sameAs: [] — populate as social accounts launch (Arjun handoff)
       },
       {

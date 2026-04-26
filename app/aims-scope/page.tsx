@@ -61,7 +61,7 @@ export default function AimsScopePage() {
             <span className="section-label">Readership</span>
             <h2 className="section-heading mb-3">Target Audience</h2>
             <p className="text-ink">
-              OSCRSJ is designed for and authored by medical students, residents, fellows, and attending orthopedic surgeons. We are committed to being the most accessible, trainee-friendly peer-reviewed orthopedic journal in the United States — lowering the barrier to publishing without compromising the rigor of peer review.
+              OSCRSJ is designed for and authored by the global orthopedic surgery community. We are committed to being one of the most accessible peer-reviewed orthopedic journals — lowering the barrier to publishing without compromising the rigor of peer review.
             </p>
           </section>
 

@@ -260,7 +260,7 @@ A complete Next.js 14 website — **66 pages total** (35 existing + `/news` land
 - **Waiver policy:** 100% for low-income countries, 50% for lower-middle-income + PGY-1/2 residents/med students, 25% for first-ever publication
 - **Backend:** Custom LLM-powered submission system (not OJS) — to be built
 - **Goal:** PubMed indexing (~2-year path requiring monthly releases)
-- **Target audience:** US-based, med students / residents / fellows
+- **Target audience:** The global orthopedic surgery community — practicing surgeons, fellows, residents, students, and researchers (locked 2026-04-26 per Kanwar audience-reframe directive; replaces the prior trainee-only framing)
 - **Revenue projections:** ~$13K Y1 → ~$72K Y2 → ~$170K Y3
 
 ---

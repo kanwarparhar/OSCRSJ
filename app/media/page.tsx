@@ -116,19 +116,19 @@ export default function MediaPage() {
             <div>
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Short (one line)</p>
               <p className="text-ink leading-relaxed">
-                OSCRSJ is an independent, peer-reviewed, open-access orthopedic journal for medical students, residents, and fellows.
+                OSCRSJ is an independent, peer-reviewed, open-access orthopedic journal for the global orthopedic surgery community.
               </p>
             </div>
             <div>
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Medium (one paragraph)</p>
               <p className="text-ink leading-relaxed">
-                The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is an independent, peer-reviewed, open-access journal founded in 2026. OSCRSJ publishes case reports, case series, surgical techniques, and images in orthopedics across every musculoskeletal subspecialty. The journal is built specifically for trainees — medical students, residents, and fellows — and operates a fast, double-blind peer review process with a target of 30-day first decisions.
+                The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is an independent, peer-reviewed, open-access journal founded in 2026. OSCRSJ publishes case reports, case series, surgical techniques, and images in orthopedics across every musculoskeletal subspecialty for the global orthopedic surgery community, and operates a fast, double-blind peer review process with a target of 10-day first decisions.
               </p>
             </div>
             <div>
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Long (two paragraphs)</p>
               <p className="text-ink leading-relaxed mb-3">
-                The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is an independent, peer-reviewed, open-access journal founded in 2026 to give early-career orthopedic clinicians a credible, US-based venue for scholarly publication. OSCRSJ publishes case reports, case series, surgical techniques, images in orthopedics, letters to the editor, and invited review articles across every musculoskeletal subspecialty — trauma, sports medicine, spine, adult reconstruction, pediatric orthopedics, hand and wrist, foot and ankle, and orthopedic oncology.
+                The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is an independent, peer-reviewed, open-access journal founded in 2026 to give the global orthopedic surgery community a credible, US-based venue for scholarly publication. OSCRSJ publishes case reports, case series, surgical techniques, images in orthopedics, letters to the editor, and invited review articles across every musculoskeletal subspecialty — trauma, sports medicine, spine, adult reconstruction, pediatric orthopedics, hand and wrist, foot and ankle, and orthopedic oncology.
               </p>
               <p className="text-ink leading-relaxed">
                 Every article receives a Crossref DOI at acceptance, is published open access under a CC BY-NC-ND 4.0 license, and is indexed in Google Scholar with an active pathway toward PubMed indexing. The journal operates a double-blind peer review process, publishes monthly, and waives article processing charges for trainees and authors in low-income countries. OSCRSJ is a COPE member committed to the highest standards of publication ethics.

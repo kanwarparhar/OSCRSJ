@@ -14,7 +14,7 @@ export default function ApplyPage() {
       <PageHeader
         label="For Reviewers"
         title="Apply to Review"
-        subtitle="Join the OSCRSJ reviewer pool. We welcome medical students, residents, fellows, and attending orthopedic surgeons."
+        subtitle="Join the OSCRSJ reviewer pool. We welcome reviewers from across the global orthopedic surgery community."
       />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

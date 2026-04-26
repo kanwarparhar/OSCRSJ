@@ -101,7 +101,7 @@ export default function ForReviewersPage() {
             Peer review is the cornerstone of scientific publishing, and your expertise directly shapes the quality of OSCRSJ. As a reviewer, you serve two functions: advising the editorial team on whether a manuscript meets our standards for publication, and providing constructive feedback to help authors improve their work. Even manuscripts that require revision or rejection deserve thoughtful, respectful feedback.
           </p>
           <p className="text-ink leading-relaxed mt-3">
-            Many of our authors are medical students and residents submitting their first manuscript. Your review may shape their career in academic publishing.
+            OSCRSJ publishes work from across the global orthopedic surgery community, from first-time student authors to established researchers. Your review shapes the quality of the literature and the development of every author you evaluate.
           </p>
         </section>
 

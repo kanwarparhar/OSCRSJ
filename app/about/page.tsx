@@ -10,7 +10,7 @@ export default function AboutPage() {
       <PageHeader
         label="About the Journal"
         title="About OSCRSJ"
-        subtitle="An independent, peer-reviewed orthopedic journal for medical students, residents, and fellows."
+        subtitle="An independent, peer-reviewed orthopedic journal for the global orthopedic surgery community."
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -32,7 +32,7 @@ export default function AboutPage() {
           <h2 className="section-heading mb-4">Why OSCRSJ Exists</h2>
           <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8">
             <p className="text-ink leading-relaxed">
-              OSCRSJ exists to give medical students, residents, and fellows a credible, accessible, US-based venue to publish orthopedic case reports and case series. We believe that early-career clinicians produce important educational literature that deserves the same rigorous peer review — and lasting accessibility — as work from established researchers.
+              OSCRSJ exists to give the global orthopedic surgery community a credible, accessible, US-based venue to publish orthopedic case reports and case series. We believe that orthopedic clinicians at every career stage produce important educational literature that deserves rigorous peer review and lasting accessibility.
             </p>
           </div>
         </section>
@@ -80,7 +80,7 @@ export default function AboutPage() {
           <h2 className="section-heading mb-6">What Sets OSCRSJ Apart</h2>
           <div className="space-y-3">
             {[
-              { title: 'Trainee-focused', desc: 'We specifically encourage submissions from medical students, residents, and fellows — the authors most large journals underserve.' },
+              { title: 'Open to every career stage', desc: 'We welcome submissions from across the global orthopedic surgery community — practicing surgeons, fellows, residents, students, and researchers — without preference based on training level or institutional affiliation.' },
               { title: 'Fast peer review', desc: 'Our target: first decision within 10 days. We respect your time and career timeline.' },
               { title: 'Free to publish in 2026', desc: 'No APCs during our launch phase. We want to earn your trust before asking for payment.' },
               { title: 'Transparent process', desc: 'Clear submission guidelines, clear pricing, clear peer review criteria. No surprises.' },

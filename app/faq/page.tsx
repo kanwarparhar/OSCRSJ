@@ -17,7 +17,7 @@ const faqSections = [
     questions: [
       {
         q: 'Who can submit to OSCRSJ?',
-        a: 'Anyone involved in orthopedic surgery or musculoskeletal medicine, including medical students, residents, fellows, attending surgeons, and allied health professionals. We particularly welcome submissions from trainees. All submissions must have at least one supervising physician as a co-author.',
+        a: 'Anyone in the global orthopedic surgery community — practicing orthopedic surgeons, fellows, residents, medical students, researchers, and allied health professionals involved in musculoskeletal care. All submissions must have at least one supervising physician as a co-author.',
       },
       {
         q: 'What types of articles does OSCRSJ accept?',

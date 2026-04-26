@@ -81,7 +81,7 @@ export default function IndexingPage() {
           <span className="section-label">Why It Matters</span>
           <h2 className="section-heading mb-3">Why Indexing Matters</h2>
           <p className="text-ink leading-relaxed">
-            Indexing in databases like PubMed and Scopus makes your published work discoverable to the global medical community. For trainees, PubMed-indexed publications carry significant weight on residency and fellowship applications. We are building OSCRSJ with the explicit goal of achieving PubMed indexing within two years — and every article published now contributes to that track record.
+            Indexing in databases like PubMed and Scopus makes your published work discoverable to the global medical community. PubMed-indexed publications carry significant weight on academic CVs, faculty promotion files, and on residency and fellowship applications. We are building OSCRSJ with the explicit goal of achieving PubMed indexing within two years — and every article published now contributes to that track record.
           </p>
         </section>
 

@@ -495,7 +495,7 @@ export default function HomePage() {
             Raising the bar for orthopedic case reporting
           </h2>
           <p className="text-peach/50 text-sm mb-8 max-w-lg mx-auto">
-            Join a growing community of orthopedic trainees and faculty publishing rigorous, peer-reviewed case reports.
+            Join the global orthopedic surgery community publishing rigorous, peer-reviewed case reports.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/submit" className="btn-primary">

@@ -69,7 +69,7 @@ export default function SubmitPage() {
       <PageHeader
         label="For Authors"
         title="Submit a Manuscript"
-        subtitle="We welcome case reports and case series from medical students, residents, fellows, and attending surgeons."
+        subtitle="We welcome submissions from across the global orthopedic surgery community."
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
