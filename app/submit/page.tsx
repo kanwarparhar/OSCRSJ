@@ -4,62 +4,46 @@ import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = { title: 'Submit a Manuscript' }
 
-const steps = [
-  { step: '01', title: 'Prepare Your Manuscript', desc: 'Review the Guide for Authors and ensure your submission meets formatting and content requirements.' },
-  { step: '02', title: 'Create an Account', desc: 'Register for a free author account on our submission portal.' },
-  { step: '03', title: 'Submit Online', desc: 'Log in and use our 5-step submission wizard to upload your manuscript, add co-authors, and complete declarations.' },
-  { step: '04', title: 'Peer Review', desc: 'You\'ll receive an initial editorial response within 10 days of submission. If your manuscript advances to peer review, the full peer-reviewed decision typically follows within 30 days.' },
-  { step: '05', title: 'Revision & Acceptance', desc: 'Revise based on reviewer feedback. Once accepted, your article receives a DOI and is published.' },
-]
-
-const articleTypes = [
+const resourceLinks = [
   {
-    type: 'Case Report',
-    desc: 'A detailed report of one to three patients with a novel, rare, or instructive orthopedic case. CARE checklist required.',
-    maxWords: '2,000 words',
-    figures: 'Up to 8 figures',
-    tables: 'Up to 3 tables',
-    refs: 'Up to 25 references',
+    title: 'Guide for Authors',
+    desc: 'Article-type specifications, manuscript structure, formatting, references, ethics, and reporting checklists. The canonical reference for every submission.',
+    href: '/guide-for-authors',
   },
   {
-    type: 'Case Series',
-    desc: 'A report of four or more patients sharing common features, analyzed collectively for patterns or outcomes. JBI checklist required.',
-    maxWords: '3,000 words',
-    figures: 'Up to 10 figures',
-    tables: 'Up to 5 tables',
-    refs: 'Up to 40 references',
+    title: 'Manuscript Templates',
+    desc: 'Downloadable Word templates and worked examples for every article type. Pre-formatted to OSCRSJ specifications (Times New Roman 12pt, double-spaced, line numbering on, italic-only headings).',
+    href: '/templates',
   },
   {
-    type: 'Surgical Technique',
-    desc: 'A new, modified, or improved operative technique with step-by-step description and intraoperative figures. Video links encouraged.',
-    maxWords: '1,500 words',
-    figures: '4–10 figures',
-    tables: 'Up to 2 tables',
-    refs: '8–15 references',
+    title: 'Peer Review Process',
+    desc: 'How OSCRSJ evaluates manuscripts: double-blind review, two independent reviewers, decision categories, and turnaround targets.',
+    href: '/peer-review',
   },
   {
-    type: 'Images in Orthopedics',
-    desc: 'A brief, image-focused article presenting one to four striking clinical, radiographic, or intraoperative images with a concise teaching point.',
-    maxWords: '500 words',
-    figures: '1–4 images',
-    tables: 'No tables',
-    refs: 'Up to 5 references',
+    title: 'Editorial Policies',
+    desc: 'Patient consent, IRB approval, data availability, conflict of interest, authorship criteria (ICMJE), and AI disclosure requirements.',
+    href: '/editorial-policies',
   },
   {
-    type: 'Letter to the Editor',
-    desc: 'Brief commentary on a previously published OSCRSJ article. Reference the discussed article by DOI and state the point of agreement or disagreement.',
-    maxWords: '600 words',
-    figures: 'Up to 1 figure',
-    tables: 'Up to 1 table',
-    refs: 'Up to 5 references',
+    title: 'APC & Fees',
+    desc: 'Article processing charges, the launch-window waiver, and discount eligibility for low-income countries, lower-middle-income countries, and first-time authors.',
+    href: '/apc',
   },
   {
-    type: 'Review Article',
-    desc: 'A comprehensive review of a focused topic in orthopedic surgery. Invited only during Year 1; PRISMA recommended for systematic reviews.',
-    maxWords: '3,500 words',
-    figures: 'Up to 6 figures',
-    tables: 'Up to 4 tables',
-    refs: '20–60 references',
+    title: 'Open Access Policy',
+    desc: 'Licensing terms (CC BY-NC-ND 4.0), copyright retention, and reuse rights for authors and readers.',
+    href: '/open-access',
+  },
+  {
+    title: 'Author FAQ',
+    desc: 'Common questions on submission, peer review, formatting, ethics, and post-publication. Start here if you are unsure about any submission step.',
+    href: '/faq',
+  },
+  {
+    title: 'For Reviewers',
+    desc: 'Standards, expectations, and guidance for serving as a peer reviewer at OSCRSJ.',
+    href: '/for-reviewers',
   },
 ]
 
@@ -103,48 +87,28 @@ export default function SubmitPage() {
           </div>
         </div>
 
-        {/* Article types */}
+        {/* Resource grid — author-facing reference pages */}
         <section className="mb-12">
-          <span className="section-label">Article Types</span>
-          <h2 className="section-heading mb-6">What We Accept</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articleTypes.map((t) => (
-              <div key={t.type} className="bg-white border border-border rounded-xl p-6">
-                <h3 className="font-serif text-xl font-normal text-brown-dark mb-2">{t.type}</h3>
-                <p className="text-sm text-brown mb-4">{t.desc}</p>
-                <div className="space-y-1.5">
-                  {[t.maxWords, t.figures, t.tables, t.refs].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-brown">
-                      <svg className="w-3.5 h-3.5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs text-brown mt-4 italic">
-            Full specifications (abstract format, keywords, reporting checklists, structure) live on the <Link href="/guide-for-authors" className="underline hover:text-brown-dark">Guide for Authors</Link> — the canonical source.
+          <span className="section-label">Before You Submit</span>
+          <h2 className="section-heading mb-6">Author Resources</h2>
+          <p className="text-ink leading-relaxed mb-8 max-w-2xl">
+            Every page below contains information you should review before submitting. The Guide for Authors is the canonical reference; the rest are deep-dives on specific aspects of the submission and publication process.
           </p>
-        </section>
-
-        {/* Submission Steps */}
-        <section className="mb-12">
-          <span className="section-label">How It Works</span>
-          <h2 className="section-heading mb-8">Submission Process</h2>
-          <div className="space-y-5">
-            {steps.map((s) => (
-              <div key={s.step} className="flex gap-5 items-start">
-                <div className="w-12 h-12 bg-tan/20 rounded-full flex-shrink-0 flex items-center justify-center border-2 border-peach/30">
-                  <span className="text-sm font-bold text-brown">{s.step}</span>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {resourceLinks.map((r) => (
+              <Link
+                key={r.title}
+                href={r.href}
+                className="group bg-white border border-border rounded-xl p-6 hover:border-tan hover:shadow-sm transition-all duration-200"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="font-serif text-lg font-normal text-brown-dark group-hover:text-brown transition-colors">{r.title}</h3>
+                  <svg className="w-4 h-4 text-brown flex-shrink-0 mt-1.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
-                <div className="pt-2">
-                  <h3 className="font-semibold text-ink">{s.title}</h3>
-                  <p className="text-sm text-brown mt-0.5">{s.desc}</p>
-                </div>
-              </div>
+                <p className="text-sm text-ink/80 mt-2 leading-relaxed">{r.desc}</p>
+              </Link>
             ))}
           </div>
         </section>
