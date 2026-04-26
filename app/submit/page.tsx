@@ -8,24 +8,58 @@ const steps = [
   { step: '01', title: 'Prepare Your Manuscript', desc: 'Review the Guide for Authors and ensure your submission meets formatting and content requirements.' },
   { step: '02', title: 'Create an Account', desc: 'Register for a free author account on our submission portal.' },
   { step: '03', title: 'Submit Online', desc: 'Log in and use our 5-step submission wizard to upload your manuscript, add co-authors, and complete declarations.' },
-  { step: '04', title: 'Peer Review', desc: 'Your submission undergoes double-blind peer review. You\'ll receive a decision within 30 days.' },
+  { step: '04', title: 'Peer Review', desc: 'Your submission undergoes double-blind peer review. You\'ll receive a decision within 10 days.' },
   { step: '05', title: 'Revision & Acceptance', desc: 'Revise based on reviewer feedback. Once accepted, your article receives a DOI and is published.' },
 ]
 
 const articleTypes = [
   {
     type: 'Case Report',
-    desc: 'A detailed report of a single patient or clinical case with unusual, novel, or educational value.',
-    maxWords: '2,500 words',
-    figures: 'Up to 6 figures/tables',
+    desc: 'A detailed report of one to three patients with a novel, rare, or instructive orthopedic case. CARE checklist required.',
+    maxWords: '2,000 words',
+    figures: 'Up to 8 figures',
+    tables: 'Up to 3 tables',
     refs: 'Up to 25 references',
   },
   {
     type: 'Case Series',
-    desc: 'A report of 3 or more cases sharing common features, analyzed collectively for patterns or outcomes.',
-    maxWords: '4,000 words',
-    figures: 'Up to 10 figures/tables',
+    desc: 'A report of four or more patients sharing common features, analyzed collectively for patterns or outcomes. JBI checklist required.',
+    maxWords: '3,000 words',
+    figures: 'Up to 10 figures',
+    tables: 'Up to 5 tables',
     refs: 'Up to 40 references',
+  },
+  {
+    type: 'Surgical Technique',
+    desc: 'A new, modified, or improved operative technique with step-by-step description and intraoperative figures. Video links encouraged.',
+    maxWords: '1,500 words',
+    figures: '4–10 figures',
+    tables: 'Up to 2 tables',
+    refs: '8–15 references',
+  },
+  {
+    type: 'Images in Orthopedics',
+    desc: 'A brief, image-focused article presenting one to four striking clinical, radiographic, or intraoperative images with a concise teaching point.',
+    maxWords: '500 words',
+    figures: '1–4 images',
+    tables: 'No tables',
+    refs: 'Up to 5 references',
+  },
+  {
+    type: 'Letter to the Editor',
+    desc: 'Brief commentary on a previously published OSCRSJ article. Reference the discussed article by DOI and state the point of agreement or disagreement.',
+    maxWords: '600 words',
+    figures: 'Up to 1 figure',
+    tables: 'Up to 1 table',
+    refs: 'Up to 5 references',
+  },
+  {
+    type: 'Review Article',
+    desc: 'A comprehensive review of a focused topic in orthopedic surgery. Invited only during Year 1; PRISMA recommended for systematic reviews.',
+    maxWords: '3,500 words',
+    figures: 'Up to 6 figures',
+    tables: 'Up to 4 tables',
+    refs: '20–60 references',
   },
 ]
 
@@ -73,13 +107,13 @@ export default function SubmitPage() {
         <section className="mb-12">
           <span className="section-label">Article Types</span>
           <h2 className="section-heading mb-6">What We Accept</h2>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {articleTypes.map((t) => (
               <div key={t.type} className="bg-white border border-border rounded-xl p-6">
                 <h3 className="font-serif text-xl font-normal text-brown-dark mb-2">{t.type}</h3>
                 <p className="text-sm text-brown mb-4">{t.desc}</p>
                 <div className="space-y-1.5">
-                  {[t.maxWords, t.figures, t.refs].map((item) => (
+                  {[t.maxWords, t.figures, t.tables, t.refs].map((item) => (
                     <div key={item} className="flex items-center gap-2 text-xs text-brown">
                       <svg className="w-3.5 h-3.5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -91,6 +125,9 @@ export default function SubmitPage() {
               </div>
             ))}
           </div>
+          <p className="text-xs text-brown mt-4 italic">
+            Full specifications (abstract format, keywords, reporting checklists, structure) live on the <Link href="/guide-for-authors" className="underline hover:text-brown-dark">Guide for Authors</Link> — the canonical source.
+          </p>
         </section>
 
         {/* Submission Steps */}

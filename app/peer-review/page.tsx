@@ -54,10 +54,10 @@ export default function PeerReviewPage() {
           <h2 className="section-heading mb-5">Review Process</h2>
           <div className="space-y-3">
             {[
-              { step: '1', title: 'Initial Editorial Screening', desc: 'The Editor-in-Chief screens submissions for scope, completeness, and basic quality. Manuscripts that do not meet minimum criteria are returned within 7 days with feedback.', time: '1–7 days' },
-              { step: '2', title: 'Reviewer Assignment', desc: 'Suitable manuscripts are assigned to at least two independent reviewers with expertise in the relevant orthopedic subspecialty.', time: '1–3 days' },
-              { step: '3', title: 'Peer Review', desc: 'Reviewers evaluate the manuscript for clinical significance, novelty, methodology, ethical compliance, and clarity of presentation. Structured review forms are used.', time: '14–21 days' },
-              { step: '4', title: 'Editorial Decision', desc: 'Based on reviewer recommendations, the editor issues one of four decisions: Accept, Minor Revisions, Major Revisions, or Reject.', time: '1–3 days' },
+              { step: '1', title: 'Initial Editorial Screening', desc: 'The Editor-in-Chief screens submissions for scope, completeness, and basic quality. Manuscripts that do not meet minimum criteria are returned within 2 days with feedback.', time: '1–2 days' },
+              { step: '2', title: 'Reviewer Assignment', desc: 'Suitable manuscripts are assigned to at least two independent reviewers with expertise in the relevant orthopedic subspecialty.', time: '1–2 days' },
+              { step: '3', title: 'Peer Review', desc: 'Reviewers evaluate the manuscript for clinical significance, novelty, methodology, ethical compliance, and clarity of presentation. Structured review forms are used.', time: '5–7 days' },
+              { step: '4', title: 'Editorial Decision', desc: 'Based on reviewer recommendations, the editor issues one of four decisions: Accept, Minor Revisions, Major Revisions, or Reject.', time: '1 day' },
               { step: '5', title: 'Revision & Resubmission', desc: 'Authors are given clear, constructive feedback and a deadline for revision. Revised manuscripts may undergo additional review.', time: '14 days' },
               { step: '6', title: 'Final Decision & Publication', desc: 'Accepted manuscripts receive copyediting, DOI assignment, and are published online.', time: '3–7 days' },
             ].map((item) => (
@@ -76,7 +76,7 @@ export default function PeerReviewPage() {
             ))}
           </div>
           <p className="text-sm text-brown mt-4 italic">
-            Target: first decision within 30 days of submission.
+            Target: first decision within 10 days of submission; 35 days from acceptance to publication.
           </p>
         </section>
 

@@ -27,7 +27,7 @@ export default function AimsScopePage() {
             <ul className="space-y-2 pl-4">
               {[
                 'Case Reports: detailed documentation of a single clinical case with unusual presentation, rare diagnosis, novel treatment approach, or important teaching value.',
-                'Case Series: a collection of three or more cases sharing meaningful clinical features, analyzed collectively to identify patterns, outcomes, or complications.',
+                'Case Series: a collection of four or more cases sharing meaningful clinical features, analyzed collectively to identify patterns, outcomes, or complications.',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">→</span>

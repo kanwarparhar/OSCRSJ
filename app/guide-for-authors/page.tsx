@@ -26,7 +26,7 @@ const articleTypes = [
       { label: 'Tables', value: 'Maximum 3' },
       { label: 'References', value: '10-25 in Vancouver style' },
       { label: 'Required Checklist', value: 'CARE checklist (mandatory, submit as supplementary file)' },
-      { label: 'Review Timeline', value: 'Target first decision within 2-3 weeks' },
+      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
     ],
     sections: [
       'Title Page: full title (max 20 words), running title (max 50 characters), all author names with affiliations and ORCID IDs, corresponding author email',
@@ -51,14 +51,14 @@ const articleTypes = [
       'A descriptive study reporting on the clinical details and outcomes of four or more patients with a similar diagnosis, treatment, or outcome. Case series at OSCRSJ should identify patterns, outcomes, or complications across multiple cases that contribute to clinical decision-making in orthopedic surgery.',
     specs: [
       { label: 'Word Limit', value: '3,000 words (excluding abstract, references, figure legends, and tables)' },
-      { label: 'Abstract', value: '350 words maximum, structured (Background, Methods, Results, Discussion, Conclusion)' },
+      { label: 'Abstract', value: '300 words maximum, structured (Background, Methods, Results, Discussion, Conclusion)' },
       { label: 'Keywords', value: '3-6 MeSH terms' },
       { label: 'Figures', value: 'Maximum 10' },
       { label: 'Tables', value: 'Maximum 5 (patient demographics/summary table strongly recommended)' },
       { label: 'References', value: '15-40 in Vancouver style' },
       { label: 'Required Checklist', value: 'JBI Critical Appraisal Checklist for Case Series (mandatory)' },
       { label: 'IRB', value: 'IRB approval or exemption statement required' },
-      { label: 'Review Timeline', value: 'Target first decision within 3-4 weeks' },
+      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -82,13 +82,13 @@ const articleTypes = [
       'Presents a new, modified, or improved operative technique with step-by-step description, illustrated with intraoperative photographs or diagrams. The technique should offer a clear advantage over existing approaches in terms of outcomes, efficiency, reproducibility, or safety.',
     specs: [
       { label: 'Word Limit', value: '1,500 words (excluding abstract, references, figure legends, tables)' },
-      { label: 'Abstract', value: '200 words maximum, unstructured' },
+      { label: 'Abstract', value: '300 words maximum, unstructured' },
       { label: 'Keywords', value: '3-5 MeSH terms' },
       { label: 'Figures', value: 'Minimum 4, maximum 10 (this is a visually-driven article type)' },
       { label: 'Tables', value: 'Maximum 2' },
       { label: 'References', value: '8-15 in Vancouver style' },
       { label: 'Supplementary', value: 'Video links (YouTube or similar) are strongly encouraged' },
-      { label: 'Review Timeline', value: 'Target first decision within 2-3 weeks' },
+      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -114,7 +114,7 @@ const articleTypes = [
       { label: 'Images', value: '1-4 images (this is the primary content). Minimum 300 DPI, 600 DPI recommended.' },
       { label: 'Tables', value: 'None' },
       { label: 'References', value: 'Maximum 5' },
-      { label: 'Review Timeline', value: 'Expedited: target 7-10 days' },
+      { label: 'Review Timeline', value: 'Expedited: target 7–10 days (faster than the 10-day journal default)' },
     ],
     sections: [
       'Title: descriptive, hints at the diagnosis or finding (max 15 words)',
@@ -135,7 +135,7 @@ const articleTypes = [
       { label: 'Abstract', value: 'Not required' },
       { label: 'Figures/Tables', value: 'Maximum 1 figure or 1 table' },
       { label: 'References', value: 'Maximum 5' },
-      { label: 'Review Timeline', value: 'Target 1-2 weeks' },
+      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
     ],
     sections: [
       'No formal section headings required',
@@ -151,14 +151,14 @@ const articleTypes = [
       'Comprehensive reviews of a focused topic in orthopedic surgery. During Year 1, review articles are accepted by editorial invitation only. Open submissions will begin in Year 2 after OSCRSJ establishes its credibility and indexing milestones.',
     specs: [
       { label: 'Word Limit', value: '3,500 words' },
-      { label: 'Abstract', value: '350 words maximum, structured (Background, Methods, Results, Conclusion)' },
+      { label: 'Abstract', value: '300 words maximum, structured (Background, Methods, Results, Conclusion)' },
       { label: 'Keywords', value: '3-6 MeSH terms' },
       { label: 'Figures', value: 'Maximum 6' },
       { label: 'Tables', value: 'Maximum 4' },
       { label: 'References', value: '20-60 in Vancouver style' },
       { label: 'Reporting Guideline', value: 'PRISMA checklist recommended for systematic reviews' },
       { label: 'Submission', value: 'By editorial invitation only during Year 1' },
-      { label: 'Review Timeline', value: 'Target first decision within 4-6 weeks' },
+      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -179,12 +179,12 @@ const articleTypes = [
 
 const comparisonRows = [
   { param: 'Word Limit', values: ['2,000', '3,000', '1,500', '500', '600', '3,500'] },
-  { param: 'Abstract', values: ['300 (structured)', '350 (structured)', '200 (unstructured)', 'None', 'None', '350 (structured)'] },
+  { param: 'Abstract', values: ['300 (structured)', '300 (structured)', '300 (unstructured)', 'None', 'None', '300 (structured)'] },
   { param: 'Max Figures', values: ['8', '10', '10', '4', '1', '6'] },
   { param: 'Max Tables', values: ['3', '5', '2', '0', '1', '4'] },
   { param: 'References', values: ['10-25', '15-40', '8-15', 'Max 5', 'Max 5', '20-60'] },
   { param: 'Checklist', values: ['CARE', 'JBI', 'N/A', 'N/A', 'N/A', 'PRISMA rec.'] },
-  { param: 'Review Target', values: ['2-3 wk', '3-4 wk', '2-3 wk', '7-10 d', '1-2 wk', '4-6 wk'] },
+  { param: 'Review Target', values: ['10 d', '10 d', '10 d', '7-10 d', '10 d', '10 d'] },
 ]
 
 /* ------------------------------------------------------------------ */

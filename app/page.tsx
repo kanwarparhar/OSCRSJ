@@ -180,7 +180,7 @@ export default function HomePage() {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-cream-alt/50 rounded-lg p-4">
                   <p className="font-serif text-brown-dark leading-none mb-2" style={{ fontSize: '36px' }}>
-                    7<span className="text-ink text-sm font-sans ml-1">days</span>
+                    10<span className="text-ink text-sm font-sans ml-1">days</span>
                   </p>
                   <p className="text-xs text-ink leading-snug">
                     From submission to first decision
@@ -188,7 +188,7 @@ export default function HomePage() {
                 </div>
                 <div className="bg-cream-alt/50 rounded-lg p-4">
                   <p className="font-serif text-brown-dark leading-none mb-2" style={{ fontSize: '36px' }}>
-                    30<span className="text-ink text-sm font-sans ml-1">days</span>
+                    35<span className="text-ink text-sm font-sans ml-1">days</span>
                   </p>
                   <p className="text-xs text-ink leading-snug">
                     From acceptance to publication

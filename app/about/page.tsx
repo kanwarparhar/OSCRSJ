@@ -81,7 +81,7 @@ export default function AboutPage() {
           <div className="space-y-3">
             {[
               { title: 'Trainee-focused', desc: 'We specifically encourage submissions from medical students, residents, and fellows — the authors most large journals underserve.' },
-              { title: 'Fast peer review', desc: 'Our target: first decision within 30 days. We respect your time and career timeline.' },
+              { title: 'Fast peer review', desc: 'Our target: first decision within 10 days. We respect your time and career timeline.' },
               { title: 'Free to publish in 2026', desc: 'No APCs during our launch phase. We want to earn your trust before asking for payment.' },
               { title: 'Transparent process', desc: 'Clear submission guidelines, clear pricing, clear peer review criteria. No surprises.' },
               { title: 'DOI-registered and indexed', desc: 'Every article receives a Crossref DOI. We are actively pursuing PubMed indexing.' },
