@@ -41,7 +41,6 @@ const navItems = [
     dropdown: [
       { label: 'Editorial Board', href: '/editorial-board' },
       { label: 'Aims & Scope', href: '/aims-scope' },
-      { label: 'Abstracting & Indexing', href: '/indexing' },
       { label: 'Review Process', href: '/peer-review' },
       { label: 'Subscribe', href: '/subscribe' },
     ],

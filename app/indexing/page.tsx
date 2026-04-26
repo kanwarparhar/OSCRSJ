@@ -2,7 +2,14 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Indexing & Metrics — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Indexing & Metrics — OSCRSJ',
+  // Page is intentionally hidden from search engines while we wait to have more
+  // substantive indexing milestones to report. File preserved for reactivation
+  // when DOAJ / PubMed / Scopus updates land. Re-enable indexing by removing the
+  // robots block + restoring the Header dropdown entry + the sitemap row.
+  robots: { index: false, follow: false },
+}
 
 export default function IndexingPage() {
   return (
