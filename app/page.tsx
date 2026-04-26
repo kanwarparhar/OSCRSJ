@@ -223,7 +223,93 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. Latest Articles */}
+      {/* 3. Editor-in-Chief — leadership credibility section */}
+      <section className="bg-white" style={{ padding: '72px 24px' }}>
+        <div className="max-w-content mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            {/* LEFT — Headshot in cream-alt frame, mirrors the journal-cover treatment in For Authors */}
+            <div className="lg:col-span-5 flex items-center justify-center lg:justify-start">
+              <div
+                className="bg-cream-alt rounded-md p-3 shadow-sm"
+                style={{ border: '1px solid var(--border)' }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/brand/madhan-jeyaraman.jpg"
+                  alt="Portrait of Dr. Madhan Jeyaraman, Editor-in-Chief of OSCRSJ"
+                  width={800}
+                  height={800}
+                  className="block w-full max-w-[320px] h-auto rounded-sm"
+                />
+              </div>
+            </div>
+
+            {/* RIGHT — Editorial content */}
+            <div className="lg:col-span-7 flex flex-col justify-center">
+              <span className="section-label text-ink mb-3">Editor-in-Chief</span>
+              <h2
+                className="font-serif text-brown-dark mb-2 leading-tight"
+                style={{ fontSize: 'clamp(32px, 4vw, 44px)', letterSpacing: '-0.01em' }}
+              >
+                Madhan Jeyaraman, MD, MBA, PhD
+              </h2>
+              <p className="text-brown text-base mb-6">
+                Associate Professor of Orthopaedics · Dr. MGR Educational and Research Institute, Chennai
+              </p>
+
+              {/* Stat block — matches Journal Insights styling in For Authors */}
+              <div className="grid grid-cols-2 gap-4 mb-6 max-w-md">
+                <div className="bg-cream-alt/50 rounded-lg p-4">
+                  <p
+                    className="font-serif text-brown-dark leading-none mb-2"
+                    style={{ fontSize: '36px' }}
+                  >
+                    460<span className="text-ink text-sm font-sans ml-1">+</span>
+                  </p>
+                  <p className="text-xs text-ink leading-snug">Peer-reviewed publications</p>
+                </div>
+                <div className="bg-cream-alt/50 rounded-lg p-4">
+                  <p
+                    className="font-serif text-brown-dark leading-none mb-2"
+                    style={{ fontSize: '36px' }}
+                  >
+                    4,295<span className="text-ink text-sm font-sans ml-1">+</span>
+                  </p>
+                  <p className="text-xs text-ink leading-snug">Citations</p>
+                </div>
+              </div>
+
+              <p className="text-ink text-base leading-relaxed mb-6 max-w-xl">
+                Leads OSCRSJ&apos;s editorial direction with an emphasis on rigorous methodology, scholarly quality, and substantive review.
+              </p>
+
+              <div>
+                <Link
+                  href="/editorial-board"
+                  className="inline-flex items-center gap-2 text-brown-dark hover:text-brown font-medium border-b border-brown-dark/30 hover:border-brown-dark pb-1 transition-colors"
+                >
+                  Meet the editorial board
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Latest Articles */}
       <section className="bg-white" style={{ padding: '28px 24px 72px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label text-ink">Latest Articles</span>
