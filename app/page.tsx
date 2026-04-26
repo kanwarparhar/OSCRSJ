@@ -36,6 +36,28 @@ const newsItems = [
 export default function HomePage() {
   return (
     <div className="bg-white">
+      {/* Scroll-driven fade-in for content sections (CSS-only, view-timeline-based; gracefully degrades to no-animation on older browsers). */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @supports (animation-timeline: view()) {
+              .scroll-fade-in {
+                animation: oscrsj-scroll-fade-in linear both;
+                animation-timeline: view();
+                animation-range: entry 0% entry 80%;
+              }
+              @keyframes oscrsj-scroll-fade-in {
+                from { opacity: 0; transform: translateY(24px); }
+                to { opacity: 1; transform: translateY(0); }
+              }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .scroll-fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+            }
+          `,
+        }}
+      />
+
       {/* 1. Hero — brand masthead lockup (eyebrow → OSCRSJ wordmark → diamond rule → italic subtitle) */}
       <section
         className="relative flex items-center justify-center text-center"
@@ -107,7 +129,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. For Authors — 3-column journal layout (no section heading; equal-height columns) */}
-      <section className="bg-white" style={{ padding: '72px 24px 28px' }}>
+      <section className="bg-white scroll-fade-in" style={{ padding: '72px 24px 28px' }}>
         <div className="max-w-content mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
             {/* LEFT — Journal cover (portrait, edge-to-edge cream) */}
@@ -223,25 +245,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Section divider — light brown line between content sections */}
+      <div className="bg-white px-6">
+        <div className="max-w-content mx-auto">
+          <hr style={{ border: 'none', borderTop: '1px solid rgba(153,126,103,0.3)', margin: 0 }} />
+        </div>
+      </div>
+
       {/* 3. Editor-in-Chief — leadership credibility section */}
-      <section className="bg-white" style={{ padding: '72px 24px' }}>
+      <section className="bg-white scroll-fade-in" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* LEFT — Headshot in cream-alt frame, mirrors the journal-cover treatment in For Authors */}
+            {/* LEFT — Headshot, no surrounding frame box */}
             <div className="lg:col-span-5 flex items-center justify-center lg:justify-start">
-              <div
-                className="bg-cream-alt rounded-md p-3 shadow-sm"
-                style={{ border: '1px solid var(--border)' }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/brand/madhan-jeyaraman.jpg"
-                  alt="Portrait of Dr. Madhan Jeyaraman, Editor-in-Chief of OSCRSJ"
-                  width={800}
-                  height={800}
-                  className="block w-full max-w-[320px] h-auto rounded-sm"
-                />
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/madhan-jeyaraman.jpg"
+                alt="Portrait of Dr. Madhan Jeyaraman, Editor-in-Chief of OSCRSJ"
+                width={800}
+                height={800}
+                className="block w-full max-w-[400px] h-auto rounded-md shadow-md"
+              />
             </div>
 
             {/* RIGHT — Editorial content */}
@@ -253,9 +277,11 @@ export default function HomePage() {
               >
                 Madhan Jeyaraman, MD, MBA, PhD
               </h2>
-              <p className="text-brown text-base mb-6">
-                Associate Professor of Orthopaedics · Dr. MGR Educational and Research Institute, Chennai
-              </p>
+              <div className="text-brown text-base mb-6 space-y-1 leading-relaxed">
+                <p>Professor of Orthopaedics · Dr. MGR Educational and Research Institute, Chennai</p>
+                <p>Founder Director · Agathisha Ortho Stemcell Clinic (AOSC)</p>
+                <p>Head, Research and Development · Sri Lalithambigai Medical College and Hospital</p>
+              </div>
 
               {/* Stat block — matches Journal Insights styling in For Authors */}
               <div className="grid grid-cols-2 gap-4 mb-6 max-w-md">
@@ -309,8 +335,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Section divider — light brown line between content sections */}
+      <div className="bg-white px-6">
+        <div className="max-w-content mx-auto">
+          <hr style={{ border: 'none', borderTop: '1px solid rgba(153,126,103,0.3)', margin: 0 }} />
+        </div>
+      </div>
+
       {/* 4. Latest Articles */}
-      <section className="bg-white" style={{ padding: '28px 24px 72px' }}>
+      <section className="bg-white scroll-fade-in" style={{ padding: '28px 24px 72px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label text-ink">Latest Articles</span>
           <div className="flex items-end justify-between mb-8">
@@ -370,8 +403,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Section divider — light brown line between content sections */}
+      <div className="bg-white px-6">
+        <div className="max-w-content mx-auto">
+          <hr style={{ border: 'none', borderTop: '1px solid rgba(153,126,103,0.3)', margin: 0 }} />
+        </div>
+      </div>
+
       {/* 5. News */}
-      <section className="bg-white" style={{ padding: '72px 24px' }}>
+      <section className="bg-white scroll-fade-in" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
           <span className="section-label text-ink">News &amp; Updates</span>
           <h2 className="section-heading text-black mb-8" style={{ fontSize: 'clamp(28px, 3.5vw, 36px)' }}>From the Field</h2>
@@ -416,8 +456,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Section divider — light brown line between content sections */}
+      <div className="bg-white px-6">
+        <div className="max-w-content mx-auto">
+          <hr style={{ border: 'none', borderTop: '1px solid rgba(153,126,103,0.3)', margin: 0 }} />
+        </div>
+      </div>
+
       {/* 6. Newsletter */}
-      <section className="bg-white" style={{ padding: '72px 24px' }}>
+      <section className="bg-white scroll-fade-in" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center max-w-lg">
           <span className="section-label text-ink">Stay Updated</span>
           <h2 className="section-heading text-black mb-2">Get notified when new issues are published</h2>
@@ -439,7 +486,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. CTA */}
-      <section style={{ backgroundColor: 'var(--dark)', padding: '72px 24px' }}>
+      <section className="scroll-fade-in" style={{ backgroundColor: 'var(--dark)', padding: '72px 24px' }}>
         <div className="max-w-content mx-auto text-center">
           <h2
             className="font-serif text-peach leading-tight mb-6"
