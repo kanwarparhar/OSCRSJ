@@ -49,7 +49,7 @@ export default function CurrentIssuePage() {
           <span className="section-label">Get Involved</span>
           <h2 className="section-heading mb-3">Be Part of Our First Issue</h2>
           <p className="text-ink leading-relaxed mb-5 max-w-xl mx-auto">
-            Publishing in a journal's inaugural issue is a unique opportunity. APCs are waived through the end of 2026. Submit your case report or case series today.
+            Publishing in a journal&apos;s inaugural issue is a unique opportunity. APCs are waived for all manuscripts submitted before August 1, 2026. Submit your case report or case series today.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>

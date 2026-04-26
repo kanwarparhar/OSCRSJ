@@ -69,28 +69,10 @@ export default function AimsScopePage() {
             <span className="section-label">Access</span>
             <h2 className="section-heading mb-3">Open Access Policy</h2>
             <p className="text-ink">
-              All articles published in OSCRSJ are freely available to read, download, and share for non-commercial purposes under a Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND 4.0) license. We do not charge readers or institutions for access. The journal is sustained through article processing charges (APCs), which are currently waived during our launch phase. We believe that publicly relevant medical literature should be publicly accessible.
+              All articles published in OSCRSJ are freely available to read, download, and share for non-commercial purposes under a Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND 4.0) license. We do not charge readers or institutions for access. The journal is sustained through article processing charges (APCs), which are waived for all manuscripts submitted before August 1, 2026. We believe that publicly relevant medical literature should be publicly accessible.
             </p>
           </section>
 
-          <section className="mb-12">
-            <span className="section-label">Exclusions</span>
-            <h2 className="section-heading mb-3">What We Do Not Publish</h2>
-            <ul className="space-y-2 pl-4">
-              {[
-                'Randomized controlled trials, cohort studies, or other study designs (these are better suited to primary research journals)',
-                'Review articles or systematic reviews',
-                'Editorials, commentaries, or opinion pieces',
-                'Animal studies or basic science research',
-                'Submissions without appropriate patient consent or IRB documentation',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <span className="text-brown mt-1 flex-shrink-0">&#10005;</span>
-                  <span className="text-ink">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-3">

@@ -243,7 +243,7 @@ export default function ImagingPrimerForResidents() {
       <div className="mt-12 bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 text-center">
         <h3 className="font-serif text-xl text-brown-dark mb-2">Publishing AI imaging research?</h3>
         <p className="text-sm text-ink/80 leading-relaxed mb-5 max-w-lg mx-auto">
-          OSCRSJ accepts case reports and series on novel AI-assisted diagnoses and surgical planning. Free to publish in 2026.
+          OSCRSJ accepts case reports and series on novel AI-assisted diagnoses and surgical planning. Free to publish for manuscripts submitted before August 1, 2026.
         </p>
         <Link href="/submit" className="btn-primary-light">
           Submit a manuscript

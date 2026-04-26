@@ -49,7 +49,7 @@ export default function AboutPage() {
               { label: 'Publisher', value: 'Independent (no commercial publisher)' },
               { label: 'DOI Registration', value: 'Crossref' },
               { label: 'Publication Frequency', value: 'Monthly issues' },
-              { label: 'Current APC', value: 'Free through end of 2026' },
+              { label: 'Current APC', value: 'Free for manuscripts submitted before August 1, 2026' },
               { label: 'Indexing Goal', value: 'PubMed (2-year pathway)' },
             ].map((fact) => (
               <div key={fact.label} className="flex items-start gap-3 bg-white border border-border rounded-xl p-6">
@@ -82,7 +82,7 @@ export default function AboutPage() {
             {[
               { title: 'Open to every career stage', desc: 'We welcome submissions from across the global orthopedic surgery community — practicing surgeons, fellows, residents, students, and researchers — without preference based on training level or institutional affiliation.' },
               { title: 'Fast peer review', desc: 'Our target: first decision within 10 days. We respect your time and career timeline.' },
-              { title: 'Free to publish in 2026', desc: 'No APCs during our launch phase. We want to earn your trust before asking for payment.' },
+              { title: 'Free to publish before Aug 1, 2026', desc: 'No APCs for manuscripts submitted during our launch window. We want to earn your trust before asking for payment.' },
               { title: 'Transparent process', desc: 'Clear submission guidelines, clear pricing, clear peer review criteria. No surprises.' },
               { title: 'DOI-registered and indexed', desc: 'Every article receives a Crossref DOI. We are actively pursuing PubMed indexing.' },
               { title: 'LLM-assisted operations', desc: 'Our backend is AI-augmented, which means faster turnarounds and less admin delay than traditional journals.' },

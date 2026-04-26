@@ -77,7 +77,7 @@ export default function OpenAccessPage() {
             OSCRSJ is funded through article processing charges (APCs) paid by authors upon acceptance. APCs cover the costs of peer review coordination, copyediting, DOI registration, web hosting, and long-term digital archiving.
           </p>
           <p className="text-ink leading-relaxed">
-            We offer generous waivers for trainees, first-time authors, and researchers from low- and middle-income countries. APCs are waived entirely during our 2026 launch phase. See our <Link href="/apc" className="text-brown hover:text-brown transition-colors font-medium">APC & Fees</Link> page for full details.
+            We offer generous waivers for first-time authors and researchers from low- and middle-income countries. APCs are waived entirely for manuscripts submitted before August 1, 2026. See our <Link href="/apc" className="text-brown hover:text-brown transition-colors font-medium">APC & Fees</Link> page for full details.
           </p>
         </section>
 

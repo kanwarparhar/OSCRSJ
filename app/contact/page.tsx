@@ -72,11 +72,11 @@ export default function ContactPage() {
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-semibold text-brown mb-1.5">First Name</label>
-                <input type="text" className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40" placeholder="Kanwar" />
+                <input type="text" className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40" placeholder="First name" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-brown mb-1.5">Last Name</label>
-                <input type="text" className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40" placeholder="Parhar" />
+                <input type="text" className="w-full text-sm px-4 py-2.5 bg-white border border-border rounded-lg focus:outline-none focus:border-peach focus:ring-1 focus:ring-peach/40" placeholder="Last name" />
               </div>
             </div>
             <div>

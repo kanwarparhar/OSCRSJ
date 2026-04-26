@@ -30,7 +30,7 @@ export default function ApcPage() {
         name: 'How much does it cost to publish in OSCRSJ?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ is currently offering free article processing for all submissions through the end of 2026. After this introductory period, APCs will begin at $299.',
+          text: 'OSCRSJ is currently offering free article processing for all manuscripts submitted before August 1, 2026. After this launch window, APCs will begin at $299.',
         },
       },
       {
@@ -70,9 +70,9 @@ export default function ApcPage() {
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
             <div>
-              <p className="font-semibold text-lg">Currently Free to Publish</p>
+              <p className="font-semibold text-lg">Free to Publish — Submit Before August 1, 2026</p>
               <p className="text-white/80 text-sm mt-1">
-                Through the end of 2026, all APCs are waived. Submit now and publish at no cost during our launch phase.
+                All APCs are waived for manuscripts submitted before August 1, 2026. Submit now and publish at no cost during our launch window.
               </p>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function ApcPage() {
         </section>
 
         <div className="text-center">
-          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Free in 2026</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Free Before Aug 1, 2026</Link>
         </div>
       </div>
     </div>

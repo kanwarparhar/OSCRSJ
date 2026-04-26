@@ -325,7 +325,7 @@ export default function AiInOrthopedicsLanding() {
             <span className="section-label">For Authors</span>
             <h3 className="font-serif text-xl text-brown-dark mb-2">Publishing AI research in orthopedics?</h3>
             <p className="text-sm text-ink/80 leading-relaxed mb-5">
-              OSCRSJ accepts case reports and series on novel AI-assisted diagnoses and surgical planning. Free to publish in 2026.
+              OSCRSJ accepts case reports and series on novel AI-assisted diagnoses and surgical planning. Free to publish for manuscripts submitted before August 1, 2026.
             </p>
             <Link href="/submit" className="btn-primary-light">
               Submit a manuscript

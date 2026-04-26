@@ -95,9 +95,9 @@ export default function SubmitPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-sm font-semibold text-brown">Free to Publish Through End of 2026</p>
+            <p className="text-sm font-semibold text-brown">Free to Publish — Submit Before August 1, 2026</p>
             <p className="text-sm text-brown mt-0.5">
-              During our launch phase, all article processing charges (APCs) are waived.{' '}
+              Article processing charges (APCs) are waived for all manuscripts submitted before August 1, 2026.{' '}
               <Link href="/apc" className="text-brown hover:text-brown underline">Learn about our APC policy →</Link>
             </p>
           </div>

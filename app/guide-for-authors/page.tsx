@@ -418,7 +418,7 @@ export default function GuideForAuthorsPage() {
         <div className="mt-12 bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-ink">Ready to submit?</p>
-            <p className="text-sm text-brown mt-0.5">Publishing is free through the end of 2026.</p>
+            <p className="text-sm text-brown mt-0.5">Publishing is free for manuscripts submitted before August 1, 2026.</p>
           </div>
           <div className="flex gap-3">
             <Link href="/submit" className="btn-primary-light flex-shrink-0">
