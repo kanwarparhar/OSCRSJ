@@ -24,18 +24,6 @@ export default function EditorialBoardPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Seal — anchors the Est. MMXXVI mood for the board page */}
-        <section className="mb-12 flex justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/seal-cream.svg"
-            alt="OSCRSJ journal seal — est. MMXXVI"
-            width={200}
-            height={200}
-            className="w-[160px] h-[160px] md:w-[200px] md:h-[200px]"
-          />
-        </section>
-
         {/* Editor-in-Chief */}
         <section className="mb-12">
           <span className="section-label">Leadership</span>
