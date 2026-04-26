@@ -1,10 +1,8 @@
 'use client'
 
 import { FormEvent, useState, useTransition } from 'react'
-import {
-  submitContactMessage,
-  CONTACT_SUBJECT_LABELS,
-} from '@/lib/inquiry/actions'
+import { submitContactMessage } from '@/lib/inquiry/actions'
+import { CONTACT_SUBJECT_LABELS } from '@/lib/inquiry/constants'
 
 export default function ContactForm() {
   const [firstName, setFirstName] = useState('')

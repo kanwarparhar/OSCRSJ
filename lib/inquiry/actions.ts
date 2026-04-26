@@ -206,6 +206,9 @@ export async function submitDiscountInquiry(
 // Subject → routing inbox map. Mirrors the four contact cards on
 // `/contact`. Update both surfaces in lock-step if the routing changes.
 
+// Keys MUST match CONTACT_SUBJECT_LABELS in `lib/inquiry/constants.ts` —
+// the dropdown on /contact is rendered from CONTACT_SUBJECT_LABELS, so any
+// label that's not also a routing key here will fail validation below.
 const CONTACT_INBOXES: Record<string, string> = {
   'General Inquiry': 'info@oscrsj.com',
   'Manuscript Submission': 'submit@oscrsj.com',
@@ -213,10 +216,6 @@ const CONTACT_INBOXES: Record<string, string> = {
   'APC Waiver Request': 'waivers@oscrsj.com',
   Other: 'info@oscrsj.com',
 }
-
-export const CONTACT_SUBJECT_LABELS: readonly string[] = Object.keys(
-  CONTACT_INBOXES
-)
 
 export interface ContactMessagePayload {
   firstName: string
