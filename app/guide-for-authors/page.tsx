@@ -26,7 +26,7 @@ const articleTypes = [
       { label: 'Tables', value: 'Maximum 3' },
       { label: 'References', value: '10-25 in Vancouver style' },
       { label: 'Required Checklist', value: 'CARE checklist (mandatory, submit as supplementary file)' },
-      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
+      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 2–3 weeks' },
     ],
     sections: [
       'Title Page: full title (max 20 words), running title (max 50 characters), all author names with affiliations and ORCID IDs, corresponding author email',
@@ -58,7 +58,7 @@ const articleTypes = [
       { label: 'References', value: '15-40 in Vancouver style' },
       { label: 'Required Checklist', value: 'JBI Critical Appraisal Checklist for Case Series (mandatory)' },
       { label: 'IRB', value: 'IRB approval or exemption statement required' },
-      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
+      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 3–4 weeks' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -88,7 +88,7 @@ const articleTypes = [
       { label: 'Tables', value: 'Maximum 2' },
       { label: 'References', value: '8-15 in Vancouver style' },
       { label: 'Supplementary', value: 'Video links (YouTube or similar) are strongly encouraged' },
-      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
+      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 2–3 weeks' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -114,7 +114,7 @@ const articleTypes = [
       { label: 'Images', value: '1-4 images (this is the primary content). Minimum 300 DPI, 600 DPI recommended.' },
       { label: 'Tables', value: 'None' },
       { label: 'References', value: 'Maximum 5' },
-      { label: 'Review Timeline', value: 'Expedited: target 7–10 days (faster than the 10-day journal default)' },
+      { label: 'Review Timeline', value: 'Expedited: full peer-reviewed decision target 7–10 days' },
     ],
     sections: [
       'Title: descriptive, hints at the diagnosis or finding (max 15 words)',
@@ -135,7 +135,7 @@ const articleTypes = [
       { label: 'Abstract', value: 'Not required' },
       { label: 'Figures/Tables', value: 'Maximum 1 figure or 1 table' },
       { label: 'References', value: 'Maximum 5' },
-      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
+      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 1–2 weeks' },
     ],
     sections: [
       'No formal section headings required',
@@ -158,7 +158,7 @@ const articleTypes = [
       { label: 'References', value: '20-60 in Vancouver style' },
       { label: 'Reporting Guideline', value: 'PRISMA checklist recommended for systematic reviews' },
       { label: 'Submission', value: 'By editorial invitation only during Year 1' },
-      { label: 'Review Timeline', value: 'Target first decision within 10 days' },
+      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 4–6 weeks' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -184,7 +184,7 @@ const comparisonRows = [
   { param: 'Max Tables', values: ['3', '5', '2', '0', '1', '4'] },
   { param: 'References', values: ['10-25', '15-40', '8-15', 'Max 5', 'Max 5', '20-60'] },
   { param: 'Checklist', values: ['CARE', 'JBI', 'N/A', 'N/A', 'N/A', 'PRISMA rec.'] },
-  { param: 'Review Target', values: ['10 d', '10 d', '10 d', '7-10 d', '10 d', '10 d'] },
+  { param: 'Review Target', values: ['2-3 wk', '3-4 wk', '2-3 wk', '7-10 d', '1-2 wk', '4-6 wk'] },
 ]
 
 /* ------------------------------------------------------------------ */

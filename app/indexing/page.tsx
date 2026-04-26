@@ -74,7 +74,7 @@ export default function IndexingPage() {
               { label: 'Publication Frequency', value: 'Monthly' },
               { label: 'Impact Factor', value: 'Not yet eligible (requires 2+ years of indexing)' },
               { label: 'Acceptance Rate', value: 'To be reported after first year' },
-              { label: 'Average Review Time', value: 'Target: 10 days to first decision · 35 days from acceptance to publication' },
+              { label: 'Average Review Time', value: 'Target: 10 days to initial editorial response · 30–35 days to full peer-reviewed decision · 35 days from acceptance to publication' },
             ].map((fact) => (
               <div key={fact.label} className="bg-white border border-border rounded-xl p-6">
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest">{fact.label}</p>

@@ -183,7 +183,7 @@ export default function HomePage() {
                     10<span className="text-ink text-sm font-sans ml-1">days</span>
                   </p>
                   <p className="text-xs text-ink leading-snug">
-                    From submission to first decision
+                    From submission to initial editorial response
                   </p>
                 </div>
                 <div className="bg-cream-alt/50 rounded-lg p-4">

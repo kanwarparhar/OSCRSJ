@@ -54,10 +54,10 @@ export default function PeerReviewPage() {
           <h2 className="section-heading mb-5">Review Process</h2>
           <div className="space-y-3">
             {[
-              { step: '1', title: 'Initial Editorial Screening', desc: 'The Editor-in-Chief screens submissions for scope, completeness, and basic quality. Manuscripts that do not meet minimum criteria are returned within 2 days with feedback.', time: '1–2 days' },
-              { step: '2', title: 'Reviewer Assignment', desc: 'Suitable manuscripts are assigned to at least two independent reviewers with expertise in the relevant orthopedic subspecialty.', time: '1–2 days' },
-              { step: '3', title: 'Peer Review', desc: 'Reviewers evaluate the manuscript for clinical significance, novelty, methodology, ethical compliance, and clarity of presentation. Structured review forms are used.', time: '5–7 days' },
-              { step: '4', title: 'Editorial Decision', desc: 'Based on reviewer recommendations, the editor issues one of four decisions: Accept, Minor Revisions, Major Revisions, or Reject.', time: '1 day' },
+              { step: '1', title: 'Initial Editorial Response', desc: 'The Editor-in-Chief screens submissions for scope, completeness, and basic quality. Authors receive a screening decision (advance to peer review or desk-reject with feedback) within 10 days of submission.', time: '≤ 10 days' },
+              { step: '2', title: 'Reviewer Assignment', desc: 'Suitable manuscripts are assigned to at least two independent reviewers with expertise in the relevant orthopedic subspecialty.', time: '1–3 days' },
+              { step: '3', title: 'Peer Review', desc: 'Reviewers evaluate the manuscript for clinical significance, novelty, methodology, ethical compliance, and clarity of presentation. Structured review forms are used.', time: '14–21 days' },
+              { step: '4', title: 'Editorial Decision', desc: 'Based on reviewer recommendations, the editor issues one of four decisions: Accept, Minor Revisions, Major Revisions, or Reject.', time: '1–3 days' },
               { step: '5', title: 'Revision & Resubmission', desc: 'Authors are given clear, constructive feedback and a deadline for revision. Revised manuscripts may undergo additional review.', time: '14 days' },
               { step: '6', title: 'Final Decision & Publication', desc: 'Accepted manuscripts receive copyediting, DOI assignment, and are published online.', time: '3–7 days' },
             ].map((item) => (
@@ -76,33 +76,8 @@ export default function PeerReviewPage() {
             ))}
           </div>
           <p className="text-sm text-brown mt-4 italic">
-            Target: first decision within 10 days of submission; 35 days from acceptance to publication.
+            Targets: initial editorial response within 10 days of submission · full peer-reviewed decision within 30–35 days · 35 days from acceptance to publication.
           </p>
-        </section>
-
-        <section className="mb-12">
-          <span className="section-label">Evaluation</span>
-          <h2 className="section-heading mb-5">Reviewer Criteria</h2>
-          <div className="space-y-3">
-            {[
-              { title: 'Clinical Significance', desc: 'Does the case contribute meaningful knowledge to orthopedic practice or education?' },
-              { title: 'Novelty', desc: 'Does the case present an unusual diagnosis, rare complication, or novel treatment approach?' },
-              { title: 'Methodology', desc: 'Is the case reported with sufficient detail, appropriate follow-up, and sound clinical reasoning?' },
-              { title: 'Ethical Compliance', desc: 'Does the manuscript include appropriate patient consent and IRB/ethics documentation?' },
-              { title: 'Reporting Quality', desc: 'Does the manuscript follow CARE guidelines and OSCRSJ formatting standards?' },
-              { title: 'Clarity', desc: 'Is the manuscript well-written, logically structured, and free of ambiguity?' },
-            ].map((item) => (
-              <div key={item.title} className="flex gap-3 bg-white border border-border rounded-xl p-6">
-                <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <div>
-                  <p className="font-semibold text-ink text-sm">{item.title}</p>
-                  <p className="text-sm text-ink mt-0.5">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
 
         <section className="mb-12">

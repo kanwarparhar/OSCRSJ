@@ -81,7 +81,7 @@ export default function AboutPage() {
           <div className="space-y-3">
             {[
               { title: 'Open to every career stage', desc: 'We welcome submissions from across the global orthopedic surgery community — practicing surgeons, fellows, residents, students, and researchers — without preference based on training level or institutional affiliation.' },
-              { title: 'Fast peer review', desc: 'Our target: first decision within 10 days. We respect your time and career timeline.' },
+              { title: 'Fast editorial response', desc: 'Our target: initial editorial response within 10 days of submission. We respect your time and career timeline.' },
               { title: 'Free to publish before Aug 1, 2026', desc: 'No APCs for manuscripts submitted during our launch window. We want to earn your trust before asking for payment.' },
               { title: 'Transparent process', desc: 'Clear submission guidelines, clear pricing, clear peer review criteria. No surprises.' },
               { title: 'DOI-registered and indexed', desc: 'Every article receives a Crossref DOI. We are actively pursuing PubMed indexing.' },

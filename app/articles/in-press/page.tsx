@@ -121,7 +121,7 @@ export default async function InPressPage() {
               },
               {
                 title: 'Double-Blind Peer Review',
-                desc: 'Reviewed by at least two orthopedic surgeons within 10 days of submission.',
+                desc: 'Initial editorial response within 10 days of submission; reviewed by at least two orthopedic surgeons over the following 14–21 days.',
               },
               {
                 title: 'Acceptance & DOI Assignment',

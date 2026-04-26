@@ -50,7 +50,7 @@ const faqSections = [
       },
       {
         q: 'How long does the review process take?',
-        a: 'Our target turnaround is 10 days from submission to first decision and 35 days from acceptance to publication. Initial editorial screening completes within 1–2 business days; if your manuscript passes screening, peer review runs in parallel by at least two reviewers and we issue an editorial decision within 10 days total. Images in Orthopedics undergo expedited review (7–10 days).',
+        a: 'Our target turnaround has two milestones: (1) initial editorial response within 10 days of submission — the Editor-in-Chief screens for scope, completeness, and basic quality and either advances the manuscript to peer review or returns it; (2) full peer-reviewed decision within 30 days of submission — at least two independent reviewers evaluate the manuscript over the following 14–21 days and the editor issues an Accept / Minor Revisions / Major Revisions / Reject decision. Once accepted, articles are published within 35 days. Images in Orthopedics undergo expedited review (7–10 days for the full decision).',
       },
       {
         q: 'How many reviewers evaluate each manuscript?',

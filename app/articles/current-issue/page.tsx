@@ -28,7 +28,7 @@ export default function CurrentIssuePage() {
           <div className="space-y-3">
             {[
               { step: '1', title: 'Accepting Submissions', desc: 'We are open for case report and case series submissions now. All subspecialties welcome.', active: true },
-              { step: '2', title: 'Peer Review', desc: 'Each submission undergoes double-blind peer review with a target first decision within 10 days.' },
+              { step: '2', title: 'Peer Review', desc: 'Each submission undergoes double-blind peer review. Authors receive an initial editorial response within 10 days; the full peer-reviewed decision typically follows within 30 days.' },
               { step: '3', title: 'Accepted Articles Published Online', desc: 'Accepted articles appear in "Articles in Press" with DOIs assigned immediately.' },
               { step: '4', title: 'Issue Compilation', desc: 'Once enough accepted articles are available, they will be compiled into Volume 1, Issue 1.' },
             ].map((item) => (

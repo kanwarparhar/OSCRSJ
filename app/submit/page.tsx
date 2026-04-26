@@ -8,7 +8,7 @@ const steps = [
   { step: '01', title: 'Prepare Your Manuscript', desc: 'Review the Guide for Authors and ensure your submission meets formatting and content requirements.' },
   { step: '02', title: 'Create an Account', desc: 'Register for a free author account on our submission portal.' },
   { step: '03', title: 'Submit Online', desc: 'Log in and use our 5-step submission wizard to upload your manuscript, add co-authors, and complete declarations.' },
-  { step: '04', title: 'Peer Review', desc: 'Your submission undergoes double-blind peer review. You\'ll receive a decision within 10 days.' },
+  { step: '04', title: 'Peer Review', desc: 'You\'ll receive an initial editorial response within 10 days of submission. If your manuscript advances to peer review, the full peer-reviewed decision typically follows within 30 days.' },
   { step: '05', title: 'Revision & Acceptance', desc: 'Revise based on reviewer feedback. Once accepted, your article receives a DOI and is published.' },
 ]
 
