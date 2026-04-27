@@ -75,7 +75,7 @@ export default function EditorialBoardPage() {
               { name: 'Bill K. Huang, MD', specialty: 'Adult Reconstruction' },
               { name: 'Sukhman Singh, MBBS, MS', specialty: 'Foot & Ankle' },
               { name: 'Hiroki Okamura, MD, PhD', specialty: 'Sports Medicine' },
-              { name: 'Dheeraj Makkar, MBBS, MS', specialty: 'Orthopedic Oncology' },
+              { name: 'Dheeraj Makkar, MD', specialty: 'Orthopedic Oncology' },
               { name: 'Shreya Chaudhuri, MD', specialty: 'Orthopedic Microbiology & Infectious Diseases' },
             ].map((member) => (
               <div key={member.specialty} className="bg-white border border-border rounded-xl p-6 flex items-start gap-4">

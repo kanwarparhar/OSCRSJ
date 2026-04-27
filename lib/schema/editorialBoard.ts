@@ -88,10 +88,10 @@ export const BOARD_MEMBERS: BoardMember[] = [
     medicalSpecialty: 'Sports Medicine',
   },
   {
-    name: 'Dheeraj Makkar, MBBS, MS',
+    name: 'Dheeraj Makkar, MD',
     givenName: 'Dheeraj',
     familyName: 'Makkar',
-    honorificSuffix: 'MBBS, MS',
+    honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Oncology',
   },
