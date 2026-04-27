@@ -99,7 +99,7 @@ export default function EditorialBoardPage() {
           <h2 className="section-heading mb-4">Associate Editors</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              { name: 'Vikash, MBBS, MS' },
+              { name: 'Vikash Raj, MBBS, MS' },
               { name: 'Abhijit Jayan, MBBS, MS' },
               { name: 'Damarla Meghana, MBBS, MS' },
               { name: 'Akshay Phupate, MBBS, MS' },

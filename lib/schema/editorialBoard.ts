@@ -105,9 +105,9 @@ export const BOARD_MEMBERS: BoardMember[] = [
   },
   // Associate Editors
   {
-    name: 'Vikash, MBBS, MS',
+    name: 'Vikash Raj, MBBS, MS',
     givenName: 'Vikash',
-    // mononym — no familyName provided; @id derivation falls back to givenName
+    familyName: 'Raj',
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
