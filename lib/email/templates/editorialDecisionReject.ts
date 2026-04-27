@@ -29,10 +29,12 @@ export interface EditorialDecisionRejectParams {
 }
 
 function renderLetterHtml(letter: string): string {
+  // v2 inset block: faint warm gray surface + brown-dark left accent.
+  // Matches the new details-list pattern in shared.ts.
   const safe = escapeHtml(letter)
   return `
-    <div style="margin: 0 0 24px 0; padding: 16px; background-color: #FFF5EB; border: 1px solid rgba(153,126,103,0.18); border-radius: 4px;">
-      <pre style="margin: 0; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 22px; color: #3d2a18; white-space: pre-wrap; word-break: break-word;">${safe}</pre>
+    <div style="margin: 0 0 24px 0; padding: 18px 22px; background-color: #F7F6F4; border-left: 3px solid #3d2a18;">
+      <pre style="margin: 0; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 22px; color: #1c0f05; white-space: pre-wrap; word-break: break-word;">${safe}</pre>
     </div>
   `
 }

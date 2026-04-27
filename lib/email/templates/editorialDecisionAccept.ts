@@ -26,13 +26,14 @@ export interface EditorialDecisionAcceptParams {
 }
 
 function renderLetterHtml(letter: string): string {
-  // Plain-text letter rendered inside a monospace, cream-tinted
-  // <pre> block. Escape first so markdown/HTML in the letter cannot
-  // leak into rendered email output.
+  // Plain-text decision letter rendered inside a monospace inset
+  // block. Faint warm-gray surface with a brown-dark left accent —
+  // matches the v2 details-list pattern from shared.ts. Escape first
+  // so markdown/HTML in the letter cannot leak into rendered email.
   const safe = escapeHtml(letter)
   return `
-    <div style="margin: 0 0 24px 0; padding: 16px; background-color: #FFF5EB; border: 1px solid rgba(153,126,103,0.18); border-radius: 4px;">
-      <pre style="margin: 0; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 22px; color: #3d2a18; white-space: pre-wrap; word-break: break-word;">${safe}</pre>
+    <div style="margin: 0 0 24px 0; padding: 18px 22px; background-color: #F7F6F4; border-left: 3px solid #3d2a18;">
+      <pre style="margin: 0; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 22px; color: #1c0f05; white-space: pre-wrap; word-break: break-word;">${safe}</pre>
     </div>
   `
 }

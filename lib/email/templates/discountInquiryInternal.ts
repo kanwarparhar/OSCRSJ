@@ -55,9 +55,9 @@ export function renderDiscountInquiryInternal(
   details.push(['Inquiry ID', inquiryId])
 
   const messageBlock = `
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 4px 0 24px 0; padding: 16px 20px; background-color: #FFFFFF; border: 1px solid rgba(153,126,103,0.18); border-radius: 4px; width: 100%;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 4px 0 24px 0; padding: 18px 22px; background-color: #F7F6F4; border-left: 3px solid #3d2a18; width: 100%;">
       <tr>
-        <td style="font-family: Georgia, 'Times New Roman', serif; font-size: 14px; line-height: 22px; color: #3d2a18; white-space: pre-wrap;">${escapeHtml(
+        <td style="font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 22px; color: #1c0f05; white-space: pre-wrap;">${escapeHtml(
           message
         )}</td>
       </tr>
