@@ -74,7 +74,9 @@ export default function EditorialBoardPage() {
               { name: 'Miguel A. Schmitz, MD', specialty: 'Spine' },
               { name: 'Bill K. Huang, MD', specialty: 'Adult Reconstruction' },
               { name: 'Sukhman Singh, MBBS, MS', specialty: 'Foot & Ankle' },
-              { name: 'Dheeraj Makkar, MBBS, MS', specialty: 'Sports Medicine' },
+              { name: 'Hiroki Okamura, MD, PhD', specialty: 'Sports Medicine' },
+              { name: 'Dheeraj Makkar, MBBS, MS', specialty: 'Orthopedic Oncology' },
+              { name: 'Shreya Chaudhuri, MD', specialty: 'Orthopedic Microbiology & Infectious Diseases' },
             ].map((member) => (
               <div key={member.specialty} className="bg-white border border-border rounded-xl p-6 flex items-start gap-4">
                 <div className="w-10 h-10 rounded-full bg-peach/20 flex-shrink-0 flex items-center justify-center">
@@ -100,6 +102,7 @@ export default function EditorialBoardPage() {
               { name: 'Vikash, MBBS, MS' },
               { name: 'Abhijit Jayan, MBBS, MS' },
               { name: 'Damarla Meghana, MBBS, MS' },
+              { name: 'Akshay Phupate, MBBS, MS' },
             ].map((member) => (
               <div key={member.name} className="bg-white border border-border rounded-xl p-6 flex items-start gap-4">
                 <div className="w-10 h-10 rounded-full bg-peach/20 flex-shrink-0 flex items-center justify-center">
