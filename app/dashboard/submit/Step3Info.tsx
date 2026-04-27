@@ -90,6 +90,13 @@ export default function Step3Info({
   }
 
   const removeSuggestedReviewer = (idx: number) => {
+    // Always keep at least one row visible — the field is required
+    // (≥1 reviewer suggestion). If the editor is removing the last
+    // populated row, blank it out instead of dropping it.
+    if (suggestedReviewers.length <= 1) {
+      onChange({ suggestedReviewers: [{ name: '', email: '', expertise: '' }] })
+      return
+    }
     onChange({ suggestedReviewers: suggestedReviewers.filter((_, i) => i !== idx) })
   }
 
@@ -110,7 +117,10 @@ export default function Step3Info({
   }
 
   const abstractWords = wordCount(abstract)
-  const abstractValid = abstractWords >= 150 && abstractWords <= 500
+  // 0–300 word window. Counter is green while non-zero and ≤300,
+  // red only when over 300. Empty (0 words) shows neutral brown.
+  const abstractOver = abstractWords > 300
+  const abstractValid = abstractWords > 0 && abstractWords <= 300
 
   return (
     <div>
@@ -140,7 +150,7 @@ export default function Step3Info({
           Abstract <span className="text-red-500">*</span>
         </label>
         <p className="text-xs text-brown mb-2">
-          Structured abstract: Background, Case Presentation, Discussion, Conclusion. 150 to 500 words.
+          Structured abstract: Background, Case Presentation, Discussion, Conclusion. 0 to 300 words.
         </p>
         <textarea
           value={abstract}
@@ -150,9 +160,9 @@ export default function Step3Info({
           className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
         />
         <p className={`text-xs mt-1 text-right ${
-          abstractWords === 0 ? 'text-brown' : abstractValid ? 'text-green-600' : 'text-red-500'
+          abstractWords === 0 ? 'text-brown' : abstractOver ? 'text-red-500' : abstractValid ? 'text-green-600' : 'text-brown'
         }`}>
-          {abstractWords} / 150-500 words
+          {abstractWords} / 0-300 words{abstractOver ? ' — please trim to 300 or fewer' : ''}
         </p>
       </div>
 
@@ -243,9 +253,13 @@ export default function Step3Info({
       {!hideReviewerSuggestions && (
       <>
       <div className="mb-6 border-t border-border pt-6">
-        <h3 className="font-serif text-lg text-brown-dark mb-1">Suggested Reviewers</h3>
+        <h3 className="font-serif text-lg text-brown-dark mb-1">
+          Suggested Reviewers <span className="text-red-500">*</span>
+        </h3>
         <p className="text-xs text-brown mb-4">
-          Optional. Suggest up to 5 reviewers with relevant expertise. These should not be co-authors or collaborators.
+          Suggest at least one reviewer with relevant expertise (up to 5). Provide name,
+          email, and area of expertise for each. Suggested reviewers should not be co-authors
+          or close collaborators on this work.
         </p>
 
         {suggestedReviewers.map((reviewer, idx) => (

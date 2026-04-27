@@ -148,6 +148,17 @@ function initialStateFromDraft(
   const noConflicts = !coiValue && (meta?.author_consent_certified !== undefined ? !coiValue : false)
   const noFunding = fundingValues.length === 0 && (meta?.author_consent_certified !== undefined ? true : false)
 
+  // Migration 016 — load any persisted Step 3 reviewer suggestions
+  // back into the wizard so a returning author sees what they
+  // entered last session. The required-≥1 gate means we always
+  // render at least one row; seed an empty row when the metadata
+  // is missing or empty.
+  const persistedSuggested = meta?.suggested_reviewers || []
+  const persistedNonPreferred = meta?.non_preferred_reviewers || []
+  const seededSuggested = persistedSuggested.length > 0
+    ? persistedSuggested
+    : [{ name: '', email: '', expertise: '' }]
+
   return {
     manuscriptId: m?.id || null,
     submissionId: m?.submission_id || null,
@@ -160,8 +171,8 @@ function initialStateFromDraft(
     abstract: m?.abstract || '',
     keywords: m?.keywords || [],
     subspecialty: m?.subspecialty || '',
-    suggestedReviewers: [],
-    nonPreferredReviewers: [],
+    suggestedReviewers: seededSuggested,
+    nonPreferredReviewers: persistedNonPreferred,
     authors,
     authorConsentCertified: meta?.author_consent_certified || false,
     conflictOfInterest: coiValue,
@@ -185,7 +196,21 @@ function computeInitialStep(state: WizardState): number {
   const hasMain = state.files.some(f => f.file_type === 'manuscript')
   const hasBlinded = state.files.some(f => f.file_type === 'blinded_manuscript')
   if (!hasMain || !hasBlinded) return 2
-  if (!state.title || !state.abstract || state.keywords.length < 3 || !state.subspecialty) return 3
+  const abstractWords = state.abstract.trim()
+    ? state.abstract.trim().split(/\s+/).length
+    : 0
+  const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim())
+  const hasOneReviewer = state.suggestedReviewers.some(
+    r => r.name.trim() && isEmail(r.email) && r.expertise.trim()
+  )
+  if (
+    !state.title ||
+    abstractWords === 0 ||
+    abstractWords > 300 ||
+    state.keywords.length < 3 ||
+    !state.subspecialty ||
+    !hasOneReviewer
+  ) return 3
   if (state.authors.length === 0 || !state.authorConsentCertified) return 4
   return 5
 }
@@ -444,11 +469,30 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
   const hasBlindedManuscript = state.files.some(f => f.file_type === 'blinded_manuscript')
   const step2Complete = hasMainManuscript && hasBlindedManuscript
 
+  // Step 3 abstract gate: required (non-empty) AND ≤300 words.
+  // Mirror Step3Info's word count.
+  const abstractWords = state.abstract.trim()
+    ? state.abstract.trim().split(/\s+/).length
+    : 0
+  const abstractOk = abstractWords > 0 && abstractWords <= 300
+
+  // Step 3 suggested-reviewer gate: ≥1 row with name + email + expertise
+  // all non-empty. Email validity is a soft check (basic shape) so the
+  // wizard never blocks on edge-case addresses; the editorial review
+  // catches anything malformed.
+  const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim())
+  const suggestedReviewersOk = isRevising
+    ? true
+    : state.suggestedReviewers.some(
+        r => r.name.trim() && isEmail(r.email) && r.expertise.trim()
+      )
+
   const step3Complete = !!(
     state.title &&
-    state.abstract &&
+    abstractOk &&
     state.keywords.length >= 3 &&
-    state.subspecialty
+    state.subspecialty &&
+    suggestedReviewersOk
   )
 
   const step4Complete = state.authors.length >= 1 && state.authorConsentCertified

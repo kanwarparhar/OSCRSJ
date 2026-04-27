@@ -187,6 +187,11 @@ export interface ManuscriptMetadataRow {
   ai_tools_details: string | null
   all_reviews_notified_at: string | null
   revision_reminder_sent_at: string | null
+  // Migration 016 — Step 3 reviewer suggestions persisted as jsonb.
+  // suggested_reviewers: 1..5 entries enforced client-side (≥1 required
+  // since 2026-04-26). non_preferred_reviewers: 0..3 entries.
+  suggested_reviewers: SuggestedReviewer[]
+  non_preferred_reviewers: NonPreferredReviewer[]
   created_at: string
   updated_at: string
 }
@@ -194,6 +199,17 @@ export interface ManuscriptMetadataRow {
 export interface CoAuthorDispute {
   email: string
   disputed_at: string
+}
+
+export interface SuggestedReviewer {
+  name: string
+  email: string
+  expertise: string
+}
+
+export interface NonPreferredReviewer {
+  name: string
+  reason: string
 }
 
 export interface PaymentRow {
@@ -507,6 +523,8 @@ export interface ManuscriptMetadataInsert {
   all_authors_agreed?: boolean
   ai_tools_used?: boolean
   ai_tools_details?: string | null
+  suggested_reviewers?: SuggestedReviewer[]
+  non_preferred_reviewers?: NonPreferredReviewer[]
 }
 
 export interface PaymentInsert {

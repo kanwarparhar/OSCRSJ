@@ -60,17 +60,43 @@ export default async function AdminManuscriptsPage() {
 
   return (
     <div className="space-y-6 pb-24">
-      <div>
-        <p className="text-xs uppercase tracking-widest text-brown mb-1">
-          Admin
-        </p>
-        <h1 className="font-serif text-3xl text-brown-dark">Manuscripts</h1>
-        <p className="text-sm text-brown mt-2 max-w-2xl">
-          All submitted manuscripts. Open a row to view the manuscript
-          metadata and invite reviewers from the active reviewer pool. Select
-          multiple rows to issue the same decision across a batch &mdash;
-          typically used for desk-reject sweeps after a call for papers.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-brown mb-1">
+            Admin
+          </p>
+          <h1 className="font-serif text-3xl text-brown-dark">Manuscripts</h1>
+          <p className="text-sm text-brown mt-2 max-w-2xl">
+            All submitted manuscripts. Open a row to view the manuscript
+            metadata and invite reviewers from the active reviewer pool. Select
+            multiple rows to issue the same decision across a batch &mdash;
+            typically used for desk-reject sweeps after a call for papers.
+          </p>
+        </div>
+
+        {/* Suggested-reviewer export — server route enforces editor/admin
+            role before streaming the .xlsx. Plain anchor download (no
+            client-side fetch needed). */}
+        <a
+          href="/api/admin/exports/suggested-reviewers"
+          download
+          className="inline-flex items-center gap-2 rounded-full border border-brown/20 bg-white px-4 py-2 text-xs font-medium text-brown hover:bg-cream-alt transition-colors"
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
+            />
+          </svg>
+          Download suggested reviewers (.xlsx)
+        </a>
       </div>
 
       {error ? (

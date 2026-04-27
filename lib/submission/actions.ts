@@ -235,7 +235,16 @@ export async function saveManuscriptInfo(params: {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  const { manuscriptId, title, abstract, keywords, subspecialty, noteToEditor } = params
+  const {
+    manuscriptId,
+    title,
+    abstract,
+    keywords,
+    subspecialty,
+    suggestedReviewers,
+    nonPreferredReviewers,
+    noteToEditor,
+  } = params
 
   const { error } = await (supabase.from('manuscripts') as any)
     .update({
@@ -249,6 +258,55 @@ export async function saveManuscriptInfo(params: {
     .eq('corresponding_author_id', user.id)
 
   if (error) return { error: 'Failed to save manuscript info' }
+
+  // Persist suggested + non-preferred reviewer arrays into
+  // manuscript_metadata. Until migration 016 these were collected
+  // in the UI but silently dropped server-side. We use the admin
+  // client because RLS for manuscript_metadata follows the same
+  // ownership pattern as saveDeclarations and we already verified
+  // ownership above via the manuscripts UPDATE returning no error.
+  if (suggestedReviewers !== undefined || nonPreferredReviewers !== undefined) {
+    const admin = createAdminClient()
+
+    // Confirm ownership before admin-client write (the manuscripts
+    // UPDATE above proves it but be explicit for the metadata path).
+    const { data: ownsMs } = await supabase
+      .from('manuscripts')
+      .select('id')
+      .eq('id', manuscriptId)
+      .eq('corresponding_author_id', user.id)
+      .maybeSingle()
+    if (!ownsMs) return { error: 'Manuscript not found' }
+
+    const reviewerFields: Record<string, unknown> = {}
+    if (suggestedReviewers !== undefined) {
+      // Drop fully-empty rows defensively — the UI also filters but
+      // belt + suspenders for any draft state that snuck through.
+      reviewerFields.suggested_reviewers = suggestedReviewers.filter(
+        r => r.name.trim() || r.email.trim() || r.expertise.trim()
+      )
+    }
+    if (nonPreferredReviewers !== undefined) {
+      reviewerFields.non_preferred_reviewers = nonPreferredReviewers.filter(
+        r => r.name.trim() || r.reason.trim()
+      )
+    }
+
+    const { data: existingMeta } = await admin
+      .from('manuscript_metadata')
+      .select('id')
+      .eq('manuscript_id', manuscriptId)
+      .maybeSingle()
+
+    if (existingMeta) {
+      await (admin.from('manuscript_metadata') as any)
+        .update(reviewerFields)
+        .eq('manuscript_id', manuscriptId)
+    } else {
+      await (admin.from('manuscript_metadata') as any)
+        .insert({ manuscript_id: manuscriptId, ...reviewerFields })
+    }
+  }
 
   return { success: true }
 }
