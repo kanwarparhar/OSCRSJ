@@ -72,7 +72,10 @@ export interface WizardState {
   ethicsApprovalNumber: string
   clinicalTrial: boolean
   clinicalTrialId: string
-  aiToolsUsed: boolean
+  // AI disclosure tri-state. null = not yet answered (must pick one
+  // of the two radios on Step 5 before submitting). boolean once the
+  // editor has explicitly chosen.
+  aiToolsUsed: boolean | null
   aiToolsDetails: string
   noteToEditor: string
 }
@@ -185,7 +188,18 @@ function initialStateFromDraft(
     ethicsApprovalNumber: meta?.ethics_approval_number || '',
     clinicalTrial: !!meta?.clinical_trial_id,
     clinicalTrialId: meta?.clinical_trial_id || '',
-    aiToolsUsed: meta?.ai_tools_used || false,
+    // AI disclosure must be an explicit choice. Seed `true` when the
+    // metadata shows positive evidence the author already chose "yes"
+    // (either ai_tools_used is true, or details were captured —
+    // saveDeclarations only persists details when the radio was set
+    // to "yes"). Otherwise seed `null` so the wizard forces a fresh
+    // explicit selection. This avoids the prior bug where the column
+    // default `false` would pre-tick "I did not use AI" on every
+    // draft resume regardless of whether the author had ever clicked.
+    aiToolsUsed:
+      meta && (meta.ai_tools_used === true || (meta.ai_tools_details && meta.ai_tools_details.trim().length > 0))
+        ? true
+        : null,
     aiToolsDetails: meta?.ai_tools_details || '',
     noteToEditor: m?.note_to_editor || '',
   }
@@ -323,8 +337,13 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
           ethicsApprovalNumber: s.ethicsInvolved ? (s.ethicsApprovalNumber || null) : null,
           clinicalTrialId: s.clinicalTrial ? (s.clinicalTrialId || null) : null,
           authorConsentCertified: s.authorConsentCertified,
+          // Pass null until the author has explicitly answered the
+          // AI disclosure radio. saveDeclarations skips the column
+          // write when null so the DB default doesn't masquerade
+          // as an explicit "no".
           aiToolsUsed: s.aiToolsUsed,
-          aiToolsDetails: s.aiToolsUsed ? (s.aiToolsDetails.trim() || null) : null,
+          aiToolsDetails:
+            s.aiToolsUsed === true ? (s.aiToolsDetails.trim() || null) : null,
           // Omit noteToEditor in revising mode — the revision's note
           // lives on manuscript_revisions, not the original
           // manuscript.
@@ -503,7 +522,11 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
     (state.dataAvailability !== 'Data available in a public repository' || state.dataAvailabilityUrl.trim().length > 0)
   const ethicsOk = !state.ethicsInvolved || state.ethicsApprovalNumber.trim().length > 0
   const trialOk = !state.clinicalTrial || state.clinicalTrialId.trim().length > 0
-  const aiToolsOk = !state.aiToolsUsed || state.aiToolsDetails.trim().length > 0
+  // AI disclosure must be explicitly answered (non-null). When "yes"
+  // is picked, the description textarea is also required.
+  const aiAnswered = state.aiToolsUsed !== null
+  const aiDetailsOk = state.aiToolsUsed !== true || state.aiToolsDetails.trim().length > 0
+  const aiToolsOk = aiAnswered && aiDetailsOk
   const step5Complete = coiOk && fundingOk && dataOk && ethicsOk && trialOk && aiToolsOk
 
   // Can we move to the next step?

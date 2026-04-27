@@ -561,7 +561,11 @@ export async function saveDeclarations(params: {
   ethicsApprovalNumber: string | null
   clinicalTrialId: string | null
   authorConsentCertified: boolean
-  aiToolsUsed: boolean
+  // null = author has not yet picked the AI disclosure radio. We
+  // deliberately skip the ai_tools_used + ai_tools_details writes
+  // when null so the column's NOT NULL DEFAULT false doesn't get
+  // mistaken for an explicit "no" on subsequent draft loads.
+  aiToolsUsed: boolean | null
   aiToolsDetails: string | null
   noteToEditor?: string | null
 }) {
@@ -600,15 +604,20 @@ export async function saveDeclarations(params: {
     .eq('manuscript_id', manuscriptId)
     .single()
 
-  const metaFields = {
+  const metaFields: Record<string, unknown> = {
     conflict_of_interest: conflictOfInterest,
     funding_sources: fundingSources.length > 0 ? fundingSources : null,
     data_availability_statement: dataAvailabilityStatement,
     ethics_approval_number: ethicsApprovalNumber,
     clinical_trial_id: clinicalTrialId,
     author_consent_certified: authorConsentCertified,
-    ai_tools_used: aiToolsUsed,
-    ai_tools_details: aiToolsUsed ? aiToolsDetails : null,
+  }
+  // Only persist AI disclosure when the author has explicitly
+  // answered. Null means "not yet answered" — leave the column at
+  // its current value (default false on a fresh row).
+  if (aiToolsUsed !== null) {
+    metaFields.ai_tools_used = aiToolsUsed
+    metaFields.ai_tools_details = aiToolsUsed ? aiToolsDetails : null
   }
 
   if (existingMeta) {

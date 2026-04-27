@@ -49,7 +49,8 @@ interface Step5DeclarationsProps {
   ethicsApprovalNumber: string
   clinicalTrial: boolean
   clinicalTrialId: string
-  aiToolsUsed: boolean
+  // Tri-state: null = author hasn't picked either AI radio yet.
+  aiToolsUsed: boolean | null
   aiToolsDetails: string
   noteToEditor: string
   // Review summary data (read-only)
@@ -127,7 +128,11 @@ export default function Step5Declarations({
     (dataAvailability !== 'Data available in a public repository' || dataAvailabilityUrl.trim().length > 0)
   const ethicsComplete = !ethicsInvolved || ethicsApprovalNumber.trim().length > 0
   const trialComplete = !clinicalTrial || clinicalTrialId.trim().length > 0
-  const aiToolsComplete = !aiToolsUsed || aiToolsDetails.trim().length > 0
+  // AI disclosure: must explicitly pick a radio (non-null), and if
+  // "yes" was picked the description textarea is also required.
+  const aiAnswered = aiToolsUsed !== null
+  const aiDetailsComplete = aiToolsUsed !== true || aiToolsDetails.trim().length > 0
+  const aiToolsComplete = aiAnswered && aiDetailsComplete
 
   const step5DeclarationsComplete = coiComplete && fundingComplete && dataComplete && ethicsComplete && trialComplete && aiToolsComplete
 
@@ -337,27 +342,61 @@ export default function Step5Declarations({
           <h3 className="text-sm font-semibold text-ink mb-2">
             AI-Assisted Writing Disclosure <span className="text-red-500">*</span>
           </h3>
-          <label className="flex items-start gap-3 cursor-pointer mb-2">
-            <input
-              type="checkbox"
-              checked={aiToolsUsed}
-              onChange={(e) => onChange({ aiToolsUsed: e.target.checked, aiToolsDetails: e.target.checked ? aiToolsDetails : '' })}
-              className="mt-0.5 accent-brown w-4 h-4"
-            />
-            <span className="text-sm text-ink">
-              AI writing tools were used in the preparation of this manuscript
-            </span>
-          </label>
-          {aiToolsUsed && (
-            <textarea
-              value={aiToolsDetails}
-              onChange={(e) => onChange({ aiToolsDetails: e.target.value })}
-              rows={3}
-              maxLength={500}
-              placeholder="Describe tool(s), version(s), and how they were used (e.g., 'ChatGPT-4o for grammar check on Methods'; 'Claude 3.5 Sonnet for restructuring Introduction')."
-              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
-            />
+          <p className="text-xs text-brown mb-3">
+            Please indicate whether AI writing tools (ChatGPT, Claude, Gemini,
+            Copilot, etc.) were used in the preparation of this manuscript.
+            Both options are required answers — pick the one that applies.
+          </p>
+
+          <div className="space-y-2 mb-3">
+            <label className="flex items-start gap-3 cursor-pointer p-3 border border-border rounded-lg hover:bg-cream-alt/40 transition-colors">
+              <input
+                type="radio"
+                name="ai-disclosure"
+                checked={aiToolsUsed === false}
+                onChange={() =>
+                  onChange({ aiToolsUsed: false, aiToolsDetails: '' })
+                }
+                className="mt-0.5 accent-brown w-4 h-4"
+              />
+              <span className="text-sm text-ink">
+                I did not use AI writing tools in the preparation of this manuscript
+              </span>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer p-3 border border-border rounded-lg hover:bg-cream-alt/40 transition-colors">
+              <input
+                type="radio"
+                name="ai-disclosure"
+                checked={aiToolsUsed === true}
+                onChange={() => onChange({ aiToolsUsed: true })}
+                className="mt-0.5 accent-brown w-4 h-4"
+              />
+              <span className="text-sm text-ink">
+                AI writing tools were used in the preparation of this manuscript
+              </span>
+            </label>
+          </div>
+
+          {aiToolsUsed === true && (
+            <div className="mb-2">
+              <label className="block text-xs font-medium text-ink mb-1">
+                Describe how AI tools were used <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={aiToolsDetails}
+                onChange={(e) => onChange({ aiToolsDetails: e.target.value })}
+                rows={3}
+                maxLength={500}
+                placeholder="Describe tool(s), version(s), and how they were used (e.g., 'ChatGPT-4o for grammar check on Methods'; 'Claude 3.5 Sonnet for restructuring Introduction')."
+                className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
+              />
+              <p className="text-[11px] text-brown mt-1 text-right">
+                {aiToolsDetails.length} / 500 characters
+              </p>
+            </div>
           )}
+
           <p className="text-xs text-brown mt-2 leading-relaxed">
             Authors remain fully responsible for the accuracy, integrity, and originality of all content, including any portions drafted with AI assistance.
           </p>
@@ -514,9 +553,13 @@ export default function Step5Declarations({
             )}
             <p>
               <span className="font-medium">AI Tools Used:</span>{' '}
-              {aiToolsUsed
-                ? (aiToolsDetails.trim() || <span className="text-red-500">Description required</span>)
-                : 'None declared'}
+              {aiToolsUsed === null ? (
+                <span className="text-red-500">Not yet answered — pick one of the radio options above</span>
+              ) : aiToolsUsed === true ? (
+                aiToolsDetails.trim() || <span className="text-red-500">Description required</span>
+              ) : (
+                'None declared'
+              )}
             </p>
             {noteToEditor && (
               <p><span className="font-medium">Note to Editor:</span> {noteToEditor.slice(0, 100)}{noteToEditor.length > 100 ? '...' : ''}</p>
