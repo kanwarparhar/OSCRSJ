@@ -165,12 +165,6 @@ function initialFormState(existing: ReviewRow | null): FormState {
   }
 }
 
-function countWords(text: string): number {
-  const trimmed = text.trim()
-  if (!trimmed) return 0
-  return trimmed.split(/\s+/).length
-}
-
 function toPayload(state: FormState): ReviewSubmissionPayload {
   return {
     qualityScore: state.qualityScore,
@@ -198,9 +192,6 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
   const [isPending, startTransition] = useTransition()
   const stateRef = useRef(state)
   stateRef.current = state
-
-  const authorWordCount = countWords(state.commentsToAuthor)
-  const authorMet = authorWordCount >= 200
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setState((prev) => ({ ...prev, [key]: value }))
@@ -254,14 +245,8 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
       setError('Please choose a final recommendation.')
       return
     }
-    if (authorWordCount < 200) {
-      setError(
-        'Comments to the author must be at least 200 words to give meaningful feedback.'
-      )
-      return
-    }
     if (!state.commentsToEditor.trim()) {
-      setError('Confidential comments to the editor are required.')
+      setError('Please paste your feedback and review regarding the manuscript.')
       return
     }
     if (!state.conflictLevel) {
@@ -382,55 +367,22 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
         </div>
       </div>
 
-      {/* Comments to author */}
-      <div className="space-y-2 border-t border-border pt-6">
-        <label
-          htmlFor="comments-to-author"
-          className="block font-serif text-xl text-brown-dark"
-        >
-          Comments to the author
-        </label>
-        <p className="text-sm text-brown">
-          Minimum 200 words. Shared with the authors alongside the other
-          reviewers' comments. Stay professional and constructive.
-        </p>
-        <textarea
-          id="comments-to-author"
-          value={state.commentsToAuthor}
-          onChange={(e) => update('commentsToAuthor', e.target.value)}
-          rows={10}
-          className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
-        />
-        <p className="text-xs">
-          <span
-            className={`inline-block rounded-full px-2 py-0.5 ${
-              authorMet
-                ? 'bg-green-100 text-green-900'
-                : 'bg-red-100 text-red-900'
-            }`}
-          >
-            {authorWordCount} / 200 words
-          </span>
-        </p>
-      </div>
-
-      {/* Comments to editor */}
+      {/* Feedback and review */}
       <div className="space-y-2 border-t border-border pt-6">
         <label
           htmlFor="comments-to-editor"
           className="block font-serif text-xl text-brown-dark"
         >
-          Confidential comments to the editor
+          Feedback and review
         </label>
         <p className="text-sm text-brown">
-          Not shared with authors. Use this for frank assessments, conflict
-          flags, or concerns you do not want to raise publicly.
+          Paste your feedback and review regarding the manuscript here.
         </p>
         <textarea
           id="comments-to-editor"
           value={state.commentsToEditor}
           onChange={(e) => update('commentsToEditor', e.target.value)}
-          rows={6}
+          rows={12}
           className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
         />
       </div>

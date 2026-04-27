@@ -1439,12 +1439,6 @@ function normalizePayload(
   }
 }
 
-function countWords(text: string): number {
-  const trimmed = text.trim()
-  if (!trimmed) return 0
-  return trimmed.split(/\s+/).length
-}
-
 async function loadInvitationByToken(
   token: string
 ): Promise<ReviewInvitationRow | null> {
@@ -1590,18 +1584,10 @@ export async function submitReview(
       error: 'A final recommendation is required.',
     }
   }
-  if (countWords(payload.commentsToAuthor) < 200) {
-    return {
-      validation:
-        'Comments to the author must be at least 200 words to give meaningful feedback.',
-      error:
-        'Comments to the author must be at least 200 words to give meaningful feedback.',
-    }
-  }
   if (!payload.commentsToEditor.trim()) {
     return {
-      validation: 'Confidential comments to the editor are required.',
-      error: 'Confidential comments to the editor are required.',
+      validation: 'Please paste your feedback and review regarding the manuscript.',
+      error: 'Please paste your feedback and review regarding the manuscript.',
     }
   }
   if (!payload.conflictLevel) {
