@@ -2011,3 +2011,521 @@ export async function getReviewerFileSignedUrl(
     fileName: file.original_filename || file.file_name,
   }
 }
+
+// ============================================================
+// Unified reviewer roster (Session 32 — Sushant)
+// ============================================================
+// Powers /dashboard/admin/reviewer-applications when it pivots
+// from "applicant triage" to a unified reviewer directory. One
+// row per reviewer (deduplicated by lower-case email), with
+// aggregated counts across all manuscripts they've been invited
+// to review.
+//
+// Bucket precedence (highest tier wins):
+//   withdrawn  — editor marked them as withdrawn from reviewing
+//   active     — accepted ≥1 invitation AND submitted ≥1 review
+//   approved   — accepted ≥1 invitation, no review submitted yet
+//   pending    — has ≥1 'invited' invitation, no accepts yet
+//   declined   — has invitations, all declined or cancelled
+//   applicant  — has a reviewer_applications row but has NEVER
+//                been invited (separate "Applicants" tab)
+// ============================================================
+
+export type ReviewerRosterBucket =
+  | 'applicant'
+  | 'pending'
+  | 'approved'
+  | 'active'
+  | 'declined'
+  | 'withdrawn'
+
+export interface ReviewerRosterEntry {
+  email: string
+  firstName: string
+  lastName: string
+  affiliation: string | null
+  country: string | null
+  orcidId: string | null
+  applicationId: string | null
+  applicationStatus: ReviewerApplicationStatus | null
+  bucket: ReviewerRosterBucket
+  invitationsSent: number
+  invitationsAccepted: number
+  invitationsDeclined: number
+  reviewsSubmitted: number
+  latestInvitationDate: string | null
+  resendableInvitationId: string | null
+  withdrawnReason: string | null
+  withdrawnAt: string | null
+}
+
+export interface BuildReviewerRosterResult {
+  roster?: ReviewerRosterEntry[]
+  error?: string
+}
+
+export async function buildReviewerRoster(): Promise<BuildReviewerRosterResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  const admin = createAdminClient()
+
+  // ---- Bulk fetch every input collection in parallel ---------
+  const [
+    invitationsResp,
+    applicationsResp,
+    reviewsResp,
+    withdrawalsResp,
+  ] = await Promise.all([
+    admin
+      .from('review_invitations')
+      .select('*')
+      .order('invited_date', { ascending: false }),
+    admin
+      .from('reviewer_applications')
+      .select('*')
+      .order('created_at', { ascending: false }),
+    admin
+      .from('reviews')
+      .select('id, review_invitation_id, is_draft, submitted_date'),
+    admin.from('reviewer_withdrawals').select('*'),
+  ])
+
+  if (invitationsResp.error) return { error: invitationsResp.error.message }
+  if (applicationsResp.error) return { error: applicationsResp.error.message }
+  if (reviewsResp.error) return { error: reviewsResp.error.message }
+  // reviewer_withdrawals may not exist yet (migration 018 not run);
+  // treat that as an empty list instead of failing the whole page.
+  const withdrawalRows: Array<{
+    email: string
+    reason: string | null
+    withdrawn_at: string
+  }> = withdrawalsResp.error
+    ? []
+    : ((withdrawalsResp.data || []) as Array<{
+        email: string
+        reason: string | null
+        withdrawn_at: string
+      }>)
+
+  const invitations = (invitationsResp.data || []) as ReviewInvitationRow[]
+  const applications = (applicationsResp.data || []) as ReviewerApplicationRow[]
+  const reviewRows = (reviewsResp.data || []) as Array<{
+    id: string
+    review_invitation_id: string | null
+    is_draft: boolean
+    submitted_date: string | null
+  }>
+
+  // Set of invitation IDs that have at least one non-draft review.
+  // Used to count reviewsSubmitted and to gate the "active" bucket.
+  const submittedInvitationIds = new Set<string>()
+  for (const r of reviewRows) {
+    if (r.review_invitation_id && r.is_draft === false) {
+      submittedInvitationIds.add(r.review_invitation_id)
+    }
+  }
+
+  // Pre-index applications by lower-case email for O(1) lookup.
+  const applicationByEmail = new Map<string, ReviewerApplicationRow>()
+  for (const app of applications) {
+    const key = (app.email || '').toLowerCase()
+    if (!key) continue
+    // First-write wins (oldest application kept). Same email
+    // re-applying is rare; if it happens we keep the oldest row
+    // so its created_at is preserved.
+    if (!applicationByEmail.has(key)) applicationByEmail.set(key, app)
+  }
+
+  // Pre-index withdrawals by email.
+  const withdrawalByEmail = new Map<
+    string,
+    { reason: string | null; withdrawn_at: string }
+  >()
+  for (const w of withdrawalRows) {
+    const key = (w.email || '').toLowerCase()
+    if (!key) continue
+    withdrawalByEmail.set(key, {
+      reason: w.reason,
+      withdrawn_at: w.withdrawn_at,
+    })
+  }
+
+  // ---- Build a per-email entry as we walk invitations --------
+  interface Acc {
+    email: string
+    firstName: string
+    lastName: string
+    invitationsSent: number
+    invitationsAccepted: number // accepted OR submitted
+    invitationsDeclined: number // declined OR cancelled
+    invitationsPending: number // invited
+    reviewsSubmitted: number
+    latestInvitationDate: string | null
+    resendableInvitationId: string | null
+    resendableInvitedDate: string | null // most recent invited_date among resendable
+    applicationId: string | null
+    applicationStatus: ReviewerApplicationStatus | null
+    affiliation: string | null
+    country: string | null
+    orcidId: string | null
+    firstNameSource: 'application' | 'invitation' | null
+  }
+
+  const byEmail = new Map<string, Acc>()
+
+  function ensure(email: string): Acc {
+    let acc = byEmail.get(email)
+    if (acc) return acc
+    const app = applicationByEmail.get(email) || null
+    acc = {
+      email,
+      firstName: app?.first_name || '',
+      lastName: app?.last_name || '',
+      invitationsSent: 0,
+      invitationsAccepted: 0,
+      invitationsDeclined: 0,
+      invitationsPending: 0,
+      reviewsSubmitted: 0,
+      latestInvitationDate: null,
+      resendableInvitationId: null,
+      resendableInvitedDate: null,
+      applicationId: app?.id || null,
+      applicationStatus: app?.status || null,
+      affiliation: app?.affiliation || null,
+      country: app?.country || null,
+      orcidId: app?.orcid_id || null,
+      firstNameSource: app ? 'application' : null,
+    }
+    byEmail.set(email, acc)
+    return acc
+  }
+
+  for (const inv of invitations) {
+    const email = (inv.reviewer_email || '').toLowerCase()
+    if (!email) continue
+    const acc = ensure(email)
+
+    // Names: prefer application-side names, otherwise take from
+    // the invitation snapshot (covers direct-email invitees who
+    // have no application row).
+    if (acc.firstNameSource !== 'application') {
+      if (!acc.firstName && inv.reviewer_first_name) {
+        acc.firstName = inv.reviewer_first_name
+        acc.firstNameSource = 'invitation'
+      }
+      if (!acc.lastName && inv.reviewer_last_name) {
+        acc.lastName = inv.reviewer_last_name
+      }
+    }
+
+    acc.invitationsSent += 1
+
+    if (inv.status === 'invited') {
+      acc.invitationsPending += 1
+      // Track most-recent resendable invitation by invited_date.
+      if (
+        !acc.resendableInvitedDate ||
+        inv.invited_date > acc.resendableInvitedDate
+      ) {
+        acc.resendableInvitedDate = inv.invited_date
+        acc.resendableInvitationId = inv.id
+      }
+    } else if (inv.status === 'accepted' || inv.status === 'submitted') {
+      acc.invitationsAccepted += 1
+      if (submittedInvitationIds.has(inv.id)) {
+        acc.reviewsSubmitted += 1
+      }
+    } else if (inv.status === 'declined' || inv.status === 'cancelled') {
+      acc.invitationsDeclined += 1
+    }
+
+    if (
+      !acc.latestInvitationDate ||
+      inv.invited_date > acc.latestInvitationDate
+    ) {
+      acc.latestInvitationDate = inv.invited_date
+    }
+  }
+
+  // Add applicants who have NEVER been invited — they show up in
+  // the "Applicants" tab so editor triage stays.
+  for (const [email, app] of Array.from(applicationByEmail.entries())) {
+    if (byEmail.has(email)) continue
+    byEmail.set(email, {
+      email,
+      firstName: app.first_name,
+      lastName: app.last_name,
+      invitationsSent: 0,
+      invitationsAccepted: 0,
+      invitationsDeclined: 0,
+      invitationsPending: 0,
+      reviewsSubmitted: 0,
+      latestInvitationDate: null,
+      resendableInvitationId: null,
+      resendableInvitedDate: null,
+      applicationId: app.id,
+      applicationStatus: app.status,
+      affiliation: app.affiliation,
+      country: app.country,
+      orcidId: app.orcid_id,
+      firstNameSource: 'application',
+    })
+  }
+
+  // ---- Compute final bucket per row --------------------------
+  const roster: ReviewerRosterEntry[] = []
+  for (const [email, acc] of Array.from(byEmail.entries())) {
+    const withdrawal = withdrawalByEmail.get(email) || null
+
+    let bucket: ReviewerRosterBucket
+    if (withdrawal) {
+      bucket = 'withdrawn'
+    } else if (acc.reviewsSubmitted > 0) {
+      bucket = 'active'
+    } else if (acc.invitationsAccepted > 0) {
+      bucket = 'approved'
+    } else if (acc.invitationsPending > 0) {
+      bucket = 'pending'
+    } else if (acc.invitationsSent > 0) {
+      bucket = 'declined'
+    } else {
+      bucket = 'applicant'
+    }
+
+    roster.push({
+      email: acc.email,
+      firstName: acc.firstName,
+      lastName: acc.lastName,
+      affiliation: acc.affiliation,
+      country: acc.country,
+      orcidId: acc.orcidId,
+      applicationId: acc.applicationId,
+      applicationStatus: acc.applicationStatus,
+      bucket,
+      invitationsSent: acc.invitationsSent,
+      invitationsAccepted: acc.invitationsAccepted,
+      invitationsDeclined: acc.invitationsDeclined,
+      reviewsSubmitted: acc.reviewsSubmitted,
+      latestInvitationDate: acc.latestInvitationDate,
+      resendableInvitationId: acc.resendableInvitationId,
+      withdrawnReason: withdrawal?.reason || null,
+      withdrawnAt: withdrawal?.withdrawn_at || null,
+    })
+  }
+
+  // Sort: most-recently-touched-first, ties broken by email asc.
+  roster.sort((a, b) => {
+    const aDate = a.latestInvitationDate || ''
+    const bDate = b.latestInvitationDate || ''
+    if (aDate !== bDate) return bDate.localeCompare(aDate)
+    return a.email.localeCompare(b.email)
+  })
+
+  return { roster }
+}
+
+// ---- Resend latest pending invitation --------------------------
+//
+// Per Kanwar: re-fire the reviewerInvitation email for the most
+// recent invitation in 'invited' status for this email. Token +
+// deadline + reviewer_application_id + manuscript stay the same.
+// Audit-logs `reviewer_invitation_resent`.
+//
+// If no resendable invitation exists, returns `noResendable: true`.
+
+export interface ResendInvitationResult {
+  success?: true
+  invitationId?: string
+  noResendable?: true
+  error?: string
+}
+
+export async function resendLatestPendingInvitation(
+  invitationId: string
+): Promise<ResendInvitationResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  if (!invitationId || typeof invitationId !== 'string') {
+    return { error: 'Invitation id is required.' }
+  }
+
+  const admin = createAdminClient()
+
+  // Load invitation + manuscript in parallel.
+  const { data: invData, error: invErr } = await admin
+    .from('review_invitations')
+    .select('*')
+    .eq('id', invitationId)
+    .single()
+
+  if (invErr || !invData) return { error: 'Invitation not found.' }
+  const invitation = invData as ReviewInvitationRow
+
+  if (invitation.status !== 'invited') {
+    return {
+      noResendable: true,
+      error: `Cannot resend an invitation in status "${invitation.status}". Only 'invited' invitations are resendable.`,
+    }
+  }
+
+  const { data: mData, error: mErr } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('id', invitation.manuscript_id)
+    .single()
+
+  if (mErr || !mData) return { error: 'Manuscript not found.' }
+  const manuscript = mData as ManuscriptRow
+
+  const reviewerEmail = invitation.reviewer_email || ''
+  const firstName = invitation.reviewer_first_name || ''
+  if (!reviewerEmail) {
+    return { error: 'Invitation has no reviewer email on file.' }
+  }
+
+  const base = siteUrl()
+  const acceptUrl = `${base}/review/${invitation.review_token}?action=accept`
+  const declineUrl = `${base}/review/${invitation.review_token}?action=decline`
+
+  // Best-effort send; swallow Resend errors so the action still
+  // succeeds and the audit log records the attempt. The
+  // sendEmail() wrapper logs every send to email_logs regardless
+  // of outcome.
+  try {
+    const { html, text } = renderReviewerInvitation({
+      firstName,
+      manuscriptTitle: manuscript.title || '(untitled manuscript)',
+      manuscriptType:
+        MANUSCRIPT_TYPE_LABELS[manuscript.manuscript_type || ''] ||
+        manuscript.manuscript_type ||
+        'Not specified',
+      subspecialty: manuscript.subspecialty || 'Not specified',
+      abstractTeaser: teaseAbstract(manuscript.abstract),
+      deadlineLabel: formatDeadline(invitation.deadline),
+      editorNote:
+        'A reminder of your earlier review invitation. The Accept and Decline links below are unchanged.',
+      acceptUrl,
+      declineUrl,
+    })
+    await sendEmail({
+      to: reviewerEmail,
+      subject: getReviewerInvitationSubject(
+        manuscript.title || '(untitled manuscript)'
+      ),
+      html,
+      text,
+      emailType: 'reviewer_invitation',
+      manuscriptId: invitation.manuscript_id,
+    })
+  } catch {
+    // fire-and-forget
+  }
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'reviewer_invitation_resent',
+      resource_type: 'review_invitation',
+      resource_id: invitation.id,
+      details: {
+        invitation_id: invitation.id,
+        manuscript_id: invitation.manuscript_id,
+        reviewer_email: reviewerEmail,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath('/dashboard/admin/reviewer-applications')
+  return { success: true, invitationId: invitation.id }
+}
+
+// ---- Mark / un-mark a reviewer as withdrawn --------------------
+//
+// Adds (or removes) a row in reviewer_withdrawals keyed by
+// lower-case email. Editor-only. Audit-logged. The roster
+// aggregator picks up the row on next load and surfaces the
+// reviewer in the "Declined" tab with a "Withdrawn" pill.
+
+export interface MarkWithdrawnArgs {
+  email: string
+  reason?: string | null
+  unmark?: boolean
+}
+
+export interface MarkWithdrawnResult {
+  success?: true
+  error?: string
+}
+
+export async function markReviewerWithdrawn(
+  args: MarkWithdrawnArgs
+): Promise<MarkWithdrawnResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) return { error: gate.error }
+
+  const email = (args.email || '').trim().toLowerCase()
+  if (!email || !isValidEmail(email)) {
+    return { error: 'A valid email is required.' }
+  }
+
+  const admin = createAdminClient()
+
+  if (args.unmark) {
+    const { error } = await (admin.from('reviewer_withdrawals') as any)
+      .delete()
+      .eq('email', email)
+    if (error) return { error: error.message }
+
+    try {
+      await (admin.from('audit_logs') as any).insert({
+        user_id: gate.userId,
+        action: 'reviewer_withdrawal_cleared',
+        resource_type: 'reviewer_withdrawal',
+        resource_id: email,
+        details: { email },
+      })
+    } catch {
+      // swallow
+    }
+
+    revalidatePath('/dashboard/admin/reviewer-applications')
+    return { success: true }
+  }
+
+  const reason = normalizeString(args.reason ?? '', 1000) || null
+
+  // Upsert. If a withdrawal already exists for this email, update
+  // the reason + timestamp (preserves PK; audit log captures the
+  // re-mark). If it doesn't, insert fresh.
+  const { error: upsertErr } = await (admin.from('reviewer_withdrawals') as any)
+    .upsert(
+      {
+        email,
+        reason,
+        withdrawn_at: new Date().toISOString(),
+        withdrawn_by: gate.userId,
+      },
+      { onConflict: 'email' }
+    )
+
+  if (upsertErr) return { error: upsertErr.message }
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'reviewer_marked_withdrawn',
+      resource_type: 'reviewer_withdrawal',
+      resource_id: email,
+      details: { email, reason },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath('/dashboard/admin/reviewer-applications')
+  return { success: true }
+}

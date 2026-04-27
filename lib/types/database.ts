@@ -456,6 +456,26 @@ export type ReviewerApplicationUpdate = Partial<
   admin_notes?: string | null
 }
 
+// Reviewer withdrawals (migration 018) — editor-marked records
+// that a reviewer no longer wishes to be invited. Keyed by
+// lower-case email so direct-email invitees (no
+// reviewer_applications row) can still be tracked.
+export interface ReviewerWithdrawalRow {
+  email: string
+  reason: string | null
+  withdrawn_at: string
+  withdrawn_by: string | null
+}
+
+export interface ReviewerWithdrawalInsert {
+  email: string
+  reason?: string | null
+  withdrawn_at?: string
+  withdrawn_by?: string | null
+}
+
+export type ReviewerWithdrawalUpdate = Partial<ReviewerWithdrawalInsert>
+
 export interface AuditLogRow {
   id: string
   user_id: string | null
@@ -722,6 +742,11 @@ export interface Database {
         Row: ReviewerApplicationRow
         Insert: ReviewerApplicationInsert
         Update: ReviewerApplicationUpdate
+      }
+      reviewer_withdrawals: {
+        Row: ReviewerWithdrawalRow
+        Insert: ReviewerWithdrawalInsert
+        Update: ReviewerWithdrawalUpdate
       }
     }
     Functions: {
