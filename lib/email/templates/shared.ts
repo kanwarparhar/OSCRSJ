@@ -28,11 +28,15 @@
 // ============================================================
 
 const SITE_URL = 'https://www.oscrsj.com'
-// 480×64 peach wordmark on transparent — sits cleanly on the dark
-// brown header strip. Hotlinks Vercel-served public asset; alt text
-// covers the image-blocked fallback path most institutional mail
-// clients still default to.
-const WORDMARK_URL = `${SITE_URL}/brand/wordmark-peach.png`
+// 924×540 canonical masthead lockup — the dark brand variant from
+// Logo/jpg/04-masthead-dark.jpg. Image background is `#3d2a18`,
+// exactly matching the email header strip color, so the masthead
+// merges seamlessly with the strip on every email client. Includes
+// the baked-in "PEER REVIEWED · QUARTERLY" eyebrow + serif OSCRSJ
+// wordmark + diamond rule + "Orthopedic Surgery Case Reports &
+// Series Journal" tagline. Replaces the prior 480×64 wordmark-peach
+// asset which was just the bare wordmark.
+const MASTHEAD_URL = `${SITE_URL}/brand/masthead-dark-email.png`
 
 // Color tokens — kept in sync with tailwind.config.ts brand palette.
 const COLOR = {
@@ -95,15 +99,17 @@ export function renderEmailShell(params: EmailShellParams): string {
       <tr>
         <td align="center" style="padding: 40px 16px;">
           <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="max-width: 560px; width: 100%; background-color: ${COLOR.white};">
-            <!-- Brand header strip -->
+            <!-- Brand header strip — the masthead image's background
+                 is the exact brown-dark of the strip (#3d2a18) so the
+                 lockup merges seamlessly with the surrounding fill on
+                 every email client. The image has the eyebrow tagline
+                 + wordmark + diamond rule + journal tagline baked in,
+                 so no additional HTML text is needed here. -->
             <tr>
-              <td align="center" style="background-color: ${COLOR.brownDark}; padding: 30px 40px 26px 40px;">
+              <td align="center" style="background-color: ${COLOR.brownDark}; padding: 16px 40px 12px 40px;">
                 <a href="${SITE_URL}" target="_blank" rel="noopener" style="text-decoration: none; border: 0; outline: none; color: ${COLOR.peach};">
-                  <img src="${WORDMARK_URL}" alt="OSCRSJ" width="210" height="28" style="display: block; height: 28px; width: auto; max-height: 28px; max-width: 210px; border: 0; outline: none; text-decoration: none;" />
+                  <img src="${MASTHEAD_URL}" alt="OSCRSJ — Orthopedic Surgery Case Reports & Series Journal" width="320" height="187" style="display: block; height: 187px; width: 320px; max-width: 320px; border: 0; outline: none; text-decoration: none;" />
                 </a>
-                <p style="margin: 12px 0 0 0; font-family: ${FONT_BODY}; font-size: 10px; line-height: 14px; letter-spacing: 0.24em; text-transform: uppercase; color: ${COLOR.peachMuted}; font-weight: 600;">
-                  Peer Reviewed &middot; Open Access
-                </p>
               </td>
             </tr>
             <!-- Heading -->
