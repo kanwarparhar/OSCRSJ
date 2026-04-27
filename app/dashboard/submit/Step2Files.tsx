@@ -95,12 +95,12 @@ const BASE_CATEGORIES: FileCategory[] = [
 const REVISION_CATEGORIES: FileCategory[] = [
   {
     type: 'manuscript',
-    label: 'Revised Manuscript',
+    label: 'Original Unblinded Manuscript',
     required: true,
     accept: '.docx,.pdf',
     maxSizeMB: 50,
     maxFiles: 1,
-    description: 'Clean revised manuscript with all author information. Accepted formats: .docx or .pdf (max 50 MB).',
+    description: 'Clean revised manuscript with all author information — no track-changes formatting (no red, no highlighting). Accepted formats: .docx or .pdf (max 50 MB).',
   },
   {
     type: 'blinded_manuscript',
@@ -122,16 +122,16 @@ const REVISION_CATEGORIES: FileCategory[] = [
   },
   {
     type: 'title_page',
-    label: 'Revised Title Page',
+    label: 'Title Page',
     required: false,
     accept: '.docx',
     maxSizeMB: 5,
     maxFiles: 1,
-    description: 'Updated Title Page if author list, affiliations, or corresponding author changed. Accepted format: .docx (max 5 MB).',
+    description: 'Updated Title Page if author list, affiliations, or corresponding author changed during revision. Accepted format: .docx (max 5 MB).',
   },
   {
     type: 'tables',
-    label: 'Revised Tables',
+    label: 'Tables',
     required: false,
     accept: '.docx',
     maxSizeMB: 10,
@@ -149,7 +149,7 @@ const REVISION_CATEGORIES: FileCategory[] = [
   },
   {
     type: 'figure',
-    label: 'Revised Figures',
+    label: 'Figures',
     required: false,
     accept: '.jpeg,.jpg,.png,.tiff,.tif',
     maxSizeMB: 10,
