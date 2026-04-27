@@ -501,7 +501,7 @@ export default function HomePage() {
             <Link href="/submit" className="btn-primary">
               Submit Your Case
             </Link>
-            <Link href="/about" className="btn-ghost">
+            <Link href="/aims-scope" className="btn-ghost">
               Learn More
             </Link>
           </div>

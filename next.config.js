@@ -24,6 +24,9 @@ const nextConfig = {
       // limits, figure/table counts, and reporting checklists. Anchor link
       // lands at the article-type comparison table.
       { source: '/article-types', destination: '/guide-for-authors#article-types', permanent: true },
+      // /about retired 2026-04-27 — redundant landing page, content overlap
+      // with /aims-scope. Closest semantic redirect target is /aims-scope.
+      { source: '/about', destination: '/aims-scope', permanent: true },
     ]
   },
 }

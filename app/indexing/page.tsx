@@ -94,7 +94,7 @@ export default function IndexingPage() {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>
-          <Link href="/about" className="btn-outline">About OSCRSJ</Link>
+          <Link href="/aims-scope" className="btn-outline">About OSCRSJ</Link>
         </div>
       </div>
     </div>

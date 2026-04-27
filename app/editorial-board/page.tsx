@@ -147,7 +147,7 @@ export default function EditorialBoardPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/contact" className="btn-primary-light">Express Interest</Link>
-            <Link href="/about" className="btn-outline">Learn More About OSCRSJ</Link>
+            <Link href="/aims-scope" className="btn-outline">Learn More About OSCRSJ</Link>
           </div>
         </div>
       </div>

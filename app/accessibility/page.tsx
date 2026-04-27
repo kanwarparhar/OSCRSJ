@@ -67,7 +67,7 @@ export default function AccessibilityPage() {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link href="/contact" className="btn-primary-light">Contact Us</Link>
-          <Link href="/about" className="btn-outline">About OSCRSJ</Link>
+          <Link href="/aims-scope" className="btn-outline">About OSCRSJ</Link>
         </div>
       </div>
     </div>

@@ -37,7 +37,7 @@ const navItems = [
   },
   {
     label: 'About',
-    href: '/about',
+    href: '/aims-scope',
     dropdown: [
       { label: 'Editorial Board', href: '/editorial-board' },
       { label: 'Aims & Scope', href: '/aims-scope' },

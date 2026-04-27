@@ -36,7 +36,7 @@ export default function Footer() {
                 { label: 'Submit a Manuscript', href: '/submit' },
                 { label: 'Guide for Authors', href: '/guide-for-authors' },
                 { label: 'Editorial Board', href: '/editorial-board' },
-                { label: 'About', href: '/about' },
+                { label: 'Aims & Scope', href: '/aims-scope' },
                 { label: 'Contact', href: '/contact' },
                 { label: 'Press Kit', href: '/media' },
               ].map((l) => (
