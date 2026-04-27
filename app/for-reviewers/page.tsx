@@ -109,7 +109,7 @@ export default function ForReviewersPage() {
             {[
               { step: '1', title: 'First Read', desc: 'Read the entire manuscript without taking notes. Get a general impression of the clinical significance, novelty, and presentation quality. Ask yourself: does this case teach something useful? Would I want to know about this case if I encountered a similar patient?' },
               { step: '2', title: 'Detailed Assessment', desc: 'Re-read the manuscript section by section, evaluating clinical significance, novelty, methodology, ethical compliance, reporting quality, and clarity. Take notes on strengths and weaknesses, originality, readability, and overall structure.' },
-              { step: '3', title: 'Write Your Review in the OSCRSJ Reviewer Template', desc: 'Reviews must be submitted as a Microsoft Word document using the OSCRSJ Reviewer Template (download below). The template contains the required structure (Summary, Major Comments, Minor Comments, Recommendation), section-by-section evaluation prompts, and guidance for writing a great review. Do not submit reviews in other formats; do not write the review without the template.' },
+              { step: '3', title: 'Use the OSCRSJ Reviewer Template as Your Guide', desc: 'Download the OSCRSJ Reviewer Template (Word document — see below) and use it as a scaffold for organizing your thinking. It walks you through the structure of a strong review (summary, major comments, minor comments, recommendation), section-by-section evaluation prompts, and guidance tips. When you are ready to submit, paste your completed review into the Feedback and review field on the structured review form linked from your invitation email — reviews are submitted through the form, not as a Word document upload.' },
             ].map((item) => (
               <div key={item.step} className="flex gap-4 bg-white border border-border rounded-xl p-6">
                 <span className="w-8 h-8 rounded-full bg-cream-alt flex items-center justify-center text-sm font-bold text-brown flex-shrink-0">
@@ -134,7 +134,7 @@ export default function ForReviewersPage() {
               <div className="flex-1">
                 <p className="font-semibold text-ink text-sm">OSCRSJ Reviewer Template (Word document)</p>
                 <p className="text-xs text-ink/80 mt-1 mb-3">
-                  Required for every review. Contains the review structure, section-by-section evaluation prompts, decision categories, and guidance tips for writing a great review.
+                  Recommended scaffold for every review. Walks through the review structure, section-by-section evaluation prompts, decision categories, and guidance tips. Use it to organize your thinking, then paste the completed review into the Feedback and review field on the structured review form.
                 </p>
                 <a
                   href="/downloads/oscrsj-reviewer-template.docx"
