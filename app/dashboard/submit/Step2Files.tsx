@@ -113,12 +113,12 @@ const REVISION_CATEGORIES: FileCategory[] = [
   },
   {
     type: 'tracked_changes',
-    label: 'Tracked Changes',
+    label: 'Tracked-Changes Manuscript',
     required: true,
     accept: '.docx,.pdf',
     maxSizeMB: 50,
     maxFiles: 1,
-    description: 'Revised manuscript with edits visible (Word track-changes or PDF compare). Accepted formats: .docx or .pdf (max 50 MB).',
+    description: 'A second copy of the revised manuscript with every change visually marked: new or changed text in RED font and HIGHLIGHTED YELLOW. The editor should be able to see at a glance which lines were modified. Deletions can be left struck-through in red or shown via Word\'s track-changes feature. Accepted formats: .docx or .pdf (max 50 MB).',
   },
   {
     type: 'title_page',
@@ -145,7 +145,7 @@ const REVISION_CATEGORIES: FileCategory[] = [
     accept: '.docx,.pdf',
     maxSizeMB: 20,
     maxFiles: 1,
-    description: 'Point-by-point response to each reviewer comment. Accepted formats: .docx or .pdf (max 20 MB).',
+    description: 'A point-by-point response document. For each reviewer comment, quote the comment verbatim, write your response, describe the specific change you made, and cite the line numbers in the revised manuscript. Use the OSCRSJ Revision Response Template (download from /templates) — it contains a worked example and pre-formatted response tables. Accepted formats: .docx or .pdf (max 20 MB).',
   },
   {
     type: 'figure',
@@ -344,7 +344,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
         {isRevising
           ? 'Upload the revised manuscript set. Original v1 files stay on record — new uploads land in the v' +
             currentVersion +
-            '/ folder. Revised manuscript, revised blinded manuscript, tracked-changes file, and response-to-reviewers are required.'
+            '/ folder. Required: revised manuscript (clean), revised blinded manuscript (clean), tracked-changes manuscript (every edit in red text + yellow highlight), and the Response to Reviewers document (point-by-point with line numbers).'
           : 'Upload your manuscript files below. Main manuscript and blinded manuscript are required.'}
       </p>
 

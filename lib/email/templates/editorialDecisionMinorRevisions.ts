@@ -60,8 +60,16 @@ export function renderEditorialDecisionMinorRevisions(
     ]),
     paragraph(`<strong>Editor's letter</strong>`),
     renderLetterHtml(decisionLetter),
+    paragraph(`<strong>How to submit your revision</strong>`),
     paragraph(
-      `Please address each reviewer comment point-by-point in a response-to-reviewers letter, upload a revised manuscript plus a tracked-changes file, and submit your revision through the link below.`
+      `Your revision package must include <strong>two new documents</strong> in addition to your clean revised manuscript and clean revised blinded manuscript:`
+    ),
+    `<ol style="margin: 0 0 16px 0; padding-left: 22px; color: #1c0f05; font-size: 15px; line-height: 24px;">
+      <li style="margin-bottom: 10px;"><strong>Response to Reviewers (.docx).</strong> A point-by-point response. For every reviewer comment, quote the comment verbatim, write your response, describe the specific change you made to the manuscript, and cite the line numbers in the revised manuscript where the change appears. <a href="https://www.oscrsj.com/downloads/oscrsj-revision-response-template.docx" style="color: #3d2a18; text-decoration: underline;">Download the OSCRSJ Revision Response Template</a> — it includes a worked example and pre-formatted response tables.</li>
+      <li style="margin-bottom: 10px;"><strong>Tracked-Changes Manuscript (.docx or .pdf).</strong> A copy of the revised manuscript with every change visually marked: new or changed text in <strong style="color: #C0392B;">RED font</strong> and <strong style="background-color: #FFF59D;">HIGHLIGHTED YELLOW</strong>. The editor should be able to see at a glance which lines were modified.</li>
+    </ol>`,
+    paragraph(
+      `Both documents are required upload slots in Step 2 of the revision wizard. Click below to begin your revision.`
     ),
     cta(revisingUrl, 'Submit revised manuscript'),
     paragraph(
@@ -84,7 +92,15 @@ export function renderEditorialDecisionMinorRevisions(
     `Decision: Minor Revisions\n` +
     `Revision deadline: ${deadlineLabel}\n\n` +
     `Editor's letter:\n\n${decisionLetter}\n\n` +
-    `Please address each reviewer comment point-by-point in a response-to-reviewers letter, upload a revised manuscript plus a tracked-changes file, and submit your revision:\n${revisingUrl}\n\n` +
+    `HOW TO SUBMIT YOUR REVISION\n\n` +
+    `Your revision package must include TWO new documents in addition to your clean revised manuscript and clean revised blinded manuscript:\n\n` +
+    `1. RESPONSE TO REVIEWERS (.docx)\n` +
+    `   A point-by-point response. For every reviewer comment, quote the comment verbatim, write your response, describe the specific change you made to the manuscript, and cite the line numbers in the revised manuscript where the change appears.\n` +
+    `   Download the OSCRSJ Revision Response Template (with a worked example and pre-formatted response tables):\n` +
+    `   https://www.oscrsj.com/downloads/oscrsj-revision-response-template.docx\n\n` +
+    `2. TRACKED-CHANGES MANUSCRIPT (.docx or .pdf)\n` +
+    `   A copy of the revised manuscript with every change visually marked: new or changed text in RED FONT and HIGHLIGHTED YELLOW. The editor should be able to see at a glance which lines were modified.\n\n` +
+    `Both documents are required upload slots in Step 2 of the revision wizard. Submit your revision here:\n${revisingUrl}\n\n` +
     `If you need an extension, reply to this email.\n\n` +
     `With thanks,\nThe OSCRSJ Editorial Office` +
     plainTextFooter()

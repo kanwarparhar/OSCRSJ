@@ -310,6 +310,36 @@ export default function TemplatesPage() {
         </section>
 
         {/* ============================================================
+            REVISION RESOURCES — for authors who received Minor/Major Revisions
+            ============================================================ */}
+        <section id="revision-resources">
+          <h2 className="font-serif text-3xl text-brown-dark mb-2">Revision Resources</h2>
+          <p className="text-brown mb-6">For authors responding to a Minor or Major Revisions decision. Every revision must include a Response to Reviewers document AND a tracked-changes manuscript with edits in red and yellow highlight.</p>
+          <div className="bg-white border border-border rounded-xl p-6">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+              <div className="flex-1">
+                <h3 className="font-serif text-xl text-brown-dark mb-2">Revision Response Template</h3>
+                <p className="text-sm text-ink leading-relaxed mb-3">
+                  A Word template for assembling your point-by-point response to reviewer comments. Includes a fully worked example (3 sample comments with author responses, change descriptions, and line-number references) plus pre-formatted blank response tables you populate. Required upload in Step 2 of the revision wizard.
+                </p>
+                <p className="text-sm text-ink leading-relaxed">
+                  <strong>How to format your tracked-changes manuscript:</strong> in your revised manuscript file, set every changed or added word to <span className="text-red-600 font-semibold">RED font</span> with a <span style={{ backgroundColor: '#FFF59D' }} className="px-1 font-semibold">YELLOW highlight</span>. The editor must be able to see at a glance which lines you modified. Save this as a separate file from your clean revised manuscript.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 flex-shrink-0 lg:w-64">
+                <a
+                  href="/downloads/oscrsj-revision-response-template.docx"
+                  download
+                  className="btn-primary-light text-center"
+                >
+                  Download Response Template (.docx)
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================
             ARTICLE-TYPE TEMPLATES + EXAMPLES
             ============================================================ */}
         <section id="article-types">
