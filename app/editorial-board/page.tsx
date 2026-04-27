@@ -35,7 +35,7 @@ export default function EditorialBoardPage() {
               </svg>
             </div>
             <div>
-              <p className="font-semibold text-ink">Madhan Jeyaraman, MBBS, MS, MBA, PhD</p>
+              <p className="font-semibold text-ink">Madhan Jeyaraman, MD, PhD, MBA</p>
               <p className="text-sm text-brown mt-0.5">Editor-in-Chief · OSCRSJ</p>
               <p className="text-sm text-ink mt-2">
                 Professor of Orthopaedics, Dr. MGR Educational and Research Institute, Chennai. Leads OSCRSJ&apos;s editorial direction with an emphasis on rigorous methodology, scholarly quality, and substantive review.

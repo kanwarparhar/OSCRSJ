@@ -29,10 +29,10 @@ export interface BoardMember {
 export const BOARD_MEMBERS: BoardMember[] = [
   // Leadership
   {
-    name: 'Madhan Jeyaraman, MBBS, MS, MBA, PhD',
+    name: 'Madhan Jeyaraman, MD, PhD, MBA',
     givenName: 'Madhan',
     familyName: 'Jeyaraman',
-    honorificSuffix: 'MBBS, MS, MBA, PhD',
+    honorificSuffix: 'MD, PhD, MBA',
     jobTitle: 'Editor-in-Chief',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'Dr. MGR Educational and Research Institute, Chennai',

@@ -275,7 +275,7 @@ export default function HomePage() {
                 className="font-serif text-brown-dark mb-2 leading-tight"
                 style={{ fontSize: 'clamp(32px, 4vw, 44px)', letterSpacing: '-0.01em' }}
               >
-                Madhan Jeyaraman, MD, MBA, PhD
+                Madhan Jeyaraman, MD, PhD, MBA
               </h2>
               <div className="text-brown text-base mb-6 space-y-1 leading-relaxed">
                 <p>Professor of Orthopaedics · Dr. MGR Educational and Research Institute, Chennai</p>
