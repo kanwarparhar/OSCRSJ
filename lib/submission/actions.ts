@@ -1388,12 +1388,6 @@ export async function submitRevision(
 export interface AnonymisedReview {
   label: string
   recommendation: string | null
-  quality_score: number | null
-  novelty_score: number | null
-  rigor_score: number | null
-  data_score: number | null
-  clarity_score: number | null
-  scope_score: number | null
   comments_to_author: string | null
   submitted_date: string | null
 }
@@ -1466,7 +1460,7 @@ export async function loadRevisionContext(
       admin
         .from('reviews')
         .select(
-          'id, recommendation, quality_score, novelty_score, rigor_score, data_score, clarity_score, scope_score, comments_to_author, submitted_date, is_draft'
+          'id, recommendation, comments_to_author, submitted_date, is_draft'
         )
         .eq('manuscript_id', manuscriptId)
         .eq('is_draft', false)
@@ -1494,12 +1488,6 @@ export async function loadRevisionContext(
   const reviews: AnonymisedReview[] = rawReviews.map((r: any, idx: number) => ({
     label: `Reviewer ${String.fromCharCode(65 + idx)}`,
     recommendation: r.recommendation,
-    quality_score: r.quality_score,
-    novelty_score: r.novelty_score,
-    rigor_score: r.rigor_score,
-    data_score: r.data_score,
-    clarity_score: r.clarity_score,
-    scope_score: r.scope_score,
     comments_to_author: r.comments_to_author,
     submitted_date: r.submitted_date,
   }))

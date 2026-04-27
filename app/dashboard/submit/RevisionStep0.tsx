@@ -55,25 +55,10 @@ function daysUntil(iso: string | null): number | null {
   return Math.ceil(ms / (1000 * 60 * 60 * 24))
 }
 
-function ScoreRow({ label, value }: { label: string; value: number | null }) {
-  const v = value == null ? null : Math.max(0, Math.min(5, value))
-  return (
-    <div className="grid grid-cols-[120px_1fr_40px] items-center gap-2 text-xs">
-      <span className="text-brown">{label}</span>
-      <span className="h-1.5 bg-border rounded-full overflow-hidden">
-        {v != null && (
-          <span
-            className="block h-full bg-brown"
-            style={{ width: `${(v / 5) * 100}%` }}
-          />
-        )}
-      </span>
-      <span className="text-ink text-right tabular-nums">
-        {v == null ? '—' : `${v}/5`}
-      </span>
-    </div>
-  )
-}
+// Session 35 (2026-04-26): the 6-row Likert score grid (Quality / Novelty /
+// Rigor / Data / Clarity / Scope fit) was removed per Kanwar's directive.
+// Scores are no longer collected on the reviewer form; the recommendation
+// pill + freeform comments-to-author now carry the entire review.
 
 export default function RevisionStep0({
   revisionNumber,
@@ -167,15 +152,6 @@ export default function RevisionStep0({
                         review.recommendation}
                     </span>
                   )}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 mb-3">
-                  <ScoreRow label="Quality" value={review.quality_score} />
-                  <ScoreRow label="Novelty" value={review.novelty_score} />
-                  <ScoreRow label="Rigor" value={review.rigor_score} />
-                  <ScoreRow label="Data" value={review.data_score} />
-                  <ScoreRow label="Clarity" value={review.clarity_score} />
-                  <ScoreRow label="Scope fit" value={review.scope_score} />
                 </div>
 
                 {review.comments_to_author ? (

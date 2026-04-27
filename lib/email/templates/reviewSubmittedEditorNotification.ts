@@ -2,11 +2,16 @@
 // Review submitted editor notification
 // ============================================================
 // Fires to the editorial inbox when a reviewer presses "Submit
-// review" on /review/[token]/form. Carries the 6 Likert scores,
-// the recommendation, and a link to the admin manuscript detail
-// view so the editor can see the full review content (Phase 3
-// editor dashboard will add a dedicated /reviews/[reviewId] page;
-// for Session 10 the detail page is the interim landing).
+// review" on /review/[token]/form. Carries the recommendation
+// and a link to the admin manuscript detail view so the editor
+// can see the full review content.
+//
+// Session 35 (2026-04-26): the 6 Likert score rows (Quality /
+// Novelty / Rigor / Data / Clarity / Scope fit) were removed
+// per Kanwar's directive — scores are no longer collected on
+// the reviewer form. The recommendation + freeform feedback
+// (visible on the admin review detail page) now carry the
+// entire review.
 // ============================================================
 
 import {
@@ -34,18 +39,7 @@ export interface ReviewSubmittedEditorNotificationParams {
   reviewerName: string
   reviewerEmail: string
   recommendation: ReviewRecommendation
-  qualityScore: number | null
-  noveltyScore: number | null
-  rigorScore: number | null
-  dataScore: number | null
-  clarityScore: number | null
-  scopeScore: number | null
   adminManuscriptUrl: string
-}
-
-function fmtScore(score: number | null, max: number): string {
-  if (score === null || score === undefined) return '—'
-  return `${score} / ${max}`
 }
 
 export function renderReviewSubmittedEditorNotification(
@@ -57,12 +51,6 @@ export function renderReviewSubmittedEditorNotification(
     reviewerName,
     reviewerEmail,
     recommendation,
-    qualityScore,
-    noveltyScore,
-    rigorScore,
-    dataScore,
-    clarityScore,
-    scopeScore,
     adminManuscriptUrl,
   } = params
 
@@ -79,17 +67,8 @@ export function renderReviewSubmittedEditorNotification(
       ['Reviewer email', reviewerEmail],
       ['Recommendation', recommendationLabel],
     ]),
-    paragraph(`<strong>Likert scores</strong>`),
-    detailsList([
-      ['Manuscript Quality', fmtScore(qualityScore, 5)],
-      ['Novelty & Significance', fmtScore(noveltyScore, 5)],
-      ['Scientific Rigor', fmtScore(rigorScore, 5)],
-      ['Data Quality', fmtScore(dataScore, 5)],
-      ['Clarity & Presentation', fmtScore(clarityScore, 5)],
-      ['Journal Scope Fit', fmtScore(scopeScore, 4)],
-    ]),
     paragraph(
-      `Comments to author, comments to editor, and conflict-of-interest disclosure are visible on the admin manuscript page.`
+      `The reviewer's feedback and conflict-of-interest disclosure are visible on the admin manuscript page.`
     ),
     cta(adminManuscriptUrl, 'View manuscript in admin'),
   ].join('\n')
@@ -106,14 +85,7 @@ export function renderReviewSubmittedEditorNotification(
     `Submission ID: ${submissionId}\n` +
     `Reviewer: ${reviewerName} <${reviewerEmail}>\n` +
     `Recommendation: ${recommendationLabel}\n\n` +
-    `Likert scores:\n` +
-    `  Manuscript Quality: ${fmtScore(qualityScore, 5)}\n` +
-    `  Novelty & Significance: ${fmtScore(noveltyScore, 5)}\n` +
-    `  Scientific Rigor: ${fmtScore(rigorScore, 5)}\n` +
-    `  Data Quality: ${fmtScore(dataScore, 5)}\n` +
-    `  Clarity & Presentation: ${fmtScore(clarityScore, 5)}\n` +
-    `  Journal Scope Fit: ${fmtScore(scopeScore, 4)}\n\n` +
-    `Comments to author, comments to editor, and conflict-of-interest disclosure are visible on the admin manuscript page:\n${adminManuscriptUrl}` +
+    `The reviewer's feedback and conflict-of-interest disclosure are visible on the admin manuscript page:\n${adminManuscriptUrl}` +
     plainTextFooter()
 
   return { html, text }

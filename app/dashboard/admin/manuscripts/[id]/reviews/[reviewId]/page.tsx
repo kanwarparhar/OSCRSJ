@@ -34,80 +34,13 @@ const RECOMMENDATION_STYLES: Record<ReviewRecommendation, string> = {
   reject: 'bg-red-100 text-red-800 border-red-200',
 }
 
-interface LikertRow {
-  key: string
-  label: string
-  description: string
-  value: number | null
-  scaleMax: number
-}
-
-function buildLikertRows(review: ReviewRow): LikertRow[] {
-  return [
-    {
-      key: 'quality',
-      label: 'Overall quality',
-      description: 'Publishable as-is at one extreme, unsalvageable at the other',
-      value: review.quality_score,
-      scaleMax: 5,
-    },
-    {
-      key: 'novelty',
-      label: 'Novelty / originality',
-      description: 'Does it add to what is already known?',
-      value: review.novelty_score,
-      scaleMax: 5,
-    },
-    {
-      key: 'rigor',
-      label: 'Methodological rigor',
-      description: 'Study design, reporting completeness, checklist adherence',
-      value: review.rigor_score,
-      scaleMax: 5,
-    },
-    {
-      key: 'data',
-      label: 'Data & figures',
-      description: 'Are data presented clearly? Do figures support the claims?',
-      value: review.data_score,
-      scaleMax: 5,
-    },
-    {
-      key: 'clarity',
-      label: 'Clarity of writing',
-      description: 'Readability, structure, language quality',
-      value: review.clarity_score,
-      scaleMax: 5,
-    },
-    {
-      key: 'scope',
-      label: 'Scope fit for OSCRSJ',
-      description: 'Orthopedic case report / series / technique alignment',
-      value: review.scope_score,
-      scaleMax: 4,
-    },
-  ]
-}
-
-function LikertBar({ value, max }: { value: number | null; max: number }) {
-  const pct = value === null ? 0 : (value / max) * 100
-  return (
-    <div className="flex items-center gap-3">
-      <div className="flex-1 h-2 bg-cream-alt border border-border rounded-full overflow-hidden">
-        {value !== null && (
-          <div
-            className="h-full bg-peach-dark"
-            style={{ width: `${pct}%` }}
-            aria-hidden
-          />
-        )}
-      </div>
-      <span className="text-sm text-ink font-medium whitespace-nowrap">
-        {value === null ? '—' : `${value} / ${max}`}
-      </span>
-    </div>
-  )
-}
+// Session 35 (2026-04-26): the 6-row Likert score grid (Quality / Novelty /
+// Rigor / Data / Clarity / Scope fit) was removed from this editor view per
+// Kanwar's directive — scores are no longer collected on the reviewer form.
+// Historical reviews still carry their scores in the DB columns
+// (quality_score / novelty_score / rigor_score / data_score / clarity_score /
+// scope_score on `reviews`), but they are intentionally not surfaced here.
+// The recommendation pill + freeform feedback now carry the entire review.
 
 export default async function EditorReviewDetailPage({
   params,
@@ -166,7 +99,6 @@ export default async function EditorReviewDetailPage({
   const reviewerAffiliation = reviewerProfile?.affiliation || null
   const reviewerOrcid = reviewerProfile?.orcid_id || null
 
-  const likertRows = buildLikertRows(review)
   const rec = review.recommendation
 
   return (
@@ -277,25 +209,6 @@ export default async function EditorReviewDetailPage({
         ) : (
           <p className="text-sm text-brown">No recommendation recorded.</p>
         )}
-      </div>
-
-      {/* Likert grid */}
-      <div className="bg-white border border-border rounded-xl p-6 space-y-4">
-        <h2 className="font-serif text-lg text-brown-dark">Rating scales</h2>
-        <ul className="space-y-4">
-          {likertRows.map((row) => (
-            <li key={row.key} className="space-y-1.5">
-              <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                <p className="text-sm text-ink font-medium">{row.label}</p>
-                <p className="text-[11px] text-brown">
-                  1–{row.scaleMax} scale
-                </p>
-              </div>
-              <p className="text-xs text-brown">{row.description}</p>
-              <LikertBar value={row.value} max={row.scaleMax} />
-            </li>
-          ))}
-        </ul>
       </div>
 
       {/* Feedback and review */}

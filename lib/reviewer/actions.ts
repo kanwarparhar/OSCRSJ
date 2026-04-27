@@ -1355,13 +1355,13 @@ const RECOMMENDATIONS: readonly ReviewRecommendation[] = [
 const CONFLICT_LEVELS = ['none', 'minor', 'major'] as const
 type ConflictLevel = (typeof CONFLICT_LEVELS)[number]
 
+// Session 35 (2026-04-26): the six Likert score fields (qualityScore /
+// noveltyScore / rigorScore / dataScore / clarityScore / scopeScore) were
+// removed from this payload per Kanwar's directive. The DB columns on
+// `reviews` are nullable and stay nullable — historical rows preserve their
+// values, new rows land with NULL there. The `recommendation` + freeform
+// `commentsToAuthor` now carry the entire review.
 export interface ReviewSubmissionPayload {
-  qualityScore: number | null
-  noveltyScore: number | null
-  rigorScore: number | null
-  dataScore: number | null
-  clarityScore: number | null
-  scopeScore: number | null
   recommendation: ReviewRecommendation | null
   commentsToAuthor: string
   commentsToEditor: string
@@ -1387,13 +1387,6 @@ export interface SubmitReviewResult {
   validation?: string
 }
 
-function clampLikert(value: unknown, min: number, max: number): number | null {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return null
-  const rounded = Math.round(value)
-  if (rounded < min || rounded > max) return null
-  return rounded
-}
-
 function formatConflictOfInterest(
   level: ConflictLevel | null,
   details: string
@@ -1410,12 +1403,6 @@ function normalizePayload(
   raw: ReviewSubmissionPayload
 ): ReviewSubmissionPayload {
   return {
-    qualityScore: clampLikert(raw.qualityScore, 1, 5),
-    noveltyScore: clampLikert(raw.noveltyScore, 1, 5),
-    rigorScore: clampLikert(raw.rigorScore, 1, 5),
-    dataScore: clampLikert(raw.dataScore, 1, 5),
-    clarityScore: clampLikert(raw.clarityScore, 1, 5),
-    scopeScore: clampLikert(raw.scopeScore, 1, 4),
     recommendation:
       raw.recommendation && RECOMMENDATIONS.includes(raw.recommendation)
         ? raw.recommendation
@@ -1485,12 +1472,6 @@ export async function saveReviewDraft(
 
   const patch = {
     recommendation: payload.recommendation,
-    quality_score: payload.qualityScore,
-    novelty_score: payload.noveltyScore,
-    rigor_score: payload.rigorScore,
-    data_score: payload.dataScore,
-    clarity_score: payload.clarityScore,
-    scope_score: payload.scopeScore,
     comments_to_author: payload.commentsToAuthor || null,
     comments_to_editor: payload.commentsToEditor || null,
     conflict_of_interest: formatConflictOfInterest(
@@ -1565,19 +1546,6 @@ export async function submitReview(
   const payload = normalizePayload(rawPayload)
 
   // ---- Server-side validation (mirror client) ----
-  if (
-    payload.qualityScore === null ||
-    payload.noveltyScore === null ||
-    payload.rigorScore === null ||
-    payload.dataScore === null ||
-    payload.clarityScore === null ||
-    payload.scopeScore === null
-  ) {
-    return {
-      validation: 'All six rating scales are required.',
-      error: 'All six rating scales are required.',
-    }
-  }
   if (!payload.recommendation) {
     return {
       validation: 'A final recommendation is required.',
@@ -1618,12 +1586,6 @@ export async function submitReview(
 
   const patch = {
     recommendation: payload.recommendation,
-    quality_score: payload.qualityScore,
-    novelty_score: payload.noveltyScore,
-    rigor_score: payload.rigorScore,
-    data_score: payload.dataScore,
-    clarity_score: payload.clarityScore,
-    scope_score: payload.scopeScore,
     comments_to_author: payload.commentsToAuthor,
     comments_to_editor: payload.commentsToEditor,
     conflict_of_interest: conflictOfInterest,
@@ -1761,12 +1723,6 @@ export async function submitReview(
       reviewerName,
       reviewerEmail,
       recommendation: payload.recommendation,
-      qualityScore: payload.qualityScore,
-      noveltyScore: payload.noveltyScore,
-      rigorScore: payload.rigorScore,
-      dataScore: payload.dataScore,
-      clarityScore: payload.clarityScore,
-      scopeScore: payload.scopeScore,
       adminManuscriptUrl,
     })
     await sendEmail({

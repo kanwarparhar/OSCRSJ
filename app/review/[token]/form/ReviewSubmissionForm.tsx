@@ -16,60 +16,13 @@ interface Props {
 
 type ConflictLevel = 'none' | 'minor' | 'major'
 
-const LIKERT_SCALES: Array<{
-  key:
-    | 'qualityScore'
-    | 'noveltyScore'
-    | 'rigorScore'
-    | 'dataScore'
-    | 'clarityScore'
-    | 'scopeScore'
-  label: string
-  max: 4 | 5
-  anchors: string[]
-}> = [
-  {
-    key: 'qualityScore',
-    label: 'Manuscript Quality (Overall)',
-    max: 5,
-    anchors: ['1 Poor', '2', '3 Adequate', '4', '5 Excellent'],
-  },
-  {
-    key: 'noveltyScore',
-    label: 'Novelty & Significance',
-    max: 5,
-    anchors: ['1 Not novel', '2', '3 Incremental', '4', '5 Highly novel'],
-  },
-  {
-    key: 'rigorScore',
-    label: 'Scientific Rigor & Methods',
-    max: 5,
-    anchors: ['1 Weak', '2', '3 Adequate', '4', '5 Rigorous'],
-  },
-  {
-    key: 'dataScore',
-    label: 'Data Quality & Results',
-    max: 5,
-    anchors: ['1 Weak', '2', '3 Adequate', '4', '5 Strong'],
-  },
-  {
-    key: 'clarityScore',
-    label: 'Clarity & Presentation',
-    max: 5,
-    anchors: ['1 Unclear', '2', '3 Readable', '4', '5 Very clear'],
-  },
-  {
-    key: 'scopeScore',
-    label: 'Compliance with Journal Scope',
-    max: 4,
-    anchors: [
-      '1 Out of scope',
-      '2 Tangential',
-      '3 Aligned',
-      '4 Central to scope',
-    ],
-  },
-]
+// Session 35 (2026-04-26): the six Likert rating scales (Quality, Novelty,
+// Rigor, Data, Clarity, Scope fit) were removed per Kanwar's directive. The
+// reviewer's recommendation + freeform feedback now carry the entire review.
+// The DB columns (quality_score / novelty_score / rigor_score / data_score /
+// clarity_score / scope_score on `reviews`) were already nullable per
+// migration 001; new rows land with NULL there, historical rows preserve
+// their values for audit.
 
 const RECOMMENDATIONS: Array<{
   value: ReviewRecommendation
@@ -99,12 +52,6 @@ const RECOMMENDATIONS: Array<{
 ]
 
 interface FormState {
-  qualityScore: number | null
-  noveltyScore: number | null
-  rigorScore: number | null
-  dataScore: number | null
-  clarityScore: number | null
-  scopeScore: number | null
   recommendation: ReviewRecommendation | null
   commentsToAuthor: string
   commentsToEditor: string
@@ -136,12 +83,6 @@ function parseExistingConflict(
 function initialFormState(existing: ReviewRow | null): FormState {
   if (!existing) {
     return {
-      qualityScore: null,
-      noveltyScore: null,
-      rigorScore: null,
-      dataScore: null,
-      clarityScore: null,
-      scopeScore: null,
       recommendation: null,
       commentsToAuthor: '',
       commentsToEditor: '',
@@ -151,12 +92,6 @@ function initialFormState(existing: ReviewRow | null): FormState {
   }
   const conflict = parseExistingConflict(existing.conflict_of_interest)
   return {
-    qualityScore: existing.quality_score,
-    noveltyScore: existing.novelty_score,
-    rigorScore: existing.rigor_score,
-    dataScore: existing.data_score,
-    clarityScore: existing.clarity_score,
-    scopeScore: existing.scope_score,
     recommendation: existing.recommendation,
     // Feedback now writes to comments_to_author so it surfaces to authors
     // through the revision Step 0 + decision-letter pipelines. Fall back to
@@ -171,12 +106,6 @@ function initialFormState(existing: ReviewRow | null): FormState {
 
 function toPayload(state: FormState): ReviewSubmissionPayload {
   return {
-    qualityScore: state.qualityScore,
-    noveltyScore: state.noveltyScore,
-    rigorScore: state.rigorScore,
-    dataScore: state.dataScore,
-    clarityScore: state.clarityScore,
-    scopeScore: state.scopeScore,
     recommendation: state.recommendation,
     commentsToAuthor: state.commentsToAuthor,
     commentsToEditor: state.commentsToEditor,
@@ -238,13 +167,6 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
     setError(null)
 
     // Client-side validation (server re-validates).
-    const missingRatings = LIKERT_SCALES.some(
-      (s) => state[s.key] === null || state[s.key] === undefined
-    )
-    if (missingRatings) {
-      setError('Please complete all six rating scales.')
-      return
-    }
     if (!state.recommendation) {
       setError('Please choose a final recommendation.')
       return
@@ -279,61 +201,8 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
 
   return (
     <div className="bg-white border border-border rounded-xl p-8 space-y-8">
-      {/* Likert scales */}
-      <div className="space-y-6">
-        <div>
-          <h2 className="font-serif text-xl text-brown-dark">Ratings</h2>
-          <p className="text-sm text-brown mt-1">
-            All six ratings are required. Five scales use 1–5; the Journal
-            Scope Fit scale uses 1–4.
-          </p>
-        </div>
-        {LIKERT_SCALES.map((scale) => (
-          <fieldset key={scale.key} className="space-y-2">
-            <legend className="text-sm font-medium text-ink">
-              {scale.label}
-              <span className="text-brown font-normal"> ({scale.max}-point)</span>
-            </legend>
-            <div
-              className="grid gap-2"
-              style={{
-                gridTemplateColumns: `repeat(${scale.max}, minmax(0, 1fr))`,
-              }}
-            >
-              {Array.from({ length: scale.max }).map((_, i) => {
-                const value = i + 1
-                const checked = state[scale.key] === value
-                return (
-                  <label
-                    key={value}
-                    className={`cursor-pointer border rounded-lg px-2 py-2 text-xs text-center transition-colors ${
-                      checked
-                        ? 'border-brown bg-peach-dark/30 text-ink'
-                        : 'border-border bg-white text-brown hover:border-tan'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name={scale.key}
-                      value={value}
-                      checked={checked}
-                      onChange={() => update(scale.key, value)}
-                      className="sr-only"
-                    />
-                    <span className="block font-medium text-ink">{value}</span>
-                    <span className="block text-[10px] mt-1 text-brown leading-tight">
-                      {scale.anchors[i]}
-                    </span>
-                  </label>
-                )
-              })}
-            </div>
-          </fieldset>
-        ))}
-      </div>
-
       {/* Recommendation */}
-      <div className="space-y-2 border-t border-border pt-6">
+      <div className="space-y-2">
         <h2 className="font-serif text-xl text-brown-dark">Recommendation</h2>
         <p className="text-sm text-brown">
           Your recommendation, not a consensus — the editor weighs this
