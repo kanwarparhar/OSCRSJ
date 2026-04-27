@@ -15,6 +15,10 @@ History:
         for paste-into-textarea submission workflow. Build path migrated from Node docx-js
         (script preserved only in outputs scratchpad in Session 25) to Python python-docx
         committed in-tree so future sessions have a regenerator.
+  v1.2 (2026-04-26, Session 35 follow-up) — Section 7 step 3 dropped the six-Likert-scale
+        listing because Session 35 (commit baaa7e7) removed all 6 scales from the reviewer
+        form. Step 3 now just says "select your recommendation and complete the
+        conflict-of-interest declaration." Sections 1-6 unchanged.
 """
 
 from __future__ import annotations
@@ -501,10 +505,9 @@ def build() -> None:
         ),
         (
             "3.",
-            "Set the six rating scales on the form (Manuscript Quality, Novelty & Significance, "
-            "Scientific Rigor & Methods, Data Quality & Results, Clarity & Presentation, and "
-            "Compliance with Journal Scope), select your recommendation, and complete the "
-            "conflict-of-interest declaration.",
+            "Select your recommendation and complete the conflict-of-interest declaration in "
+            "the form fields. (The form does not collect Likert rating scales — your "
+            "recommendation plus the freeform Feedback and review carry your assessment.)",
         ),
         (
             "4.",
@@ -548,7 +551,7 @@ def build() -> None:
     p = doc.add_paragraph()
     set_paragraph_spacing(p, after=0)
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = p.add_run("Reviewer Template v1.1  ·  Issued April 2026")
+    run = p.add_run("Reviewer Template v1.2  ·  Issued April 2026")
     run.italic = True
     run.font.size = Pt(9)
     run.font.color.rgb = TAN
