@@ -181,12 +181,22 @@ interface UploadProgress {
 }
 
 export default function Step2Files({ manuscriptId, files, onFilesChange, revisionNumber }: Step2FilesProps) {
-  const isRevising = typeof revisionNumber === 'number' && revisionNumber >= 2
+  // `revisionNumber` is the value of `manuscript_revisions.revision_number`
+  // the author is about to create — first revision = 1, second = 2, etc.
+  // The original (un-revised) submission is NOT in that table; v1 of the
+  // manuscript_files store holds the original. So:
+  //   revision_number 1 → manuscript_files.version 2 (first revision)
+  //   revision_number 2 → manuscript_files.version 3
+  //   …
+  // The wizard parent only passes `revisionNumber` when in revising mode
+  // (otherwise undefined), so a presence check is sufficient — no
+  // value-based gate is needed here.
+  const isRevising = typeof revisionNumber === 'number' && revisionNumber >= 1
   const FILE_CATEGORIES = isRevising ? REVISION_CATEGORIES : BASE_CATEGORIES
   // Revision mode hides prior-version files from the per-category
   // slot count so upload-required gates are against the current
   // version's tiles only.
-  const currentVersion = isRevising ? revisionNumber! : 1
+  const currentVersion = isRevising ? revisionNumber! + 1 : 1
   const currentVersionFiles = files.filter((f) => f.version === currentVersion)
   const [uploading, setUploading] = useState<UploadProgress[]>([])
   const [error, setError] = useState<string | null>(null)
