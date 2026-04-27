@@ -8,6 +8,7 @@ import ReviewerRosterTable, {
   type RosterTab,
 } from './ReviewerRosterTable'
 import ReviewerApplicationsTable from './ReviewerApplicationsTable'
+import RosterPagination from './RosterPagination'
 
 const VALID_TABS: ReadonlyArray<RosterTab> = [
   'all',
@@ -27,12 +28,14 @@ const TAB_LABELS: Record<RosterTab, string> = {
   declined: 'Declined',
 }
 
+const PAGE_SIZE = 25
+
 export const dynamic = 'force-dynamic'
 
 export default async function AdminReviewerApplicationsPage({
   searchParams,
 }: {
-  searchParams?: { tab?: string; status?: string }
+  searchParams?: { tab?: string; status?: string; page?: string }
 }) {
   // Back-compat: the old page used ?status=<application-status>.
   // Map legacy ?status=... to the new tab where it makes sense so
@@ -51,6 +54,11 @@ export default async function AdminReviewerApplicationsPage({
     else if (rawStatus === 'withdrawn') tab = 'declined'
   }
 
+  // Parse + clamp page. Defaults to 1; non-numeric falls through.
+  const rawPage = Number.parseInt(searchParams?.page ?? '', 10)
+  const requestedPage =
+    Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1
+
   const { roster, error } = await buildReviewerRoster()
 
   // The Applicants tab uses the existing inline-triage component
@@ -62,9 +70,29 @@ export default async function AdminReviewerApplicationsPage({
     status: 'pending',
   })
 
+  // ---- Compute the page slice for the active tab ---------------
+  const pendingApps = pendingApplications || []
   const filtered: ReviewerRosterEntry[] = roster
     ? filterRoster(roster, tab)
     : []
+
+  const totalRows =
+    tab === 'applicants' ? pendingApps.length : filtered.length
+  const totalPages = Math.max(1, Math.ceil(totalRows / PAGE_SIZE))
+  const currentPage = Math.min(requestedPage, totalPages)
+  const sliceStart = (currentPage - 1) * PAGE_SIZE
+  const sliceEnd = sliceStart + PAGE_SIZE
+
+  const pagedRoster = filtered.slice(sliceStart, sliceEnd)
+  const pagedApplicants = pendingApps.slice(sliceStart, sliceEnd)
+
+  function buildHref(targetTab: RosterTab, page: number): string {
+    const params: string[] = []
+    if (targetTab !== 'all') params.push(`tab=${targetTab}`)
+    if (page > 1) params.push(`page=${page}`)
+    const qs = params.length ? `?${params.join('&')}` : ''
+    return `/dashboard/admin/reviewer-applications${qs}`
+  }
 
   return (
     <div className="space-y-6">
@@ -95,15 +123,11 @@ export default async function AdminReviewerApplicationsPage({
       <div className="flex items-center gap-2 flex-wrap border-b border-border pb-3">
         {VALID_TABS.map((t) => {
           const active = t === tab
-          const count = countForTab(roster || [], pendingApplications || [], t)
+          const count = countForTab(roster || [], pendingApps, t)
           return (
             <Link
               key={t}
-              href={
-                t === 'all'
-                  ? '/dashboard/admin/reviewer-applications'
-                  : `/dashboard/admin/reviewer-applications?tab=${t}`
-              }
+              href={buildHref(t, 1)}
               className={`text-xs uppercase tracking-widest px-3 py-1.5 rounded-full border transition-colors flex items-center gap-1.5 ${
                 active
                   ? 'bg-brown-dark text-cream border-brown-dark'
@@ -130,16 +154,34 @@ export default async function AdminReviewerApplicationsPage({
           {error}
         </div>
       ) : tab === 'applicants' ? (
-        <ReviewerApplicationsTable
-          applications={pendingApplications || []}
-          activeFilter="pending"
-        />
+        <>
+          <ReviewerApplicationsTable
+            applications={pagedApplicants}
+            activeFilter="pending"
+          />
+          <RosterPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalRows={totalRows}
+            pageSize={PAGE_SIZE}
+            hrefForPage={(p) => buildHref(tab, p)}
+          />
+        </>
       ) : (
-        <ReviewerRosterTable
-          roster={filtered}
-          activeTab={tab}
-          emptyMessage={emptyMessageForTab(tab)}
-        />
+        <>
+          <ReviewerRosterTable
+            roster={pagedRoster}
+            activeTab={tab}
+            emptyMessage={emptyMessageForTab(tab)}
+          />
+          <RosterPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalRows={totalRows}
+            pageSize={PAGE_SIZE}
+            hrefForPage={(p) => buildHref(tab, p)}
+          />
+        </>
       )}
     </div>
   )
