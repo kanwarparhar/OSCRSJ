@@ -192,6 +192,14 @@ export interface ManuscriptMetadataRow {
   // since 2026-04-26). non_preferred_reviewers: 0..3 entries.
   suggested_reviewers: SuggestedReviewer[]
   non_preferred_reviewers: NonPreferredReviewer[]
+  // Migration 017 — reviewer manuscript-package build cache.
+  // The combined .docx is built on first reviewer acceptance per
+  // manuscript-version and reused for every subsequent reviewer of
+  // that version. A new revision bumps reviewer_package_version and
+  // forces a fresh build.
+  reviewer_package_storage_path: string | null
+  reviewer_package_built_at: string | null
+  reviewer_package_version: number | null
   created_at: string
   updated_at: string
 }

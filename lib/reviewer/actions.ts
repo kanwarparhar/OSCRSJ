@@ -24,6 +24,14 @@ import {
   getReviewerInvitationEditorNotificationSubject,
 } from '@/lib/email/templates/reviewerInvitationEditorNotification'
 import {
+  renderReviewerManuscriptPackage,
+  getReviewerManuscriptPackageSubject,
+} from '@/lib/email/templates/reviewerManuscriptPackage'
+import {
+  buildReviewerPackage,
+  getReviewerPackageSignedUrl,
+} from '@/lib/reviewer-package/build'
+import {
   renderReviewSubmittedConfirmation,
   getReviewSubmittedConfirmationSubject,
 } from '@/lib/email/templates/reviewSubmittedConfirmation'
@@ -767,6 +775,246 @@ export interface InvitationResponseResult {
   cancelled?: true
 }
 
+// ---- Reviewer package delivery (fired after acceptance) ----
+//
+// On accept, kick off the combined-.docx build, then deliver the
+// package to the reviewer in a separate editorial-team email.
+// First reviewer on a given version pays the build cost (~5-8 sec
+// for typical case reports); subsequent reviewers hit the cache.
+// Hard cap: ~22 MB raw bytes for inline attachment (Resend's 40 MB
+// per-message ceiling minus base64 inflation overhead). Anything
+// larger ships as a 14-day signed download URL instead.
+const PACKAGE_ATTACHMENT_MAX_BYTES = 22 * 1024 * 1024
+const PACKAGE_LINK_TTL_SECONDS = 14 * 24 * 60 * 60 // 14 days
+
+async function sendReviewerPackageEmail(
+  invitation: ReviewInvitationRow,
+  manuscript: ManuscriptRow | null
+): Promise<void> {
+  const reviewerEmail = invitation.reviewer_email || ''
+  if (!reviewerEmail) return
+  const firstName = invitation.reviewer_first_name || 'Reviewer'
+  const manuscriptTitle = manuscript?.title || '(untitled manuscript)'
+  const submissionId = manuscript?.submission_id || invitation.manuscript_id
+  const manuscriptType =
+    MANUSCRIPT_TYPE_LABELS[manuscript?.manuscript_type || ''] ||
+    manuscript?.manuscript_type ||
+    'Not specified'
+  const subspecialty = manuscript?.subspecialty || 'Not specified'
+  const reviewFormUrl = `${siteUrl()}/review/${invitation.review_token}/form`
+  const fallbackManuscriptUrl = `${siteUrl()}/review/${invitation.review_token}/manuscript`
+  const deadlineLabel = formatDeadline(invitation.deadline)
+
+  const admin = createAdminClient()
+
+  // ---- Run the build ----
+  // No timeout race here: the build runs synchronously inside the
+  // function. On Vercel Hobby (10s ceiling) a manuscript with many
+  // high-res figures may exceed the limit. If that happens, the
+  // function is killed and the reviewer doesn't get the package
+  // email — but acceptance already committed earlier in
+  // acceptReviewInvitation, so they retain access via
+  // /review/[token]/manuscript.
+  let result
+  try {
+    result = await buildReviewerPackage({ manuscriptId: invitation.manuscript_id })
+  } catch (err) {
+    result = {
+      ok: false as const,
+      error: err instanceof Error ? err.message : 'unknown error',
+    }
+  }
+
+  // ---- Failure path: fallback email pointing at per-file page ----
+  if (!result.ok) {
+    try {
+      await (admin.from('audit_logs') as any).insert({
+        action: 'reviewer_package_build_failed',
+        resource_type: 'review_invitation',
+        resource_id: invitation.id,
+        details: {
+          invitation_id: invitation.id,
+          manuscript_id: invitation.manuscript_id,
+          error: result.error,
+          build_in_progress: 'buildInProgress' in result && result.buildInProgress,
+        },
+      })
+    } catch {
+      // swallow
+    }
+
+    // Notify Kanwar so he can intervene if needed (don't block on this).
+    try {
+      const subject = `[OSCRSJ alert] Reviewer package build failed — ${submissionId}`
+      const note =
+        'buildInProgress' in result && result.buildInProgress
+          ? 'Another build is already running for this manuscript. The reviewer will receive a fallback email pointing to the per-file download page.'
+          : `Reason: ${result.error}`
+      await sendEmail({
+        to: INTERNAL_EDITORIAL_EMAIL,
+        subject,
+        html: `<p>${note}</p><p>Reviewer: ${reviewerEmail}<br/>Manuscript: ${submissionId}<br/>Invitation: ${invitation.id}</p><p><a href="${siteUrl()}/dashboard/admin/manuscripts/${invitation.manuscript_id}">Open admin view</a></p>`,
+        text: `${note}\n\nReviewer: ${reviewerEmail}\nManuscript: ${submissionId}\nInvitation: ${invitation.id}\n\nAdmin: ${siteUrl()}/dashboard/admin/manuscripts/${invitation.manuscript_id}`,
+        emailType: 'reviewer_package_build_failed_internal',
+        manuscriptId: invitation.manuscript_id,
+      })
+    } catch {
+      // swallow
+    }
+
+    // Reviewer-facing fallback email — keep it simple, point them
+    // at the per-file download page so they're never blocked.
+    try {
+      const fallbackHtml = `
+        <p>Dear ${escapeBasic(firstName)},</p>
+        <p>Thank you again for agreeing to review for OSCRSJ. Your blinded manuscript files are ready for download.</p>
+        <p>The combined package is still being assembled. While we finish that, you can already access the individual files:</p>
+        <p><a href="${fallbackManuscriptUrl}">Open the reviewer file page</a></p>
+        <p>If you'd prefer the combined Word document, please reply to this email and we'll send it along once it's ready.</p>
+        <p>With appreciation,<br/>The OSCRSJ Editorial Office</p>
+      `
+      await sendEmail({
+        to: reviewerEmail,
+        subject: `Manuscript files ready — ${submissionId} — OSCRSJ`,
+        html: fallbackHtml,
+        text: `Dear ${firstName},\n\nThank you again for agreeing to review for OSCRSJ. Your blinded manuscript files are ready for download.\n\nThe combined package is still being assembled. While we finish that, you can already access the individual files:\n${fallbackManuscriptUrl}\n\nIf you'd prefer the combined Word document, please reply to this email and we'll send it along once it's ready.\n\nWith appreciation,\nThe OSCRSJ Editorial Office`,
+        emailType: 'reviewer_package_fallback',
+        manuscriptId: invitation.manuscript_id,
+      })
+    } catch {
+      // swallow
+    }
+    return
+  }
+
+  // ---- Success path: decide attachment vs link ----
+  // For a cache hit we don't have bytes in hand. Re-download to
+  // measure size + (if attaching) embed.
+  let packageBytes: Buffer | null = null
+  let packageBytesLen = result.bytes
+  if (packageBytesLen === 0 || result.cached) {
+    try {
+      const { data, error } = await admin.storage
+        .from('submissions')
+        .download(result.storagePath)
+      if (!error && data) {
+        const ab = await data.arrayBuffer()
+        packageBytes = Buffer.from(ab)
+        packageBytesLen = packageBytes.length
+      }
+    } catch {
+      // fall through; we'll send the link form
+    }
+  } else {
+    // We just built it; re-download to get the bytes for attachment.
+    try {
+      const { data } = await admin.storage
+        .from('submissions')
+        .download(result.storagePath)
+      if (data) {
+        const ab = await data.arrayBuffer()
+        packageBytes = Buffer.from(ab)
+        packageBytesLen = packageBytes.length
+      }
+    } catch {
+      // fall through
+    }
+  }
+
+  const useAttachment =
+    packageBytes !== null && packageBytesLen <= PACKAGE_ATTACHMENT_MAX_BYTES
+
+  let downloadUrl: string | null = null
+  if (!useAttachment) {
+    const { signedUrl } = await getReviewerPackageSignedUrl(
+      invitation.manuscript_id,
+      result.storagePath,
+      PACKAGE_LINK_TTL_SECONDS
+    )
+    downloadUrl = signedUrl
+  }
+
+  const sizeLabel = formatBytes(packageBytesLen)
+  const attachmentName = `OSCRSJ-${submissionId}-package.docx`
+
+  try {
+    const { html, text } = renderReviewerManuscriptPackage({
+      firstName,
+      manuscriptTitle,
+      submissionId,
+      manuscriptType,
+      subspecialty,
+      deliveryMode: useAttachment ? 'attached' : 'link',
+      downloadUrl,
+      reviewFormUrl,
+      deadlineLabel,
+      packageSizeLabel: sizeLabel,
+      figureCount: result.figureCount,
+      hasTables: result.hasTables,
+    })
+
+    await sendEmail({
+      to: reviewerEmail,
+      subject: getReviewerManuscriptPackageSubject(submissionId),
+      html,
+      text,
+      emailType: 'reviewer_manuscript_package',
+      manuscriptId: invitation.manuscript_id,
+      ...(useAttachment && packageBytes
+        ? {
+            attachments: [
+              {
+                filename: attachmentName,
+                content: packageBytes,
+                contentType:
+                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+              },
+            ],
+          }
+        : {}),
+    })
+
+    // Audit-log success
+    try {
+      await (admin.from('audit_logs') as any).insert({
+        action: result.cached
+          ? 'reviewer_package_email_sent'
+          : 'reviewer_package_built',
+        resource_type: 'review_invitation',
+        resource_id: invitation.id,
+        details: {
+          invitation_id: invitation.id,
+          manuscript_id: invitation.manuscript_id,
+          version: result.version,
+          bytes: packageBytesLen,
+          delivery_mode: useAttachment ? 'attached' : 'link',
+          cached: result.cached,
+          figure_count: result.figureCount,
+          has_tables: result.hasTables,
+        },
+      })
+    } catch {
+      // swallow
+    }
+  } catch {
+    // sendEmail already logs to email_logs; nothing else to do.
+  }
+}
+
+function formatBytes(bytes: number): string {
+  if (!bytes || bytes < 1) return 'unknown'
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+function escapeBasic(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
 async function sendInvitationFollowupEmails(
   invitation: ReviewInvitationRow,
   manuscript: ManuscriptRow | null,
@@ -907,12 +1155,22 @@ export async function acceptReviewInvitation(
     // swallow
   }
 
-  await sendInvitationFollowupEmails(
-    { ...invitation, status: 'accepted', response_date: nowIso },
-    manuscript,
-    true,
-    null
-  )
+  const finalInvitation = {
+    ...invitation,
+    status: 'accepted' as const,
+    response_date: nowIso,
+  }
+
+  await sendInvitationFollowupEmails(finalInvitation, manuscript, true, null)
+
+  // Build + deliver the combined manuscript package. Runs after the
+  // confirmation/editor emails so that even if the build hits the
+  // function-timeout ceiling on a heavy manuscript, the reviewer
+  // already has confirmation that their acceptance was recorded.
+  // The build itself is cached on `manuscript_metadata` so the
+  // second-and-onward reviewers of this manuscript-version skip
+  // straight to email delivery (~1-2 sec vs. 5-8 sec).
+  await sendReviewerPackageEmail(finalInvitation, manuscript)
 
   revalidatePath(`/review/${token}`)
   return {
@@ -1671,6 +1929,7 @@ async function triggerAllReviewsReceivedIfReady(
 
 const REVIEWER_SAFE_FILE_TYPES = [
   'blinded_manuscript',
+  'tables',
   'figure',
   'supplement',
 ] as const

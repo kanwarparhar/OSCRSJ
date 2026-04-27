@@ -41,6 +41,16 @@ const DEFAULT_FROM =
 const DEFAULT_REPLY_TO =
   process.env.EMAIL_REPLY_TO || 'kanwarparhar@gmail.com'
 
+export interface SendEmailAttachment {
+  // Filename as the recipient will see it (e.g., "OSCRSJ-2026-001-package.docx")
+  filename: string
+  // Buffer of file bytes. Resend accepts either base64 string or
+  // Buffer; we standardize on Buffer here and let the SDK encode.
+  content: Buffer
+  // Optional MIME type. Resend infers from filename when omitted.
+  contentType?: string
+}
+
 export interface SendEmailParams {
   to: string
   subject: string
@@ -53,6 +63,10 @@ export interface SendEmailParams {
   // sender's address on internal-notification emails so editorial replies
   // route directly back to the visitor / author / inquirer.
   replyTo?: string
+  // Optional file attachments. Resend caps total payload at ~40 MB; the
+  // caller is responsible for the size check (base64 inflation ~33%, so
+  // safe ceiling is ~22 MB total of raw bytes).
+  attachments?: SendEmailAttachment[]
 }
 
 export interface SendEmailResult {
@@ -63,7 +77,7 @@ export interface SendEmailResult {
 export async function sendEmail(
   params: SendEmailParams
 ): Promise<SendEmailResult> {
-  const { to, subject, html, text, emailType, manuscriptId, replyTo } = params
+  const { to, subject, html, text, emailType, manuscriptId, replyTo, attachments } = params
 
   let messageId: string | null = null
   let sendError: string | null = null
@@ -77,6 +91,15 @@ export async function sendEmail(
       html,
       replyTo: replyTo || DEFAULT_REPLY_TO,
       ...(text ? { text } : {}),
+      ...(attachments && attachments.length > 0
+        ? {
+            attachments: attachments.map((a) => ({
+              filename: a.filename,
+              content: a.content,
+              ...(a.contentType ? { contentType: a.contentType } : {}),
+            })),
+          }
+        : {}),
     })
 
     if (error) {

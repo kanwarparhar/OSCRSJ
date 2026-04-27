@@ -4,8 +4,10 @@ import { createAdminClient } from '@/lib/supabase/server'
 import type {
   ManuscriptRow,
   ManuscriptFileRow,
+  ManuscriptMetadataRow,
   ReviewInvitationRow,
 } from '@/lib/types/database'
+import { getReviewerPackageSignedUrl } from '@/lib/reviewer-package/build'
 import ReviewerFileDownloadButton from './ReviewerFileDownloadButton'
 
 export const dynamic = 'force-dynamic'
@@ -28,6 +30,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 const FILE_TYPE_LABELS: Record<string, string> = {
   blinded_manuscript: 'Blinded manuscript',
+  tables: 'Tables',
   figure: 'Figure',
   supplement: 'Supplementary file',
 }
@@ -132,11 +135,54 @@ export default async function ReviewerManuscriptPage({
     .from('manuscript_files')
     .select('*')
     .eq('manuscript_id', invitation.manuscript_id)
-    .in('file_type', ['blinded_manuscript', 'figure', 'supplement'])
+    .in('file_type', ['blinded_manuscript', 'tables', 'figure', 'supplement'])
     .order('file_type', { ascending: true })
     .order('file_order', { ascending: true })
 
   const files = (fData as ManuscriptFileRow[] | null) || []
+
+  // ---- Combined package status (Session 31, 2026-04-26) ----
+  // If the package has been built for the current manuscript-version,
+  // surface a one-click signed URL at the top of the page. We don't
+  // trigger a build from this page — that only happens on reviewer
+  // acceptance (acceptReviewInvitation). If the cache is empty here,
+  // the reviewer either hasn't checked their email for the package
+  // delivery yet OR the build is still in progress for the first
+  // reviewer; in both cases we show a "preparing" notice.
+  const { data: metaData } = await admin
+    .from('manuscript_metadata')
+    .select(
+      'reviewer_package_storage_path, reviewer_package_built_at, reviewer_package_version'
+    )
+    .eq('manuscript_id', invitation.manuscript_id)
+    .maybeSingle()
+  const meta = (metaData as Pick<
+    ManuscriptMetadataRow,
+    | 'reviewer_package_storage_path'
+    | 'reviewer_package_built_at'
+    | 'reviewer_package_version'
+  > | null) || null
+
+  let packageDownloadUrl: string | null = null
+  let packageSizeBytes: number | null = null
+  if (meta?.reviewer_package_storage_path) {
+    const { signedUrl } = await getReviewerPackageSignedUrl(
+      invitation.manuscript_id,
+      meta.reviewer_package_storage_path,
+      30 * 60 // 30-minute signed URL on the per-page render
+    )
+    packageDownloadUrl = signedUrl
+    // Best-effort size lookup for the label.
+    try {
+      const { data: blob } = await admin.storage
+        .from('submissions')
+        .download(meta.reviewer_package_storage_path)
+      if (blob) packageSizeBytes = (await blob.arrayBuffer()).byteLength
+    } catch {
+      // size is optional; the download still works without it
+    }
+  }
+  const packageInProgress = !meta?.reviewer_package_storage_path
 
   return (
     <div className="min-h-screen bg-white py-12 px-4">
@@ -183,8 +229,52 @@ export default async function ReviewerManuscriptPage({
           </div>
         </div>
 
+        {packageDownloadUrl ? (
+          <div className="bg-cream-alt border border-border rounded-xl p-8 space-y-4">
+            <p className="text-[11px] uppercase tracking-widest text-brown">
+              Combined manuscript package
+            </p>
+            <h2 className="font-serif text-xl text-brown-dark">
+              One Word document, end-to-end
+            </h2>
+            <p className="text-sm text-ink leading-relaxed">
+              The blinded manuscript, tables, and figures (one figure per page
+              with its filename) are merged into a single .docx so you can read
+              start to finish without juggling separate files. We&rsquo;ve also
+              emailed it to you when you accepted the invitation.
+            </p>
+            <a
+              href={packageDownloadUrl}
+              className="inline-block bg-brown-dark text-peach px-5 py-3 rounded text-xs uppercase tracking-widest font-bold hover:bg-ink transition"
+            >
+              Download package{packageSizeBytes ? ` (${formatFileSize(packageSizeBytes)})` : ''}
+            </a>
+            <p className="text-xs text-brown">
+              Link valid for 30 minutes. Refresh the page if it expires.
+            </p>
+          </div>
+        ) : packageInProgress ? (
+          <div className="bg-cream-alt border border-border rounded-xl p-8 space-y-3">
+            <p className="text-[11px] uppercase tracking-widest text-brown">
+              Combined manuscript package
+            </p>
+            <h2 className="font-serif text-xl text-brown-dark">
+              Your package is being prepared
+            </h2>
+            <p className="text-sm text-ink leading-relaxed">
+              We&rsquo;re assembling the blinded manuscript, tables, and figures
+              into a single Word document and will email it to you shortly. In
+              the meantime you can download the individual files below.
+            </p>
+          </div>
+        ) : null}
+
         <div className="bg-white border border-border rounded-xl p-8 space-y-4">
-          <h2 className="font-serif text-xl text-brown-dark">Review files</h2>
+          <h2 className="font-serif text-xl text-brown-dark">
+            {packageDownloadUrl
+              ? 'Individual files (fallback)'
+              : 'Review files'}
+          </h2>
           {files.length === 0 ? (
             <p className="text-sm text-brown">
               No blinded manuscript, figures, or supplements have been posted
