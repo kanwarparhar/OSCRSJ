@@ -1584,7 +1584,7 @@ export async function submitReview(
       error: 'A final recommendation is required.',
     }
   }
-  if (!payload.commentsToEditor.trim()) {
+  if (!payload.commentsToAuthor.trim()) {
     return {
       validation: 'Please paste your feedback and review regarding the manuscript.',
       error: 'Please paste your feedback and review regarding the manuscript.',

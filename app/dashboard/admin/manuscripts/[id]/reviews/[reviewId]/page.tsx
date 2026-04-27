@@ -298,28 +298,20 @@ export default async function EditorReviewDetailPage({
         </ul>
       </div>
 
-      {/* Comments to author */}
-      <div className="bg-white border border-border rounded-xl p-6 space-y-3">
-        <h2 className="font-serif text-lg text-brown-dark">
-          Comments to author
-        </h2>
-        <div className="bg-cream/50 border border-border rounded-lg p-4 text-sm text-ink whitespace-pre-wrap leading-relaxed font-mono">
-          {review.comments_to_author || '—'}
-        </div>
-      </div>
-
-      {/* Comments to editor */}
+      {/* Feedback and review */}
       <div className="bg-white border border-border rounded-xl p-6 space-y-3">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <h2 className="font-serif text-lg text-brown-dark">
-            Comments to editor
+            Feedback and review
           </h2>
           <span className="text-[10px] uppercase tracking-widest bg-amber-50 border border-amber-200 text-amber-800 px-2 py-1 rounded">
             Confidential to editorial office
           </span>
         </div>
         <div className="bg-cream/50 border border-border rounded-lg p-4 text-sm text-ink whitespace-pre-wrap leading-relaxed font-mono">
-          {review.comments_to_editor || '—'}
+          {review.comments_to_author ||
+            review.comments_to_editor ||
+            '—'}
         </div>
       </div>
 

@@ -158,8 +158,12 @@ function initialFormState(existing: ReviewRow | null): FormState {
     clarityScore: existing.clarity_score,
     scopeScore: existing.scope_score,
     recommendation: existing.recommendation,
-    commentsToAuthor: existing.comments_to_author || '',
-    commentsToEditor: existing.comments_to_editor || '',
+    // Feedback now writes to comments_to_author so it surfaces to authors
+    // through the revision Step 0 + decision-letter pipelines. Fall back to
+    // comments_to_editor for any drafts saved under the prior column.
+    commentsToAuthor:
+      existing.comments_to_author || existing.comments_to_editor || '',
+    commentsToEditor: '',
     conflictLevel: conflict.level,
     conflictDetails: conflict.details,
   }
@@ -245,7 +249,7 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
       setError('Please choose a final recommendation.')
       return
     }
-    if (!state.commentsToEditor.trim()) {
+    if (!state.commentsToAuthor.trim()) {
       setError('Please paste your feedback and review regarding the manuscript.')
       return
     }
@@ -370,7 +374,7 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
       {/* Feedback and review */}
       <div className="space-y-2 border-t border-border pt-6">
         <label
-          htmlFor="comments-to-editor"
+          htmlFor="comments-to-author"
           className="block font-serif text-xl text-brown-dark"
         >
           Feedback and review
@@ -379,9 +383,9 @@ export default function ReviewSubmissionForm({ token, existingReview }: Props) {
           Paste your feedback and review regarding the manuscript here.
         </p>
         <textarea
-          id="comments-to-editor"
-          value={state.commentsToEditor}
-          onChange={(e) => update('commentsToEditor', e.target.value)}
+          id="comments-to-author"
+          value={state.commentsToAuthor}
+          onChange={(e) => update('commentsToAuthor', e.target.value)}
           rows={12}
           className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark"
         />
