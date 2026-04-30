@@ -3,7 +3,19 @@ import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 import DiscountInquiryForm from './DiscountInquiryForm'
 
-export const metadata: Metadata = { title: 'APC & Fees' }
+export const metadata: Metadata = {
+  title: 'APC & Fees',
+  description:
+    'OSCRSJ article processing charges and case-by-case discount inquiries. Free to publish for manuscripts submitted before August 1, 2026; $499 standard APC after.',
+  alternates: { canonical: 'https://www.oscrsj.com/apc' },
+  openGraph: {
+    title: 'APC & Fees | OSCRSJ',
+    description:
+      'OSCRSJ article processing charges and case-by-case discount inquiries. Free to publish before August 1, 2026.',
+    url: 'https://www.oscrsj.com/apc',
+    type: 'website',
+  },
+}
 
 export default function ApcPage() {
   const faqData = {

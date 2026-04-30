@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Editorial Policies — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Editorial Policies',
+  description:
+    'OSCRSJ editorial policies — ethics, peer review, COI, corrections, retractions, and publication integrity, aligned with COPE and ICMJE standards.',
+  alternates: { canonical: 'https://www.oscrsj.com/editorial-policies' },
+  openGraph: {
+    title: 'Editorial Policies | OSCRSJ',
+    description:
+      'OSCRSJ editorial policies — ethics, peer review, COI, corrections, retractions, and publication integrity.',
+    url: 'https://www.oscrsj.com/editorial-policies',
+    type: 'website',
+  },
+}
 
 export default function EditorialPoliciesPage() {
   return (

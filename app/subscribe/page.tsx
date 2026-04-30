@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Subscribe — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Subscribe',
+  description:
+    'Subscribe to OSCRSJ — monthly email digest of newly published case reports, editorials, and AI-in-orthopedics briefs.',
+  alternates: { canonical: 'https://www.oscrsj.com/subscribe' },
+  openGraph: {
+    title: 'Subscribe | OSCRSJ',
+    description:
+      'Subscribe to OSCRSJ — monthly digest of new case reports, editorials, and AI briefs.',
+    url: 'https://www.oscrsj.com/subscribe',
+    type: 'website',
+  },
+}
 
 export default function SubscribePage() {
   return (

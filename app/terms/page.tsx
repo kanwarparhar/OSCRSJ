@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Terms of Use — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Terms of Use',
+  description:
+    'OSCRSJ terms of service — use of the website, submissions, authorship, licensing, and acceptable use.',
+  alternates: { canonical: 'https://www.oscrsj.com/terms' },
+  openGraph: {
+    title: 'Terms of Use | OSCRSJ',
+    description:
+      'OSCRSJ terms of service — use of the website, submissions, authorship, and licensing.',
+    url: 'https://www.oscrsj.com/terms',
+    type: 'website',
+  },
+}
 
 export default function TermsPage() {
   return (

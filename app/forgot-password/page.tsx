@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import ForgotPasswordForm from './ForgotPasswordForm'
 
-export const metadata: Metadata = { title: 'Reset Password — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Reset Password',
+  robots: { index: false, follow: true },
+}
 
 export default function ForgotPasswordPage() {
   return (

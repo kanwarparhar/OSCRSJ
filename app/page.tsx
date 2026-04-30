@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/server'
 import { SUBSPECIALTIES } from '@/lib/constants'
@@ -6,6 +7,19 @@ import type {
   ManuscriptAuthorRow,
   ManuscriptType,
 } from '@/lib/types/database'
+
+// Homepage canonical — `metadataBase` in the root layout doesn't emit a
+// canonical tag on its own (it only resolves relative URLs in OG/Twitter
+// blocks). Per John's 2026-04-24 site-wide canonical sweep, every public-
+// indexable page gets an explicit `alternates.canonical`. Inherits title
+// + description defaults from app/layout.tsx so we don't double up.
+export const metadata: Metadata = {
+  alternates: { canonical: 'https://www.oscrsj.com' },
+  openGraph: {
+    url: 'https://www.oscrsj.com',
+    type: 'website',
+  },
+}
 
 // Always fetch fresh — published-state transitions are editor-driven
 // and rare; cheap query so revalidation overhead is fine.

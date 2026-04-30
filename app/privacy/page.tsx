@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Privacy Policy — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description:
+    'OSCRSJ privacy policy — what we collect, how we use it, and your rights under GDPR and CCPA.',
+  alternates: { canonical: 'https://www.oscrsj.com/privacy' },
+  openGraph: {
+    title: 'Privacy Policy | OSCRSJ',
+    description:
+      'OSCRSJ privacy policy — what we collect, how we use it, and your rights under GDPR and CCPA.',
+    url: 'https://www.oscrsj.com/privacy',
+    type: 'website',
+  },
+}
 
 export default function PrivacyPage() {
   return (

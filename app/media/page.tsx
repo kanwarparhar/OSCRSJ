@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: 'Media & Press Kit',
   description:
     'Official OSCRSJ logos, journal seal, mastheads, color palette, and boilerplate copy for press, partners, and institutional use.',
+  alternates: { canonical: 'https://www.oscrsj.com/media' },
+  openGraph: {
+    title: 'Media & Press Kit | OSCRSJ',
+    description:
+      'Official OSCRSJ logos, journal seal, mastheads, color palette, and boilerplate copy.',
+    url: 'https://www.oscrsj.com/media',
+    type: 'website',
+  },
 }
 
 type Asset = {

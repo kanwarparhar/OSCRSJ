@@ -3,7 +3,10 @@ import { Suspense } from 'react'
 import PageHeader from '@/components/PageHeader'
 import LoginForm from './LoginForm'
 
-export const metadata: Metadata = { title: 'Log In — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Log In',
+  robots: { index: false, follow: true },
+}
 
 export default function LoginPage() {
   return (

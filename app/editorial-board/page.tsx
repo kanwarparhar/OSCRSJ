@@ -9,7 +9,19 @@ import {
   type BoardMember,
 } from '@/lib/schema/editorialBoard'
 
-export const metadata: Metadata = { title: 'Editorial Board' }
+export const metadata: Metadata = {
+  title: 'Editorial Board',
+  description:
+    'OSCRSJ editorial board — editor-in-chief, section editors, associate editors, and review editors across orthopedic subspecialties, with affiliations and ORCID iDs.',
+  alternates: { canonical: 'https://www.oscrsj.com/editorial-board' },
+  openGraph: {
+    title: 'Editorial Board | OSCRSJ',
+    description:
+      'OSCRSJ editorial board — editor-in-chief, section editors, associate editors, and review editors across orthopedic subspecialties.',
+    url: 'https://www.oscrsj.com/editorial-board',
+    type: 'website',
+  },
+}
 
 // Avatar — real photo when available, otherwise an initials disc. Sized
 // per `variant`: 'lg' for EIC + Founding Editor (56px); 'md' for every

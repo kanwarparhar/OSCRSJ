@@ -18,11 +18,48 @@ import type {
 // work cannot land on this page because the query only accepts
 // `in_production`.
 
-export const metadata: Metadata = { title: 'Articles in Press — OSCRSJ' }
-
 // Always fetch fresh on each request — In Press transitions are
 // editor-driven and rare; cheap query so revalidation overhead is fine.
 export const dynamic = 'force-dynamic'
+
+// Soft 404 guard + canonical/OG/JSON-LD per John's 2026-04-25 audit
+// (`^handoff-soft-404-guard-in-press`). The empty-state version of this
+// page is exactly what Google's Soft 404 detector treats as 404-equivalent
+// (workflow explainer + CTAs but no actual articles), same shape that hit
+// /articles?topic=hand-wrist on 2026-04-23. Solution: count manuscripts
+// at request time and emit noindex only while the count is zero. Flips
+// to indexable automatically as soon as the first manuscript reaches
+// status='in_production'. Title drops the ` — OSCRSJ` suffix because the
+// root layout's `%s | OSCRSJ` template adds ` | OSCRSJ` (otherwise the
+// rendered title doubles).
+export async function generateMetadata(): Promise<Metadata> {
+  const admin = createAdminClient()
+  const { count } = await admin
+    .from('manuscripts')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'in_production')
+
+  const isEmpty = !count || count === 0
+
+  return {
+    title: 'In Press — Forthcoming Orthopedic Case Reports',
+    description:
+      'Articles accepted for publication in OSCRSJ — peer-reviewed case reports and case series awaiting copyediting and final issue assignment, with author bylines and Crossref DOIs.',
+    alternates: {
+      canonical: 'https://www.oscrsj.com/articles/in-press',
+    },
+    openGraph: {
+      title: 'In Press — Forthcoming Orthopedic Case Reports | OSCRSJ',
+      description:
+        'Accepted orthopedic case reports and case series awaiting final issue assignment in OSCRSJ.',
+      url: 'https://www.oscrsj.com/articles/in-press',
+      type: 'website',
+    },
+    robots: isEmpty
+      ? { index: false, follow: true }
+      : { index: true, follow: true },
+  }
+}
 
 const TYPE_LABELS: Record<ManuscriptType, string> = {
   case_report: 'Case Report',
@@ -80,8 +117,82 @@ async function loadInPressArticles(): Promise<InPressArticle[]> {
 export default async function InPressPage() {
   const articles = await loadInPressArticles()
 
+  // BreadcrumbList JSON-LD always; ItemList of ScholarlyArticle nodes
+  // only when articles.length > 0 (Google warns on empty ItemList).
+  // ScholarlyArticle nodes carry the per-manuscript signals indexing-
+  // body crawlers care about: headline, author[] with optional ORCID
+  // sameAs, identifier (DOI URL when present), dateAccepted, and a
+  // back-reference to the journal Periodical declared in app/layout.tsx.
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.oscrsj.com',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Articles',
+        item: 'https://www.oscrsj.com/articles',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'In Press',
+        item: 'https://www.oscrsj.com/articles/in-press',
+      },
+    ],
+  }
+
+  const itemListJsonLd =
+    articles.length === 0
+      ? null
+      : {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: 'OSCRSJ Articles in Press',
+          itemListOrder: 'https://schema.org/ItemListOrderDescending',
+          numberOfItems: articles.length,
+          itemListElement: articles.map(({ manuscript, authors }, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            item: {
+              '@type': 'ScholarlyArticle',
+              headline: manuscript.title || '(untitled manuscript)',
+              ...(manuscript.doi && {
+                identifier: `https://doi.org/${manuscript.doi}`,
+              }),
+              ...(manuscript.accepted_date && {
+                dateAccepted: manuscript.accepted_date,
+              }),
+              author: authors.map((a) => ({
+                '@type': 'Person',
+                name: a.full_name,
+                ...(a.orcid_id && {
+                  sameAs: `https://orcid.org/${a.orcid_id}`,
+                }),
+              })),
+              isPartOf: { '@id': 'https://www.oscrsj.com/#periodical' },
+            },
+          })),
+        }
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      {itemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+      )}
       <PageHeader
         label="In Press"
         title="Articles in Press"

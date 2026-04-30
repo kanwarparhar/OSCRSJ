@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import ContactForm from './ContactForm'
 
-export const metadata: Metadata = { title: 'Contact' }
+export const metadata: Metadata = {
+  title: 'Contact',
+  description:
+    'Contact OSCRSJ — general inquiries, submission questions, editorial board correspondence, APC waiver inquiries, and media requests.',
+  alternates: { canonical: 'https://www.oscrsj.com/contact' },
+  openGraph: {
+    title: 'Contact | OSCRSJ',
+    description:
+      'Contact OSCRSJ — general inquiries, submission questions, editorial board correspondence, and media requests.',
+    url: 'https://www.oscrsj.com/contact',
+    type: 'website',
+  },
+}
 
 const contacts = [
   {

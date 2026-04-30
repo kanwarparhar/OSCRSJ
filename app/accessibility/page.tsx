@@ -4,7 +4,16 @@ import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
   title: 'Accessibility Statement',
-  description: 'OSCRSJ accessibility commitment and WCAG 2.1 AA compliance information.',
+  description:
+    'OSCRSJ accessibility commitment and WCAG 2.1 AA compliance information.',
+  alternates: { canonical: 'https://www.oscrsj.com/accessibility' },
+  openGraph: {
+    title: 'Accessibility Statement | OSCRSJ',
+    description:
+      'OSCRSJ accessibility commitment and WCAG 2.1 AA compliance information.',
+    url: 'https://www.oscrsj.com/accessibility',
+    type: 'website',
+  },
 }
 
 export default function AccessibilityPage() {

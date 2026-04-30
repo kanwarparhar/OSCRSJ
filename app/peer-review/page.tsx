@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Peer Review Policy — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Peer Review Policy',
+  description:
+    'OSCRSJ uses double-blind peer review. Two independent subspecialty reviewers per manuscript; initial editorial response within 10 days of submission.',
+  alternates: { canonical: 'https://www.oscrsj.com/peer-review' },
+  openGraph: {
+    title: 'Peer Review Policy | OSCRSJ',
+    description:
+      'OSCRSJ uses double-blind peer review. Two independent subspecialty reviewers per manuscript; initial editorial response within 10 days of submission.',
+    url: 'https://www.oscrsj.com/peer-review',
+    type: 'website',
+  },
+}
 
 export default function PeerReviewPage() {
   const faqData = {

@@ -3,8 +3,17 @@ import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
-  title: 'Guide for Authors - OSCRSJ',
-  description: 'Complete author guidelines for submitting case reports, case series, surgical techniques, and more to the Orthopedic Surgery Case Reports & Series Journal.',
+  title: 'Guide for Authors',
+  description:
+    'Complete author guidelines for submitting case reports, case series, surgical techniques, and more to the Orthopedic Surgery Case Reports & Series Journal.',
+  alternates: { canonical: 'https://www.oscrsj.com/guide-for-authors' },
+  openGraph: {
+    title: 'Guide for Authors | OSCRSJ',
+    description:
+      'Complete author guidelines for submitting case reports, case series, surgical techniques, and reviews to OSCRSJ.',
+    url: 'https://www.oscrsj.com/guide-for-authors',
+    type: 'website',
+  },
 }
 
 /* ------------------------------------------------------------------ */

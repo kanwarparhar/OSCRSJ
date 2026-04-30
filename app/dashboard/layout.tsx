@@ -1,7 +1,19 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import DashboardShell from './DashboardShell'
 import type { UserRow } from '@/lib/types/database'
+
+// Dashboard noindex defense-in-depth (per John's 2026-04-24 canonical sweep).
+// Every /dashboard/* route — including /dashboard/admin/* via transitive
+// layout inheritance — picks this up automatically. Cleaner than per-route
+// edits across the 11+ dashboard page files. The middleware already
+// redirects unauth visitors to /login, so Googlebot rarely lands here, but
+// this layer makes the intent explicit and survives any future routing
+// changes that might briefly expose a dashboard URL.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 export default async function DashboardLayout({
   children,

@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Open Access Policy — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Open Access Policy',
+  description:
+    'OSCRSJ open access policy — CC BY-NC-ND 4.0 licensing, no embargoes, free-to-read for every article, and case-by-case discount inquiries for authors who need them.',
+  alternates: { canonical: 'https://www.oscrsj.com/open-access' },
+  openGraph: {
+    title: 'Open Access Policy | OSCRSJ',
+    description:
+      'OSCRSJ open access policy — CC BY-NC-ND 4.0 licensing, no embargoes, and free-to-read for every article.',
+    url: 'https://www.oscrsj.com/open-access',
+    type: 'website',
+  },
+}
 
 export default function OpenAccessPage() {
   return (

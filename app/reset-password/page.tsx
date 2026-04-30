@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import ResetPasswordForm from './ResetPasswordForm'
 
-export const metadata: Metadata = { title: 'Set New Password — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Set New Password',
+  robots: { index: false, follow: true },
+}
 
 export default function ResetPasswordPage() {
   return (

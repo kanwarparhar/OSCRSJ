@@ -22,11 +22,111 @@ import ArticlesBrowser, { type BrowserArticle } from './ArticlesBrowser'
 // from broken doi.org redirects. Per [[2026-04-30 John — Thin-Content
 // Sweep]] D1 (Option B locked by Manvir 2026-04-30).
 
-export const metadata: Metadata = { title: 'Articles — OSCRSJ' }
-
 // Always fetch fresh — published-state transitions are editor-driven
 // and rare; cheap query so revalidation overhead is fine.
 export const dynamic = 'force-dynamic'
+
+// Soft 404 guard for /articles?topic=<slug> empty-filter views (per
+// John's 2026-04-24 handoff `^handoff-soft-404-guard-articles-filter`).
+// GSC flagged /topics/hand-wrist + /pediatric-orthopedics + /orthopedic-
+// oncology as Soft 404 on 2026-04-23 because the post-redirect target
+// rendered zero matching articles. Rather than per-page noindex on every
+// possibly-empty filter URL, we count matches at request time and emit
+// noindex only when the filter genuinely matches zero. Canonical always
+// points at the bare /articles URL because filter variants are UX
+// discovery aids, not canonical pages — that avoids a future duplicate-
+// content signal across filter URLs once each topic fills with content.
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: { topic?: string }
+}): Promise<Metadata> {
+  const topic = searchParams?.topic ?? ''
+  const canonical = 'https://www.oscrsj.com/articles'
+
+  // No filter set → always indexable. Skip the count query — homepage
+  // and bare /articles share the same coverage.
+  if (!topic) {
+    return {
+      title: 'Articles',
+      description:
+        'Browse peer-reviewed orthopedic case reports and case series published in OSCRSJ.',
+      alternates: { canonical },
+      openGraph: {
+        title: 'Articles | OSCRSJ',
+        description:
+          'Browse peer-reviewed orthopedic case reports and case series published in OSCRSJ.',
+        url: canonical,
+        type: 'website',
+      },
+    }
+  }
+
+  // Topic filter present → count matches against the published set.
+  // Map URL slug → internal SUBSPECIALTIES slug so the DB query can
+  // match. Mirrors INTERNAL_TO_URL_SLUG below in the same file.
+  const URL_TO_INTERNAL_SLUG: Record<string, string> = {
+    trauma: 'trauma',
+    'sports-medicine': 'sports',
+    spine: 'spine',
+    arthroplasty: 'arthroplasty',
+    'pediatric-orthopedics': 'pediatrics',
+    'hand-wrist': 'hand',
+    'foot-ankle': 'foot-ankle',
+    'orthopedic-oncology': 'tumor',
+  }
+  const internalSlug = URL_TO_INTERNAL_SLUG[topic] ?? topic
+
+  const admin = createAdminClient()
+  const { count } = await admin
+    .from('manuscripts')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'published')
+    .eq('subspecialty', internalSlug)
+
+  const matchCount = count ?? 0
+
+  // Topic label for the title — fall back to the slug if it's not in
+  // the canonical list (someone hand-typed an unknown ?topic= value).
+  const topicLabels: Record<string, string> = {
+    trauma: 'Trauma & Fractures',
+    'sports-medicine': 'Sports Medicine',
+    spine: 'Spine',
+    arthroplasty: 'Arthroplasty',
+    'pediatric-orthopedics': 'Pediatric Orthopedics',
+    'hand-wrist': 'Hand & Wrist',
+    'foot-ankle': 'Foot & Ankle',
+    'orthopedic-oncology': 'Tumor & Oncology',
+  }
+  const topicLabel = topicLabels[topic] ?? topic
+
+  // Empty filter → noindex,follow + canonical to bare /articles. This
+  // pre-empts Google's Soft 404 detector AND consolidates link equity
+  // back to the indexable parent page. follow:true keeps the topic
+  // sidebar links crawlable for discovery.
+  if (matchCount === 0) {
+    return {
+      title: `${topicLabel} — no articles yet`,
+      description: `No articles published in ${topicLabel} yet. OSCRSJ is pre-launch — submit your case report or browse other subspecialties.`,
+      alternates: { canonical },
+      robots: { index: false, follow: true },
+    }
+  }
+
+  // Filter has matches → indexable, but canonical still points at bare
+  // /articles so we don't fragment ranking signals across filter URLs.
+  return {
+    title: `${topicLabel} articles`,
+    description: `Browse OSCRSJ peer-reviewed case reports and case series in ${topicLabel}.`,
+    alternates: { canonical },
+    openGraph: {
+      title: `${topicLabel} articles | OSCRSJ`,
+      description: `Browse OSCRSJ peer-reviewed case reports and case series in ${topicLabel}.`,
+      url: canonical,
+      type: 'website',
+    },
+  }
+}
 
 const TYPE_LABELS: Record<ManuscriptType, string> = {
   case_report: 'Case Report',

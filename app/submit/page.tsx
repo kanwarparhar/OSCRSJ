@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Submit a Manuscript' }
+export const metadata: Metadata = {
+  title: 'Submit a Manuscript',
+  description:
+    'Submit a manuscript to OSCRSJ — peer-reviewed open-access orthopedic case reports, case series, surgical techniques, and reviews. Free to publish before August 1, 2026.',
+  alternates: { canonical: 'https://www.oscrsj.com/submit' },
+  openGraph: {
+    title: 'Submit a Manuscript | OSCRSJ',
+    description:
+      'Submit a manuscript to OSCRSJ — peer-reviewed open-access orthopedic case reports and case series.',
+    url: 'https://www.oscrsj.com/submit',
+    type: 'website',
+  },
+}
 
 const resourceLinks = [
   {

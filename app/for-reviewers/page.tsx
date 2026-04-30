@@ -3,8 +3,17 @@ import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
-  title: 'For Reviewers - OSCRSJ',
-  description: 'Reviewer guidelines for OSCRSJ. Standards, expectations, timeline, and ethics for peer reviewers of orthopedic case reports and case series.',
+  title: 'For Reviewers',
+  description:
+    'Reviewer guidelines for OSCRSJ. Standards, expectations, timeline, and ethics for peer reviewers of orthopedic case reports and case series.',
+  alternates: { canonical: 'https://www.oscrsj.com/for-reviewers' },
+  openGraph: {
+    title: 'For Reviewers | OSCRSJ',
+    description:
+      'Reviewer guidelines for OSCRSJ — standards, expectations, timeline, and ethics for peer reviewers.',
+    url: 'https://www.oscrsj.com/for-reviewers',
+    type: 'website',
+  },
 }
 
 export default function ForReviewersPage() {

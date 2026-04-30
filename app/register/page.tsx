@@ -3,7 +3,19 @@ import { Suspense } from 'react'
 import PageHeader from '@/components/PageHeader'
 import RegisterForm from './RegisterForm'
 
-export const metadata: Metadata = { title: 'Create an Account — OSCRSJ' }
+export const metadata: Metadata = {
+  title: 'Create an Account',
+  description:
+    'Register an OSCRSJ author account to submit manuscripts and track them through peer review. Free to create; ORCID sign-in supported.',
+  alternates: { canonical: 'https://www.oscrsj.com/register' },
+  openGraph: {
+    title: 'Create an Account | OSCRSJ',
+    description:
+      'Register an OSCRSJ author account to submit manuscripts and track them through peer review.',
+    url: 'https://www.oscrsj.com/register',
+    type: 'website',
+  },
+}
 
 export default function RegisterPage() {
   return (

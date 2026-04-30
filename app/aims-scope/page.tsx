@@ -2,7 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Aims & Scope' }
+export const metadata: Metadata = {
+  title: 'Aims & Scope',
+  description:
+    'The aims, scope, and subspecialty coverage of OSCRSJ — an independent, peer-reviewed orthopedic case-report and case-series journal for the global orthopedic surgery community.',
+  alternates: { canonical: 'https://www.oscrsj.com/aims-scope' },
+  openGraph: {
+    title: 'Aims & Scope | OSCRSJ',
+    description:
+      'The aims, scope, and subspecialty coverage of OSCRSJ — an independent, peer-reviewed orthopedic case-report and case-series journal.',
+    url: 'https://www.oscrsj.com/aims-scope',
+    type: 'website',
+  },
+}
 
 export default function AimsScopePage() {
   return (

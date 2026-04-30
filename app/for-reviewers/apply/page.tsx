@@ -3,9 +3,17 @@ import PageHeader from '@/components/PageHeader'
 import ApplyForm from './ApplyForm'
 
 export const metadata: Metadata = {
-  title: 'Apply to Review — OSCRSJ',
+  title: 'Apply to Review',
   description:
-    'Apply to join the OSCRSJ reviewer pool. Medical students, residents, fellows, and attending orthopedic surgeons are welcome to review case reports and series.',
+    'Apply to join the OSCRSJ reviewer pool — open to orthopedic surgeons across all career stages who want to review case reports and case series.',
+  alternates: { canonical: 'https://www.oscrsj.com/for-reviewers/apply' },
+  openGraph: {
+    title: 'Apply to Review | OSCRSJ',
+    description:
+      'Apply to join the OSCRSJ reviewer pool — open to orthopedic surgeons across all career stages.',
+    url: 'https://www.oscrsj.com/for-reviewers/apply',
+    type: 'website',
+  },
 }
 
 export default function ApplyPage() {
