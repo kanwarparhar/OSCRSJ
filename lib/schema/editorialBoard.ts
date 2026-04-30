@@ -145,12 +145,16 @@ export const BOARD_MEMBERS: BoardMember[] = [
   },
   // Associate Editors
   {
-    name: 'Vikash Raj, MBBS, MS',
+    // Credentials updated 2026-04-30 per ResearchGate screenshot supplied
+    // by Kanwar — actual designation is MS(Ortho), preserving the Indian-
+    // convention specialty marker in parentheses.
+    name: 'Vikash Raj, MBBS, MS(Ortho)',
     givenName: 'Vikash',
     familyName: 'Raj',
-    honorificSuffix: 'MBBS, MS',
+    honorificSuffix: 'MBBS, MS(Ortho)',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    affiliation: 'All India Institute of Medical Sciences, Deoghar',
     slug: 'vikash-raj',
   },
   {
@@ -343,7 +347,11 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     experience: [
       'Faculty appointment at the Department of Orthopedic Surgery, Showa Medical University.',
       'Subspecialty focus on sports medicine and knee surgery, with emphasis on ligament injuries, meniscal disorders, and degenerative knee conditions.',
-      'Actively engaged in patient care and academic research, contributing to the advancement of orthopedic surgery through clinical practice and scholarly activities.',
+      'Actively engaged in patient care and academic research, contributing to the advancement of orthopedic surgery through clinical practice and scholarly activities. Selected work includes "Circumferential Meniscal Reconstruction Using the Semitendinosus Tendon for a Medial" meniscal repair technique.',
+    ],
+    achievements: [
+      '12 research works',
+      '88 citations',
     ],
     workLocation: 'Tokyo, Japan',
   },
@@ -367,7 +375,18 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
   'vikash-raj': {
     photo: '/brand/vikash-raj.png',
     summary:
-      'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
+      'Additional Professor of Orthopedic Surgery at All India Institute of Medical Sciences, Deoghar, with a longstanding faculty tenure spanning Assistant Professor through Associate and Additional Professor appointments at AIIMS Deoghar since 2020.',
+    experience: [
+      'All India Institute of Medical Sciences, Deoghar — Additional Professor (Jun 2025 – present).',
+      'All India Institute of Medical Sciences, Deoghar — Associate Professor (Jun 2022 – Jun 2025).',
+      'All India Institute of Medical Sciences, Deoghar — Assistant Professor (Nov 2020 – Jun 2022).',
+    ],
+    achievements: [
+      '83 publications',
+      '5,405 reads',
+      '169 citations',
+    ],
+    workLocation: 'Deoghar, Jharkhand, India',
   },
   'abhijit-jayan': {
     summary:
