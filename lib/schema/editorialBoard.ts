@@ -60,12 +60,15 @@ export const BOARD_MEMBERS: BoardMember[] = [
   },
   // Section Editors
   {
-    name: 'Nathaniel Schaffer, MD',
+    // MSTP graduate (MD/PhD) of UT Southwestern. Credentials reflect dual
+    // training; PhD added per the bio document supplied 2026-04-30.
+    name: 'Nathaniel Schaffer, MD, PhD',
     givenName: 'Nathaniel',
     familyName: 'Schaffer',
-    honorificSuffix: 'MD',
+    honorificSuffix: 'MD, PhD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Trauma',
+    affiliation: 'Denver Health',
     slug: 'nathaniel-schaffer',
   },
   {
@@ -98,6 +101,8 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Adult Reconstruction',
+    affiliation:
+      'Washington State University, Elson S. Floyd College of Medicine',
     slug: 'bill-huang',
   },
   {
@@ -116,6 +121,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD, PhD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Sports Medicine',
+    affiliation: 'Department of Orthopedic Surgery, Showa Medical University',
     slug: 'hiroki-okamura',
   },
   {
@@ -125,6 +131,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Oncology',
+    affiliation: 'Emory University',
     slug: 'dheeraj-makkar',
   },
   {
@@ -249,8 +256,21 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
 
   // ----- Section Editors -----
   'nathaniel-schaffer': {
+    photo: '/brand/nathaniel-schaffer.jpg',
     summary:
-      'Section Editor for Orthopedic Trauma at OSCRSJ. Brings clinical expertise across acute and reconstructive trauma to the journal’s peer-review process.',
+      'Chief of the orthopedic trauma team at Denver Health. MD/PhD graduate of the Medical Scientist Training Program at UT Southwestern, with a longstanding commitment to providing care in lesser-developed countries through service trips abroad.',
+    education: [
+      'Undergraduate — Washington University in St. Louis',
+      'MD/PhD — Medical Scientist Training Program, University of Texas Southwestern Medical Center',
+      'Residency — University of Michigan, Orthopedic Surgery',
+      'Fellowship — Vanderbilt University Medical Center, Orthopedic Trauma',
+    ],
+    experience: [
+      'Pursued orthopedic surgery residency training at the University of Michigan, continuing his commitment to global health service trips throughout residency.',
+      'Completed his orthopedic trauma fellowship at Vanderbilt University Medical Center.',
+      'Practiced briefly in Everett, Washington, before joining Denver Health, where he serves as chief of the orthopedic trauma team.',
+    ],
+    workLocation: 'Denver, Colorado, United States',
   },
   'chingiz-alizade': {
     photo: '/brand/chingiz-alizade.jpg',
@@ -281,24 +301,62 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     workLocation: 'Baku, Azerbaijan',
   },
   'miguel-schmitz': {
+    photo: '/brand/miguel-schmitz.png',
     summary:
-      'Section Editor for Spine Surgery at OSCRSJ. Brings clinical expertise across cervical, thoracic, and lumbar spine pathology to the journal’s peer-review process.',
+      'Orthopedic surgeon with dual fellowship training in surgical sports medicine and comprehensive spine surgery, completed at Massachusetts General Hospital and Brigham and Women’s Hospital — both Harvard Medical School healthcare partners. Qualified Medical Examiner for the California Department of Workers’ Compensation.',
+    education: [
+      'Undergraduate — Carroll College, Helena, Montana — Biology and Chemistry (1982)',
+      'Medical School — University of Washington',
+      'Fellowship — Orthopaedic Sports Medicine, New York',
+      'Fellowship — Comprehensive Spine Surgery, Massachusetts General Hospital and Brigham and Women’s Hospital (Harvard Medical School)',
+    ],
+    experience: [
+      'Sought training across the country in orthopedics, sports medicine, arthroscopy, and spine surgery before establishing his practice in the Northwest.',
+      'Eleven years in private practice prior to his comprehensive spine surgery fellowship at Massachusetts General Hospital and Brigham and Women’s Hospital.',
+      'Offers services in both surgical sports medicine and spine surgery to patients from the Inland Northwest, with dual fellowship credentials supporting both disciplines.',
+      'Qualified Medical Examiner for the California Department of Workers’ Compensation, issued by the Medical Unit.',
+    ],
   },
   'bill-huang': {
+    photo: '/brand/bill-huang.jpg',
     summary:
-      'Section Editor for Adult Reconstruction at OSCRSJ. Brings clinical expertise across primary and revision joint arthroplasty to the journal’s peer-review process.',
+      'Board-certified orthopedic surgeon specializing in hip and knee arthritis, total and partial joint replacement, and robotic/computer-assisted joint replacement surgery. Clinical professor at Washington State University, Elson S. Floyd College of Medicine.',
+    education: [
+      'Medical School — Northwestern University Feinberg School of Medicine, MD',
+      'Residency — University of California San Diego',
+      'Fellowship — Anderson Orthopaedic Clinic, Adult Reconstruction Surgery',
+    ],
+    experience: [
+      'Specializes in hip and knee arthritis, total and partial joint replacement, and robotic/computer-assisted joint replacement surgery.',
+      'Committed to helping patients become informed and confident about the range of treatments available for their arthritis, with a goal of providing world-class, cutting-edge treatment options.',
+      'Clinical professor at Washington State University, Elson S. Floyd College of Medicine, where he provides clinical instruction for medical students in orthopedic surgery.',
+    ],
   },
   'sukhman-singh': {
     summary:
       'Section Editor for Foot and Ankle Surgery at OSCRSJ. Brings clinical expertise across foot and ankle reconstruction, deformity correction, and trauma to the journal’s peer-review process.',
   },
   'hiroki-okamura': {
+    photo: '/brand/hiroki-okamura.png',
     summary:
-      'Section Editor for Sports Medicine at OSCRSJ. Brings clinical expertise across arthroscopy, ligament reconstruction, and sports-related injury management to the journal’s peer-review process.',
+      'Orthopedic surgeon at the Department of Orthopedic Surgery, Showa Medical University, with clinical and research interests focused on sports medicine and knee surgery — including ligament injuries, meniscal disorders, and degenerative knee conditions.',
+    experience: [
+      'Faculty appointment at the Department of Orthopedic Surgery, Showa Medical University.',
+      'Subspecialty focus on sports medicine and knee surgery, with emphasis on ligament injuries, meniscal disorders, and degenerative knee conditions.',
+      'Actively engaged in patient care and academic research, contributing to the advancement of orthopedic surgery through clinical practice and scholarly activities.',
+    ],
+    workLocation: 'Tokyo, Japan',
   },
   'dheeraj-makkar': {
+    photo: '/brand/dheeraj-makkar.png',
     summary:
-      'Section Editor for Orthopedic Oncology at OSCRSJ. Brings clinical expertise across primary and metastatic musculoskeletal tumors and limb-salvage surgery to the journal’s peer-review process.',
+      'Orthopaedic oncology fellow at Emory University with focused expertise in musculoskeletal tumor surgery, limb salvage, and complex reconstructions. Completed orthopaedic training in India and pursued advanced fellowship training in the United States.',
+    experience: [
+      'Orthopaedic Oncology Fellow, Emory University.',
+      'Subspecialty focus on orthopaedic oncology, with particular emphasis on limb salvage and complex musculoskeletal reconstruction.',
+      'Academic interests include translational oncology, surgical outcomes, and innovation in multidisciplinary musculoskeletal care.',
+    ],
+    workLocation: 'Atlanta, Georgia, United States',
   },
   'shreya-chaudhuri': {
     summary:
@@ -307,6 +365,7 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
 
   // ----- Associate Editors -----
   'vikash-raj': {
+    photo: '/brand/vikash-raj.png',
     summary:
       'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
   },
