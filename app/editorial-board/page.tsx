@@ -198,6 +198,9 @@ export default function EditorialBoardPage() {
   const foundingEditor = BOARD_MEMBERS.find(
     (m) => m.jobTitle === 'Founding Editor'
   )
+  const managingEditor = BOARD_MEMBERS.find(
+    (m) => m.jobTitle === 'Managing Editor'
+  )
   const sectionEditors = membersByRole('Section Editor')
   const associateEditors = membersByRole('Associate Editor')
   const reviewEditors = membersByRole('Review Editor')
@@ -241,6 +244,19 @@ export default function EditorialBoardPage() {
           </section>
         )}
 
+        {/* Managing Editor — operations leadership tier */}
+        {managingEditor && (
+          <section className="mb-12">
+            <span className="section-label">Leadership</span>
+            <h2 className="section-heading mb-4">Managing Editor</h2>
+            <LeadershipCard
+              member={managingEditor}
+              roleLine="Managing Editor · OSCRSJ"
+              blurb="Leads day-to-day editorial operations across reviewer recruitment, peer-review coordination, manuscript workflow, and cross-functional program management. Brings a decade of strategy and program management leadership at Fortune 500 corporations (Nike, Nordstrom) to the operational backbone of the journal."
+            />
+          </section>
+        )}
+
         {/* Section Editors */}
         {sectionEditors.length > 0 && (
           <section className="mb-12">
@@ -275,7 +291,9 @@ export default function EditorialBoardPage() {
           </section>
         )}
 
-        {/* Review Editor */}
+        {/* Review Editor — kept as a render-when-non-empty section for any
+            future review-editor recruits. Currently empty since Manvir was
+            promoted to Managing Editor at the leadership tier. */}
         {reviewEditors.length > 0 && (
           <section className="mb-12">
             <span className="section-label">Editorial Team</span>

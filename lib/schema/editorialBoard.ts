@@ -23,8 +23,14 @@ export interface BoardMember {
   givenName: string
   familyName?: string // optional for mononyms (e.g. single-name members)
   honorificSuffix: string // 'MD', 'MBBS, MS, MBA, PhD', etc.
-  jobTitle: string // 'Editor-in-Chief' | 'Founding Editor' | 'Section Editor' | 'Associate Editor' | 'Review Editor'
-  medicalSpecialty: string // schema.org MedicalSpecialty vocab where possible
+  jobTitle: string // 'Editor-in-Chief' | 'Founding Editor' | 'Managing Editor' | 'Section Editor' | 'Associate Editor' | 'Review Editor'
+  /**
+   * schema.org MedicalSpecialty vocabulary where applicable. Optional —
+   * non-clinical board members (e.g. Managing Editor with operations or
+   * business backgrounds) omit this field; the JSON-LD Person node
+   * conditionally emits medicalSpecialty only when set.
+   */
+  medicalSpecialty?: string
   affiliation?: string // institution name (optional — fill when confirmed)
   sameAs?: string[] // ORCID URL, institutional page, ResearchGate, etc.
   slug?: string // when set, member has a bio page at /editorial-board/[slug]
@@ -189,15 +195,17 @@ export const BOARD_MEMBERS: BoardMember[] = [
     medicalSpecialty: 'Orthopedic Surgery',
     slug: 'akshay-phupate',
   },
-  // Review Editor
+  // Managing Editor — operations leadership, sits at the leadership tier
+  // alongside EIC + Founding Editor. Non-clinical role — medicalSpecialty
+  // intentionally omitted (her domain is editorial operations + program
+  // management, not a clinical subspecialty).
   {
     name: 'Manvir Kaur, MS',
     givenName: 'Manvir',
     familyName: 'Kaur',
     honorificSuffix: 'MS',
-    jobTitle: 'Review Editor',
-    medicalSpecialty: 'Orthopedic Surgery',
-    affiliation: 'Portland State University',
+    jobTitle: 'Managing Editor',
+    affiliation: 'OSCRSJ',
     slug: 'manvir-kaur',
   },
 ]
@@ -255,7 +263,7 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     workLocation: 'Chennai, India',
   },
   'kanwar-parhar': {
-    photo: '/brand/kanwar-parhar.jpg',
+    photo: '/brand/kanwar-parhar.png',
     summary:
       'Founding Editor of OSCRSJ and orthopedic surgery resident at the University of California, San Diego. Founded the journal in 2026 to give the global orthopedic community a rigorous, fast, and supportive venue for case reports and case series. Oversees editorial operations, journal development, and day-to-day management during the launch phase.',
     education: [
@@ -446,10 +454,24 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
       'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
   },
 
-  // ----- Review Editor -----
+  // ----- Managing Editor -----
   'manvir-kaur': {
+    photo: '/brand/manvir-kaur.png',
     summary:
-      'Review Editor at OSCRSJ. Coordinates reviewer recruitment and review-quality oversight across the journal.',
+      'Managing Editor of OSCRSJ. Leads day-to-day editorial operations across reviewer recruitment, peer-review coordination, manuscript workflow, and cross-functional program management. Brings a decade of strategy and program management leadership at Fortune 500 corporations to the operational backbone of an independent research journal.',
+    education: [
+      'Master of Science in Business Management — Portland State University',
+      'Bachelor of Business Administration — University of Washington',
+    ],
+    experience: [
+      'Managing Editor at OSCRSJ — leads reviewer recruitment, peer-review coordination, manuscript pipeline operations, editorial workflow design, and the journal’s cross-functional program management. Owns day-to-day operations during the launch phase.',
+      'Cross-functional strategy and program management leadership at Nike, where she led program teams spanning product, supply chain, and operations.',
+      'Strategy and program management at Nordstrom, with a focus on cross-functional program execution and organizational strategy.',
+    ],
+    achievements: [
+      'Led cross-functional strategy and program management teams at two Fortune 500 corporations: Nike and Nordstrom',
+      'Master of Science in Business Management (Portland State University) and Bachelor of Business Administration (University of Washington)',
+    ],
     workLocation: 'Portland, Oregon, United States',
   },
 }
@@ -465,7 +487,7 @@ export function buildEditorialBoardSchema(members: BoardMember[]) {
       ...(m.familyName && { familyName: m.familyName }),
       honorificSuffix: m.honorificSuffix,
       jobTitle: m.jobTitle,
-      medicalSpecialty: m.medicalSpecialty,
+      ...(m.medicalSpecialty && { medicalSpecialty: m.medicalSpecialty }),
       ...(m.affiliation && {
         affiliation: { '@type': 'Organization', name: m.affiliation },
       }),
@@ -502,7 +524,7 @@ export function buildBoardMemberDetailSchema(
     ...(member.familyName && { familyName: member.familyName }),
     honorificSuffix: member.honorificSuffix,
     jobTitle: member.jobTitle,
-    medicalSpecialty: member.medicalSpecialty,
+    ...(member.medicalSpecialty && { medicalSpecialty: member.medicalSpecialty }),
     description: bio.summary,
     ...(bio.photo && { image: `https://www.oscrsj.com${bio.photo}` }),
     url: `https://www.oscrsj.com/editorial-board/${member.slug}`,
