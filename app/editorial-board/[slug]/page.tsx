@@ -9,6 +9,7 @@ import {
   getBoardMemberInitials,
   type BoardMember,
 } from '@/lib/schema/editorialBoard'
+import { THIN_BIO_SLUGS } from '@/lib/schema/thinBioSlugs'
 
 interface PageProps {
   params: { slug: string }
@@ -26,6 +27,13 @@ export function generateMetadata({ params }: PageProps): Metadata {
   if (!member || !bio) {
     return { title: 'Editorial Board Member Not Found' }
   }
+  // Thin bios — boilerplate summary + no education/experience/achievements
+  // detail — emit `noindex, follow` so Google's helpful-content classifier
+  // doesn't flag them as templated filler. When the bio is fleshed out, the
+  // slug is removed from THIN_BIO_SLUGS in the same commit and the page
+  // becomes indexable automatically. Internal link equity still flows
+  // because of `follow: true`. Per [[2026-04-30 John — Thin-Content Sweep]].
+  const isThinBio = THIN_BIO_SLUGS.has(params.slug)
   return {
     title: `${member.name} — ${member.jobTitle}`,
     description: bio.summary,
@@ -41,6 +49,9 @@ export function generateMetadata({ params }: PageProps): Metadata {
     alternates: {
       canonical: `https://www.oscrsj.com/editorial-board/${member.slug}`,
     },
+    ...(isThinBio && {
+      robots: { index: false, follow: true },
+    }),
   }
 }
 
