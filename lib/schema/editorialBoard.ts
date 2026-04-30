@@ -31,7 +31,10 @@ export interface BoardMember {
 }
 
 // Real members only — "Recruiting" slots are NOT rendered as Person nodes.
-// Update this roster as members are confirmed.
+// Update this roster as members are confirmed. Every member has a `slug`
+// — they all get a bio page at /editorial-board/[slug]. Lean stub bios
+// for members without rich CV data still render in the shared format;
+// individual sections hide gracefully when their data is empty.
 export const BOARD_MEMBERS: BoardMember[] = [
   // Leadership
   {
@@ -42,6 +45,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Editor-in-Chief',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'Dr. MGR Educational and Research Institute, Chennai',
+    slug: 'madhan-jeyaraman',
   },
   {
     name: 'Kanwar Parhar, MD',
@@ -51,6 +55,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Founding Editor',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'University of California, San Diego',
+    slug: 'kanwar-parhar',
     // sameAs to be populated when ready
   },
   // Section Editors
@@ -61,6 +66,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Trauma',
+    slug: 'nathaniel-schaffer',
   },
   {
     // Co-Section Editor for Trauma — paired with Schaffer for load
@@ -83,6 +89,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Spine Surgery',
+    slug: 'miguel-schmitz',
   },
   {
     name: 'Bill K. Huang, MD',
@@ -91,6 +98,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Adult Reconstruction',
+    slug: 'bill-huang',
   },
   {
     name: 'Sukhman Singh, MBBS, MS',
@@ -99,6 +107,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Foot and Ankle Surgery',
+    slug: 'sukhman-singh',
   },
   {
     name: 'Hiroki Okamura, MD, PhD',
@@ -107,6 +116,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD, PhD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Sports Medicine',
+    slug: 'hiroki-okamura',
   },
   {
     name: 'Dheeraj Makkar, MD',
@@ -115,6 +125,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Oncology',
+    slug: 'dheeraj-makkar',
   },
   {
     name: 'Shreya Chaudhuri, MD',
@@ -123,6 +134,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Microbiology and Infectious Diseases',
+    slug: 'shreya-chaudhuri',
   },
   // Associate Editors
   {
@@ -132,6 +144,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    slug: 'vikash-raj',
   },
   {
     name: 'Abhijit Jayan, MBBS, MS',
@@ -140,6 +153,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    slug: 'abhijit-jayan',
   },
   {
     // Telugu/South Indian naming convention: surname-first ordering. If
@@ -151,6 +165,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    slug: 'damarla-meghana',
   },
   {
     name: 'Akshay Phupate, MBBS, MS',
@@ -159,6 +174,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    slug: 'akshay-phupate',
   },
   // Review Editor
   {
@@ -169,6 +185,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Review Editor',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'Portland State University',
+    slug: 'manvir-kaur',
   },
 ]
 
@@ -179,31 +196,66 @@ export const BOARD_MEMBERS: BoardMember[] = [
 // ---------------------------------------------------------------------------
 
 export interface BoardMemberBio {
-  /** Path to portrait JPG/PNG under /public, e.g. '/brand/chingiz-alizade.jpg' */
-  photo: string
+  /**
+   * Path to portrait JPG/PNG under /public, e.g. '/brand/chingiz-alizade.jpg'.
+   * Optional — when missing, the bio page + listing card render an
+   * initials-on-peach-circle avatar fallback so the visual rhythm stays
+   * consistent across members regardless of photo availability.
+   */
+  photo?: string
   /** 1-2 sentence summary that anchors the bio page hero. */
   summary: string
   /** Education entries, each line = one degree/credential. */
-  education: string[]
+  education?: string[]
   /** Free-form experience description (rendered as paragraphs). */
-  experience: string[]
+  experience?: string[]
   /** Career achievements (rendered as a bulleted list). */
-  achievements: string[]
+  achievements?: string[]
   /** Society memberships and leadership roles. */
-  memberships: string[]
+  memberships?: string[]
   /** Awards / honors (year-prefixed where known). */
-  awards: string[]
-  /** Public contact email — display verbatim. Optional. */
-  email?: string
+  awards?: string[]
   /** Locale text for the JSON-LD `address` / `workLocation`. */
   workLocation?: string
 }
+// Note: contact information (email, phone, etc.) is intentionally NOT a
+// field on this interface — Kanwar directive 2026-04-30: editorial board
+// members do not have contact info surfaced on their public bio pages.
+// Editorial correspondence routes through the journal's editorial inbox
+// (editorial@oscrsj.com / oscrsjournal@gmail.com), not individual members.
 
 export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
+  // ----- Leadership -----
+  'madhan-jeyaraman': {
+    photo: '/brand/madhan-jeyaraman.jpg',
+    summary:
+      "Editor-in-Chief of OSCRSJ. Professor of Orthopaedics at Dr. MGR Educational and Research Institute, Chennai. Leads OSCRSJ's editorial direction with an emphasis on rigorous methodology, scholarly quality, and substantive review.",
+    experience: [
+      'Professor of Orthopaedics, Dr. MGR Educational and Research Institute, Chennai.',
+      'Founder Director, Agathisha Ortho Stemcell Clinic (AOSC).',
+      'Head, Research and Development, Sri Lalithambigai Medical College and Hospital.',
+    ],
+    achievements: [
+      '460+ peer-reviewed publications',
+      '4,295+ citations',
+    ],
+    workLocation: 'Chennai, India',
+  },
+  'kanwar-parhar': {
+    summary:
+      'Founding Editor of OSCRSJ. Founded the journal in 2026 to give the global orthopedic community a rigorous, fast, and supportive venue for case reports and case series. Oversees editorial operations, journal development, and day-to-day management during the launch phase.',
+    workLocation: 'San Diego, California, United States',
+  },
+
+  // ----- Section Editors -----
+  'nathaniel-schaffer': {
+    summary:
+      'Section Editor for Orthopedic Trauma at OSCRSJ. Brings clinical expertise across acute and reconstructive trauma to the journal’s peer-review process.',
+  },
   'chingiz-alizade': {
     photo: '/brand/chingiz-alizade.jpg',
     summary:
-      "A distinguished orthopedic surgeon with over 40 years of dedicated service at the Azerbaijan Scientific Research Institute of Traumatology and Orthopedics, recognized for founding a new scientific direction in the study of infectious complications in traumatology and orthopedics in Azerbaijan.",
+      'A distinguished orthopedic surgeon with over 40 years of dedicated service at the Azerbaijan Scientific Research Institute of Traumatology and Orthopedics, recognized for founding a new scientific direction in the study of infectious complications in traumatology and orthopedics in Azerbaijan.',
     education: [
       'Azerbaijan Medical Institute — MD (1974)',
       'PhD in Traumatology and Orthopedics — Moscow, Russia (1985)',
@@ -226,8 +278,56 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
       'EFORT — European Federation of National Associations of Orthopaedics and Traumatology',
     ],
     awards: ['2019 — SICOT Prize in Fundamental Science'],
-    email: 'ch.alizadehff@gmail.com',
     workLocation: 'Baku, Azerbaijan',
+  },
+  'miguel-schmitz': {
+    summary:
+      'Section Editor for Spine Surgery at OSCRSJ. Brings clinical expertise across cervical, thoracic, and lumbar spine pathology to the journal’s peer-review process.',
+  },
+  'bill-huang': {
+    summary:
+      'Section Editor for Adult Reconstruction at OSCRSJ. Brings clinical expertise across primary and revision joint arthroplasty to the journal’s peer-review process.',
+  },
+  'sukhman-singh': {
+    summary:
+      'Section Editor for Foot and Ankle Surgery at OSCRSJ. Brings clinical expertise across foot and ankle reconstruction, deformity correction, and trauma to the journal’s peer-review process.',
+  },
+  'hiroki-okamura': {
+    summary:
+      'Section Editor for Sports Medicine at OSCRSJ. Brings clinical expertise across arthroscopy, ligament reconstruction, and sports-related injury management to the journal’s peer-review process.',
+  },
+  'dheeraj-makkar': {
+    summary:
+      'Section Editor for Orthopedic Oncology at OSCRSJ. Brings clinical expertise across primary and metastatic musculoskeletal tumors and limb-salvage surgery to the journal’s peer-review process.',
+  },
+  'shreya-chaudhuri': {
+    summary:
+      'Section Editor for Orthopedic Microbiology and Infectious Diseases at OSCRSJ. Brings clinical expertise across periprosthetic joint infection, osteomyelitis, and infection-related reconstruction to the journal’s peer-review process.',
+  },
+
+  // ----- Associate Editors -----
+  'vikash-raj': {
+    summary:
+      'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
+  },
+  'abhijit-jayan': {
+    summary:
+      'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
+  },
+  'damarla-meghana': {
+    summary:
+      'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
+  },
+  'akshay-phupate': {
+    summary:
+      'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
+  },
+
+  // ----- Review Editor -----
+  'manvir-kaur': {
+    summary:
+      'Review Editor at OSCRSJ. Coordinates reviewer recruitment and review-quality oversight across the journal.',
+    workLocation: 'Portland, Oregon, United States',
   },
 }
 
@@ -259,7 +359,12 @@ export function buildEditorialBoardSchema(members: BoardMember[]) {
 
 /**
  * Per-member detail JSON-LD for the bio page. Adds bio-specific fields
- * (image, address, email, alumniOf) on top of the base Person node.
+ * (image, description, workLocation) on top of the base Person node.
+ *
+ * Contact information (email, telephone) is intentionally NOT emitted —
+ * Kanwar directive 2026-04-30: editorial-board members do not have
+ * contact info surfaced publicly. Editorial correspondence routes
+ * through the journal's editorial inbox, not individual members.
  */
 export function buildBoardMemberDetailSchema(
   member: BoardMember,
@@ -276,16 +381,29 @@ export function buildBoardMemberDetailSchema(
     jobTitle: member.jobTitle,
     medicalSpecialty: member.medicalSpecialty,
     description: bio.summary,
-    image: `https://www.oscrsj.com${bio.photo}`,
+    ...(bio.photo && { image: `https://www.oscrsj.com${bio.photo}` }),
     url: `https://www.oscrsj.com/editorial-board/${member.slug}`,
     ...(member.affiliation && {
       affiliation: { '@type': 'Organization', name: member.affiliation },
     }),
-    ...(bio.email && { email: bio.email }),
     ...(bio.workLocation && {
       workLocation: { '@type': 'Place', name: bio.workLocation },
     }),
     ...(member.sameAs && { sameAs: member.sameAs }),
     memberOf: { '@id': 'https://www.oscrsj.com/#organization' },
   }
+}
+
+/**
+ * Initials derivation for the avatar fallback used on bio pages and
+ * editorial-board listing cards when a member has no photo. Returns
+ * up to 2 characters: the given-name initial + family-name initial.
+ * Mononym members fall back to the first 2 characters of givenName.
+ */
+export function getBoardMemberInitials(member: BoardMember): string {
+  const givenInitial = member.givenName.charAt(0).toUpperCase()
+  if (member.familyName) {
+    return `${givenInitial}${member.familyName.charAt(0).toUpperCase()}`
+  }
+  return member.givenName.slice(0, 2).toUpperCase()
 }

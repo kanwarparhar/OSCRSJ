@@ -6,6 +6,8 @@ import {
   BOARD_MEMBERS,
   BOARD_MEMBER_BIOS,
   buildBoardMemberDetailSchema,
+  getBoardMemberInitials,
+  type BoardMember,
 } from '@/lib/schema/editorialBoard'
 
 interface PageProps {
@@ -31,13 +33,50 @@ export function generateMetadata({ params }: PageProps): Metadata {
       title: `${member.name} — ${member.jobTitle} · OSCRSJ`,
       description: bio.summary,
       url: `https://www.oscrsj.com/editorial-board/${member.slug}`,
-      images: [{ url: bio.photo, alt: `Portrait of ${member.name}` }],
+      ...(bio.photo && {
+        images: [{ url: bio.photo, alt: `Portrait of ${member.name}` }],
+      }),
       type: 'profile',
     },
     alternates: {
       canonical: `https://www.oscrsj.com/editorial-board/${member.slug}`,
     },
   }
+}
+
+// Hero portrait — real photo when bio.photo is set, otherwise a
+// peach-on-cream initials disc that matches the existing card icon
+// rhythm so members without photos still feel "in format".
+function HeroPortrait({
+  member,
+  photo,
+}: {
+  member: BoardMember
+  photo?: string
+}) {
+  if (photo) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={photo}
+        alt={`Portrait of ${member.name}, ${member.jobTitle}`}
+        className="rounded-md shadow-md max-w-[280px] w-full h-auto"
+        width={320}
+        height={384}
+      />
+    )
+  }
+  return (
+    <div
+      role="img"
+      aria-label={`${member.name}, ${member.jobTitle}`}
+      className="rounded-md shadow-md w-[240px] aspect-[5/6] bg-peach/20 flex items-center justify-center"
+    >
+      <span className="font-serif text-7xl text-brown-dark tracking-tight">
+        {getBoardMemberInitials(member)}
+      </span>
+    </div>
+  )
 }
 
 export default function BoardMemberBioPage({ params }: PageProps) {
@@ -50,7 +89,7 @@ export default function BoardMemberBioPage({ params }: PageProps) {
 
   const detailSchema = buildBoardMemberDetailSchema(member, bio)
 
-  // Specialty pill text — combines role + subspecialty when set
+  // Subtitle text — combines role + subspecialty when set on a Section Editor
   const roleLine =
     member.jobTitle === 'Section Editor'
       ? `${member.jobTitle} · ${member.medicalSpecialty}`
@@ -81,17 +120,10 @@ export default function BoardMemberBioPage({ params }: PageProps) {
           </Link>
         </div>
 
-        {/* Hero — photo + summary */}
+        {/* Hero — portrait + summary */}
         <section className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12">
           <div className="lg:col-span-4 flex justify-center lg:justify-start">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={bio.photo}
-              alt={`Portrait of ${member.name}, ${member.jobTitle}`}
-              className="rounded-md shadow-md max-w-[280px] w-full h-auto"
-              width={320}
-              height={384}
-            />
+            <HeroPortrait member={member} photo={bio.photo} />
           </div>
           <div className="lg:col-span-8 space-y-4">
             <span className="section-label">{member.jobTitle}</span>
@@ -111,86 +143,97 @@ export default function BoardMemberBioPage({ params }: PageProps) {
         </section>
 
         {/* Education */}
-        <section className="mb-10">
-          <span className="section-label">Education</span>
-          <h2 className="section-heading mb-4">Education &amp; Training</h2>
-          <div className="bg-white border border-border rounded-xl p-6">
-            <ul className="space-y-3">
-              {bio.education.map((entry, idx) => (
-                <li
-                  key={idx}
-                  className="text-sm text-ink flex items-start gap-3"
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full bg-peach-dark mt-2 flex-shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>{entry}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+        {bio.education && bio.education.length > 0 && (
+          <section className="mb-10">
+            <span className="section-label">Education</span>
+            <h2 className="section-heading mb-4">Education &amp; Training</h2>
+            <div className="bg-white border border-border rounded-xl p-6">
+              <ul className="space-y-3">
+                {bio.education.map((entry, idx) => (
+                  <li
+                    key={idx}
+                    className="text-sm text-ink flex items-start gap-3"
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full bg-peach-dark mt-2 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span>{entry}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
 
         {/* Professional Experience */}
-        <section className="mb-10">
-          <span className="section-label">Career</span>
-          <h2 className="section-heading mb-4">Professional Experience</h2>
-          <div className="bg-white border border-border rounded-xl p-6 space-y-3">
-            {bio.experience.map((para, idx) => (
-              <p key={idx} className="text-sm text-ink leading-relaxed">
-                {para}
-              </p>
-            ))}
-          </div>
-        </section>
+        {bio.experience && bio.experience.length > 0 && (
+          <section className="mb-10">
+            <span className="section-label">Career</span>
+            <h2 className="section-heading mb-4">Professional Experience</h2>
+            <div className="bg-white border border-border rounded-xl p-6 space-y-3">
+              {bio.experience.map((para, idx) => (
+                <p key={idx} className="text-sm text-ink leading-relaxed">
+                  {para}
+                </p>
+              ))}
+            </div>
+          </section>
+        )}
 
-        {/* Achievements + Memberships side-by-side at lg+ */}
-        <section className="grid lg:grid-cols-2 gap-6 mb-10">
-          <div>
-            <span className="section-label">Scholarship</span>
-            <h2 className="section-heading mb-4">Career Achievements</h2>
-            <div className="bg-white border border-border rounded-xl p-6">
-              <ul className="space-y-3">
-                {bio.achievements.map((entry, idx) => (
-                  <li
-                    key={idx}
-                    className="text-sm text-ink flex items-start gap-3"
-                  >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full bg-peach-dark mt-2 flex-shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span>{entry}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div>
-            <span className="section-label">Affiliations</span>
-            <h2 className="section-heading mb-4">Society Memberships</h2>
-            <div className="bg-white border border-border rounded-xl p-6">
-              <ul className="space-y-3">
-                {bio.memberships.map((entry, idx) => (
-                  <li
-                    key={idx}
-                    className="text-sm text-ink flex items-start gap-3"
-                  >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full bg-peach-dark mt-2 flex-shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span>{entry}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
+        {/* Achievements + Memberships side-by-side at lg+ when both present */}
+        {((bio.achievements && bio.achievements.length > 0) ||
+          (bio.memberships && bio.memberships.length > 0)) && (
+          <section className="grid lg:grid-cols-2 gap-6 mb-10">
+            {bio.achievements && bio.achievements.length > 0 && (
+              <div>
+                <span className="section-label">Scholarship</span>
+                <h2 className="section-heading mb-4">Career Achievements</h2>
+                <div className="bg-white border border-border rounded-xl p-6">
+                  <ul className="space-y-3">
+                    {bio.achievements.map((entry, idx) => (
+                      <li
+                        key={idx}
+                        className="text-sm text-ink flex items-start gap-3"
+                      >
+                        <span
+                          className="w-1.5 h-1.5 rounded-full bg-peach-dark mt-2 flex-shrink-0"
+                          aria-hidden="true"
+                        />
+                        <span>{entry}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            {bio.memberships && bio.memberships.length > 0 && (
+              <div>
+                <span className="section-label">Affiliations</span>
+                <h2 className="section-heading mb-4">Society Memberships</h2>
+                <div className="bg-white border border-border rounded-xl p-6">
+                  <ul className="space-y-3">
+                    {bio.memberships.map((entry, idx) => (
+                      <li
+                        key={idx}
+                        className="text-sm text-ink flex items-start gap-3"
+                      >
+                        <span
+                          className="w-1.5 h-1.5 rounded-full bg-peach-dark mt-2 flex-shrink-0"
+                          aria-hidden="true"
+                        />
+                        <span>{entry}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Awards */}
-        {bio.awards.length > 0 && (
+        {bio.awards && bio.awards.length > 0 && (
           <section className="mb-10">
             <span className="section-label">Recognition</span>
             <h2 className="section-heading mb-4">Awards &amp; Honors</h2>
@@ -213,26 +256,8 @@ export default function BoardMemberBioPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Contact */}
-        {bio.email && (
-          <section className="mb-12">
-            <span className="section-label">Contact</span>
-            <h2 className="section-heading mb-4">Get in Touch</h2>
-            <div className="bg-cream-alt border border-border rounded-xl p-6">
-              <p className="text-sm text-ink">
-                <span className="font-semibold">Email: </span>
-                <a
-                  href={`mailto:${bio.email}`}
-                  className="text-brown-dark underline hover:text-brown"
-                >
-                  {bio.email}
-                </a>
-              </p>
-            </div>
-          </section>
-        )}
-
-        {/* Back-to-board CTA */}
+        {/* Back-to-board CTA — contact section intentionally omitted per
+            Kanwar directive (no public contact info on member bios). */}
         <div className="bg-gradient-to-br from-tan/10 to-cream-alt border border-peach/20 rounded-2xl p-8 text-center">
           <h2 className="section-heading mb-2">Meet the Full Editorial Board</h2>
           <p className="text-ink text-sm mb-6 max-w-xl mx-auto">
