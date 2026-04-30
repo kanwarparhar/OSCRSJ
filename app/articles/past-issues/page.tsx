@@ -2,7 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
-export const metadata: Metadata = { title: 'Past Issues — OSCRSJ' }
+// noindex thin-content placeholder per John's 2026-04-30 sweep
+// (^handoff-thin-content-noindex-implementation-2026-04-30).
+// FLIP TRIGGER: remove the `robots` line below when ≥1 issue is archived.
+export const metadata: Metadata = {
+  title: 'Past Issues — OSCRSJ',
+  robots: { index: false, follow: true },
+}
 
 export default function PastIssuesPage() {
   return (

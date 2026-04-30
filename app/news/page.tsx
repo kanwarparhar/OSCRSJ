@@ -83,38 +83,6 @@ export default function NewsPage() {
           )}
         </section>
 
-        {/* Ortho Headlines — placeholder */}
-        <section>
-          <div className="mb-6">
-            <span className="section-label">Coming Soon</span>
-            <h2 className="section-heading">Ortho Headlines</h2>
-            <p className="text-brown text-sm max-w-xl mt-2">
-              Weekly summaries of the most significant peer-reviewed orthopedic research.
-            </p>
-          </div>
-          <div className="bg-white border border-border rounded-xl p-8 text-center">
-            <p className="text-sm text-ink">
-              Ortho Headlines launches alongside the first published issue of OSCRSJ.
-            </p>
-          </div>
-        </section>
-
-        {/* Journal Updates — placeholder */}
-        <section>
-          <div className="mb-6">
-            <span className="section-label">Coming Soon</span>
-            <h2 className="section-heading">Journal Updates</h2>
-            <p className="text-brown text-sm max-w-xl mt-2">
-              Milestones, editorial board news, and indexing progress from the journal.
-            </p>
-          </div>
-          <div className="bg-white border border-border rounded-xl p-8 text-center">
-            <p className="text-sm text-ink">
-              Updates will appear here once OSCRSJ begins publishing.
-            </p>
-          </div>
-        </section>
-
         {/* Categories at a glance */}
         <section>
           <div className="mb-6">

@@ -1,28 +1,94 @@
 import Link from 'next/link'
+import { createAdminClient } from '@/lib/supabase/server'
+import { SUBSPECIALTIES } from '@/lib/constants'
+import type {
+  ManuscriptRow,
+  ManuscriptAuthorRow,
+  ManuscriptType,
+} from '@/lib/types/database'
 
-const featuredArticles = [
-  {
-    type: 'Case Report',
-    title: 'Bilateral Spontaneous Patellar Tendon Rupture in a Young Athlete: A Rare Presentation',
-    authors: 'Smith JA, Patel RK, Johnson ML',
-    doi: '10.XXXX/oscrsj.2026.001',
-    topic: 'Sports Medicine',
-  },
-  {
-    type: 'Case Series',
-    title: 'Minimally Invasive Fixation of Distal Radius Fractures in Elderly Patients: A Three-Case Series',
-    authors: 'Chen W, Rodriguez L, Kim DH',
-    doi: '10.XXXX/oscrsj.2026.002',
-    topic: 'Trauma & Fractures',
-  },
-  {
-    type: 'Case Report',
-    title: 'Unusual Presentation of Pigmented Villonodular Synovitis in the Ankle Joint',
-    authors: 'Thompson BJ, Nguyen TT',
-    doi: '10.XXXX/oscrsj.2026.003',
-    topic: 'Foot & Ankle',
-  },
-]
+// Always fetch fresh — published-state transitions are editor-driven
+// and rare; cheap query so revalidation overhead is fine.
+export const dynamic = 'force-dynamic'
+
+// Homepage Latest Articles block — pulls directly from `manuscripts`
+// filtered to status='published' (LIMIT 3, newest first). Mirrors the
+// server-component pattern Manvir locked at /articles in commit 93f6c9d
+// (Option B per [[2026-04-30 John — Thin-Content Sweep]] D6). Admin
+// client (service-role) on the server side because RLS would otherwise
+// block an anonymous read; the narrow status='published' filter is the
+// safety fence. Pre-launch (no published articles yet) renders an
+// EmptyState — no fake-DOI samples, no E-E-A-T risk from broken
+// doi.org redirects.
+type FeaturedArticle = {
+  id: string
+  type: string
+  title: string
+  authors: string
+  doi: string | null
+  topic: string
+}
+
+const TYPE_LABELS: Record<ManuscriptType, string> = {
+  case_report: 'Case Report',
+  case_series: 'Case Series',
+  surgical_technique: 'Surgical Technique',
+  images_in_orthopedics: 'Images in Orthopedics',
+  letter_to_editor: 'Letter to the Editor',
+  review_article: 'Review Article',
+}
+
+const SUBSPECIALTY_LABELS: Record<string, string> = Object.fromEntries(
+  SUBSPECIALTIES.map((s) => [s.slug, s.name])
+)
+
+async function loadFeaturedArticles(): Promise<FeaturedArticle[]> {
+  const admin = createAdminClient()
+
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('*')
+    .eq('status', 'published')
+    .order('published_date', { ascending: false })
+    .limit(3)
+
+  const manuscripts = (mData as ManuscriptRow[] | null) || []
+  if (manuscripts.length === 0) return []
+
+  const manuscriptIds = manuscripts.map((m) => m.id)
+
+  const { data: aData } = await admin
+    .from('manuscript_authors')
+    .select('*')
+    .in('manuscript_id', manuscriptIds)
+    .order('author_order', { ascending: true })
+
+  const authorsById = new Map<string, ManuscriptAuthorRow[]>()
+  for (const a of (aData as ManuscriptAuthorRow[] | null) || []) {
+    const bucket = authorsById.get(a.manuscript_id) || []
+    bucket.push(a)
+    authorsById.set(a.manuscript_id, bucket)
+  }
+
+  return manuscripts.map((m) => {
+    const authors = authorsById.get(m.id) || []
+    const authorsLine = authors.map((a) => a.full_name).join(', ')
+    const internalSlug = m.subspecialty || ''
+    const subspecialtyLabel =
+      SUBSPECIALTY_LABELS[internalSlug] || internalSlug
+    const typeLabel = m.manuscript_type
+      ? TYPE_LABELS[m.manuscript_type]
+      : 'Case Report'
+    return {
+      id: m.id,
+      type: typeLabel,
+      title: m.title || '(untitled manuscript)',
+      authors: authorsLine,
+      doi: m.doi,
+      topic: subspecialtyLabel,
+    }
+  })
+}
 
 const newsItems = [
   { date: 'April 2026', title: 'OSCRSJ officially launches, accepting submissions across all orthopedic subspecialties', tag: 'Journal' },
@@ -33,7 +99,9 @@ const newsItems = [
   { date: 'February 2026', title: 'Rising interest in AI-assisted fracture classification tools', tag: 'Orthopedics' },
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const featuredArticles = await loadFeaturedArticles()
+
   return (
     <div className="bg-white">
       {/* Scroll-driven fade-in for content sections (CSS-only, view-timeline-based; gracefully degrades to no-animation on older browsers). */}
@@ -359,47 +427,77 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredArticles.map((article, i) => (
-              <article
-                key={article.doi}
-                className={`card flex flex-col ${i === 0 ? 'md:row-span-2' : ''}`}
-              >
-                <div
-                  className={`w-full rounded-lg mb-4 flex items-center justify-center ${i === 0 ? 'h-48' : 'h-32'}`}
-                  style={{ background: 'linear-gradient(135deg, var(--cream-alt) 0%, var(--taupe) 100%)' }}
-                >
-                  <span className="text-ink/50 text-xs uppercase tracking-widest">Radiograph</span>
-                </div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-medium text-ink bg-tan/20 px-2.5 py-1 rounded-full">
-                    {article.type}
-                  </span>
-                  <span className="text-xs text-ink bg-black/5 px-2.5 py-1 rounded-full">
-                    {article.topic}
-                  </span>
-                </div>
-                <h3 className="font-serif text-lg font-normal text-black leading-snug mb-3 flex-1">
-                  {article.title}
-                </h3>
-                <p className="text-xs text-ink mb-2">{article.authors}</p>
-                <p className="text-xs text-ink font-mono">{article.doi}</p>
-                <Link
-                  href={`/articles/${article.doi}`}
-                  className="mt-4 text-sm text-ink font-medium hover:text-black transition-colors flex items-center gap-1"
-                >
-                  Read article
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+          {featuredArticles.length === 0 ? (
+            <div className="bg-cream-alt border border-border rounded-2xl p-8 text-center">
+              <div className="text-4xl mb-4">📚</div>
+              <h3 className="section-heading mb-3">No Published Articles Yet</h3>
+              <p className="text-ink leading-relaxed max-w-xl mx-auto mb-6">
+                OSCRSJ is in pre-launch. Our first peer-reviewed case
+                reports and series will appear here as they complete
+                editorial review.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link href="/submit" className="btn-primary-light">
+                  Submit a Manuscript
                 </Link>
-              </article>
-            ))}
-          </div>
+                <Link href="/articles/in-press" className="btn-outline">
+                  See Articles in Press
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {featuredArticles.map((article, i) => (
+                  <article
+                    key={article.id}
+                    className={`card flex flex-col ${i === 0 ? 'md:row-span-2' : ''}`}
+                  >
+                    <div
+                      className={`w-full rounded-lg mb-4 flex items-center justify-center ${i === 0 ? 'h-48' : 'h-32'}`}
+                      style={{ background: 'linear-gradient(135deg, var(--cream-alt) 0%, var(--taupe) 100%)' }}
+                    >
+                      <span className="text-ink/50 text-xs uppercase tracking-widest">Radiograph</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xs font-medium text-ink bg-tan/20 px-2.5 py-1 rounded-full">
+                        {article.type}
+                      </span>
+                      {article.topic && (
+                        <span className="text-xs text-ink bg-black/5 px-2.5 py-1 rounded-full">
+                          {article.topic}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-serif text-lg font-normal text-black leading-snug mb-3 flex-1">
+                      {article.title}
+                    </h3>
+                    {article.authors && (
+                      <p className="text-xs text-ink mb-2">{article.authors}</p>
+                    )}
+                    {article.doi && (
+                      <p className="text-xs text-ink font-mono">{article.doi}</p>
+                    )}
+                    {article.doi && (
+                      <a
+                        href={`https://doi.org/${article.doi}`}
+                        className="mt-4 text-sm text-ink font-medium hover:text-black transition-colors flex items-center gap-1"
+                      >
+                        Read article
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </a>
+                    )}
+                  </article>
+                ))}
+              </div>
 
-          <div className="mt-8 text-center sm:hidden">
-            <Link href="/articles" className="btn-primary-light">See all articles</Link>
-          </div>
+              <div className="mt-8 text-center sm:hidden">
+                <Link href="/articles" className="btn-primary-light">See all articles</Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
