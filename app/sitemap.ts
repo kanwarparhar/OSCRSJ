@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { AI_ORTHO_BRIEFS } from '@/lib/ai-ortho/data'
+import { BOARD_MEMBER_BIOS } from '@/lib/schema/editorialBoard'
 
 const AI_ORTHO_CATEGORY_SLUGS = [
   'imaging',
@@ -168,6 +169,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    // Individual board-member bio pages — one entry per member with a bio
+    ...Object.keys(BOARD_MEMBER_BIOS).map((slug) => ({
+      url: `${baseUrl}/editorial-board/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
     {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),

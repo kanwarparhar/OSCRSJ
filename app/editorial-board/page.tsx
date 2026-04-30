@@ -8,6 +8,83 @@ import {
 
 export const metadata: Metadata = { title: 'Editorial Board' }
 
+// Section Editor cards — order intentional: Trauma pair leads, then the rest
+// in subspecialty order. Members with `slug` render as clickable Links to
+// /editorial-board/[slug] (full bio); others render as static cards.
+const SECTION_EDITORS: Array<{
+  name: string
+  specialty: string
+  slug?: string
+}> = [
+  { name: 'Nathaniel Schaffer, MD', specialty: 'Trauma' },
+  {
+    name: 'Chingiz Alizade, MD, PhD, DMSc',
+    specialty: 'Trauma',
+    slug: 'chingiz-alizade',
+  },
+  { name: 'Miguel A. Schmitz, MD', specialty: 'Spine' },
+  { name: 'Bill K. Huang, MD', specialty: 'Adult Reconstruction' },
+  { name: 'Sukhman Singh, MBBS, MS', specialty: 'Foot & Ankle' },
+  { name: 'Hiroki Okamura, MD, PhD', specialty: 'Sports Medicine' },
+  { name: 'Dheeraj Makkar, MD', specialty: 'Orthopedic Oncology' },
+  {
+    name: 'Shreya Chaudhuri, MD',
+    specialty: 'Orthopedic Microbiology & Infectious Diseases',
+  },
+]
+
+const ASSOCIATE_EDITORS: Array<{ name: string; slug?: string }> = [
+  { name: 'Vikash Raj, MBBS, MS' },
+  { name: 'Abhijit Jayan, MBBS, MS' },
+  { name: 'Damarla Meghana, MBBS, MS' },
+  { name: 'Akshay Phupate, MBBS, MS' },
+]
+
+// Reusable card body — kept identical for static + clickable variants so
+// the visual stays uniform; the Link wrapper just adds hover affordance.
+function SectionEditorCardBody({
+  name,
+  specialty,
+  isLink,
+}: {
+  name: string
+  specialty: string
+  isLink: boolean
+}) {
+  return (
+    <div
+      className={`bg-white border border-border rounded-xl p-6 flex items-start gap-4 transition-colors ${
+        isLink ? 'hover:border-tan hover:shadow-sm' : ''
+      }`}
+    >
+      <div className="w-10 h-10 rounded-full bg-peach/20 flex-shrink-0 flex items-center justify-center">
+        <svg
+          className="w-5 h-5 text-brown"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+          />
+        </svg>
+      </div>
+      <div className="flex-1">
+        <p className="text-sm font-semibold text-ink">{name}</p>
+        <p className="text-xs text-brown mt-0.5">Section Editor · {specialty}</p>
+        {isLink && (
+          <p className="text-xs text-brown-dark mt-2 font-medium">
+            Read full bio →
+          </p>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function EditorialBoardPage() {
   const personSchema = buildEditorialBoardSchema(BOARD_MEMBERS)
 
@@ -69,27 +146,32 @@ export default function EditorialBoardPage() {
           <span className="section-label">Subspecialty Leadership</span>
           <h2 className="section-heading mb-4">Section Editors</h2>
           <div className="grid sm:grid-cols-2 gap-4">
-            {[
-              { name: 'Nathaniel Schaffer, MD', specialty: 'Trauma' },
-              { name: 'Miguel A. Schmitz, MD', specialty: 'Spine' },
-              { name: 'Bill K. Huang, MD', specialty: 'Adult Reconstruction' },
-              { name: 'Sukhman Singh, MBBS, MS', specialty: 'Foot & Ankle' },
-              { name: 'Hiroki Okamura, MD, PhD', specialty: 'Sports Medicine' },
-              { name: 'Dheeraj Makkar, MD', specialty: 'Orthopedic Oncology' },
-              { name: 'Shreya Chaudhuri, MD', specialty: 'Orthopedic Microbiology & Infectious Diseases' },
-            ].map((member) => (
-              <div key={member.specialty} className="bg-white border border-border rounded-xl p-6 flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-peach/20 flex-shrink-0 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-ink">{member.name}</p>
-                  <p className="text-xs text-brown mt-0.5">Section Editor · {member.specialty}</p>
-                </div>
-              </div>
-            ))}
+            {SECTION_EDITORS.map((member) => {
+              const key = `${member.name}-${member.specialty}`
+              if (member.slug) {
+                return (
+                  <Link
+                    key={key}
+                    href={`/editorial-board/${member.slug}`}
+                    className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-peach focus-visible:ring-offset-2 rounded-xl"
+                  >
+                    <SectionEditorCardBody
+                      name={member.name}
+                      specialty={member.specialty}
+                      isLink
+                    />
+                  </Link>
+                )
+              }
+              return (
+                <SectionEditorCardBody
+                  key={key}
+                  name={member.name}
+                  specialty={member.specialty}
+                  isLink={false}
+                />
+              )
+            })}
           </div>
         </section>
 
@@ -98,12 +180,7 @@ export default function EditorialBoardPage() {
           <span className="section-label">Editorial Team</span>
           <h2 className="section-heading mb-4">Associate Editors</h2>
           <div className="grid sm:grid-cols-2 gap-4">
-            {[
-              { name: 'Vikash Raj, MBBS, MS' },
-              { name: 'Abhijit Jayan, MBBS, MS' },
-              { name: 'Damarla Meghana, MBBS, MS' },
-              { name: 'Akshay Phupate, MBBS, MS' },
-            ].map((member) => (
+            {ASSOCIATE_EDITORS.map((member) => (
               <div key={member.name} className="bg-white border border-border rounded-xl p-6 flex items-start gap-4">
                 <div className="w-10 h-10 rounded-full bg-peach/20 flex-shrink-0 flex items-center justify-center">
                   <svg className="w-5 h-5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">

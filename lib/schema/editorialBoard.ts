@@ -12,6 +12,11 @@
 // inside the Server Component's JSX so the block ships in initial SSR HTML.
 // "Recruiting" placeholder slots are intentionally NOT emitted — schema
 // must reflect real people only (per John's spec).
+//
+// Members with full bios get a `slug` — that's the URL segment for
+// /editorial-board/[slug] and the indicator that their card on the board
+// page should render as a clickable Link (instead of a static card).
+// Bio detail content lives in BOARD_MEMBER_BIOS keyed by slug.
 
 export interface BoardMember {
   name: string
@@ -22,6 +27,7 @@ export interface BoardMember {
   medicalSpecialty: string // schema.org MedicalSpecialty vocab where possible
   affiliation?: string // institution name (optional — fill when confirmed)
   sameAs?: string[] // ORCID URL, institutional page, ResearchGate, etc.
+  slug?: string // when set, member has a bio page at /editorial-board/[slug]
 }
 
 // Real members only — "Recruiting" slots are NOT rendered as Person nodes.
@@ -44,7 +50,8 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Founding Editor',
     medicalSpecialty: 'Orthopedic Surgery',
-    // affiliation + sameAs to be populated when ready
+    affiliation: 'University of California, San Diego',
+    // sameAs to be populated when ready
   },
   // Section Editors
   {
@@ -54,6 +61,20 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Trauma',
+  },
+  {
+    // Co-Section Editor for Trauma — paired with Schaffer for load
+    // redundancy + complementary depth (Schaffer: US-based acute trauma;
+    // Alizade: 40+ years Azerbaijan-based reconstructive trauma + trauma
+    // infectious complications, SICOT Prize laureate, WAIOT 2nd VP).
+    name: 'Chingiz Alizade, MD, PhD, DMSc',
+    givenName: 'Chingiz',
+    familyName: 'Alizade',
+    honorificSuffix: 'MD, PhD, DMSc',
+    jobTitle: 'Section Editor',
+    medicalSpecialty: 'Orthopedic Trauma',
+    affiliation: 'HB Güven Clinic, Baku, Azerbaijan',
+    slug: 'chingiz-alizade',
   },
   {
     name: 'Miguel A. Schmitz, MD',
@@ -147,8 +168,68 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MS',
     jobTitle: 'Review Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    affiliation: 'Portland State University',
   },
 ]
+
+// ---------------------------------------------------------------------------
+// Bio detail data — keyed by slug. Members without an entry render as a
+// static card on the board page (no Link wrapper). Adding an entry here +
+// setting `slug` on the matching BoardMember row above is the full opt-in.
+// ---------------------------------------------------------------------------
+
+export interface BoardMemberBio {
+  /** Path to portrait JPG/PNG under /public, e.g. '/brand/chingiz-alizade.jpg' */
+  photo: string
+  /** 1-2 sentence summary that anchors the bio page hero. */
+  summary: string
+  /** Education entries, each line = one degree/credential. */
+  education: string[]
+  /** Free-form experience description (rendered as paragraphs). */
+  experience: string[]
+  /** Career achievements (rendered as a bulleted list). */
+  achievements: string[]
+  /** Society memberships and leadership roles. */
+  memberships: string[]
+  /** Awards / honors (year-prefixed where known). */
+  awards: string[]
+  /** Public contact email — display verbatim. Optional. */
+  email?: string
+  /** Locale text for the JSON-LD `address` / `workLocation`. */
+  workLocation?: string
+}
+
+export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
+  'chingiz-alizade': {
+    photo: '/brand/chingiz-alizade.jpg',
+    summary:
+      "A distinguished orthopedic surgeon with over 40 years of dedicated service at the Azerbaijan Scientific Research Institute of Traumatology and Orthopedics, recognized for founding a new scientific direction in the study of infectious complications in traumatology and orthopedics in Azerbaijan.",
+    education: [
+      'Azerbaijan Medical Institute — MD (1974)',
+      'PhD in Traumatology and Orthopedics — Moscow, Russia (1985)',
+      'Doctor of Medical Sciences (DMSc) — Moscow, Russia (2003)',
+      'Professor (since 2005)',
+    ],
+    experience: [
+      'Azerbaijan Scientific Research Institute of Traumatology and Orthopedics, Baku — 1974 to 2019.',
+      'Currently practicing at HB Güven Clinic, Baku, Azerbaijan, with a clinical focus on infections in traumatology and orthopedics and reconstructive surgery.',
+    ],
+    achievements: [
+      'Supervised 8 PhD dissertations',
+      'Authored 13 patents, including 6 with international recognition',
+      'Published over 230 scientific works',
+      'Authored 2 monographs',
+    ],
+    memberships: [
+      'SICOT — Société Internationale de Chirurgie Orthopédique et de Traumatologie',
+      'WAIOT — World Association against Infection in Orthopaedics and Trauma (2nd Vice President)',
+      'EFORT — European Federation of National Associations of Orthopaedics and Traumatology',
+    ],
+    awards: ['2019 — SICOT Prize in Fundamental Science'],
+    email: 'ch.alizadehff@gmail.com',
+    workLocation: 'Baku, Azerbaijan',
+  },
+}
 
 export function buildEditorialBoardSchema(members: BoardMember[]) {
   return {
@@ -166,8 +247,45 @@ export function buildEditorialBoardSchema(members: BoardMember[]) {
         affiliation: { '@type': 'Organization', name: m.affiliation },
       }),
       ...(m.sameAs && { sameAs: m.sameAs }),
+      // Members with a bio page get a `url` pointing at the canonical bio URL
+      // — strengthens the Person node for indexing and AI retrieval, and gives
+      // search engines a destination for the rich-result link.
+      ...(m.slug && { url: `https://www.oscrsj.com/editorial-board/${m.slug}` }),
       // Links each Person back to the root Organization node emitted in app/layout.tsx.
       memberOf: { '@id': 'https://www.oscrsj.com/#organization' },
     })),
+  }
+}
+
+/**
+ * Per-member detail JSON-LD for the bio page. Adds bio-specific fields
+ * (image, address, email, alumniOf) on top of the base Person node.
+ */
+export function buildBoardMemberDetailSchema(
+  member: BoardMember,
+  bio: BoardMemberBio
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `https://www.oscrsj.com/editorial-board#${(member.familyName || member.givenName).toLowerCase()}`,
+    name: member.name,
+    givenName: member.givenName,
+    ...(member.familyName && { familyName: member.familyName }),
+    honorificSuffix: member.honorificSuffix,
+    jobTitle: member.jobTitle,
+    medicalSpecialty: member.medicalSpecialty,
+    description: bio.summary,
+    image: `https://www.oscrsj.com${bio.photo}`,
+    url: `https://www.oscrsj.com/editorial-board/${member.slug}`,
+    ...(member.affiliation && {
+      affiliation: { '@type': 'Organization', name: member.affiliation },
+    }),
+    ...(bio.email && { email: bio.email }),
+    ...(bio.workLocation && {
+      workLocation: { '@type': 'Place', name: bio.workLocation },
+    }),
+    ...(member.sameAs && { sameAs: member.sameAs }),
+    memberOf: { '@id': 'https://www.oscrsj.com/#organization' },
   }
 }
