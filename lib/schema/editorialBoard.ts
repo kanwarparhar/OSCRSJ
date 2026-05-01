@@ -103,6 +103,24 @@ export const BOARD_MEMBERS: BoardMember[] = [
     slug: 'miguel-schmitz',
   },
   {
+    // Co-Section Editor for Spine — paired with Schmitz for load
+    // redundancy + complementary depth (Schmitz: US-based dual-board
+    // sports-medicine + spine surgery; Shahbazi: MD-credentialed
+    // orthopedic researcher with cross-discipline interests in
+    // orthopedic surgery, rheumatology, and rehabilitation, anchored at
+    // the Orthopedic Subspeciality Research Center, Iran). Mirrors the
+    // co-Section Editor pattern established for Trauma (Schaffer +
+    // Alizade).
+    name: 'Parmida Shahbazi, MD',
+    givenName: 'Parmida',
+    familyName: 'Shahbazi',
+    honorificSuffix: 'MD',
+    jobTitle: 'Section Editor',
+    medicalSpecialty: 'Spine Surgery',
+    affiliation: 'Orthopedic Subspeciality Research Center (OSRC)',
+    slug: 'parmida-shahbazi',
+  },
+  {
     name: 'Bill K. Huang, MD',
     givenName: 'Bill',
     familyName: 'Huang',
@@ -194,6 +212,38 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
     slug: 'akshay-phupate',
+  },
+  {
+    // Trauma & Orthopaedic surgeon, currently practicing as ITF
+    // (International Training Fellow) at Royal Bolton Hospital NHS
+    // Trust, Manchester, UK. Indian-trained (Government Medical College,
+    // Surat) with subspecialty experience in robotic arthroplasty (Apollo
+    // Hospitals, Navi Mumbai). Credential string preserves the formal
+    // degrees (MBBS, MS Orth, MRCS, MCh); ATLS instructorship and FIFA
+    // sports-medicine diploma are surfaced in the bio rather than the
+    // honorific suffix.
+    name: 'Yash Mehta, MBBS, MS Orth, MRCS, MCh',
+    givenName: 'Yash',
+    familyName: 'Mehta',
+    honorificSuffix: 'MBBS, MS Orth, MRCS, MCh',
+    jobTitle: 'Associate Editor',
+    medicalSpecialty: 'Orthopedic Trauma',
+    affiliation: 'Royal Bolton Hospital NHS Trust',
+    slug: 'yash-mehta',
+  },
+  {
+    // South Indian (Tamil/Telugu) given-then-family ordering assumed
+    // (Adithyaa = given, Sivaramakrishnan = family). Credential `MS`
+    // preserved verbatim from source; in Indian convention this typically
+    // denotes Master of Surgery — flagged for Kanwar confirmation if a
+    // future audit pass surfaces ambiguity.
+    name: 'Adithyaa Sivaramakrishnan, MS',
+    givenName: 'Adithyaa',
+    familyName: 'Sivaramakrishnan',
+    honorificSuffix: 'MS',
+    jobTitle: 'Associate Editor',
+    medicalSpecialty: 'Orthopedic Surgery',
+    slug: 'adithyaa-sivaramakrishnan',
   },
   // Managing Editor — operations leadership, sits at the leadership tier
   // alongside EIC + Founding Editor. Non-clinical role — medicalSpecialty
@@ -374,6 +424,22 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     ],
     workLocation: 'Spokane, Washington, United States',
   },
+  'parmida-shahbazi': {
+    summary:
+      'MD-credentialed orthopedic researcher and Section Editor for Spine at OSCRSJ. Research scientist at the Orthopedic Subspeciality Research Center (OSRC), with cross-disciplinary interests spanning orthopedic surgery, rheumatology, and rehabilitation medicine.',
+    education: ['Doctor of Medicine (MD)'],
+    experience: [
+      'MD graduate and general physician at a referral trauma center, with active clinical work in the orthopedic surgery department.',
+      'Research scientist at the Orthopedic Subspeciality Research Center (OSRC), pursuing research interests across orthopedic surgery and rheumatology.',
+      'Clinical practice in a physical therapy clinic, with continued engagement in patient care and rehabilitation. Committed to expanding the boundaries of orthopedic science and advocating for improved patient care through ongoing research.',
+    ],
+    achievements: [
+      '68.9 ResearchGate Research Interest Score',
+      '110 citations',
+      'h-index of 5',
+    ],
+    workLocation: 'Iran',
+  },
   'bill-huang': {
     photo: '/brand/bill-huang.jpg',
     summary:
@@ -450,6 +516,26 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
       'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
   },
   'akshay-phupate': {
+    summary:
+      'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
+  },
+  'yash-mehta': {
+    summary:
+      'Trauma & Orthopaedic surgeon practicing as an International Training Fellow at Royal Bolton Hospital NHS Trust, Manchester, UK. Indian-trained (Government Medical College, Surat) with subspecialty experience in robotic arthroplasty at Apollo Hospitals, Navi Mumbai. Holds the MRCS (England) and MCh fellowship in Trauma & Orthopaedics, with additional certifications in Advanced Trauma Life Support (ATLS Instructor, ACS) and the FIFA Diploma in Sports Medicine.',
+    education: [
+      'MBBS — Government Medical College, Surat, India (2018)',
+      'MS Orthopaedics (Gold Medal) — Government Medical College, Surat, India (2022)',
+      'MRCS — Royal College of Surgeons of England',
+      'MCh Fellowship in Trauma & Orthopaedics',
+    ],
+    experience: [
+      'International Training Fellow (ITF) in Trauma & Orthopaedics at Royal Bolton Hospital NHS Trust, Manchester, UK.',
+      'Senior Registrar / Clinical Fellow in Orthopaedics at Apollo Hospitals, Navi Mumbai, with subspecialty focus on robotic arthroplasty.',
+      'ATLS Instructor (American College of Surgeons); FIFA Diploma in Sports Medicine.',
+    ],
+    workLocation: 'Manchester, United Kingdom',
+  },
+  'adithyaa-sivaramakrishnan': {
     summary:
       'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
   },
