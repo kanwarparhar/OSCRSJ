@@ -425,6 +425,7 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     workLocation: 'Spokane, Washington, United States',
   },
   'parmida-shahbazi': {
+    photo: '/brand/parmida-shahbazi.png',
     summary:
       'MD-credentialed orthopedic researcher and Section Editor for Spine at OSCRSJ. Research scientist at the Orthopedic Subspeciality Research Center (OSRC), with cross-disciplinary interests spanning orthopedic surgery, rheumatology, and rehabilitation medicine.',
     education: ['Doctor of Medicine (MD)'],
@@ -520,6 +521,7 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
       'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
   },
   'yash-mehta': {
+    photo: '/brand/yash-mehta.png',
     summary:
       'Trauma & Orthopaedic surgeon practicing as an International Training Fellow at Royal Bolton Hospital NHS Trust, Manchester, UK. Indian-trained (Government Medical College, Surat) with subspecialty experience in robotic arthroplasty at Apollo Hospitals, Navi Mumbai. Holds the MRCS (England) and MCh fellowship in Trauma & Orthopaedics, with additional certifications in Advanced Trauma Life Support (ATLS Instructor, ACS) and the FIFA Diploma in Sports Medicine.',
     education: [
