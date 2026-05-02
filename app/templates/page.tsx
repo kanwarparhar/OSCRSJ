@@ -127,7 +127,7 @@ const irbBranches = [
 const preflightItems = [
   'Read the Guide for Authors before drafting your manuscript.',
   'Use the Title Page template and the article-type-matched manuscript template — not a blank document.',
-  'Use Heading 1, Heading 2, and Heading 3 only — never Heading 4 or deeper. Headings render in italic by design.',
+  'Use Heading 1, Heading 2, and Heading 3 only — never Heading 4 or deeper. Headings render in bold sentence case (only the first letter capitalised), with no italics.',
   'Number references manually as [1], [2], [3] in citation order. Do not use Word’s auto-numbered list feature.',
   'Place References on a separate page. Insert a hard page break (Cmd+Enter / Ctrl+Enter) immediately before the References heading.',
   'Do not embed figures or tables in the manuscript. Submit figures as separate high-resolution image files; submit all tables in a single Tables.docx.',
@@ -141,12 +141,12 @@ const preflightItems = [
 const formatRequirements = [
   { label: 'File Format', value: 'Microsoft Word (.docx)' },
   { label: 'Font', value: 'Times New Roman, 12 point — all text in black' },
-  { label: 'Style', value: 'No bold, no underline; headings in italic only' },
+  { label: 'Style', value: 'Headings in bold sentence case, no italics. Body text in regular weight, no underline.' },
   { label: 'Spacing', value: 'Double-spaced throughout' },
   { label: 'Margins', value: '1 inch (2.54 cm) on all sides' },
   { label: 'Line Numbering', value: 'Continuous line numbering, on every page' },
   { label: 'Page Numbers', value: 'Bottom center of every page' },
-  { label: 'References', value: 'Vancouver style, manual [n] numbering, on a separate page after a hard page break' },
+  { label: 'References', value: 'Vancouver style, manual numbering, on a separate page after a hard page break. The "References" heading is centered. In-text citations should be superscript numbers hyperlinked to the matching reference.' },
   { label: 'Figures', value: 'Separate high-resolution image files (TIFF, PNG, or JPEG; minimum 300 DPI). Not embedded in the manuscript.' },
   { label: 'Tables', value: 'Single Tables.docx file, one table per page, real Word tables (not images). Not embedded in the manuscript.' },
 ]
