@@ -129,7 +129,7 @@ const submissionFiles = [
     name: 'Title Page',
     filename: 'oscrsj-title-page.docx',
     required: 'Required',
-    description: 'Manuscript title, running title, author byline, affiliations, corresponding author email + ORCID. This is the only file that contains author-identifying information.',
+    description: 'Manuscript title, author byline with affiliations, disclosures (Funding, Conflicts of Interest, Acknowledgements), and the corresponding author block (name, address, email, phone). This is the only file that contains author-identifying information.',
   },
   {
     name: 'Manuscript (blinded)',
@@ -225,7 +225,7 @@ export default function TemplatesPage() {
             <div className="bg-white border border-border rounded-xl p-6">
               <h3 className="font-serif text-xl text-brown-dark mb-2">Title Page</h3>
               <p className="text-sm text-ink mb-4 leading-relaxed">
-                The non-blinded title page that accompanies every submission. Contains the manuscript title, running title, author byline, affiliations, and corresponding-author block. The blinded manuscript file does NOT contain any of this information.
+                The non-blinded title page that accompanies every submission. Contains the manuscript title, author byline with affiliations, disclosures (Funding, Conflicts of Interest, Acknowledgements), and the corresponding-author block. The blinded manuscript file does NOT contain any of this information.
               </p>
               <a href="/downloads/oscrsj-title-page.docx" download className="btn-primary-light inline-block">
                 Download Title Page (.docx)

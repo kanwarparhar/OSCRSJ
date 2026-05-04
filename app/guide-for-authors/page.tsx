@@ -68,7 +68,7 @@ const articleTypes: Array<{
       { label: 'Required Checklist', value: 'CARE checklist (mandatory, submit as supplementary file)' },
     ],
     sections: [
-      'Title Page: full title (max 20 words), running title (max 50 characters), all author names with affiliations, corresponding author email',
+      'Title Page: full title (max 20 words), all author names with degrees and superscript affiliation numbers, numbered affiliations, disclosures (Funding, Conflicts of Interest, Acknowledgements), and the corresponding-author block (name, mailing address, email, phone)',
       'Abstract: structured into Introduction (why this case matters), Case Presentation (demographics, history, exam, investigations, treatment), Discussion (how findings relate to literature), Conclusion (key learning point)',
       'Keywords: 3-5 MeSH terms',
       'Introduction',
@@ -264,7 +264,7 @@ const generalSections = [
       'Figure Legends: also on a separate page after the references; the "Figure legends" heading is centered, sentence case, with the first legend on the line directly below.',
       'Figures: submit each figure as a separate high-resolution image file (TIFF, PNG, or JPEG; minimum 300 DPI; 600 DPI recommended). Do NOT embed figures in the manuscript file. Add the figure legend in the Figure Legends section at the end of the manuscript and indicate placement with [Insert Figure 1 here] callouts in the body. Remove all patient identifiers; mask faces unless explicit consent is provided.',
       'Tables: submit all tables in a single Tables.docx file (use the Tables template at /templates), one table per page, real Word tables (not images). Do NOT embed tables in the manuscript file. Indicate placement with [Insert Table 1 here] callouts in the body.',
-      'Title Page: separate document containing the manuscript title, running title, author byline, affiliations, and corresponding author block. The blinded manuscript file does NOT contain author-identifying information.',
+      'Title Page: separate document containing the manuscript title, author byline with affiliations, disclosures (Funding, Conflicts of Interest, Acknowledgements), and the corresponding-author block. The blinded manuscript file does NOT contain author-identifying information.',
     ],
   },
   {
