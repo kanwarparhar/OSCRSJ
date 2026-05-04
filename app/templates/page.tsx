@@ -4,7 +4,7 @@ import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
   title: 'Manuscript Templates',
-  description: 'Download OSCRSJ manuscript templates and worked examples for every accepted article type. Plus the canonical patient consent and IRB approval statements, format requirements, and submission file checklist.',
+  description: 'Download OSCRSJ manuscript templates and worked examples for every accepted article type. Includes the EQUATOR reporting checklists (CARE for Case Reports, JBI for Case Series), canonical patient consent and IRB approval statements, format requirements, and submission file checklist.',
   alternates: { canonical: 'https://www.oscrsj.com/templates' },
 }
 
@@ -305,6 +305,60 @@ export default function TemplatesPage() {
               <a href="/downloads/oscrsj-tables-template.docx" download className="btn-primary-light inline-block">
                 Download Tables Template (.docx)
               </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================
+            REPORTING CHECKLISTS — CARE (Case Reports) + JBI (Case Series)
+            ============================================================ */}
+        <section id="reporting-checklists">
+          <h2 className="font-serif text-3xl text-brown-dark mb-2">Reporting Checklists</h2>
+          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for those two article types.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white border border-border rounded-xl p-6">
+              <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Case Reports</p>
+              <h3 className="font-serif text-xl text-brown-dark mb-1">CARE Checklist</h3>
+              <p className="text-xs text-brown mb-3">CAse REport reporting guidelines (2013) · 13 reporting items</p>
+              <p className="text-sm text-ink mb-4 leading-relaxed">
+                Forces systematic reporting of patient information, clinical findings, timeline, diagnostic assessment, intervention, follow-up, outcomes, patient perspective, and informed consent. The de facto standard across medical case-report publishing.
+              </p>
+              <a href="/downloads/oscrsj-care-checklist.pdf" download className="btn-primary-light inline-block">
+                Download CARE Checklist (.pdf)
+              </a>
+              <p className="text-xs text-brown mt-3">
+                Source:{' '}
+                <a
+                  href="https://www.care-statement.org/checklist"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-brown-dark"
+                >
+                  care-statement.org
+                </a>
+              </p>
+            </div>
+            <div className="bg-white border border-border rounded-xl p-6">
+              <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Case Series</p>
+              <h3 className="font-serif text-xl text-brown-dark mb-1">JBI Case Series Checklist</h3>
+              <p className="text-xs text-brown mb-3">Joanna Briggs Institute Critical Appraisal Checklist for Case Series (2017) · 10 appraisal items</p>
+              <p className="text-sm text-ink mb-4 leading-relaxed">
+                Covers inclusion criteria, valid measurement of the condition, consecutive and complete patient inclusion, demographic and clinical reporting, outcome measurement, follow-up duration, and statistical analysis. The canonical critical-appraisal tool for case series.
+              </p>
+              <a href="/downloads/oscrsj-jbi-case-series-checklist.pdf" download className="btn-primary-light inline-block">
+                Download JBI Checklist (.pdf)
+              </a>
+              <p className="text-xs text-brown mt-3">
+                Source:{' '}
+                <a
+                  href="https://jbi.global/critical-appraisal-tools"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-brown-dark"
+                >
+                  jbi.global
+                </a>
+              </p>
             </div>
           </div>
         </section>

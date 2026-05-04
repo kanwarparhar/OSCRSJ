@@ -209,7 +209,14 @@ function computeInitialStep(state: WizardState): number {
   if (!state.manuscriptType) return 1
   const hasMain = state.files.some(f => f.file_type === 'manuscript')
   const hasBlinded = state.files.some(f => f.file_type === 'blinded_manuscript')
-  if (!hasMain || !hasBlinded) return 2
+  // Pre-flight reporting-checklist requirement matches step2Complete.
+  const hasCare = state.files.some(f => f.file_type === 'care_checklist')
+  const hasJbi = state.files.some(f => f.file_type === 'jbi_case_series_checklist')
+  const checklistOk =
+    state.manuscriptType === 'case_report' ? hasCare
+    : state.manuscriptType === 'case_series' ? hasJbi
+    : true
+  if (!hasMain || !hasBlinded || !checklistOk) return 2
   const abstractWords = state.abstract.trim()
     ? state.abstract.trim().split(/\s+/).length
     : 0
@@ -486,7 +493,22 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
 
   const hasMainManuscript = state.files.some(f => f.file_type === 'manuscript')
   const hasBlindedManuscript = state.files.some(f => f.file_type === 'blinded_manuscript')
-  const step2Complete = hasMainManuscript && hasBlindedManuscript
+  // Reporting-checklist gate (Session 43, 2026-05-04): Case Reports must
+  // ship with a CARE checklist; Case Series must ship with a JBI Case
+  // Series checklist. Both are EQUATOR-mandated and surfaced as required
+  // slots on Step 2 when manuscriptType matches. Revising mode bypasses
+  // because the v1 submission already carries the mandatory file on
+  // record (revision-mode slots are optional, per buildRevisionCategories).
+  const hasCareChecklist = state.files.some(f => f.file_type === 'care_checklist')
+  const hasJbiChecklist = state.files.some(f => f.file_type === 'jbi_case_series_checklist')
+  const reportingChecklistOk = isRevising
+    ? true
+    : state.manuscriptType === 'case_report'
+      ? hasCareChecklist
+      : state.manuscriptType === 'case_series'
+        ? hasJbiChecklist
+        : true
+  const step2Complete = hasMainManuscript && hasBlindedManuscript && reportingChecklistOk
 
   // Step 3 abstract gate: required (non-empty) AND ≤300 words.
   // Mirror Step3Info's word count.
@@ -644,6 +666,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             files={state.files}
             onFilesChange={(files) => updateState({ files })}
             revisionNumber={isRevising ? revisionContext!.revisionNumber : undefined}
+            manuscriptType={state.manuscriptType}
           />
         )}
 

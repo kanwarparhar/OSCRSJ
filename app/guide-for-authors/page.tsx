@@ -20,13 +20,44 @@ export const metadata: Metadata = {
 /*  Article‑type specs                                                 */
 /* ------------------------------------------------------------------ */
 
-const articleTypes = [
+interface ArticleTypeChecklist {
+  // Reporting-tool details surfaced as a download card inside the
+  // article-type section. Currently only Case Report (CARE) and Case
+  // Series (JBI) carry one; other types omit the field.
+  name: string
+  fullName: string
+  itemCount: string
+  rationale: string
+  downloadHref: string
+  sourceLabel: string
+  sourceHref: string
+}
+
+const articleTypes: Array<{
+  id: string
+  label: string
+  tagline: string
+  definition: string
+  specs: { label: string; value: string }[]
+  sections: string[]
+  checklist?: ArticleTypeChecklist
+}> = [
   {
     id: 'case-report',
     label: 'Case Report',
     tagline: '1-3 patients',
     definition:
       'A detailed account of the diagnosis, treatment, and outcome of a medical condition in one to three patients. Case reports at OSCRSJ should present novel, rare, or instructive orthopedic cases that contribute meaningfully to clinical knowledge.',
+    checklist: {
+      name: 'CARE Checklist',
+      fullName: 'CAse REport reporting guidelines (CARE, 2013)',
+      itemCount: '13 reporting items',
+      rationale:
+        'Mandatory for every Case Report submission. The CARE checklist forces systematic reporting of patient information, clinical findings, timeline, diagnostic assessment, intervention, follow-up, outcomes, patient perspective, and informed consent. Complete every item and upload the filled-in checklist as part of your submission (Step 2 of the portal).',
+      downloadHref: '/downloads/oscrsj-care-checklist.pdf',
+      sourceLabel: 'care-statement.org',
+      sourceHref: 'https://www.care-statement.org/checklist',
+    },
     specs: [
       { label: 'Word Limit', value: '2,000 words (excluding abstract, references, figure legends, and tables)' },
       { label: 'Abstract', value: '300 words maximum, structured (Introduction, Case Presentation, Discussion, Conclusion)' },
@@ -35,15 +66,14 @@ const articleTypes = [
       { label: 'Tables', value: 'Maximum 3' },
       { label: 'References', value: '10-25 in Vancouver style' },
       { label: 'Required Checklist', value: 'CARE checklist (mandatory, submit as supplementary file)' },
-      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 2–3 weeks' },
     ],
     sections: [
-      'Title Page: full title (max 20 words), running title (max 50 characters), all author names with affiliations and ORCID IDs, corresponding author email',
+      'Title Page: full title (max 20 words), running title (max 50 characters), all author names with affiliations, corresponding author email',
       'Abstract: structured into Introduction (why this case matters), Case Presentation (demographics, history, exam, investigations, treatment), Discussion (how findings relate to literature), Conclusion (key learning point)',
       'Keywords: 3-5 MeSH terms',
-      'Introduction: clinical context, brief literature background, why this case is novel or instructive (150-250 words)',
-      'Case Presentation: patient demographics (age, sex), chief complaint, history of present illness, past medical/surgical history, physical examination findings, diagnostic workup (labs, imaging, pathology), treatment/surgical intervention with technique details, postoperative course, complications, follow-up and outcome',
-      'Discussion: comparison with existing literature, pathophysiology review, differential diagnoses considered, why the chosen management was appropriate, limitations of the report',
+      'Introduction',
+      'Case Presentation',
+      'Discussion',
       'Conclusion: 1-2 key clinical takeaways',
       'Patient Consent Statement',
       'Conflict of Interest Disclosure',
@@ -58,6 +88,16 @@ const articleTypes = [
     tagline: '4+ patients',
     definition:
       'A descriptive study reporting on the clinical details and outcomes of four or more patients with a similar diagnosis, treatment, or outcome. Case series at OSCRSJ should identify patterns, outcomes, or complications across multiple cases that contribute to clinical decision-making in orthopedic surgery.',
+    checklist: {
+      name: 'JBI Case Series Checklist',
+      fullName: 'Joanna Briggs Institute Critical Appraisal Checklist for Case Series (2017)',
+      itemCount: '10 appraisal items',
+      rationale:
+        'Mandatory for every Case Series submission. The JBI checklist is the canonical critical-appraisal tool for case series — it covers inclusion criteria, valid measurement of the condition, consecutive and complete patient inclusion, demographic and clinical reporting, outcome measurement, follow-up duration, and statistical analysis. Complete every item and upload the filled-in checklist as part of your submission (Step 2 of the portal).',
+      downloadHref: '/downloads/oscrsj-jbi-case-series-checklist.pdf',
+      sourceLabel: 'jbi.global',
+      sourceHref: 'https://jbi.global/critical-appraisal-tools',
+    },
     specs: [
       { label: 'Word Limit', value: '3,000 words (excluding abstract, references, figure legends, and tables)' },
       { label: 'Abstract', value: '300 words maximum, structured (Background, Methods, Results, Discussion, Conclusion)' },
@@ -67,7 +107,6 @@ const articleTypes = [
       { label: 'References', value: '15-40 in Vancouver style' },
       { label: 'Required Checklist', value: 'JBI Critical Appraisal Checklist for Case Series (mandatory)' },
       { label: 'IRB', value: 'IRB approval or exemption statement required' },
-      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 3–4 weeks' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -97,7 +136,6 @@ const articleTypes = [
       { label: 'Tables', value: 'Maximum 2' },
       { label: 'References', value: '8-15 in Vancouver style' },
       { label: 'Supplementary', value: 'Video links (YouTube or similar) are strongly encouraged' },
-      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 2–3 weeks' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -123,7 +161,6 @@ const articleTypes = [
       { label: 'Images', value: '1-4 images (this is the primary content). Minimum 300 DPI, 600 DPI recommended.' },
       { label: 'Tables', value: 'None' },
       { label: 'References', value: 'Maximum 5' },
-      { label: 'Review Timeline', value: 'Expedited: full peer-reviewed decision target 7–10 days' },
     ],
     sections: [
       'Title: descriptive, hints at the diagnosis or finding (max 15 words)',
@@ -144,7 +181,6 @@ const articleTypes = [
       { label: 'Abstract', value: 'Not required' },
       { label: 'Figures/Tables', value: 'Maximum 1 figure or 1 table' },
       { label: 'References', value: 'Maximum 5' },
-      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 1–2 weeks' },
     ],
     sections: [
       'No formal section headings required',
@@ -157,7 +193,7 @@ const articleTypes = [
     label: 'Review Article',
     tagline: 'Invited only (Year 1)',
     definition:
-      'Comprehensive reviews of a focused topic in orthopedic surgery. During Year 1, review articles are accepted by editorial invitation only. Open submissions will begin in Year 2 after OSCRSJ establishes its credibility and indexing milestones.',
+      'Comprehensive reviews of a focused topic in orthopedic surgery.',
     specs: [
       { label: 'Word Limit', value: '3,500 words' },
       { label: 'Abstract', value: '300 words maximum, structured (Background, Methods, Results, Conclusion)' },
@@ -167,7 +203,6 @@ const articleTypes = [
       { label: 'References', value: '20-60 in Vancouver style' },
       { label: 'Reporting Guideline', value: 'PRISMA checklist recommended for systematic reviews' },
       { label: 'Submission', value: 'By editorial invitation only during Year 1' },
-      { label: 'Review Timeline', value: 'Initial editorial response within 10 days; full peer-reviewed decision target 4–6 weeks' },
     ],
     sections: [
       'Title Page: same format as Case Reports',
@@ -193,7 +228,6 @@ const comparisonRows = [
   { param: 'Max Tables', values: ['3', '5', '2', '0', '1', '4'] },
   { param: 'References', values: ['10-25', '15-40', '8-15', 'Max 5', 'Max 5', '20-60'] },
   { param: 'Checklist', values: ['CARE', 'JBI', 'N/A', 'N/A', 'N/A', 'PRISMA rec.'] },
-  { param: 'Review Target', values: ['2-3 wk', '3-4 wk', '2-3 wk', '7-10 d', '1-2 wk', '4-6 wk'] },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -215,8 +249,8 @@ const generalSections = [
       'Page Numbers: bottom center of each page.',
       'Headings: use Heading 1, Heading 2, and Heading 3 only — never Heading 4 or deeper. Every heading is bold, sentence case, with no italics, and carries an empty line above it (never below).',
       'Running Title: a short running title appears in the top-right corner of every page (the manuscript template carries a placeholder you replace).',
-      'In-text Citations: format each citation number as a superscript hyperlinked to the matching entry in the Reference list. The manuscript template seeds bookmarks REF_1, REF_2, REF_3 for the first three references; add REF_4, REF_5, … as you add more.',
-      'References: Vancouver style with manual numbering. The Introduction begins on a new page after the abstract and keywords. The References section sits on its own page; the "References" heading is centered, sentence case, and the first reference begins on the line directly below the heading (no blank line between).',
+      'In-text Citations: format each citation number as a superscript hyperlinked to the matching entry in the Reference list.',
+      'References: Vancouver Style with citations numbered in sequential order or appearance. The Introduction begins on a new page after the abstract and keywords. The References section sits on its own page; the "References" heading is centered, sentence case, and the first reference begins on the line directly below the heading (no blank line between).',
       'Figure Legends: also on a separate page after the references; the "Figure legends" heading is centered, sentence case, with the first legend on the line directly below.',
       'Figures: submit each figure as a separate high-resolution image file (TIFF, PNG, or JPEG; minimum 300 DPI; 600 DPI recommended). Do NOT embed figures in the manuscript file. Add the figure legend in the Figure Legends section at the end of the manuscript and indicate placement with [Insert Figure 1 here] callouts in the body. Remove all patient identifiers; mask faces unless explicit consent is provided.',
       'Tables: submit all tables in a single Tables.docx file (use the Tables template at /templates), one table per page, real Word tables (not images). Do NOT embed tables in the manuscript file. Indicate placement with [Insert Table 1 here] callouts in the body.',
@@ -229,7 +263,7 @@ const generalSections = [
     title: 'Reference Format (Vancouver Style)',
     items: [
       'Number references consecutively in order of first citation',
-      'Use square brackets in text, e.g. [1]',
+      'Cite references in text as superscripts (e.g. ¹), hyperlinked to the matching entry in the Reference list',
       'Journal names should be abbreviated per Index Medicus',
     ],
     example:
@@ -354,8 +388,8 @@ export default function GuideForAuthorsPage() {
             {/* Specs grid */}
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mb-6 max-w-3xl">
               {type.specs.map((s) => (
-                <div key={s.label} className="flex gap-2 py-1.5 border-b border-border">
-                  <span className="text-xs font-semibold text-brown uppercase tracking-wide whitespace-nowrap min-w-[110px]">{s.label}</span>
+                <div key={s.label} className="flex gap-3 py-1.5 border-b border-border">
+                  <span className="text-xs font-semibold text-brown uppercase tracking-wide min-w-[150px] flex-shrink-0">{s.label}</span>
                   <span className="text-sm text-ink">{s.value}</span>
                 </div>
               ))}
@@ -376,6 +410,41 @@ export default function GuideForAuthorsPage() {
                 ))}
               </ol>
             </div>
+
+            {/* Reporting-checklist download card (CARE for Case Reports, JBI for Case Series) */}
+            {type.checklist && (
+              <div className="mt-6 bg-white border border-peach/40 rounded-xl p-6 max-w-3xl">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">Required Reporting Checklist</p>
+                    <h3 className="font-serif text-xl text-brown-dark mb-1">{type.checklist.name}</h3>
+                    <p className="text-xs text-brown mb-3">{type.checklist.fullName} · {type.checklist.itemCount}</p>
+                    <p className="text-sm text-ink leading-relaxed mb-3">{type.checklist.rationale}</p>
+                    <p className="text-xs text-brown">
+                      Source:{' '}
+                      <a
+                        href={type.checklist.sourceHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-brown-dark"
+                      >
+                        {type.checklist.sourceLabel}
+                      </a>{' '}
+                      · OSCRSJ hosts the official version verbatim with attribution.
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 flex-shrink-0 lg:w-56">
+                    <a
+                      href={type.checklist.downloadHref}
+                      download
+                      className="btn-primary-light text-center"
+                    >
+                      Download Checklist (.pdf)
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
         ))}
 
@@ -409,9 +478,7 @@ export default function GuideForAuthorsPage() {
               <ul className="space-y-2 max-w-3xl">
                 {section.items.map((item, j) => (
                   <li key={j} className="flex gap-3 text-sm text-ink leading-relaxed">
-                    <svg className="w-4 h-4 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 rounded-full bg-brown flex-shrink-0" />
                     {item}
                   </li>
                 ))}

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { ManuscriptFileRow, FileType } from '@/lib/types/database'
+import type { ManuscriptFileRow, FileType, ManuscriptType } from '@/lib/types/database'
 import { recordFile, deleteFile, getFileDownloadUrl } from '@/lib/submission/actions'
 
 // ---- File category definitions ----
@@ -17,7 +17,7 @@ interface FileCategory {
   description: string
 }
 
-const BASE_CATEGORIES: FileCategory[] = [
+const BASE_CATEGORIES_FIXED: FileCategory[] = [
   {
     type: 'manuscript',
     label: 'Main Manuscript',
@@ -91,6 +91,51 @@ const BASE_CATEGORIES: FileCategory[] = [
     description: 'IRB or ethics committee approval document. Accepted format: .pdf (max 10 MB).',
   },
 ]
+
+// CARE + JBI reporting-checklist slots — surfaced conditionally by
+// `buildBaseCategories(manuscriptType)` below. CARE only on case_report
+// submissions, JBI only on case_series. Surgical Technique / Images /
+// Letter / Review submissions see no checklist slot at all (those types
+// have no mandated EQUATOR-style reporting tool). The slot is inserted
+// immediately after `tables` so the conditional required upload sits
+// near the other manuscript-level documents.
+const CARE_CHECKLIST_SLOT: FileCategory = {
+  type: 'care_checklist',
+  label: 'CARE Checklist',
+  required: true,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description:
+    'Mandatory for every Case Report submission. Download the official CARE checklist from /guide-for-authors#case-report (or directly at /downloads/oscrsj-care-checklist.pdf), complete every item, and upload the filled-in checklist as a PDF or .docx.',
+}
+
+const JBI_CHECKLIST_SLOT: FileCategory = {
+  type: 'jbi_case_series_checklist',
+  label: 'JBI Case Series Checklist',
+  required: true,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description:
+    'Mandatory for every Case Series submission. Download the JBI Critical Appraisal Checklist for Case Series from /guide-for-authors#case-series (or directly at /downloads/oscrsj-jbi-case-series-checklist.pdf), complete every item, and upload the filled-in checklist as a PDF or .docx.',
+}
+
+function buildBaseCategories(manuscriptType: ManuscriptType | null): FileCategory[] {
+  const categories: FileCategory[] = [...BASE_CATEGORIES_FIXED]
+  // Insert position 4 = immediately after `tables` (index 3) and before
+  // `figure` (index 4 in BASE_CATEGORIES_FIXED). After insertion, the
+  // ordering for a Case Report becomes: manuscript / blinded /
+  // title_page / tables / care_checklist / figure / supplement /
+  // cover_letter / ethics_approval — keeps the required documents
+  // grouped together for visual scannability.
+  if (manuscriptType === 'case_report') {
+    categories.splice(4, 0, CARE_CHECKLIST_SLOT)
+  } else if (manuscriptType === 'case_series') {
+    categories.splice(4, 0, JBI_CHECKLIST_SLOT)
+  }
+  return categories
+}
 
 const REVISION_CATEGORIES: FileCategory[] = [
   {
@@ -167,11 +212,48 @@ const REVISION_CATEGORIES: FileCategory[] = [
   },
 ]
 
+// Revision-mode CARE/JBI slots are OPTIONAL (parallel to title_page +
+// tables in revision mode). The original v1 submission already carries
+// the mandatory checklist on file; the author re-uploads only when the
+// patient cohort or content materially changed during revision.
+const CARE_CHECKLIST_REVISION_SLOT: FileCategory = {
+  type: 'care_checklist',
+  label: 'CARE Checklist (if updated)',
+  required: false,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description: 'Re-upload the CARE checklist only if the patient details, timeline, or outcomes changed during revision. The original v1 checklist stays on file. Accepted formats: .pdf or .docx (max 10 MB).',
+}
+
+const JBI_CHECKLIST_REVISION_SLOT: FileCategory = {
+  type: 'jbi_case_series_checklist',
+  label: 'JBI Case Series Checklist (if updated)',
+  required: false,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description: 'Re-upload the JBI checklist only if the patient cohort, methods, or outcomes changed during revision. The original v1 checklist stays on file. Accepted formats: .pdf or .docx (max 10 MB).',
+}
+
+function buildRevisionCategories(manuscriptType: ManuscriptType | null): FileCategory[] {
+  const categories: FileCategory[] = [...REVISION_CATEGORIES]
+  // Insert position 5 (after `tables`, index 4) so the optional checklist
+  // slot sits with the other "if updated" slots in the revision view.
+  if (manuscriptType === 'case_report') {
+    categories.splice(5, 0, CARE_CHECKLIST_REVISION_SLOT)
+  } else if (manuscriptType === 'case_series') {
+    categories.splice(5, 0, JBI_CHECKLIST_REVISION_SLOT)
+  }
+  return categories
+}
+
 interface Step2FilesProps {
   manuscriptId: string | null
   files: ManuscriptFileRow[]
   onFilesChange: (files: ManuscriptFileRow[]) => void
   revisionNumber?: number
+  manuscriptType: ManuscriptType | null
 }
 
 interface UploadProgress {
@@ -180,7 +262,7 @@ interface UploadProgress {
   category: FileType
 }
 
-export default function Step2Files({ manuscriptId, files, onFilesChange, revisionNumber }: Step2FilesProps) {
+export default function Step2Files({ manuscriptId, files, onFilesChange, revisionNumber, manuscriptType }: Step2FilesProps) {
   // `revisionNumber` is the value of `manuscript_revisions.revision_number`
   // the author is about to create — first revision = 1, second = 2, etc.
   // The original (un-revised) submission is NOT in that table; v1 of the
@@ -192,7 +274,13 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
   // (otherwise undefined), so a presence check is sufficient — no
   // value-based gate is needed here.
   const isRevising = typeof revisionNumber === 'number' && revisionNumber >= 1
-  const FILE_CATEGORIES = isRevising ? REVISION_CATEGORIES : BASE_CATEGORIES
+  // Revision mode reuses the locked manuscript type from the original
+  // submission, so the conditional CARE/JBI slot is preserved on revisions
+  // of Case Reports / Case Series — the author must re-upload an updated
+  // checklist if the patient cohort or content changed.
+  const FILE_CATEGORIES = isRevising
+    ? buildRevisionCategories(manuscriptType)
+    : buildBaseCategories(manuscriptType)
   // Revision mode hides prior-version files from the per-category
   // slot count so upload-required gates are against the current
   // version's tiles only.

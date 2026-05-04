@@ -40,8 +40,10 @@ export type FileType =
   | 'ethics_approval'
   | 'response_to_reviewers'
   | 'tracked_changes'
-  | 'title_page'  // Session 19 (2026-04-25) — v1.1 multi-file submissions
-  | 'tables'      // Session 19 (2026-04-25) — v1.1 multi-file submissions
+  | 'title_page'                  // Session 19 (2026-04-25) — v1.1 multi-file submissions
+  | 'tables'                      // Session 19 (2026-04-25) — v1.1 multi-file submissions
+  | 'care_checklist'              // Session 43 (2026-05-04) — mandatory for case_report
+  | 'jbi_case_series_checklist'   // Session 43 (2026-05-04) — mandatory for case_series
 
 export type WaiverType = 'none' | 'full' | 'trainee' | 'first_pub' | 'custom'
 

@@ -29,6 +29,8 @@ const FILE_TYPE_LABELS: Record<string, string> = {
   supplement: 'Supplementary Material',
   cover_letter: 'Cover Letter',
   ethics_approval: 'Ethics Approval',
+  care_checklist: 'CARE Checklist',
+  jbi_case_series_checklist: 'JBI Case Series Checklist',
 }
 
 function formatFileSize(bytes: number): string {
