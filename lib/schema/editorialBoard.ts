@@ -187,6 +187,28 @@ export const BOARD_MEMBERS: BoardMember[] = [
     sameAs: [],
     slug: 'shreya-chaudhuri',
   },
+  {
+    // Section Editor for Hand & Upper Extremity. Indian-trained
+    // orthopaedic surgeon (MBBS / MS Orth / DNB Orth) with clinical and
+    // academic interests spanning sports medicine, hand and wrist surgery,
+    // and complex trauma. Currently a Senior Resident at the Sports Injury
+    // Centre, Vardhman Mahavir Medical College & Safdarjung Hospital, New
+    // Delhi — one of India's premier trauma + sports medicine training
+    // centres. Honorific suffix preserves the parenthetical specialty
+    // markers Kanwar supplied (MS (Orth), DNB (Orth)) since both MS and
+    // DNB are post-MBBS specialty credentials in the Indian system and the
+    // disambiguation matters for medical readers.
+    name: 'Sankalp Lal, MBBS, MS (Orth), DNB (Orth)',
+    givenName: 'Sankalp',
+    familyName: 'Lal',
+    honorificSuffix: 'MBBS, MS (Orth), DNB (Orth)',
+    jobTitle: 'Section Editor',
+    medicalSpecialty: 'Hand and Upper Extremity Surgery',
+    affiliation:
+      'Sports Injury Centre, Vardhman Mahavir Medical College & Safdarjung Hospital',
+    sameAs: [],
+    slug: 'sankalp-lal',
+  },
   // Associate Editors
   {
     // Credentials updated 2026-04-30 per ResearchGate screenshot supplied
@@ -514,6 +536,22 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
   'shreya-chaudhuri': {
     summary:
       'Section Editor for Orthopedic Microbiology and Infectious Diseases at OSCRSJ. Brings clinical expertise across periprosthetic joint infection, osteomyelitis, and infection-related reconstruction to the journal’s peer-review process.',
+  },
+  'sankalp-lal': {
+    photo: '/brand/sankalp-lal.jpg',
+    summary:
+      'Orthopaedic surgeon with clinical and academic interests in sports medicine, hand and wrist surgery, and complex trauma. Senior Resident at the Sports Injury Centre, Vardhman Mahavir Medical College & Safdarjung Hospital, New Delhi. Active orthopaedic researcher with publications spanning trauma, spine, and sports-related conditions, including case reports and clinical studies — focused on evidence-based practice, surgical innovation, and academic collaboration within orthopaedics.',
+    education: [
+      'MBBS',
+      'MS (Orthopaedics)',
+      'DNB (Orthopaedics)',
+    ],
+    experience: [
+      'Senior Resident, Sports Injury Centre, Vardhman Mahavir Medical College & Safdarjung Hospital, New Delhi.',
+      'Subspecialty focus on sports medicine, hand and wrist surgery, and complex trauma.',
+      'Active orthopaedic researcher with peer-reviewed publications across trauma, spine, and sports-related conditions, including case reports and clinical studies.',
+    ],
+    workLocation: 'New Delhi, India',
   },
 
   // ----- Associate Editors -----
