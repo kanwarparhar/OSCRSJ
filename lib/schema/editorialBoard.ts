@@ -41,6 +41,15 @@ export interface BoardMember {
 // — they all get a bio page at /editorial-board/[slug]. Lean stub bios
 // for members without rich CV data still render in the shared format;
 // individual sections hide gracefully when their data is empty.
+//
+// `sameAs` convention (Sprint 2, 2026-05-03): every member declares an
+// explicit `sameAs: []` even when no ORCID URI has been collected yet.
+// Empty array (rather than omitted field) reads as "ORCID not yet
+// collected" rather than "we forgot to add the field" — keeps Janine's
+// parallel collection deliverable auditable. Brad collects ORCIDs at
+// agreement signing; Janine maintains the source-of-truth ledger.
+// `buildEditorialBoardSchema` filters empty `sameAs` arrays out of the
+// emitted JSON-LD so the public structured-data output stays clean.
 export const BOARD_MEMBERS: BoardMember[] = [
   // Leadership
   {
@@ -51,6 +60,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Editor-in-Chief',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'Dr. MGR Educational and Research Institute, Chennai',
+    sameAs: [],
     slug: 'madhan-jeyaraman',
   },
   {
@@ -61,8 +71,8 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Founding Editor',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'University of California, San Diego',
+    sameAs: [],
     slug: 'kanwar-parhar',
-    // sameAs to be populated when ready
   },
   // Section Editors
   {
@@ -75,6 +85,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Trauma',
     affiliation: 'Denver Health',
+    sameAs: [],
     slug: 'nathaniel-schaffer',
   },
   {
@@ -89,6 +100,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Trauma',
     affiliation: 'HB Güven Clinic, Baku, Azerbaijan',
+    sameAs: [],
     slug: 'chingiz-alizade',
   },
   {
@@ -118,6 +130,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Spine Surgery',
     affiliation: 'Orthopedic Subspeciality Research Center (OSRC)',
+    sameAs: [],
     slug: 'parmida-shahbazi',
   },
   {
@@ -129,6 +142,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     medicalSpecialty: 'Adult Reconstruction',
     affiliation:
       'Washington State University, Elson S. Floyd College of Medicine',
+    sameAs: [],
     slug: 'bill-huang',
   },
   {
@@ -138,6 +152,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Foot and Ankle Surgery',
+    sameAs: [],
     slug: 'sukhman-singh',
   },
   {
@@ -148,6 +163,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Sports Medicine',
     affiliation: 'Department of Orthopedic Surgery, Showa Medical University',
+    sameAs: [],
     slug: 'hiroki-okamura',
   },
   {
@@ -158,6 +174,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Oncology',
     affiliation: 'Emory University',
+    sameAs: [],
     slug: 'dheeraj-makkar',
   },
   {
@@ -167,6 +184,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MD',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Orthopedic Microbiology and Infectious Diseases',
+    sameAs: [],
     slug: 'shreya-chaudhuri',
   },
   // Associate Editors
@@ -181,6 +199,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'All India Institute of Medical Sciences, Deoghar',
+    sameAs: [],
     slug: 'vikash-raj',
   },
   {
@@ -190,6 +209,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    sameAs: [],
     slug: 'abhijit-jayan',
   },
   {
@@ -202,6 +222,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    sameAs: [],
     slug: 'damarla-meghana',
   },
   {
@@ -211,6 +232,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    sameAs: [],
     slug: 'akshay-phupate',
   },
   {
@@ -229,6 +251,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Trauma',
     affiliation: 'Royal Bolton Hospital NHS Trust',
+    sameAs: [],
     slug: 'yash-mehta',
   },
   {
@@ -243,6 +266,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    sameAs: [],
     slug: 'adithyaa-sivaramakrishnan',
   },
   // Managing Editor — operations leadership, sits at the leadership tier
@@ -256,6 +280,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     honorificSuffix: 'MS',
     jobTitle: 'Managing Editor',
     affiliation: 'OSCRSJ',
+    sameAs: [],
     slug: 'manvir-kaur',
   },
 ]
@@ -579,7 +604,11 @@ export function buildEditorialBoardSchema(members: BoardMember[]) {
       ...(m.affiliation && {
         affiliation: { '@type': 'Organization', name: m.affiliation },
       }),
-      ...(m.sameAs && { sameAs: m.sameAs }),
+      // Filter empty arrays — every member declares an explicit `sameAs: []`
+      // when no ORCID has been collected yet (see top-of-file convention),
+      // but emitting an empty `"sameAs": []` to JSON-LD is noise. Only emit
+      // when at least one URL is present.
+      ...(m.sameAs && m.sameAs.length > 0 && { sameAs: m.sameAs }),
       // Members with a bio page get a `url` pointing at the canonical bio URL
       // — strengthens the Person node for indexing and AI retrieval, and gives
       // search engines a destination for the rich-result link.
@@ -622,7 +651,10 @@ export function buildBoardMemberDetailSchema(
     ...(bio.workLocation && {
       workLocation: { '@type': 'Place', name: bio.workLocation },
     }),
-    ...(member.sameAs && { sameAs: member.sameAs }),
+    // Filter empty arrays per top-of-file convention — empty `sameAs: []`
+    // declares "ORCID not yet collected" in source, but emitting an empty
+    // array to JSON-LD is noise.
+    ...(member.sameAs && member.sameAs.length > 0 && { sameAs: member.sameAs }),
     memberOf: { '@id': 'https://www.oscrsj.com/#organization' },
   }
 }
