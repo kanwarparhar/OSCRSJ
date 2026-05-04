@@ -166,8 +166,19 @@ export async function resetPasswordRequest(formData: FormData) {
     return { error: 'Please enter your email address.' }
   }
 
+  // Route through /auth/callback so the recovery code is exchanged for a
+  // session before the user lands on /reset-password. Without this, the
+  // page renders without an authed user and supabase.auth.updateUser()
+  // fails. Also: the redirect URL passed here MUST match an entry in the
+  // Supabase project's Redirect URLs allowlist (Authentication → URL
+  // Configuration); when it doesn't, Supabase silently falls back to the
+  // Site URL (homepage). The /auth/callback URL is already on the
+  // allowlist (signup uses it), so this single change unblocks the flow
+  // without dashboard work — but Kanwar should also add /reset-password
+  // explicitly as defense-in-depth in case anything else ever points
+  // straight at it.
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/reset-password`,
   })
 
   if (error) {
