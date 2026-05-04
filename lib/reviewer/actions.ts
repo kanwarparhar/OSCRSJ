@@ -546,10 +546,18 @@ export async function inviteReviewer(
 
     if (appErr || !appData) return { error: 'Reviewer application not found.' }
     const application = appData as ReviewerApplicationRow
-    if (application.status !== 'active') {
+    // Post-Session-32 the unified roster computes bucket dynamically from
+    // review_invitations + reviews, and the legacy reviewer_applications.status
+    // column is mostly unused. Allow invitation as long as the application
+    // hasn't been explicitly declined or withdrawn — pending / approved / active
+    // are all valid candidates for the reviewer pool.
+    if (
+      application.status === 'declined' ||
+      application.status === 'withdrawn'
+    ) {
       return {
         error:
-          'Only reviewer applications with status "active" may be invited.',
+          'This reviewer application has been declined or withdrawn and cannot be invited.',
       }
     }
     reviewerApplicationId = application.id

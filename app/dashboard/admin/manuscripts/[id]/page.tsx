@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { listReviewerApplications } from '@/lib/reviewer/actions'
+import {
+  buildReviewerRoster,
+  listReviewerApplications,
+} from '@/lib/reviewer/actions'
 import type {
   ManuscriptRow,
   ManuscriptAuthorRow,
@@ -9,7 +12,9 @@ import type {
   ManuscriptMetadataRow,
   EditorialDecisionRow,
   EditorialDecisionType,
+  ReviewerApplicationRow,
 } from '@/lib/types/database'
+import type { ReviewerPoolEntry } from './InviteReviewerPanel'
 import InviteReviewerPanel from './InviteReviewerPanel'
 import InviteByEmailPanel from './InviteByEmailPanel'
 import AdminFileDownloadButton from './AdminFileDownloadButton'
@@ -78,7 +83,7 @@ export default async function AdminManuscriptDetailPage({
   const manuscript = (mData as ManuscriptRow | null) || null
   if (!manuscript) notFound()
 
-  const [authorsRes, filesRes, metadataRes, invitationsRes, appsRes] =
+  const [authorsRes, filesRes, metadataRes, invitationsRes, rosterRes, allAppsRes] =
     await Promise.all([
       admin
         .from('manuscript_authors')
@@ -100,14 +105,63 @@ export default async function AdminManuscriptDetailPage({
         .select('*')
         .eq('manuscript_id', params.id)
         .order('invited_date', { ascending: false }),
-      listReviewerApplications({ status: 'active' }),
+      // Source-of-truth: the unified reviewer roster (Session 32). The legacy
+      // listReviewerApplications({ status: 'active' }) we used to call here
+      // returns ZERO rows post-Session-32 because the literal status column is
+      // no longer written to — every "active" reviewer surfaces via the
+      // computed bucket (reviews_submitted > 0). We pull the roster instead and
+      // filter to bucket ∈ {applicant, pending, approved, active} so direct-email
+      // reviewers (who have no application row) surface correctly.
+      buildReviewerRoster(),
+      // Side-load reviewer_applications so subspecialty interests are still
+      // available for ranking — the roster entry shape doesn't carry them.
+      listReviewerApplications({ status: 'all' }),
     ])
 
   const authors = (authorsRes.data as ManuscriptAuthorRow[] | null) || []
   const files = (filesRes.data as ManuscriptFileRow[] | null) || []
   const metadata = (metadataRes.data as ManuscriptMetadataRow | null) || null
   const invitations = (invitationsRes.data as any[]) || []
-  const activeApplications = appsRes.applications || []
+
+  // Build subspecialty-interest lookup keyed by application id.
+  const applicationById = new Map<string, ReviewerApplicationRow>(
+    (allAppsRes.applications || []).map((a) => [a.id, a])
+  )
+
+  // Filter the roster to invitable buckets. Excluded: declined (turned us
+  // down), withdrawn (pulled themselves out), and entries whose legacy
+  // applicationStatus is declined/withdrawn (defensive — the legacy editor
+  // triage UI may have set those before Session 32).
+  const reviewerPool: ReviewerPoolEntry[] = (rosterRes.roster || [])
+    .filter((entry) => {
+      if (entry.bucket === 'declined' || entry.bucket === 'withdrawn') return false
+      if (
+        entry.applicationStatus === 'declined' ||
+        entry.applicationStatus === 'withdrawn'
+      ) {
+        return false
+      }
+      return true
+    })
+    .map((entry) => {
+      const app = entry.applicationId
+        ? applicationById.get(entry.applicationId)
+        : undefined
+      return {
+        email: entry.email,
+        firstName: entry.firstName,
+        lastName: entry.lastName,
+        affiliation: entry.affiliation,
+        country: entry.country,
+        orcidId: entry.orcidId,
+        applicationId: entry.applicationId,
+        bucket: entry.bucket,
+        subspecialtyInterests: app?.subspecialty_interests ?? [],
+        careerStage: app?.career_stage ?? null,
+        reviewsSubmitted: entry.reviewsSubmitted,
+        latestInvitationDate: entry.latestInvitationDate,
+      }
+    })
 
   // Resolve currently-authed user (for the rescind ownership gate).
   const supabase = await createClient()
@@ -359,7 +413,7 @@ export default async function AdminManuscriptDetailPage({
         manuscriptSubspecialty={manuscript.subspecialty}
         manuscriptStatus={manuscript.status}
         invitations={invitations}
-        activeApplications={activeApplications}
+        reviewerPool={reviewerPool}
         reviewByInvitation={Object.fromEntries(reviewByInvitation)}
       />
 
