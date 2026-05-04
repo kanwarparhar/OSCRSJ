@@ -290,6 +290,12 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [activeCategory, setActiveCategory] = useState<FileType | null>(null)
+  // Tracks per-file Remove requests in flight so a double-click can't
+  // double-fire deleteFile. Without this guard the first call would
+  // win and the second would come back with a stale "File not found"
+  // (now an idempotent success path on the server, but we still want
+  // to disable the button for visual feedback during the round-trip).
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set())
 
   const getFilesForCategory = (type: FileType) =>
     currentVersionFiles.filter((f) => f.file_type === type)
@@ -410,13 +416,29 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
   }, [manuscriptId, files, onFilesChange])
 
   const handleRemove = useCallback(async (file: ManuscriptFileRow) => {
-    const result = await deleteFile(file.id, file.storage_path)
-    if (result.error) {
-      setError(result.error)
-      return
+    // Bail out if a Remove for this file is already in flight — keeps
+    // accidental double-clicks from racing.
+    if (removingIds.has(file.id)) return
+    setRemovingIds(prev => {
+      const next = new Set(prev)
+      next.add(file.id)
+      return next
+    })
+    try {
+      const result = await deleteFile(file.id, file.storage_path)
+      if (result.error) {
+        setError(result.error)
+        return
+      }
+      onFilesChange(files.filter(f => f.id !== file.id))
+    } finally {
+      setRemovingIds(prev => {
+        const next = new Set(prev)
+        next.delete(file.id)
+        return next
+      })
     }
-    onFilesChange(files.filter(f => f.id !== file.id))
-  }, [files, onFilesChange])
+  }, [files, onFilesChange, removingIds])
 
   const handleDownload = useCallback(async (file: ManuscriptFileRow) => {
     const result = await getFileDownloadUrl(file.storage_path)
@@ -557,9 +579,10 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
                         </button>
                         <button
                           onClick={() => handleRemove(file)}
-                          className="text-xs text-red-600 hover:underline"
+                          disabled={removingIds.has(file.id)}
+                          className="text-xs text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
                         >
-                          Remove
+                          {removingIds.has(file.id) ? 'Removing…' : 'Remove'}
                         </button>
                       </div>
                     </div>

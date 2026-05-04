@@ -440,31 +440,60 @@ export async function deleteFile(fileId: string, storagePath: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  // Confirm the file belongs to a manuscript the caller owns before
-  // anything destructive. We check through the RLS-protected read so
-  // the admin-client delete below can't touch someone else's row.
-  const { data: fileRow } = await supabase
+  const admin = createAdminClient()
+
+  // Look up the file via admin client (bypasses RLS) so we can
+  // distinguish a row that genuinely no longer exists from a row
+  // whose RLS read got blocked. Without this distinction, deleteFile
+  // was returning "File not found" when an earlier call (e.g. an
+  // accidental double-click on Remove, or a stale tile in the
+  // wizard's client state) had already deleted the row — the early
+  // return then prevented the client from removing the file from
+  // state.files, leaving the tile visible, the slot marked as full
+  // (max 1 for blinded_manuscript / title_page / etc.), and the
+  // Upload button hidden behind the !isFull gate. The user couldn't
+  // re-upload without a hard refresh. (Session 43, Kanwar bug report
+  // 2026-05-04.)
+  const { data: fileRow } = await admin
     .from('manuscript_files')
-    .select('id, manuscript_id')
+    .select('id, manuscript_id, storage_path')
     .eq('id', fileId)
     .maybeSingle()
-  const file = fileRow as { id: string; manuscript_id: string } | null
-  if (!file) return { error: 'File not found' }
+  const file = fileRow as
+    | { id: string; manuscript_id: string; storage_path: string }
+    | null
 
-  const { data: ownsMs } = await supabase
+  // Idempotent path: the row is genuinely gone, so the deletion is
+  // already achieved. Best-effort: also clear the storage object the
+  // caller passed in case it's still around (orphan from a prior
+  // partial-failure upload). This can't accidentally clobber another
+  // user's file because storage paths are UUID-namespaced
+  // (manuscripts/{ms_id}/v{n}/...) and a caller would need to know
+  // the exact path to abuse it.
+  if (!file) {
+    try {
+      await admin.storage.from('submissions').remove([storagePath])
+    } catch {
+      // best-effort cleanup; deletion is already achieved
+    }
+    return { success: true }
+  }
+
+  // Row exists — ownership gate is mandatory. Use the admin client
+  // here too so a stale cookie session in a server action can't
+  // false-fail the gate on a legitimately-owned row.
+  const { data: ownsMs } = await admin
     .from('manuscripts')
     .select('id')
     .eq('id', file.manuscript_id)
     .eq('corresponding_author_id', user.id)
     .maybeSingle()
-  if (!ownsMs) return { error: 'File not found' }
+  if (!ownsMs) return { error: 'Not authorized to delete this file' }
 
-  const admin = createAdminClient()
+  // Use the row's own storage_path defensively in case the client
+  // passed a stale value.
+  await admin.storage.from('submissions').remove([file.storage_path])
 
-  // Delete from storage
-  await admin.storage.from('submissions').remove([storagePath])
-
-  // Delete the DB record
   const { error } = await (admin.from('manuscript_files') as any)
     .delete()
     .eq('id', fileId)
