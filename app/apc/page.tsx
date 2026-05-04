@@ -6,12 +6,12 @@ import DiscountInquiryForm from './DiscountInquiryForm'
 export const metadata: Metadata = {
   title: 'APC & Fees',
   description:
-    'OSCRSJ article processing charges and case-by-case discount inquiries. Free to publish for manuscripts submitted before August 1, 2026; $499 standard APC after.',
+    'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver for manuscripts submitted before August 1, 2026; $499 standard APC after.',
   alternates: { canonical: 'https://www.oscrsj.com/apc' },
   openGraph: {
     title: 'APC & Fees | OSCRSJ',
     description:
-      'OSCRSJ article processing charges and case-by-case discount inquiries. Free to publish before August 1, 2026.',
+      'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver before August 1, 2026.',
     url: 'https://www.oscrsj.com/apc',
     type: 'website',
   },
@@ -27,7 +27,7 @@ export default function ApcPage() {
         name: 'How much does it cost to publish in OSCRSJ?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ is currently free to publish for all manuscripts submitted before August 1, 2026. After this launch window, the article processing charge is $499 per accepted manuscript.',
+          text: 'OSCRSJ is currently waiving the full APC for all manuscripts submitted before August 1, 2026. After this launch window, the article processing charge is $499 per accepted manuscript.',
         },
       },
       {
@@ -62,14 +62,14 @@ export default function ApcPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Currently free banner — dark editorial brown */}
+        {/* Launch-window APC waiver banner — dark editorial brown */}
         <div className="bg-brown-dark text-cream rounded-xl p-6 mb-12">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 bg-peach/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
             <div>
-              <p className="font-semibold text-lg text-cream">Free to Publish — Submit Before August 1, 2026</p>
+              <p className="font-semibold text-lg text-cream">Full APC Fee Waiver — Submit Before August 1, 2026</p>
               <p className="text-cream/80 text-sm mt-1">
-                All APCs are waived for manuscripts submitted before August 1, 2026. Submit now and publish at no cost during our launch window.
+                The full article processing charge is waived for every manuscript submitted before August 1, 2026. Submit during our launch window and the full APC is on us.
               </p>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function ApcPage() {
         </section>
 
         <div className="text-center">
-          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Free Before Aug 1, 2026</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Full APC Waived Before Aug 1, 2026</Link>
         </div>
       </div>
     </div>

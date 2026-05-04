@@ -88,7 +88,7 @@ const faqSections = [
       },
       {
         q: 'What is the Article Processing Charge (APC)?',
-        a: 'All manuscripts submitted before August 1, 2026 publish at no cost during our launch window. After that, the APC is a flat $499 per accepted manuscript. See our APC page for full details.',
+        a: 'OSCRSJ is currently waiving the full APC for every manuscript submitted before August 1, 2026 as part of our launch window. After that, the APC is a flat $499 per accepted manuscript. See our APC page for full details.',
       },
       {
         q: 'Are discounts on the APC available?',

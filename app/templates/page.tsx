@@ -123,34 +123,6 @@ const irbBranches = [
   },
 ]
 
-/* ---------- 10-item pre-flight checklist (migrated from v1.0 cover page) ---------- */
-const preflightItems = [
-  'Read the Guide for Authors before drafting your manuscript.',
-  'Use the Title Page template and the article-type-matched manuscript template — not a blank document.',
-  'Use Heading 1, Heading 2, and Heading 3 only — never Heading 4 or deeper. Headings render in bold sentence case (only the first letter capitalised), with no italics.',
-  'Number references manually as [1], [2], [3] in citation order. Do not use Word’s auto-numbered list feature.',
-  'Place References on a separate page. Insert a hard page break (Cmd+Enter / Ctrl+Enter) immediately before the References heading.',
-  'Do not embed figures or tables in the manuscript. Submit figures as separate high-resolution image files; submit all tables in a single Tables.docx.',
-  'Indicate placement of figures and tables in the manuscript body with [Insert Figure 1 here] and [Insert Table 1 here] callouts.',
-  'Do not use Word’s footnote feature. Disclosures live on the Title Page or in the submission portal’s Step 5.',
-  'Replace every [bracketed placeholder] with your content. Delete every instructional sentence in brackets.',
-  'Verify continuous line numbering is on (Layout → Line Numbers → Continuous in Word).',
-]
-
-/* ---------- File-format requirements (per OSCRSJ submission policy) ---------- */
-const formatRequirements = [
-  { label: 'File Format', value: 'Microsoft Word (.docx)' },
-  { label: 'Font', value: 'Times New Roman, 12 point — all text in black' },
-  { label: 'Style', value: 'Headings in bold sentence case, no italics. Body text in regular weight, no underline.' },
-  { label: 'Spacing', value: 'Double-spaced throughout' },
-  { label: 'Margins', value: '1 inch (2.54 cm) on all sides' },
-  { label: 'Line Numbering', value: 'Continuous line numbering, on every page' },
-  { label: 'Page Numbers', value: 'Bottom center of every page' },
-  { label: 'References', value: 'Vancouver style, manual numbering, on a separate page after a hard page break. The "References" heading is centered. In-text citations should be superscript numbers hyperlinked to the matching reference.' },
-  { label: 'Figures', value: 'Separate high-resolution image files (TIFF, PNG, or JPEG; minimum 300 DPI). Not embedded in the manuscript.' },
-  { label: 'Tables', value: 'Single Tables.docx file, one table per page, real Word tables (not images). Not embedded in the manuscript.' },
-]
-
 /* ---------- What to upload at submission ---------- */
 const submissionFiles = [
   {
@@ -222,44 +194,6 @@ export default function TemplatesPage() {
         </section>
 
         {/* ============================================================
-            PRE-FLIGHT CHECKLIST
-            ============================================================ */}
-        <section id="checklist">
-          <h2 className="font-serif text-3xl text-brown-dark mb-2">Before You Begin</h2>
-          <p className="text-brown mb-6">A 10-item pre-flight checklist that mirrors what the submission portal will check at upload.</p>
-          <div className="bg-cream-alt/50 rounded-xl p-6">
-            <ol className="space-y-3 text-ink">
-              {preflightItems.map((item, i) => (
-                <li key={i} className="flex gap-3">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-white border border-tan flex items-center justify-center text-xs font-semibold text-brown-dark">{i + 1}</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* ============================================================
-            FORMAT REQUIREMENTS
-            ============================================================ */}
-        <section id="format">
-          <h2 className="font-serif text-3xl text-brown-dark mb-2">Format Requirements</h2>
-          <p className="text-brown mb-6">Every manuscript must conform to these formatting rules — they are baked into the templates so you don’t need to set them yourself, but they apply equally if you author from a blank document.</p>
-          <div className="bg-white border border-border rounded-xl overflow-hidden">
-            <table className="w-full">
-              <tbody>
-                {formatRequirements.map((row, i) => (
-                  <tr key={row.label} className={i % 2 === 0 ? 'bg-white' : 'bg-cream-alt/30'}>
-                    <td className="px-6 py-3 font-semibold text-brown-dark text-sm w-1/4 align-top">{row.label}</td>
-                    <td className="px-6 py-3 text-ink text-sm">{row.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        {/* ============================================================
             SUBMISSION FILE CHECKLIST
             ============================================================ */}
         <section id="files">
@@ -310,12 +244,12 @@ export default function TemplatesPage() {
         </section>
 
         {/* ============================================================
-            REPORTING CHECKLISTS — CARE (Case Reports) + JBI (Case Series)
+            REPORTING CHECKLISTS — CARE (Case Reports) + JBI (Case Series) + PRISMA (Review Articles)
             ============================================================ */}
         <section id="reporting-checklists">
           <h2 className="font-serif text-3xl text-brown-dark mb-2">Reporting Checklists</h2>
-          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for those two article types.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series; PRISMA 2020 is recommended for every systematic-review or meta-analysis Review Article. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for Case Reports and Case Series.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white border border-border rounded-xl p-6">
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Case Reports</p>
               <h3 className="font-serif text-xl text-brown-dark mb-1">CARE Checklist</h3>
@@ -358,6 +292,29 @@ export default function TemplatesPage() {
                 >
                   jbi.global
                 </a>
+              </p>
+            </div>
+            <div className="bg-white border border-border rounded-xl p-6">
+              <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Review Articles</p>
+              <h3 className="font-serif text-xl text-brown-dark mb-1">PRISMA 2020 Checklist</h3>
+              <p className="text-xs text-brown mb-3">Preferred Reporting Items for Systematic reviews and Meta-Analyses (2020) · 27 reporting items</p>
+              <p className="text-sm text-ink mb-4 leading-relaxed">
+                The international standard for transparent reporting of systematic reviews and meta-analyses — covers protocol registration, eligibility criteria, search strategy, study selection, data extraction, risk-of-bias assessment, synthesis methods, and reporting of results. Recommended for every systematic-review or meta-analysis Review Article.
+              </p>
+              <a href="/downloads/oscrsj-prisma-checklist.pdf" download className="btn-primary-light inline-block">
+                Download PRISMA Checklist (.pdf)
+              </a>
+              <p className="text-xs text-brown mt-3">
+                Source:{' '}
+                <a
+                  href="https://www.prisma-statement.org/prisma-2020-checklist"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-brown-dark"
+                >
+                  prisma-statement.org
+                </a>{' '}
+                · CC BY 4.0
               </p>
             </div>
           </div>

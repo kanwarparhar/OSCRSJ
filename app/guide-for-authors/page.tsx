@@ -194,6 +194,16 @@ const articleTypes: Array<{
     tagline: 'Invited only (Year 1)',
     definition:
       'Comprehensive reviews of a focused topic in orthopedic surgery.',
+    checklist: {
+      name: 'PRISMA 2020 Checklist',
+      fullName: 'Preferred Reporting Items for Systematic reviews and Meta-Analyses (PRISMA 2020)',
+      itemCount: '27 reporting items',
+      rationale:
+        'Recommended for every systematic-review or meta-analysis Review Article submission. The PRISMA 2020 checklist is the international standard for transparent reporting of systematic reviews — it covers protocol registration, eligibility criteria, information sources, search strategy, study selection, data extraction, risk-of-bias assessment, synthesis methods, and reporting of results. Complete every item and upload the filled-in checklist as part of your submission (Step 2 of the portal). Narrative reviews are not required to use PRISMA but are encouraged to follow its reporting principles.',
+      downloadHref: '/downloads/oscrsj-prisma-checklist.pdf',
+      sourceLabel: 'prisma-statement.org',
+      sourceHref: 'https://www.prisma-statement.org/prisma-2020-checklist',
+    },
     specs: [
       { label: 'Word Limit', value: '3,500 words' },
       { label: 'Abstract', value: '300 words maximum, structured (Background, Methods, Results, Conclusion)' },
@@ -201,7 +211,7 @@ const articleTypes: Array<{
       { label: 'Figures', value: 'Maximum 6' },
       { label: 'Tables', value: 'Maximum 4' },
       { label: 'References', value: '20-60 in Vancouver style' },
-      { label: 'Reporting Guideline', value: 'PRISMA checklist recommended for systematic reviews' },
+      { label: 'Required Checklist', value: 'PRISMA 2020 checklist (recommended for systematic reviews and meta-analyses)' },
       { label: 'Submission', value: 'By editorial invitation only during Year 1' },
     ],
     sections: [
@@ -227,7 +237,7 @@ const comparisonRows = [
   { param: 'Max Figures', values: ['8', '10', '10', '4', '1', '6'] },
   { param: 'Max Tables', values: ['3', '5', '2', '0', '1', '4'] },
   { param: 'References', values: ['10-25', '15-40', '8-15', 'Max 5', 'Max 5', '20-60'] },
-  { param: 'Checklist', values: ['CARE', 'JBI', 'N/A', 'N/A', 'N/A', 'PRISMA rec.'] },
+  { param: 'Checklist', values: ['CARE', 'JBI', 'N/A', 'N/A', 'N/A', 'PRISMA'] },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -497,7 +507,7 @@ export default function GuideForAuthorsPage() {
         <div className="mt-12 bg-tan/20 border border-peach/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-ink">Ready to submit?</p>
-            <p className="text-sm text-brown mt-0.5">Publishing is free for manuscripts submitted before August 1, 2026.</p>
+            <p className="text-sm text-brown mt-0.5">The full APC is waived for manuscripts submitted before August 1, 2026.</p>
           </div>
           <div className="flex gap-3">
             <Link href="/submit" className="btn-primary-light flex-shrink-0">
