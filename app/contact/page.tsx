@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import ContactForm from './ContactForm'
+import SocialIcon from '@/components/SocialIcon'
+import { SOCIAL_CHANNELS } from '@/lib/social'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -71,6 +73,35 @@ export default function ContactPage() {
                     <p className="text-xs text-brown mt-0.5">{c.email}</p>
                     <p className="text-xs text-brown mt-1.5">{c.desc}</p>
                   </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Follow Us */}
+        <section className="mb-12">
+          <span className="section-label">Connect</span>
+          <h2 className="section-heading mb-4">Follow Us</h2>
+          <p className="text-ink leading-relaxed mb-6">
+            Updates on accepted manuscripts, calls for papers, surgical-technique videos, and editorial commentary across our channels.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {SOCIAL_CHANNELS.map(({ name, url, handle, ariaLabel }) => (
+              <a
+                key={name}
+                href={url}
+                target="_blank"
+                rel="me noopener noreferrer"
+                aria-label={ariaLabel}
+                className="bg-white border border-border rounded-xl p-6 hover:border-tan hover:shadow-sm transition-all duration-200 group flex items-center gap-4"
+              >
+                <div className="w-10 h-10 bg-tan/20 rounded-full flex-shrink-0 flex items-center justify-center text-brown group-hover:bg-brown-dark group-hover:text-peach transition-colors">
+                  <SocialIcon name={name} className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-semibold text-ink text-sm group-hover:text-brown transition-colors">{name}</p>
+                  <p className="text-xs text-brown mt-0.5">{handle}</p>
                 </div>
               </a>
             ))}

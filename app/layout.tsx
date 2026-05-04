@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { SOCIAL_CHANNELS } from '@/lib/social'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.oscrsj.com'),
@@ -73,7 +74,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         foundingDate: '2026',
         description:
           'Independent, peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
-        // sameAs: [] — populate as social accounts launch (Arjun handoff)
+        // sameAs: Knowledge Graph entity disambiguation — when Google sees these URLs in
+        // Organization JSON-LD, it links the OSCRSJ entity to the social profiles, strengthening
+        // the brand SERP panel and AI-citation surface presence (ChatGPT, Claude, Perplexity, etc.).
+        // URLs are sourced from lib/social.ts so footer + contact + press-kit + JSON-LD never drift.
+        sameAs: SOCIAL_CHANNELS.map((c) => c.url),
       },
       {
         '@type': 'Periodical',

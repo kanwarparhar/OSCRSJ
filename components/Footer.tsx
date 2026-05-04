@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { SOCIAL_CHANNELS } from '@/lib/social'
+import SocialIcon from '@/components/SocialIcon'
 
 export default function Footer() {
   return (
@@ -18,7 +20,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm text-peach/50 leading-relaxed">
-              An independent, peer-reviewed, open-access journal advancing orthopedic education and research for trainees worldwide.
+              An independent, peer-reviewed, open-access journal advancing orthopedic education and research for the global orthopedic surgery community.
             </p>
             <p className="mt-4 text-xs text-peach/30 font-medium tracking-widest uppercase">
               Est. 2026
@@ -72,8 +74,25 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Social links */}
+        <div className="mt-14 flex justify-center gap-3" aria-label="Follow OSCRSJ on social media">
+          {SOCIAL_CHANNELS.map(({ name, url, ariaLabel }) => (
+            <a
+              key={name}
+              href={url}
+              target="_blank"
+              rel="me noopener noreferrer"
+              aria-label={ariaLabel}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-peach/60 hover:text-peach hover:border-peach/40 transition-colors"
+              style={{ border: '1px solid rgba(255,219,187,0.18)' }}
+            >
+              <SocialIcon name={name} className="w-4 h-4" />
+            </a>
+          ))}
+        </div>
+
         {/* Copyright bar */}
-        <div className="mt-14 pt-8" style={{ borderTop: '1px solid rgba(255,219,187,0.1)' }}>
+        <div className="mt-8 pt-8" style={{ borderTop: '1px solid rgba(255,219,187,0.1)' }}>
           <p className="text-xs text-peach/30 text-center">
             &copy; {new Date().getFullYear()} OSCRSJ &mdash; Orthopedic Surgery Case Reports &amp; Series Journal. All rights reserved.
           </p>
