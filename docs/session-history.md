@@ -46,6 +46,7 @@
 - [[#^session-12-decision-composer-revision-flow]]
 
 ### Editorial board roster
+- [[#^session-48-editorial-board-roster-expansion]]
 - [[#^session-40-editorial-board-roster-expansion]]
 - [[#^session-37-editorial-board-roster-expansion]]
 - [[#^session-24-editorial-board-roster-fully-populated]]
@@ -239,6 +240,30 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 48 — 2026-05-06 — Franklin Cowork — Editorial board roster: 2 new section editors + Sukhman/Yash role swap + ortho-marker credential strip  ^session-48-editorial-board-roster-expansion
+
+**2026-05-06 Session 48 (Franklin Cowork — Editorial board roster: 2 new section editors + Sukhman/Yash role swap + ortho-marker credential strip).** Single-file feature edit on `main` (`lib/schema/editorialBoard.ts`) plus 2 photo file renames in `public/brand/`. Closes 5 Kanwar directives in one pass: (1) strip ortho/orth markers from credentials, (2) move Sukhman Singh from Section Editor to Associate Editor, (3) move Yash Mehta from Associate Editor to Section Editor for Foot and Ankle, (4) add Jean Louka as new Foot and Ankle Section Editor, (5) add Alejandro Zylberberg as new Adult Reconstruction Section Editor.
+
+**Roster changes (BOARD_MEMBERS array).** Section Editors went 10 → 12. (a) **Sukhman Singh** moved from Section Editor (Foot and Ankle Surgery) → Associate Editor; medicalSpecialty 'Foot and Ankle Surgery' retained; bio summary line updated to drop "Section Editor" framing. (b) **Yash Mehta** promoted from Associate Editor → Section Editor for Foot and Ankle Surgery; medicalSpecialty narrowed from "Foot and Ankle Surgery and Adult Reconstruction" to "Foot and Ankle Surgery" since arthroplasty interests still surface in his existing comprehensive bio (which is retained intact). (c) **Jean Louka, MD** added as Section Editor for Foot and Ankle Surgery (paired with Yash for load redundancy on the Foot & Ankle desk, mirroring the co-Section Editor pattern established for Trauma and Spine). Bio includes triple-fellowship summary (foot & ankle, trauma, oncology) and full 4-entry experience timeline (MedStar Union Memorial fellow Aug 2025–present → U-Miami oncology fellow Aug 2024–Jul 2025 → U-Louisville trauma fellow Aug 2023–Jul 2024 → Hôpital Simone Veil orthopaedic surgery resident Nov 2019–Oct 2021). workLocation 'Baltimore, Maryland, United States'. (d) **Alejandro Zylberberg, MD** added as Section Editor for Adult Reconstruction (paired with Bill Huang). Bio includes translated experience (Hip Team Lead, Clínica Universidad de los Andes since 2014; Traumatology, Hospital del Trabajador de Santiago 2011–2021), education (Universidad de los Andes orthopedic residency 2005–2008 + University of Ottawa adult arthroplasty fellowship 2011), and ResearchGate metrics (9 publications / 1,341 reads / 256 citations). workLocation 'Santiago, Chile'.
+
+**Credential cleanup.** Kanwar directive: "remove ortho/orth from anyone's credentials." Two members carried parenthetical specialty markers in their post-nominals — both stripped from `name` field and `honorificSuffix`: (a) **Sankalp Lal** `MBBS, MS (Orth), DNB (Orth)` → `MBBS, MS, DNB`. (b) **Vikash Raj** `MBBS, MS(Ortho)` → `MBBS, MS`. The bio prose on each member's detail page was left unchanged — credential strip is a post-nominal rule, not a narrative-prose rewrite. Sankalp's `BOARD_MEMBER_BIOS` education entries still read "MS (Orthopaedics)" and "DNB (Orthopaedics)" because those describe degree names in narrative form rather than honorific suffixes.
+
+**Photo file renames.** Kanwar dropped two photos with spaces in filenames (`Jean Louka .png`, `Alejandro Zylberberg.webp`). Renamed via bash to `jean-louka.png` and `alejandro-zylberberg.webp` to match the existing kebab-case-by-slug convention (`/brand/<slug>.<ext>`). The Avatar component in `app/editorial-board/page.tsx` is extension-agnostic (`<img src>`), so `.webp` works without any changes to the component.
+
+**Page render: zero edits needed.** Both `/editorial-board` (listing) and `/editorial-board/[slug]` (bio detail) iterate `BOARD_MEMBERS` and filter by `jobTitle` dynamically — adding new members and changing roles propagates automatically without any JSX changes. Both Jean and Alejandro have full bios so neither is added to `THIN_BIO_SLUGS` (their `/editorial-board/<slug>` pages emit standard `robots: index, follow` and ship in the sitemap). Sukhman remains in `THIN_BIO_SLUGS` (his bio is still summary-only).
+
+**Roster count.** Pre-session: 19 confirmed members (2 Leadership + 10 Section Editors + 6 Associate Editors + 1 Managing Editor). Post-session: 21 confirmed (2 Leadership + 12 Section Editors + 6 Associate Editors + 1 Managing Editor). The CLAUDE.md figure "17 confirmed (Session 40)" was already 2 sessions stale; this session brings it to 21 and CLAUDE.md updated to reflect the new figure as part of M2 wrap-up.
+
+**Convention codified (§3 Conventions).** New rule: **"Ortho/Orth-marker credential strip."** Post-MBBS specialty markers in honorific suffixes are stripped — `MS (Orth)`, `MS(Ortho)`, `DNB (Orth)`, etc. all collapse to bare `MS` / `DNB`. Bio narrative prose may still reference orthopaedic training (degree names, fellowship titles, etc.). Locked 2026-05-06 per Kanwar directive on this session.
+
+**TypeScript clean.** `npx tsc --noEmit -p tsconfig.json` from repo root returns exit 0. No JSX, page, or schema changes propagate beyond the single file.
+
+**Risks.** (a) Section Editors grid count went from 10 → 12. The `app/editorial-board/page.tsx` grid layout defaults to `sm:grid-cols-2` and the §11 follow-up "Section Editors grid balance — odd-count last-row issue with 9 cards" was originally surfaced for 9-count (Session 40). With 12 cards the parity issue resolves itself (12 = 6 even rows of 2). The existing follow-up may now be moot — Kanwar to verify on next visual pass. (b) `lib/schema/thinBioSlugs.ts` was not edited — Sukhman's bio is still thin-summary; his role change means the page now shows him as Associate Editor with a Foot and Ankle Surgery specialty (visually inconsistent with the other Associate Editors who carry Orthopedic Surgery as their specialty); deferred polish, not a correctness issue.
+
+**Kanwar follow-ups.** Stage and commit `lib/schema/editorialBoard.ts` + the 2 new photo files (`public/brand/jean-louka.png`, `public/brand/alejandro-zylberberg.webp`) by explicit path; `git rm` the legacy-named photo files (`Jean Louka .png`, `Alejandro Zylberberg.webp`) as part of the same commit since they were renamed not copied. Suggested commit message: `feat(editorial-board): add Jean Louka + Alejandro Zylberberg, Yash↔Sukhman role swap, strip ortho-markers`. Verify Section Editors grid balance at 12 cards on next visual pass — the §11 grid-balance follow-up may now be moot.
+
+**Handoffs pushed: None.**
 
 ### Session 47 — 2026-05-06 — Sushant Cowork — JATS Publishing 1.3 XML capability landed in renderer + main-repo migration 020 + admin panel + first GitHub-ready push of renderer  ^session-47-jats-xml-implementation
 

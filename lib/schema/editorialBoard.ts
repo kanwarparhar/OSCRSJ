@@ -146,14 +146,58 @@ export const BOARD_MEMBERS: BoardMember[] = [
     slug: 'bill-huang',
   },
   {
-    name: 'Sukhman Singh, MBBS, MS',
-    givenName: 'Sukhman',
-    familyName: 'Singh',
-    honorificSuffix: 'MBBS, MS',
+    // Section Editor for Adult Reconstruction. Chilean orthopedic surgeon
+    // with a clinical fellowship in adult arthroplasty at the University of
+    // Ottawa, decade-plus tenure in Traumatology at Hospital del Trabajador
+    // de Santiago, and a current Hip Team Lead role at Clínica Universidad
+    // de los Andes. Paired with Bill Huang on the Adult Reconstruction desk
+    // for international + arthroplasty depth (similar load-redundancy
+    // pattern to Trauma and Spine).
+    name: 'Alejandro Zylberberg, MD',
+    givenName: 'Alejandro',
+    familyName: 'Zylberberg',
+    honorificSuffix: 'MD',
+    jobTitle: 'Section Editor',
+    medicalSpecialty: 'Adult Reconstruction',
+    affiliation: 'Hospital del Trabajador de Santiago',
+    sameAs: [],
+    slug: 'alejandro-zylberberg',
+  },
+  {
+    // Yash Mehta promoted from Associate Editor to Section Editor for Foot
+    // and Ankle on 2026-05-06 per Kanwar directive — the desk needed
+    // dedicated leadership and Yash's foot & ankle clinical depth (plus
+    // robotic-arthroplasty fellowship and active NHS Senior Fellow practice)
+    // matched the role. Specialty narrowed from "Foot and Ankle Surgery and
+    // Adult Reconstruction" to "Foot and Ankle Surgery" to reflect the
+    // section assignment; arthroplasty interests still surface in the bio.
+    name: 'Yash Mehta, MBBS, MS, MRCS, SICOT Dip',
+    givenName: 'Yash',
+    familyName: 'Mehta',
+    honorificSuffix: 'MBBS, MS, MRCS, SICOT Dip',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Foot and Ankle Surgery',
+    affiliation: 'Royal Bolton Hospital NHS Trust, Manchester',
     sameAs: [],
-    slug: 'sukhman-singh',
+    slug: 'yash-mehta',
+  },
+  {
+    // Co-Section Editor for Foot and Ankle. Triple-fellowship-trained
+    // orthopaedic surgeon currently completing a Foot & Ankle Surgery
+    // fellowship at MedStar Union Memorial Hospital, with prior fellowships
+    // in orthopaedic trauma (University of Louisville) and orthopaedic
+    // oncology (University of Miami). Brings cross-disciplinary depth in
+    // complex reconstruction, limb salvage, and revision surgery to the
+    // Foot and Ankle desk. Paired with Yash Mehta for load redundancy.
+    name: 'Jean Louka, MD',
+    givenName: 'Jean',
+    familyName: 'Louka',
+    honorificSuffix: 'MD',
+    jobTitle: 'Section Editor',
+    medicalSpecialty: 'Foot and Ankle Surgery',
+    affiliation: 'MedStar Union Memorial Hospital',
+    sameAs: [],
+    slug: 'jean-louka',
   },
   {
     name: 'Hiroki Okamura, MD, PhD',
@@ -198,10 +242,10 @@ export const BOARD_MEMBERS: BoardMember[] = [
     // markers Kanwar supplied (MS (Orth), DNB (Orth)) since both MS and
     // DNB are post-MBBS specialty credentials in the Indian system and the
     // disambiguation matters for medical readers.
-    name: 'Sankalp Lal, MBBS, MS (Orth), DNB (Orth)',
+    name: 'Sankalp Lal, MBBS, MS, DNB',
     givenName: 'Sankalp',
     familyName: 'Lal',
-    honorificSuffix: 'MBBS, MS (Orth), DNB (Orth)',
+    honorificSuffix: 'MBBS, MS, DNB',
     jobTitle: 'Section Editor',
     medicalSpecialty: 'Hand and Upper Extremity Surgery',
     affiliation:
@@ -214,10 +258,10 @@ export const BOARD_MEMBERS: BoardMember[] = [
     // Credentials updated 2026-04-30 per ResearchGate screenshot supplied
     // by Kanwar — actual designation is MS(Ortho), preserving the Indian-
     // convention specialty marker in parentheses.
-    name: 'Vikash Raj, MBBS, MS(Ortho)',
+    name: 'Vikash Raj, MBBS, MS',
     givenName: 'Vikash',
     familyName: 'Raj',
-    honorificSuffix: 'MBBS, MS(Ortho)',
+    honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
     affiliation: 'All India Institute of Medical Sciences, Deoghar',
@@ -258,30 +302,6 @@ export const BOARD_MEMBERS: BoardMember[] = [
     slug: 'akshay-phupate',
   },
   {
-    // Trauma & Orthopaedic surgeon practicing as a Senior Fellow at
-    // Royal Bolton Hospital NHS Trust, Manchester, UK while pursuing
-    // the MCh in Trauma & Orthopaedics. Indian-trained (Government
-    // Medical College, Surat) with subspecialty experience in robotic
-    // arthroplasty (Apollo Hospitals, Navi Mumbai). Credential string
-    // simplified 2026-05-05 per Kanwar directive ("remove ortho and
-    // england from his credentials. Keep it simple"): formal
-    // post-MBBS credentials surface as MS, MRCS, and SICOT Dip without
-    // parenthetical specialty/jurisdiction markers. The prior MCh
-    // suffix was retired because Yash is currently *pursuing* MCh,
-    // not credentialed in it. ATLS instructorship is surfaced in the
-    // bio rather than the honorific suffix. Subspecialty interests
-    // cover foot & ankle surgery and arthroplasty.
-    name: 'Yash Mehta, MBBS, MS, MRCS, SICOT Dip',
-    givenName: 'Yash',
-    familyName: 'Mehta',
-    honorificSuffix: 'MBBS, MS, MRCS, SICOT Dip',
-    jobTitle: 'Associate Editor',
-    medicalSpecialty: 'Foot and Ankle Surgery and Adult Reconstruction',
-    affiliation: 'Royal Bolton Hospital NHS Trust, Manchester',
-    sameAs: [],
-    slug: 'yash-mehta',
-  },
-  {
     // South Indian (Tamil/Telugu) given-then-family ordering assumed
     // (Adithyaa = given, Sivaramakrishnan = family). Credential `MS`
     // preserved verbatim from source; in Indian convention this typically
@@ -295,6 +315,20 @@ export const BOARD_MEMBERS: BoardMember[] = [
     medicalSpecialty: 'Orthopedic Surgery',
     sameAs: [],
     slug: 'adithyaa-sivaramakrishnan',
+  },
+  {
+    // Moved from Section Editor for Foot and Ankle to Associate Editor on
+    // 2026-05-06 per Kanwar directive. Foot and Ankle desk leadership
+    // shifted to Yash Mehta + Jean Louka the same day. medicalSpecialty
+    // retained as Foot and Ankle Surgery to reflect ongoing clinical area.
+    name: 'Sukhman Singh, MBBS, MS',
+    givenName: 'Sukhman',
+    familyName: 'Singh',
+    honorificSuffix: 'MBBS, MS',
+    jobTitle: 'Associate Editor',
+    medicalSpecialty: 'Foot and Ankle Surgery',
+    sameAs: [],
+    slug: 'sukhman-singh',
   },
   // Managing Editor — operations leadership, sits at the leadership tier
   // alongside EIC + Founding Editor. Non-clinical role — medicalSpecialty
@@ -493,6 +527,26 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     ],
     workLocation: 'Iran',
   },
+  'alejandro-zylberberg': {
+    photo: '/brand/alejandro-zylberberg.webp',
+    summary:
+      'Section Editor for Adult Reconstruction at OSCRSJ. Chilean orthopedic surgeon with a clinical fellowship in adult arthroplasty at the University of Ottawa, decade-plus tenure in Traumatology at Hospital del Trabajador de Santiago, and an active Hip Team Lead role at Clínica Universidad de los Andes.',
+    education: [
+      'Orthopedic Surgery Residency — Universidad de los Andes (Chile), Santiago, Chile (2005–2008)',
+      'Clinical Fellowship in Adult Arthroplasty — University of Ottawa (2011)',
+    ],
+    experience: [
+      'Hip Team Lead, Clínica Universidad de los Andes, Santiago, Chile (2014–present).',
+      'Traumatology, Hospital del Trabajador de Santiago, Santiago, Chile (2011–2021).',
+      'Active orthopedic researcher with peer-reviewed publications in adult reconstruction and traumatology.',
+    ],
+    achievements: [
+      '9 publications',
+      '1,341 reads',
+      '256 citations',
+    ],
+    workLocation: 'Santiago, Chile',
+  },
   'bill-huang': {
     photo: '/brand/bill-huang.jpg',
     summary:
@@ -508,9 +562,21 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
       'Clinical professor at Washington State University, Elson S. Floyd College of Medicine, where he provides clinical instruction for medical students in orthopedic surgery.',
     ],
   },
+  'jean-louka': {
+    photo: '/brand/jean-louka.png',
+    summary:
+      'Section Editor for Foot and Ankle Surgery at OSCRSJ. Triple-fellowship-trained orthopaedic surgeon currently completing a Foot & Ankle Surgery fellowship at MedStar Union Memorial Hospital, with prior fellowships in orthopaedic trauma and musculoskeletal oncology. Brings the breadth to manage complex reconstruction, limb salvage, and revision surgery where subspecialties intersect, and is pursuing an academic career focused on surgical education and advancing outcomes in complex foot & ankle care.',
+    experience: [
+      'Foot & Ankle Surgery Fellow, MedStar Union Memorial Hospital, Baltimore, Maryland (Aug 2025 – present).',
+      'Orthopaedic Oncology Fellow, University of Miami, Miami, Florida (Aug 2024 – Jul 2025).',
+      'Orthopaedic Trauma Fellow, University of Louisville, Louisville, Kentucky (Aug 2023 – Jul 2024).',
+      'Orthopaedic Surgery Resident, Hôpital Simone Veil — Groupement hospitalier Eaubonne-Montmorency, Eaubonne, France (Nov 2019 – Oct 2021).',
+    ],
+    workLocation: 'Baltimore, Maryland, United States',
+  },
   'sukhman-singh': {
     summary:
-      'Section Editor for Foot and Ankle Surgery at OSCRSJ. Brings clinical expertise across foot and ankle reconstruction, deformity correction, and trauma to the journal’s peer-review process.',
+      'Associate Editor at OSCRSJ. Brings clinical expertise across foot and ankle reconstruction, deformity correction, and trauma to the journal’s peer-review process.',
   },
   'hiroki-okamura': {
     photo: '/brand/hiroki-okamura.png',
