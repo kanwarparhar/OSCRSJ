@@ -190,7 +190,11 @@ export async function getAdminFileSignedUrl(
 // admin-only Published PDF panel and /render-report viewer can
 // offer downloads. Gated by requireAdminOnly per §6.1 decision 1.
 
-export type PublishedAssetKind = 'pdf' | 'report'
+// Sushant Session 19 (2026-05-06): 'jats' added alongside 'pdf' and
+// 'report' to surface the JATS Publishing 1.3 XML artifact rendered
+// by the OSCRSJ Renderer (manuscripts.jats_xml_storage_path,
+// migration 020).
+export type PublishedAssetKind = 'pdf' | 'report' | 'jats'
 
 export interface GetPublishedAssetSignedUrlResult {
   signedUrl?: string
@@ -210,7 +214,7 @@ export async function getPublishedAssetSignedUrl(
   if (!manuscriptId || typeof manuscriptId !== 'string') {
     return { notFound: true, error: 'Manuscript id is required.' }
   }
-  if (which !== 'pdf' && which !== 'report') {
+  if (which !== 'pdf' && which !== 'report' && which !== 'jats') {
     return { notFound: true, error: 'Unknown asset kind.' }
   }
 
@@ -219,7 +223,7 @@ export async function getPublishedAssetSignedUrl(
   const { data: mData, error: mErr } = await admin
     .from('manuscripts')
     .select(
-      'id, submission_id, published_pdf_storage_path, render_report_storage_path'
+      'id, submission_id, published_pdf_storage_path, render_report_storage_path, jats_xml_storage_path'
     )
     .eq('id', manuscriptId)
     .maybeSingle()
@@ -233,26 +237,33 @@ export async function getPublishedAssetSignedUrl(
     submission_id: string
     published_pdf_storage_path: string | null
     render_report_storage_path: string | null
+    jats_xml_storage_path: string | null
   }
 
   const storagePath =
     which === 'pdf'
       ? m.published_pdf_storage_path
-      : m.render_report_storage_path
+      : which === 'report'
+        ? m.render_report_storage_path
+        : m.jats_xml_storage_path
   if (!storagePath) {
     return {
       notFound: true,
       error:
         which === 'pdf'
           ? 'No published PDF is attached to this manuscript yet.'
-          : 'No render report is attached to this manuscript yet.',
+          : which === 'report'
+            ? 'No render report is attached to this manuscript yet.'
+            : 'No JATS XML artifact is attached to this manuscript yet.',
     }
   }
 
   const downloadName =
     which === 'pdf'
       ? `${m.submission_id}.pdf`
-      : `${m.submission_id}_render-report.json`
+      : which === 'report'
+        ? `${m.submission_id}_render-report.json`
+        : `${m.submission_id}.xml`
 
   const { data: signed, error: signErr } = await admin.storage
     .from('submissions')

@@ -120,6 +120,11 @@ export interface ManuscriptRow {
   running_title: string | null
   published_pdf_storage_path: string | null
   render_report_storage_path: string | null
+  // Sushant Session 19 (2026-05-06). JATS Publishing 1.3 XML emit
+  // gate landed via migration 020. NULL until first publish; all
+  // pre-Session-19 published rows lack a JATS artifact (none yet
+  // exist in prod — pre-launch).
+  jats_xml_storage_path: string | null
   doi: string | null
   created_at: string
   updated_at: string
@@ -358,6 +363,20 @@ export interface RenderReport {
   }
   sanityTests: Record<string, boolean | number>
   xmpPacket?: string
+  // Sushant Session 19 (2026-05-06). JATS Publishing 1.3 XML emit
+  // + xmllint validation gate. Populated when the publish chain
+  // ran the JATS stages; absent on legacy reports from Session 18.
+  jatsXml?: {
+    passed: boolean
+    schemaVersion: string
+    sizeBytes: number
+    validationErrors: string[]
+    validationWarnings: string[]
+    storagePath: string
+    generatedAt: string
+    validatorVersion: string
+    dtdPath: string
+  }
   output: {
     pdfSha256: string
     pdfBytes: number
