@@ -105,16 +105,16 @@ export default function PeerReviewPage() {
           <span className="section-label">For Reviewers</span>
           <h2 className="section-heading mb-3">Interested in Reviewing?</h2>
           <p className="text-ink leading-relaxed mb-4">
-            We are actively recruiting reviewers across all orthopedic subspecialties. Our comprehensive reviewer guide covers everything you need to conduct a thorough, fair, and constructive peer review, including evaluation criteria, review structure, timeline expectations, and recognition benefits.
+            We are actively recruiting reviewers across all orthopedic subspecialties. Our Guide for Reviewers covers everything you need to conduct a thorough, fair, and constructive peer review, including evaluation standards, the section-by-section review structure with line-number citations, timeline expectations, and recognition benefits.
           </p>
           <Link href="/for-reviewers" className="btn-primary-light">
-            Reviewer Guidelines
+            Guide for Reviewers
           </Link>
         </section>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link href="/submit" className="btn-primary-light">Submit a Manuscript</Link>
-          <Link href="/for-reviewers" className="btn-outline">For Reviewers</Link>
+          <Link href="/for-reviewers" className="btn-outline">Guide for Reviewers</Link>
           <Link href="/editorial-policies" className="btn-outline">Editorial Policies</Link>
           <Link href="/guide-for-authors" className="btn-outline">Guide for Authors</Link>
         </div>

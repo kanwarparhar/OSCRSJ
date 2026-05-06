@@ -22,7 +22,7 @@ const navItems = [
       { label: 'Submit Article', href: '/submit' },
       { label: 'Guide for Authors', href: '/guide-for-authors' },
       { label: 'Templates', href: '/templates' },
-      { label: 'For Reviewers', href: '/for-reviewers' },
+      { label: 'Guide for Reviewers', href: '/for-reviewers' },
       { label: 'Author FAQ', href: '/faq' },
       { label: 'APC Fees', href: '/apc' },
     ],

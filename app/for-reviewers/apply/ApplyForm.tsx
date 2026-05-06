@@ -99,7 +99,7 @@ export default function ApplyForm() {
           respond within 14 days.
         </p>
         <Link href="/for-reviewers" className="btn-primary-light">
-          Back to Reviewer Guidelines
+          Back to Guide for Reviewers
         </Link>
       </div>
     )

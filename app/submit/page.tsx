@@ -53,8 +53,8 @@ const resourceLinks = [
     href: '/faq',
   },
   {
-    title: 'For Reviewers',
-    desc: 'Standards, expectations, and guidance for serving as a peer reviewer at OSCRSJ.',
+    title: 'Guide for Reviewers',
+    desc: 'Standards, ethics, and the section-by-section review structure we expect from peer reviewers at OSCRSJ.',
     href: '/for-reviewers',
   },
 ]
