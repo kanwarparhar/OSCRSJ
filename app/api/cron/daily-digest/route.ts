@@ -53,15 +53,16 @@ export const runtime = 'nodejs'
 
 // Editorial digest recipient. Override via DIGEST_RECIPIENT_EMAIL env
 // var, falling back to EMAIL_REPLY_TO (the journal Reply-To inbox the
-// rest of the email pipeline routes replies to), then to Kanwar's
-// personal Gmail. Same fallback ladder pattern as
-// lib/reviewer/actions.ts:61. Flip via env var when the editorial
-// inbox is provisioned — no code change needed.
+// rest of the email pipeline routes replies to), then to the journal's
+// primary Gmail (`oscrsjournal@gmail.com`). Same fallback ladder pattern
+// as lib/reviewer/actions.ts:61. Flip via env var when the
+// `editorial@oscrsj.com` Google Workspace inbox is provisioned — no
+// code change needed.
 function digestRecipient(): string {
   return (
     process.env.DIGEST_RECIPIENT_EMAIL ||
     process.env.EMAIL_REPLY_TO ||
-    'kanwarparhar@gmail.com'
+    'oscrsjournal@gmail.com'
   )
 }
 

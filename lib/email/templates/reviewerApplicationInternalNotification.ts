@@ -2,7 +2,7 @@
 // Reviewer application — internal editorial notification
 // ============================================================
 // Sent to the editorial office (`INTERNAL_EDITORIAL_EMAIL` — currently
-// `kanwarparhar@gmail.com` until Google Workspace `editorial@oscrsj.com`
+// `oscrsjournal@gmail.com` until Google Workspace `editorial@oscrsj.com`
 // is provisioned) whenever a new reviewer application is submitted.
 // Contains the full applicant record inline so triage can happen from
 // the inbox without opening the Supabase dashboard.

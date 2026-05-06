@@ -36,10 +36,11 @@ const DEFAULT_FROM =
 
 // Reply-To lets recipients hit Reply and reach a real inbox even
 // though outbound mail is sent from the no-reply sending address.
-// Override via EMAIL_REPLY_TO; falls back to Kanwar's Gmail until a
-// dedicated editorial inbox (Google Workspace) is provisioned.
+// Override via EMAIL_REPLY_TO; falls back to the journal's primary
+// Gmail (`oscrsjournal@gmail.com`) until a dedicated editorial inbox
+// (Google Workspace `editorial@oscrsj.com`) is provisioned.
 const DEFAULT_REPLY_TO =
-  process.env.EMAIL_REPLY_TO || 'kanwarparhar@gmail.com'
+  process.env.EMAIL_REPLY_TO || 'oscrsjournal@gmail.com'
 
 export interface SendEmailAttachment {
   // Filename as the recipient will see it (e.g., "OSCRSJ-2026-001-package.docx")

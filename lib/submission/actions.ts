@@ -38,10 +38,11 @@ import {
   buildDisputeUrl,
 } from '@/lib/email/disputeTokens'
 
-// Editorial inbox for system alerts. Temporarily routed to Kanwar's
-// Gmail until a proper editorial mailbox is provisioned (see commit
-// f93bf5b — GoDaddy removed free forwarding for admin@oscrsj.com).
-const EDITORIAL_NOTIFY_EMAIL = 'kanwarparhar@gmail.com'
+// Editorial inbox for system alerts. Routed to the journal's primary
+// Gmail (`oscrsjournal@gmail.com`) until a proper editorial mailbox is
+// provisioned (see commit f93bf5b — GoDaddy removed free forwarding for
+// admin@oscrsj.com).
+const EDITORIAL_NOTIFY_EMAIL = 'oscrsjournal@gmail.com'
 
 // Statuses that allow author self-service withdrawal. Anything past
 // an editorial decision (accepted, rejected, published, etc.) cannot

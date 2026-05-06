@@ -32,7 +32,9 @@ import type {
   ManuscriptAuthorRow,
 } from '@/lib/types/database'
 
-const ADMIN_NOTIFY_EMAIL = 'kanwarparhar@gmail.com'
+// Routed to the journal's primary Gmail (`oscrsjournal@gmail.com`)
+// until a Google Workspace editorial mailbox is provisioned.
+const ADMIN_NOTIFY_EMAIL = 'oscrsjournal@gmail.com'
 
 export async function GET(
   request: NextRequest,

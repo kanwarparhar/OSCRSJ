@@ -53,12 +53,12 @@ import type {
   ReviewerApplicationStatus,
 } from '@/lib/types/database'
 
-// Editorial triage inbox. Temporarily Kanwar's Gmail until the
-// `editorial@oscrsj.com` Google Workspace mailbox is provisioned
-// (Kanwar action item 3a on the CEO Dashboard). Flip this single
-// constant once Workspace is live; server action picks it up on next
-// deploy, no schema change.
-const INTERNAL_EDITORIAL_EMAIL = 'kanwarparhar@gmail.com'
+// Editorial triage inbox. Routed to the journal's primary Gmail
+// (`oscrsjournal@gmail.com`) until a dedicated Google Workspace
+// mailbox (`editorial@oscrsj.com`) is provisioned (Kanwar action item
+// 3a on the CEO Dashboard). Flip this single constant once Workspace
+// is live; server action picks it up on next deploy, no schema change.
+const INTERNAL_EDITORIAL_EMAIL = 'oscrsjournal@gmail.com'
 
 const CAREER_STAGES = [
   'med_student',
