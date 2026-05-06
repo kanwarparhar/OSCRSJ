@@ -74,7 +74,15 @@ function newId(): string {
 // Discount inquiry — `/apc`
 // ============================================================
 
-const DISCOUNT_INQUIRY_INBOX = 'waivers@oscrsj.com'
+// Routed to the journal's primary Gmail (`oscrsjournal@gmail.com`).
+// The `waivers@oscrsj.com` alias will exist once Google Workspace is
+// provisioned (action item 3a on the CEO Dashboard); until then the
+// apex domain has no MX records and any send to *@oscrsj.com bounces
+// at delivery, so the form would silently drop inquiries. Reply-To on
+// the internal notification is set to the inquirer's email so a reply
+// from oscrsjournal@gmail.com routes back directly without leaking the
+// Gmail address into the user-facing thread.
+const DISCOUNT_INQUIRY_INBOX = 'oscrsjournal@gmail.com'
 
 const DISCOUNT_CAREER_STAGES = [
   'Medical student',
@@ -205,16 +213,26 @@ export async function submitDiscountInquiry(
 //
 // Subject → routing inbox map. Mirrors the four contact cards on
 // `/contact`. Update both surfaces in lock-step if the routing changes.
-
+//
+// All five subjects route to the journal's primary Gmail
+// (`oscrsjournal@gmail.com`) until Google Workspace is provisioned,
+// at which point each subject can split out to its dedicated alias
+// (info/submit/editorial/waivers @oscrsj.com). The apex domain has no
+// MX records right now, so any direct send to *@oscrsj.com bounces at
+// delivery — keeping the original per-department routing here would
+// have silently dropped every contact-form submission. Reply-To on the
+// internal notification is the inquirer's email, so editorial replies
+// from oscrsjournal@gmail.com still route directly back to the user.
+//
 // Keys MUST match CONTACT_SUBJECT_LABELS in `lib/inquiry/constants.ts` —
 // the dropdown on /contact is rendered from CONTACT_SUBJECT_LABELS, so any
 // label that's not also a routing key here will fail validation below.
 const CONTACT_INBOXES: Record<string, string> = {
-  'General Inquiry': 'info@oscrsj.com',
-  'Manuscript Submission': 'submit@oscrsj.com',
-  'Editorial Board Interest': 'editorial@oscrsj.com',
-  'APC Waiver Request': 'waivers@oscrsj.com',
-  Other: 'info@oscrsj.com',
+  'General Inquiry': 'oscrsjournal@gmail.com',
+  'Manuscript Submission': 'oscrsjournal@gmail.com',
+  'Editorial Board Interest': 'oscrsjournal@gmail.com',
+  'APC Waiver Request': 'oscrsjournal@gmail.com',
+  Other: 'oscrsjournal@gmail.com',
 }
 
 export interface ContactMessagePayload {
