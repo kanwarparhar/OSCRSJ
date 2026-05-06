@@ -263,17 +263,18 @@ export const BOARD_MEMBERS: BoardMember[] = [
     // the MCh in Trauma & Orthopaedics. Indian-trained (Government
     // Medical College, Surat) with subspecialty experience in robotic
     // arthroplasty (Apollo Hospitals, Navi Mumbai). Credential string
-    // updated 2026-05-05 per Kanwar's latest information: formal
-    // post-MBBS credentials are MS (Ortho), MRCS (England), and the
-    // SICOT Diploma; the prior MCh suffix was retired because Yash is
-    // currently *pursuing* MCh, not credentialed in it. ATLS
-    // instructorship is surfaced in the bio rather than the honorific
-    // suffix. Subspecialty interests cover foot & ankle surgery and
-    // arthroplasty.
-    name: 'Yash Mehta, MBBS, MS (Ortho), MRCS (England), SICOT Dip',
+    // simplified 2026-05-05 per Kanwar directive ("remove ortho and
+    // england from his credentials. Keep it simple"): formal
+    // post-MBBS credentials surface as MS, MRCS, and SICOT Dip without
+    // parenthetical specialty/jurisdiction markers. The prior MCh
+    // suffix was retired because Yash is currently *pursuing* MCh,
+    // not credentialed in it. ATLS instructorship is surfaced in the
+    // bio rather than the honorific suffix. Subspecialty interests
+    // cover foot & ankle surgery and arthroplasty.
+    name: 'Yash Mehta, MBBS, MS, MRCS, SICOT Dip',
     givenName: 'Yash',
     familyName: 'Mehta',
-    honorificSuffix: 'MBBS, MS (Ortho), MRCS (England), SICOT Dip',
+    honorificSuffix: 'MBBS, MS, MRCS, SICOT Dip',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Foot and Ankle Surgery and Adult Reconstruction',
     affiliation: 'Royal Bolton Hospital NHS Trust, Manchester',
@@ -590,7 +591,7 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
   'yash-mehta': {
     photo: '/brand/yash-mehta.jpg',
     summary:
-      'Orthopaedic surgeon with subspecialty interests in foot & ankle surgery and arthroplasty. Currently practicing as a Senior Fellow in the NHS at Royal Bolton Hospital NHS Trust, Manchester, UK while pursuing the MCh in Trauma & Orthopaedics. Indian-trained (MBBS, MS Orthopaedics) with the MRCS (England) and SICOT Diploma; brings four years of postgraduate orthopaedic training plus a robotic arthroplasty fellowship to clinical and research practice. Experienced across trauma and elective orthopaedic surgery, including arthroplasty and foot & ankle care, with strong operative and clinical decision-making skills. ATLS Instructor committed to patient safety and NHS values, aspiring to Higher Surgical Training via CESR and FRCS (Tr & Orth) while advancing clinical, operative, and leadership expertise.',
+      'Orthopaedic surgeon with subspecialty interests in foot & ankle surgery and arthroplasty. Currently practicing as a Senior Fellow in the NHS at Royal Bolton Hospital NHS Trust, Manchester, UK while pursuing the MCh in Trauma & Orthopaedics. Indian-trained (MBBS, MS) with the MRCS and SICOT Diploma; brings four years of postgraduate orthopaedic training plus a robotic arthroplasty fellowship to clinical and research practice. Experienced across trauma and elective orthopaedic surgery, including arthroplasty and foot & ankle care, with strong operative and clinical decision-making skills. ATLS Instructor committed to patient safety and NHS values, aspiring to Higher Surgical Training via CESR and FRCS while advancing clinical, operative, and leadership expertise.',
     education: [
       'MBBS — Government Medical College, Surat, India (2018)',
       'MS Orthopaedics (Gold Medal) — Government Medical College, Surat, India (2022)',
