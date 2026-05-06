@@ -258,21 +258,25 @@ export const BOARD_MEMBERS: BoardMember[] = [
     slug: 'akshay-phupate',
   },
   {
-    // Trauma & Orthopaedic surgeon, currently practicing as ITF
-    // (International Training Fellow) at Royal Bolton Hospital NHS
-    // Trust, Manchester, UK. Indian-trained (Government Medical College,
-    // Surat) with subspecialty experience in robotic arthroplasty (Apollo
-    // Hospitals, Navi Mumbai). Credential string preserves the formal
-    // degrees (MBBS, MS Orth, MRCS, MCh); ATLS instructorship and FIFA
-    // sports-medicine diploma are surfaced in the bio rather than the
-    // honorific suffix.
-    name: 'Yash Mehta, MBBS, MS Orth, MRCS, MCh',
+    // Trauma & Orthopaedic surgeon practicing as a Senior Fellow at
+    // Royal Bolton Hospital NHS Trust, Manchester, UK while pursuing
+    // the MCh in Trauma & Orthopaedics. Indian-trained (Government
+    // Medical College, Surat) with subspecialty experience in robotic
+    // arthroplasty (Apollo Hospitals, Navi Mumbai). Credential string
+    // updated 2026-05-05 per Kanwar's latest information: formal
+    // post-MBBS credentials are MS (Ortho), MRCS (England), and the
+    // SICOT Diploma; the prior MCh suffix was retired because Yash is
+    // currently *pursuing* MCh, not credentialed in it. ATLS
+    // instructorship is surfaced in the bio rather than the honorific
+    // suffix. Subspecialty interests cover foot & ankle surgery and
+    // arthroplasty.
+    name: 'Yash Mehta, MBBS, MS (Ortho), MRCS (England), SICOT Dip',
     givenName: 'Yash',
     familyName: 'Mehta',
-    honorificSuffix: 'MBBS, MS Orth, MRCS, MCh',
+    honorificSuffix: 'MBBS, MS (Ortho), MRCS (England), SICOT Dip',
     jobTitle: 'Associate Editor',
-    medicalSpecialty: 'Orthopedic Trauma',
-    affiliation: 'Royal Bolton Hospital NHS Trust',
+    medicalSpecialty: 'Foot and Ankle Surgery and Adult Reconstruction',
+    affiliation: 'Royal Bolton Hospital NHS Trust, Manchester',
     sameAs: [],
     slug: 'yash-mehta',
   },
@@ -584,19 +588,21 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
       'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
   },
   'yash-mehta': {
-    photo: '/brand/yash-mehta.png',
+    photo: '/brand/yash-mehta.jpg',
     summary:
-      'Trauma & Orthopaedic surgeon practicing as an International Training Fellow at Royal Bolton Hospital NHS Trust, Manchester, UK. Indian-trained (Government Medical College, Surat) with subspecialty experience in robotic arthroplasty at Apollo Hospitals, Navi Mumbai. Holds the MRCS (England) and MCh fellowship in Trauma & Orthopaedics, with additional certifications in Advanced Trauma Life Support (ATLS Instructor, ACS) and the FIFA Diploma in Sports Medicine.',
+      'Orthopaedic surgeon with subspecialty interests in foot & ankle surgery and arthroplasty. Currently practicing as a Senior Fellow in the NHS at Royal Bolton Hospital NHS Trust, Manchester, UK while pursuing the MCh in Trauma & Orthopaedics. Indian-trained (MBBS, MS Orthopaedics) with the MRCS (England) and SICOT Diploma; brings four years of postgraduate orthopaedic training plus a robotic arthroplasty fellowship to clinical and research practice. Experienced across trauma and elective orthopaedic surgery, including arthroplasty and foot & ankle care, with strong operative and clinical decision-making skills. ATLS Instructor committed to patient safety and NHS values, aspiring to Higher Surgical Training via CESR and FRCS (Tr & Orth) while advancing clinical, operative, and leadership expertise.',
     education: [
       'MBBS — Government Medical College, Surat, India (2018)',
       'MS Orthopaedics (Gold Medal) — Government Medical College, Surat, India (2022)',
       'MRCS — Royal College of Surgeons of England',
-      'MCh Fellowship in Trauma & Orthopaedics',
+      'SICOT Diploma — Société Internationale de Chirurgie Orthopédique et de Traumatologie',
     ],
     experience: [
-      'International Training Fellow (ITF) in Trauma & Orthopaedics at Royal Bolton Hospital NHS Trust, Manchester, UK.',
-      'Senior Registrar / Clinical Fellow in Orthopaedics at Apollo Hospitals, Navi Mumbai, with subspecialty focus on robotic arthroplasty.',
-      'ATLS Instructor (American College of Surgeons); FIFA Diploma in Sports Medicine.',
+      'Senior Fellow in Trauma & Orthopaedics at Royal Bolton Hospital NHS Trust, Manchester, UK; concurrently pursuing the MCh in Trauma & Orthopaedics.',
+      'Four years of postgraduate MS Orthopaedics training in India, followed by a Robotic Arthroplasty fellowship at Apollo Hospitals, Navi Mumbai.',
+      'Subspecialty focus on foot & ankle surgery and arthroplasty, with clinical experience across trauma and elective orthopaedic surgery.',
+      'ATLS Instructor (American College of Surgeons); committed to patient safety and NHS values.',
+      'Aspiring to Higher Surgical Training via CESR and FRCS (Tr & Orth).',
     ],
     workLocation: 'Manchester, United Kingdom',
   },
