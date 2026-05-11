@@ -231,6 +231,7 @@ const CONTACT_INBOXES: Record<string, string> = {
   'General Inquiry': 'oscrsjournal@gmail.com',
   'Manuscript Submission': 'oscrsjournal@gmail.com',
   'Editorial Board Interest': 'oscrsjournal@gmail.com',
+  'Research Team Interest': 'oscrsjournal@gmail.com',
   'APC Waiver Request': 'oscrsjournal@gmail.com',
   Other: 'oscrsjournal@gmail.com',
 }
