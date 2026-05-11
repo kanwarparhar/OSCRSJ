@@ -18,7 +18,7 @@ export default function NewsPage() {
       <PageHeader
         label="News"
         title="OSCRSJ News"
-        subtitle="Curated orthopedic news for trainees and attendings, sourced from peer-reviewed journals and specialty societies."
+        subtitle="Curated orthopedic news for the global orthopedic surgery community, sourced from peer-reviewed journals and specialty societies."
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-16">

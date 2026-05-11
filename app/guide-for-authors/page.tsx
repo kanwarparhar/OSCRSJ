@@ -351,7 +351,7 @@ export default function GuideForAuthorsPage() {
       <PageHeader
         label="For Authors"
         title="Guide for Authors"
-        subtitle="Everything you need to prepare and submit a manuscript to OSCRSJ."
+        subtitle="Everything you need to prepare and submit a manuscript to OSCRSJ. We welcome submissions from orthopedic surgeons across all career stages."
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">

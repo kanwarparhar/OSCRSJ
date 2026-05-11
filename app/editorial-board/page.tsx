@@ -226,7 +226,7 @@ export default function EditorialBoardPage() {
       <PageHeader
         label="Our Team"
         title="Editorial Board"
-        subtitle="OSCRSJ is guided by an editorial board of practicing orthopedic surgeons and researchers committed to rigorous, fair peer review."
+        subtitle="OSCRSJ is guided by an editorial board of orthopedic surgeons across all career stages — practicing surgeons, fellows, residents, and researchers — committed to rigorous, fair peer review."
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -251,7 +251,7 @@ export default function EditorialBoardPage() {
             <LeadershipCard
               member={foundingEditor}
               roleLine="Founding Editor · OSCRSJ"
-              blurb="Founded OSCRSJ in 2026 to give the global orthopedic community a rigorous, fast, and supportive venue for case reports and case series. Oversees editorial operations, journal development, and day-to-day management during the launch phase."
+              blurb="Founded OSCRSJ in 2026 as an independent, open-access venue for orthopedic case reports and case series, built around rigorous peer review and substantive editorial feedback. Oversees editorial operations, journal development, and day-to-day management during the launch phase."
             />
           </section>
         )}
@@ -327,7 +327,7 @@ export default function EditorialBoardPage() {
           <span className="section-label">Get Involved</span>
           <h2 className="section-heading mb-2">Join Our Editorial Board</h2>
           <p className="text-ink text-sm mb-6 max-w-xl mx-auto">
-            We are building an editorial board of practicing orthopedic surgeons across all subspecialties. Board members contribute to the mission of providing fast, fair, high-quality peer review for the global orthopedic community.
+            We are building an editorial board of orthopedic surgeons across all career stages and all subspecialties. Board members contribute to the mission of providing rigorous, fair, high-quality peer review for the global orthopedic surgery community.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/contact" className="btn-primary-light">Express Interest</Link>

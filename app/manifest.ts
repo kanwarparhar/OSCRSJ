@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
     short_name: 'OSCRSJ',
     description:
-      'An independent, peer-reviewed, open-access orthopedic journal publishing case reports, case series, surgical techniques, and images in orthopedics for trainees worldwide.',
+      'An independent, peer-reviewed, open-access orthopedic journal publishing case reports, case series, surgical techniques, and images in orthopedics for the global orthopedic surgery community.',
     start_url: '/',
     display: 'standalone',
     background_color: '#FDFBF8',

@@ -32,9 +32,9 @@ export default function SubscribePage() {
           <div className="space-y-3">
             {[
               { title: 'New Issue Alerts', desc: 'Be the first to know when a new issue is published, with article highlights and direct links.' },
-              { title: 'Call for Submissions', desc: 'Special topic calls, deadline reminders, and submission tips for trainees.' },
+              { title: 'Call for Submissions', desc: 'Special topic calls, deadline reminders, and submission tips for authors across all career stages.' },
               { title: 'Journal Updates', desc: 'Milestones like PubMed indexing progress, editorial board additions, and APC policy changes.' },
-              { title: 'Author Resources', desc: 'Writing tips, peer review insights, and guides for early-career researchers.' },
+              { title: 'Author Resources', desc: 'Writing tips, peer review insights, and guides for orthopedic authors at any career stage.' },
             ].map((item) => (
               <div key={item.title} className="flex gap-3">
                 <svg className="w-5 h-5 text-brown mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">

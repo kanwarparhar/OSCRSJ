@@ -401,13 +401,13 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
   'kanwar-parhar': {
     photo: '/brand/kanwar-parhar.png',
     summary:
-      'Founding Editor of OSCRSJ and orthopedic surgery resident at the University of California, San Diego. Founded the journal in 2026 to give the global orthopedic community a rigorous, fast, and supportive venue for case reports and case series. Oversees editorial operations, journal development, and day-to-day management during the launch phase.',
+      'Founding Editor of OSCRSJ and orthopedic surgery resident at the University of California, San Diego. Founded the journal in 2026 as an independent, open-access venue for orthopedic case reports and case series, built around rigorous peer review and substantive editorial feedback. Oversees editorial operations, journal development, and day-to-day management during the launch phase.',
     education: [
       'Medical School — Washington State University, Elson S. Floyd College of Medicine, MD',
       'Residency — Orthopedic Surgery, University of California, San Diego',
     ],
     experience: [
-      'Founded OSCRSJ in 2026 to address a structural gap in orthopedic publishing: the lack of a fast, rigorous, and supportive venue for case reports and case series, with particular emphasis on early-career voices and underrepresented research from across the global orthopedic community.',
+      'Founded OSCRSJ in 2026 to address a structural gap in orthopedic publishing: the lack of an independent, open-access venue for case reports and case series built around rigorous peer review and substantive editorial feedback, with particular emphasis on underrepresented research from across the global orthopedic surgery community.',
       'Currently completing orthopedic surgery residency training at the University of California, San Diego.',
       'Active research collaborator on multiple peer-reviewed orthopedic publications spanning trauma, sports medicine, and spine surgery.',
     ],
