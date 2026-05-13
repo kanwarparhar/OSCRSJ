@@ -164,6 +164,32 @@ export const BOARD_MEMBERS: BoardMember[] = [
     slug: 'alejandro-zylberberg',
   },
   {
+    // Third Section Editor for Adult Reconstruction. Pakistani orthopaedic
+    // surgeon with deep arthroplasty + limb-reconstruction depth: dedicated
+    // arthroplasty fellowship at Ospedale Alessandro Manzoni in Lecco,
+    // Italy; Ilizarov fellowships at the National Ilizarov Medical Research
+    // Centre in Kurgan, Russia and at Lecco; FRCS-credentialed via the
+    // Royal College of Physicians and Surgeons of Glasgow. Currently
+    // Associate Professor of Orthopaedic Surgery at the Lady Reading
+    // Hospital Medical Teaching Institute, Peshawar, with operative
+    // experience spanning cemented/non-cemented/hybrid/dual-mobility THA
+    // and TKA. Joins Bill Huang and Alejandro Zylberberg on the Adult
+    // Reconstruction desk for additional load redundancy and South Asia +
+    // Ilizarov reconstruction depth. Credential strip applied per
+    // Convention §3 ortho-marker rule (FCPS (Orthopaedic Surgery) → FCPS;
+    // MRCS path superseded by FRCS).
+    name: 'Muhammad Inam, MBBS, FCPS, FRCS',
+    givenName: 'Muhammad',
+    familyName: 'Inam',
+    honorificSuffix: 'MBBS, FCPS, FRCS',
+    jobTitle: 'Section Editor',
+    medicalSpecialty: 'Adult Reconstruction',
+    affiliation:
+      'Lady Reading Hospital Medical Teaching Institute, Peshawar',
+    sameAs: ['https://orcid.org/0000-0002-1358-5306'],
+    slug: 'muhammad-inam',
+  },
+  {
     // Yash Mehta promoted from Associate Editor to Section Editor for Foot
     // and Ankle on 2026-05-06 per Kanwar directive — the desk needed
     // dedicated leadership and Yash's foot & ankle clinical depth (plus
@@ -546,6 +572,47 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
       '256 citations',
     ],
     workLocation: 'Santiago, Chile',
+  },
+  'muhammad-inam': {
+    photo: '/brand/muhammad-inam.png',
+    summary:
+      'Section Editor for Adult Reconstruction at OSCRSJ. Associate Professor of Orthopaedic Surgery at the Lady Reading Hospital Medical Teaching Institute in Peshawar, Pakistan, with subspecialty depth in adult arthroplasty (cemented, non-cemented, hybrid, and dual-mobility THA; total and unicompartmental TKA) and Ilizarov limb reconstruction. Fellowship-trained in arthroplasty and Ilizarov technique in Italy and Russia, FRCS-credentialed via the Royal College of Physicians and Surgeons of Glasgow.',
+    education: [
+      'MBBS — Peshawar University, Pakistan (1994)',
+      'FCPS (Orthopaedic Surgery) — College of Physicians and Surgeons Pakistan (2011)',
+      'MRCSEd — Royal College of Surgeons of Edinburgh (2012)',
+      'Ilizarov Fellowship in Limb Reconstruction — National Ilizarov Medical Research Centre for Traumatology and Orthopaedics, Kurgan, Russia (2013)',
+      'Arthroplasty Fellowship — Ospedale Alessandro Manzoni, Lecco, Italy (2015)',
+      'Ilizarov Fellowship — Ospedale Alessandro Manzoni, Lecco, Italy (2015)',
+      'Diploma in Health Care Management — Athena Global Education, Oxford, UK (2023)',
+      'Fellowship in Arthroscopy, Sports Surgery, Orthobiology and Arthroplasty — Interbalkan European Hospital, Greece (2025)',
+      'FRCS — Royal College of Physicians and Surgeons of Glasgow (2025)',
+      'Diploma in Health Professional Education — Health Services Academy, Islamabad (2026)',
+    ],
+    experience: [
+      'Associate Professor of Orthopaedic Surgery, Department of Orthopaedics and Trauma, Lady Reading Hospital Medical Teaching Institute, Peshawar (Jan 2023 – present); previously Assistant Professor at the same department (May 2017 – Jan 2023), with prior Senior Registrar and Junior Registrar appointments at PGMI Hayatabad Medical Complex, Peshawar (2010 – 2017).',
+      'Operative breadth across adult reconstruction (cemented, non-cemented, hybrid, and dual-mobility total hip arthroplasty; total and unicompartmental knee arthroplasty), trauma (Dynamic Hip Screw, interlocking nails, MIPO, pelvis and acetabulum fixation), Ilizarov limb reconstruction and deformity correction, arthroscopic sports surgery (ACL/PCL/MPFL reconstruction, meniscal repair, rotator cuff and labral repair), and anterior/posterior thoracolumbar and cervical spine fixation.',
+      'Controller of Examination, College of Physicians and Surgeons Pakistan (CPSP), Peshawar (March 2023 – November 2024) — conducted FCPS, MCPS, and IMM examinations across all medical and surgical specialties.',
+      'CPSP Supervisor in Orthopaedics and POA Deformity Correction Supervisor; Chairman of the Departmental Research Committee at Lady Reading Hospital MTI Peshawar (June 2024 – present); Member of the Operation Theatre and Infection Control Committee (Sept 2025 – present).',
+    ],
+    achievements: [
+      '100+ peer-reviewed publications across orthopaedic trauma, adult reconstruction, Ilizarov limb reconstruction, spine, and sports surgery',
+      'Active reviewer for BMJ Case Reports, BMC Musculoskeletal Disorders, Cureus Journal of Medical Sciences, Journal of the College of Physicians and Surgeons of Pakistan, and over a dozen additional orthopaedic and surgical journals',
+      'Associate Editor at three peer-reviewed journals: BMC Musculoskeletal Disorders (UK), Cureus Journal of Medical Sciences (US), and Orthopedic and Sports Medicine Open Access Journal (US)',
+      'Faculty and organizer at multiple national workshops on Ilizarov technique, hip and knee arthroplasty, and pelvis & acetabulum fixation across Pakistan',
+    ],
+    memberships: [
+      'Pakistan Orthopaedic Association — POA (Lifetime Member)',
+      'Société Internationale de Chirurgie Orthopédique et de Traumatologie — SICOT',
+      'AO Trauma',
+      'American Academy of Orthopaedic Surgeons — AAOS',
+      'ASAMI Pakistan (Lifetime Member)',
+      'Fellow, American College of Surgeons',
+      'Pakistan Arthroplasty Society (Lifetime Member)',
+      'Asia Pacific Orthopaedic Association (Lifetime Member)',
+      'International Society of Arthroscopy, Knee Surgery and Orthopaedic Sports Medicine — ISAKOS (Lifetime Member)',
+    ],
+    workLocation: 'Peshawar, Pakistan',
   },
   'bill-huang': {
     photo: '/brand/bill-huang.jpg',
