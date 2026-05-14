@@ -2,7 +2,8 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { sendEmail } from '@/lib/email/resend'
+import { sendEmail, type SendEmailAttachment } from '@/lib/email/resend'
+import { buildReviewerFeedbackDocx } from '@/lib/reviewer-feedback/build'
 import {
   renderEditorialDecisionAccept,
   getEditorialDecisionAcceptSubject,
@@ -472,6 +473,207 @@ export interface SubmitEditorialDecisionArgs {
   // 'invited' review_invitations rows for round 2. Best-effort:
   // a re-invite failure does NOT roll back the decision.
   reInviteOriginalReviewers?: boolean
+  // Session 51 — when set on a Minor/Major Revisions decision,
+  // the editor has downloaded the auto-generated reviewer-feedback
+  // .docx, edited it in Word, and uploaded the edited version. This
+  // overrides the auto-generated attachment. Ignored for non-
+  // revision decisions. `contentBase64` is the raw .docx bytes
+  // base64-encoded; capped at 22 MB raw (matches Resend payload).
+  reviewerFeedbackOverride?: {
+    filename: string
+    contentBase64: string
+  } | null
+}
+
+// Resend caps total payload at ~40 MB; base64 inflates ~33%, so the
+// safe raw-byte ceiling for a single attachment is ~22 MB. Surfaced
+// in both resolveReviewerFeedbackAttachment (server) and the
+// DecisionComposerPanel client-side override-upload guard.
+const REVIEWER_FEEDBACK_MAX_BYTES = 22 * 1024 * 1024
+
+export interface ResolvedReviewerFeedbackAttachment {
+  // The Resend-ready attachment, or null when no attachment ships.
+  attachment: SendEmailAttachment | null
+  // Convenience flag matching the `hasReviewerFeedbackAttachment`
+  // prop on the Minor/Major Revisions email templates.
+  hasAttachment: boolean
+  // For audit logging / debugging — which path produced the
+  // attachment (or 'none' if there is no attachment to send).
+  source: 'override' | 'auto' | 'none'
+  // Reviewer count from the auto-build path. Zero when the editor
+  // supplied an override (we don't crack open the .docx).
+  reviewerCount: number
+  // Populated on hard failures (override decode error, oversize,
+  // DB error). Decision send proceeds without attachment on error.
+  error: string | null
+}
+
+// Resolves the reviewer-feedback .docx attachment to ship with a
+// Minor/Major Revisions decision email. Exported so other paths
+// (resend, regenerate-on-demand, future bulk-decision flows) can
+// reuse the same override-vs-auto logic + 22 MB cap.
+export async function resolveReviewerFeedbackAttachment(
+  manuscriptId: string,
+  override?: { filename: string; contentBase64: string } | null,
+): Promise<ResolvedReviewerFeedbackAttachment> {
+  // Override path: editor uploaded an edited version.
+  if (override && override.contentBase64) {
+    try {
+      const buffer = Buffer.from(override.contentBase64, 'base64')
+      if (buffer.byteLength === 0) {
+        return {
+          attachment: null,
+          hasAttachment: false,
+          source: 'override',
+          reviewerCount: 0,
+          error: 'Override file decoded to zero bytes.',
+        }
+      }
+      if (buffer.byteLength > REVIEWER_FEEDBACK_MAX_BYTES) {
+        return {
+          attachment: null,
+          hasAttachment: false,
+          source: 'override',
+          reviewerCount: 0,
+          error: `Override exceeds ${Math.floor(
+            REVIEWER_FEEDBACK_MAX_BYTES / (1024 * 1024),
+          )} MB cap.`,
+        }
+      }
+      return {
+        attachment: {
+          filename: override.filename || 'reviewer-feedback.docx',
+          content: buffer,
+          contentType:
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        },
+        hasAttachment: true,
+        source: 'override',
+        reviewerCount: 0,
+        error: null,
+      }
+    } catch (err) {
+      return {
+        attachment: null,
+        hasAttachment: false,
+        source: 'override',
+        reviewerCount: 0,
+        error:
+          err instanceof Error
+            ? err.message
+            : 'Override base64 decode failed.',
+      }
+    }
+  }
+
+  // Auto path: build from `reviews.comments_to_author`.
+  const build = await buildReviewerFeedbackDocx({ manuscriptId })
+  if (!build.ok) {
+    return {
+      attachment: null,
+      hasAttachment: false,
+      source: 'auto',
+      reviewerCount: 0,
+      error: build.error,
+    }
+  }
+  if (build.empty || !build.content || !build.filename) {
+    // No author-facing comments yet — ship the decision email
+    // without attachment. The templates' default copy still reads
+    // cleanly because `hasReviewerFeedbackAttachment` is false.
+    return {
+      attachment: null,
+      hasAttachment: false,
+      source: 'none',
+      reviewerCount: 0,
+      error: null,
+    }
+  }
+  if (build.content.byteLength > REVIEWER_FEEDBACK_MAX_BYTES) {
+    return {
+      attachment: null,
+      hasAttachment: false,
+      source: 'auto',
+      reviewerCount: build.reviewerCount,
+      error: `Auto-generated reviewer feedback exceeds ${Math.floor(
+        REVIEWER_FEEDBACK_MAX_BYTES / (1024 * 1024),
+      )} MB cap.`,
+    }
+  }
+  return {
+    attachment: {
+      filename: build.filename,
+      content: build.content,
+      contentType:
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    },
+    hasAttachment: true,
+    source: 'auto',
+    reviewerCount: build.reviewerCount,
+    error: null,
+  }
+}
+
+export interface PreviewReviewerFeedbackArgs {
+  manuscriptId: string
+}
+
+export interface PreviewReviewerFeedbackResult {
+  ok: boolean
+  error?: string
+  forbidden?: true
+  // Set when ok && !empty.
+  filename?: string | null
+  // Base64-encoded .docx bytes — the client decodes and triggers
+  // an in-browser download. Set when ok && !empty.
+  contentBase64?: string | null
+  // From the auto-build path.
+  reviewerCount?: number
+  // True when no reviewer has submitted author-facing comments
+  // yet. The UI surfaces a "nothing to preview" message and the
+  // decision email will be sent without an attachment.
+  empty?: boolean
+}
+
+// Server action invoked by DecisionComposerPanel's Preview button.
+// Builds the reviewer-feedback .docx from current DB state and
+// returns it as base64 so the editor can review (and optionally
+// edit) it before submitting the decision.
+export async function previewReviewerFeedback(
+  args: PreviewReviewerFeedbackArgs,
+): Promise<PreviewReviewerFeedbackResult> {
+  const gate = await requireEditorOrAdmin()
+  if ('error' in gate) {
+    return { ok: false, forbidden: true, error: gate.error }
+  }
+  if (!args.manuscriptId || typeof args.manuscriptId !== 'string') {
+    return { ok: false, error: 'Manuscript id is required.' }
+  }
+  const build = await buildReviewerFeedbackDocx({
+    manuscriptId: args.manuscriptId,
+  })
+  if (!build.ok) {
+    return {
+      ok: false,
+      error: build.error || 'Failed to build reviewer feedback preview.',
+    }
+  }
+  if (build.empty || !build.content || !build.filename) {
+    return {
+      ok: true,
+      empty: true,
+      filename: null,
+      contentBase64: null,
+      reviewerCount: 0,
+    }
+  }
+  return {
+    ok: true,
+    empty: false,
+    filename: build.filename,
+    contentBase64: build.content.toString('base64'),
+    reviewerCount: build.reviewerCount,
+  }
 }
 
 export interface SubmitEditorialDecisionResult {
@@ -703,6 +905,13 @@ export async function submitEditorialDecision(
           manuscriptId: args.manuscriptId,
         })
       } else if (args.decision === 'minor_revisions') {
+        // Resolve reviewer-feedback .docx attachment (override OR
+        // auto-build). Failure to build is non-fatal — the email
+        // still sends with the default no-attachment copy.
+        const resolved = await resolveReviewerFeedbackAttachment(
+          args.manuscriptId,
+          args.reviewerFeedbackOverride || null,
+        )
         const { html, text } = renderEditorialDecisionMinorRevisions({
           authorName,
           submissionId,
@@ -710,6 +919,7 @@ export async function submitEditorialDecision(
           decisionLetter: letter,
           deadlineLabel: formatDeadlineLabel(deadlineIso),
           revisingUrl: `${base}/dashboard/submit?revising=${args.manuscriptId}`,
+          hasReviewerFeedbackAttachment: resolved.hasAttachment,
         })
         await sendEmail({
           to: authorEmail,
@@ -718,8 +928,31 @@ export async function submitEditorialDecision(
           text,
           emailType: 'editorial_decision_minor_revisions',
           manuscriptId: args.manuscriptId,
+          ...(resolved.attachment
+            ? { attachments: [resolved.attachment] }
+            : {}),
         })
+        try {
+          await (admin.from('audit_logs') as any).insert({
+            action: 'reviewer_feedback_attachment_resolved',
+            resource_type: 'editorial_decision',
+            resource_id: args.manuscriptId,
+            details: {
+              decision: args.decision,
+              source: resolved.source,
+              has_attachment: resolved.hasAttachment,
+              reviewer_count: resolved.reviewerCount,
+              error: resolved.error,
+            },
+          })
+        } catch {
+          // swallow — audit failure must not break the send
+        }
       } else if (args.decision === 'major_revisions') {
+        const resolved = await resolveReviewerFeedbackAttachment(
+          args.manuscriptId,
+          args.reviewerFeedbackOverride || null,
+        )
         const { html, text } = renderEditorialDecisionMajorRevisions({
           authorName,
           submissionId,
@@ -727,6 +960,7 @@ export async function submitEditorialDecision(
           decisionLetter: letter,
           deadlineLabel: formatDeadlineLabel(deadlineIso),
           revisingUrl: `${base}/dashboard/submit?revising=${args.manuscriptId}`,
+          hasReviewerFeedbackAttachment: resolved.hasAttachment,
         })
         await sendEmail({
           to: authorEmail,
@@ -735,7 +969,26 @@ export async function submitEditorialDecision(
           text,
           emailType: 'editorial_decision_major_revisions',
           manuscriptId: args.manuscriptId,
+          ...(resolved.attachment
+            ? { attachments: [resolved.attachment] }
+            : {}),
         })
+        try {
+          await (admin.from('audit_logs') as any).insert({
+            action: 'reviewer_feedback_attachment_resolved',
+            resource_type: 'editorial_decision',
+            resource_id: args.manuscriptId,
+            details: {
+              decision: args.decision,
+              source: resolved.source,
+              has_attachment: resolved.hasAttachment,
+              reviewer_count: resolved.reviewerCount,
+              error: resolved.error,
+            },
+          })
+        } catch {
+          // swallow — audit failure must not break the send
+        }
       } else {
         // post_review_reject (Session 13), legacy reject, or desk_reject
         const isDeskReject = args.decision === 'desk_reject'

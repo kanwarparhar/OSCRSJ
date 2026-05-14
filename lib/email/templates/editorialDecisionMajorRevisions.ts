@@ -24,6 +24,11 @@ export interface EditorialDecisionMajorRevisionsParams {
   decisionLetter: string
   deadlineLabel: string
   revisingUrl: string
+  // When true, the email is being sent with a Word doc
+  // (reviewer-feedback.docx) attached. The body copy adapts to
+  // tell the author to consult the attached file. Defaults
+  // false so legacy / no-attachment paths render unchanged.
+  hasReviewerFeedbackAttachment?: boolean
 }
 
 function renderLetterHtml(letter: string): string {
@@ -46,7 +51,14 @@ export function renderEditorialDecisionMajorRevisions(
     decisionLetter,
     deadlineLabel,
     revisingUrl,
+    hasReviewerFeedbackAttachment,
   } = params
+
+  const attachmentNote = hasReviewerFeedbackAttachment
+    ? paragraph(
+        `The full reviewer comments are attached to this email as <strong>${escapeHtml(submissionId)}-reviewer-feedback.docx</strong>. Please consult that document alongside the editor's letter below as you prepare your revision. Reviewer identities are kept confidential.`
+      )
+    : ''
 
   const bodyHtml = [
     paragraph(`Dear ${escapeHtml(authorName)},`),
@@ -59,6 +71,7 @@ export function renderEditorialDecisionMajorRevisions(
       ['Decision', 'Major Revisions'],
       ['Revision deadline', deadlineLabel],
     ]),
+    attachmentNote,
     paragraph(`<strong>Editor's letter</strong>`),
     renderLetterHtml(decisionLetter),
     paragraph(`<strong>How to submit your revision</strong>`),
@@ -66,7 +79,7 @@ export function renderEditorialDecisionMajorRevisions(
       `Your revision package must include <strong>two new documents</strong> in addition to your clean revised manuscript and clean revised blinded manuscript:`
     ),
     `<ol style="margin: 0 0 16px 0; padding-left: 22px; color: #1c0f05; font-size: 15px; line-height: 24px;">
-      <li style="margin-bottom: 10px;"><strong>Response to Reviewers (.docx).</strong> A point-by-point response. For every reviewer comment, quote the comment verbatim, write your response, describe the specific change you made to the manuscript, and cite the line numbers in the revised manuscript where the change appears. <a href="https://www.oscrsj.com/downloads/oscrsj-revision-response-template.docx" style="color: #3d2a18; text-decoration: underline;">Download the OSCRSJ Revision Response Template</a> — it includes a worked example and pre-formatted response tables.</li>
+      <li style="margin-bottom: 10px;"><strong>Response to Reviewers (.docx).</strong> A point-by-point response. For every reviewer comment ${hasReviewerFeedbackAttachment ? 'in the attached feedback document' : 'shared with you'}, quote the comment verbatim, write your response, describe the specific change you made to the manuscript, and cite the line numbers in the revised manuscript where the change appears. Use the <a href="https://www.oscrsj.com/templates#revision-resources" style="color: #3d2a18; text-decoration: underline;">OSCRSJ Revision Response Template</a> at oscrsj.com/templates — it includes a worked example and pre-formatted response tables.</li>
       <li style="margin-bottom: 10px;"><strong>Tracked-Changes Manuscript (.docx or .pdf).</strong> A copy of the revised manuscript with every change visually marked: new or changed text in <strong style="color: #C0392B;">RED font</strong> and <strong style="background-color: #FFF59D;">HIGHLIGHTED YELLOW</strong>. The editor should be able to see at a glance which lines were modified.</li>
     </ol>`,
     paragraph(
@@ -77,13 +90,19 @@ export function renderEditorialDecisionMajorRevisions(
       `We recognise that major revisions involve significant work. If you need an extension or wish to discuss scope with the handling editor, simply reply to this email.`
     ),
     paragraph(`With thanks,<br />The OSCRSJ Editorial Office`),
-  ].join('\n')
+  ]
+    .filter((s) => s.length > 0)
+    .join('\n')
 
   const html = renderEmailShell({
     previewText: `OSCRSJ submission ${submissionId}: major revisions requested.`,
     heading: 'Decision: Major Revisions Requested',
     bodyHtml,
   })
+
+  const attachmentNoteText = hasReviewerFeedbackAttachment
+    ? `The full reviewer comments are attached to this email as ${submissionId}-reviewer-feedback.docx. Please consult that document alongside the editor's letter below as you prepare your revision. Reviewer identities are kept confidential.\n\n`
+    : ''
 
   const text =
     `Dear ${authorName},\n\n` +
@@ -92,13 +111,14 @@ export function renderEditorialDecisionMajorRevisions(
     `Title: ${title}\n` +
     `Decision: Major Revisions\n` +
     `Revision deadline: ${deadlineLabel}\n\n` +
+    attachmentNoteText +
     `Editor's letter:\n\n${decisionLetter}\n\n` +
     `HOW TO SUBMIT YOUR REVISION\n\n` +
     `Your revision package must include TWO new documents in addition to your clean revised manuscript and clean revised blinded manuscript:\n\n` +
     `1. RESPONSE TO REVIEWERS (.docx)\n` +
-    `   A point-by-point response. For every reviewer comment, quote the comment verbatim, write your response, describe the specific change you made to the manuscript, and cite the line numbers in the revised manuscript where the change appears.\n` +
-    `   Download the OSCRSJ Revision Response Template (with a worked example and pre-formatted response tables):\n` +
-    `   https://www.oscrsj.com/downloads/oscrsj-revision-response-template.docx\n\n` +
+    `   A point-by-point response. For every reviewer comment${hasReviewerFeedbackAttachment ? ' in the attached feedback document' : ''}, quote the comment verbatim, write your response, describe the specific change you made to the manuscript, and cite the line numbers in the revised manuscript where the change appears.\n` +
+    `   Use the OSCRSJ Revision Response Template (worked example + pre-formatted response tables):\n` +
+    `   https://www.oscrsj.com/templates#revision-resources\n\n` +
     `2. TRACKED-CHANGES MANUSCRIPT (.docx or .pdf)\n` +
     `   A copy of the revised manuscript with every change visually marked: new or changed text in RED FONT and HIGHLIGHTED YELLOW. The editor should be able to see at a glance which lines were modified.\n\n` +
     `Both documents are required upload slots in Step 2 of the revision wizard. The revised manuscript will likely be returned to the original reviewers for a second round of review, so a thorough, well-documented response strengthens your chances of acceptance.\n\n` +

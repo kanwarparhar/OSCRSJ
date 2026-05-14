@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import {
   submitEditorialDecision,
   rescindEditorialDecision,
+  previewReviewerFeedback,
 } from '@/lib/admin/actions'
 import type {
   EditorialDecisionType,
@@ -190,6 +191,34 @@ export default function DecisionComposerPanel({
     return Date.now() >= new Date(rescindable.rescindWindowEndsIso).getTime()
   })
 
+  // ---- Reviewer feedback attachment (Minor / Major Revisions only) ----
+  // Editor reviews the auto-generated reviewer-feedback.docx by
+  // clicking Preview → browser download. If they want to edit it
+  // before the author sees it, they edit in Word and re-upload as
+  // an override; submitEditorialDecision will use the override
+  // instead of regenerating fresh.
+  const isRevisionDecision =
+    !deskRejectMode &&
+    (decision === 'minor_revisions' || decision === 'major_revisions')
+  const [feedbackPreviewLoading, setFeedbackPreviewLoading] = useState(false)
+  const [feedbackPreviewMessage, setFeedbackPreviewMessage] = useState<
+    string | null
+  >(null)
+  const [feedbackPreviewIsError, setFeedbackPreviewIsError] = useState(false)
+  // Last-known reviewer count from the most recent preview call.
+  // null = not yet previewed; -1 = previewed and was empty (no
+  // reviewer comments yet on this manuscript).
+  const [feedbackReviewerCount, setFeedbackReviewerCount] = useState<
+    number | null
+  >(null)
+  // Editor's uploaded override. When non-null, this ships as the
+  // attachment INSTEAD of the auto-generated version.
+  const [feedbackOverride, setFeedbackOverride] = useState<{
+    filename: string
+    contentBase64: string
+    sizeBytes: number
+  } | null>(null)
+
   const requiresDeadline =
     !deskRejectMode &&
     (decision === 'minor_revisions' || decision === 'major_revisions')
@@ -257,6 +286,135 @@ export default function DecisionComposerPanel({
     setMessage(null)
   }
 
+  // Trigger an in-browser download from a base64 .docx blob
+  // returned by the previewReviewerFeedback server action.
+  function downloadDocxFromBase64(filename: string, base64: string) {
+    try {
+      const bin = atob(base64)
+      const bytes = new Uint8Array(bin.length)
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i)
+      const blob = new Blob([bytes], {
+        type:
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      // Small delay before revoking so the browser has the blob
+      // committed to the download stream.
+      setTimeout(() => URL.revokeObjectURL(url), 1500)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Unknown download error.'
+      setFeedbackPreviewMessage(`Download failed: ${msg}`)
+      setFeedbackPreviewIsError(true)
+    }
+  }
+
+  async function handlePreviewFeedback() {
+    setFeedbackPreviewLoading(true)
+    setFeedbackPreviewMessage(null)
+    setFeedbackPreviewIsError(false)
+    try {
+      const result = await previewReviewerFeedback({ manuscriptId })
+      if (!result.ok) {
+        setFeedbackPreviewMessage(
+          result.error || 'Failed to generate preview.'
+        )
+        setFeedbackPreviewIsError(true)
+        setFeedbackReviewerCount(null)
+        return
+      }
+      if (result.empty || !result.filename || !result.contentBase64) {
+        setFeedbackReviewerCount(-1)
+        setFeedbackPreviewMessage(
+          'No completed reviewer comments are available yet for this manuscript. No attachment will be sent.'
+        )
+        setFeedbackPreviewIsError(false)
+        return
+      }
+      setFeedbackReviewerCount(result.reviewerCount ?? null)
+      downloadDocxFromBase64(result.filename, result.contentBase64)
+      setFeedbackPreviewMessage(
+        `Downloaded ${result.filename}. Review (and optionally edit) before submitting the decision.`
+      )
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Unknown error.'
+      setFeedbackPreviewMessage(msg)
+      setFeedbackPreviewIsError(true)
+    } finally {
+      setFeedbackPreviewLoading(false)
+    }
+  }
+
+  async function handleOverrideFileChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const file = e.target.files && e.target.files[0]
+    // Reset the input so re-selecting the same file fires onChange again.
+    if (e.target.value) e.target.value = ''
+    if (!file) return
+    // 22 MB raw byte cap, matches lib/admin/actions.ts server-side check.
+    const MAX_BYTES = 22 * 1024 * 1024
+    if (file.size > MAX_BYTES) {
+      setFeedbackPreviewMessage(
+        `File is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum is 22 MB.`
+      )
+      setFeedbackPreviewIsError(true)
+      return
+    }
+    if (
+      !file.name.toLowerCase().endsWith('.docx') &&
+      file.type !==
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ) {
+      setFeedbackPreviewMessage(
+        'Only .docx files are accepted as an override.'
+      )
+      setFeedbackPreviewIsError(true)
+      return
+    }
+    try {
+      const dataUrl: string = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = () => reject(reader.error)
+        reader.readAsDataURL(file)
+      })
+      const idx = dataUrl.indexOf(',')
+      const base64 = idx >= 0 ? dataUrl.slice(idx + 1) : ''
+      if (!base64) {
+        setFeedbackPreviewMessage('Could not read uploaded file.')
+        setFeedbackPreviewIsError(true)
+        return
+      }
+      setFeedbackOverride({
+        filename: file.name,
+        contentBase64: base64,
+        sizeBytes: file.size,
+      })
+      setFeedbackPreviewMessage(
+        `Override applied: ${file.name}. This edited file will be attached to the decision email.`
+      )
+      setFeedbackPreviewIsError(false)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Unknown error.'
+      setFeedbackPreviewMessage(`Override upload failed: ${msg}`)
+      setFeedbackPreviewIsError(true)
+    }
+  }
+
+  function handleClearOverride() {
+    setFeedbackOverride(null)
+    setFeedbackPreviewMessage(
+      'Override cleared. The auto-generated reviewer feedback document will be attached when you submit.'
+    )
+    setFeedbackPreviewIsError(false)
+  }
+
   function onSubmit() {
     if (!canSubmit) return
 
@@ -276,6 +434,13 @@ export default function DecisionComposerPanel({
           decision === 'major_revisions' &&
           !deskRejectMode &&
           reInviteReviewers,
+        reviewerFeedbackOverride:
+          isRevisionDecision && feedbackOverride
+            ? {
+                filename: feedbackOverride.filename,
+                contentBase64: feedbackOverride.contentBase64,
+              }
+            : null,
       })
       if (!result.ok) {
         flash(result.error || 'Failed to submit decision.', true)
@@ -290,6 +455,9 @@ export default function DecisionComposerPanel({
       setConfirmed(false)
       setDeskRejectMode(false)
       setReInviteReviewers(false)
+      setFeedbackOverride(null)
+      setFeedbackReviewerCount(null)
+      setFeedbackPreviewMessage(null)
       router.refresh()
     })
   }
@@ -505,6 +673,106 @@ export default function DecisionComposerPanel({
           {letterLength} characters &middot; minimum {MIN_LETTER_LENGTH}
         </p>
       </div>
+
+      {isRevisionDecision && (
+        <div className="bg-white border border-peach-dark/40 rounded-lg p-4 space-y-3">
+          <div>
+            <p className="text-[11px] uppercase tracking-widest text-brown">
+              Reviewer feedback attachment
+            </p>
+            <p className="text-sm text-ink mt-1 leading-relaxed">
+              A Word document containing every reviewer&apos;s
+              author-facing comments — labelled &ldquo;Reviewer 1&rdquo;,
+              &ldquo;Reviewer 2&rdquo;, etc. — will be attached to the
+              decision email. Reviewer identities are not included.
+              Preview the document below to review its contents. If you
+              want to edit it (rewrite passages, redact, reorder, add
+              editorial notes) before the author sees it, download,
+              edit in Word, and upload the edited version as an
+              override.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handlePreviewFeedback}
+              disabled={feedbackPreviewLoading || isPending}
+              className="text-xs px-3 py-1.5 rounded-lg border border-brown/30 bg-cream-alt text-brown-dark hover:bg-peach disabled:opacity-50"
+            >
+              {feedbackPreviewLoading
+                ? 'Generating preview…'
+                : 'Preview / download attachment'}
+            </button>
+            <label
+              className={`text-xs px-3 py-1.5 rounded-lg border border-brown/30 cursor-pointer hover:bg-cream-alt ${
+                isPending ? 'opacity-50 pointer-events-none' : ''
+              }`}
+            >
+              {feedbackOverride
+                ? 'Replace edited version…'
+                : 'Upload edited version…'}
+              <input
+                type="file"
+                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={handleOverrideFileChange}
+                disabled={isPending}
+                className="hidden"
+              />
+            </label>
+            {feedbackOverride && (
+              <button
+                type="button"
+                onClick={handleClearOverride}
+                disabled={isPending}
+                className="text-xs px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 disabled:opacity-50"
+              >
+                Clear override
+              </button>
+            )}
+          </div>
+
+          {feedbackOverride && (
+            <p className="text-[12px] text-green-800 bg-green-50 border border-green-200 rounded px-3 py-2">
+              <strong>Override active:</strong> {feedbackOverride.filename}
+              {' · '}
+              {(feedbackOverride.sizeBytes / 1024).toFixed(1)} KB. This
+              edited file will be attached. Click &ldquo;Clear
+              override&rdquo; to revert to auto-generated.
+            </p>
+          )}
+
+          {!feedbackOverride &&
+            feedbackReviewerCount !== null &&
+            feedbackReviewerCount > 0 && (
+              <p className="text-[12px] text-brown">
+                Auto-generated document contains feedback from{' '}
+                <strong>
+                  {feedbackReviewerCount} reviewer
+                  {feedbackReviewerCount === 1 ? '' : 's'}
+                </strong>
+                . Click Submit decision to send as-is.
+              </p>
+            )}
+
+          {!feedbackOverride && feedbackReviewerCount === -1 && (
+            <p className="text-[12px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-3 py-2">
+              No reviewer comments are available for attachment. The
+              decision email will be sent without an attachment.
+            </p>
+          )}
+
+          {feedbackPreviewMessage && (
+            <p
+              className={`text-[12px] ${
+                feedbackPreviewIsError ? 'text-red-700' : 'text-brown'
+              }`}
+            >
+              {feedbackPreviewMessage}
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="bg-cream-alt/50 border border-border rounded-lg p-3 text-xs text-ink">
         <p className="mb-1">
