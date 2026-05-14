@@ -29,6 +29,15 @@ const articleTypes = [
     exampleFile: 'oscrsj-example-case-series.docx',
   },
   {
+    id: 'review-article',
+    label: 'Systematic Review & Meta-Analysis',
+    tagline: 'Evidence synthesis · 3,500 words · PRISMA 2020 mandatory',
+    description:
+      'A systematic review or meta-analysis on a focused clinical question in orthopedic surgery, conducted with a pre-defined search strategy, transparent eligibility criteria, and (for meta-analyses) quantitative pooling of effect estimates. Structured abstract: Background · Methods · Results · Conclusion.',
+    templateFile: 'oscrsj-template-review-article.docx',
+    exampleFile: 'oscrsj-example-review-article.docx',
+  },
+  {
     id: 'surgical-technique',
     label: 'Surgical Technique',
     tagline: 'Step-by-step · 1,500 words · video encouraged',
@@ -54,15 +63,6 @@ const articleTypes = [
       'A brief commentary on a previously published OSCRSJ article. Reference the discussed article by DOI; state the point of agreement or disagreement with supporting evidence. No formal section headings.',
     templateFile: 'oscrsj-template-letter-to-editor.docx',
     exampleFile: 'oscrsj-example-letter-to-editor.docx',
-  },
-  {
-    id: 'review-article',
-    label: 'Review Article',
-    tagline: 'Invited (Year 1) · 3,500 words · PRISMA recommended',
-    description:
-      'A comprehensive review of a focused topic in orthopedic surgery. Structured abstract: Background · Methods · Results · Conclusion. Invited only during Year 1.',
-    templateFile: 'oscrsj-template-review-article.docx',
-    exampleFile: 'oscrsj-example-review-article.docx',
   },
 ]
 
@@ -153,7 +153,7 @@ const submissionFiles = [
     name: 'Reporting Checklist',
     filename: 'CARE-checklist.pdf · JBI-checklist.pdf · PRISMA-checklist.pdf',
     required: 'Per article type',
-    description: 'CARE checklist for case reports; JBI critical appraisal checklist for case series; PRISMA recommended for systematic review articles. Submit as a supplementary file.',
+    description: 'CARE checklist for case reports; JBI critical appraisal checklist for case series; PRISMA 2020 checklist for systematic reviews and meta-analyses. All three are mandatory for their respective article types. Submit as a supplementary file.',
   },
   {
     name: 'Cover Letter',
@@ -244,11 +244,11 @@ export default function TemplatesPage() {
         </section>
 
         {/* ============================================================
-            REPORTING CHECKLISTS — CARE (Case Reports) + JBI (Case Series) + PRISMA (Review Articles)
+            REPORTING CHECKLISTS — CARE (Case Reports) + JBI (Case Series) + PRISMA (Systematic Reviews & Meta-Analyses)
             ============================================================ */}
         <section id="reporting-checklists">
           <h2 className="font-serif text-3xl text-brown-dark mb-2">Reporting Checklists</h2>
-          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series; PRISMA 2020 is recommended for every systematic-review or meta-analysis Review Article. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for Case Reports and Case Series.</p>
+          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series; PRISMA 2020 is required for every Systematic Review & Meta-Analysis. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for Case Reports and Case Series, and is required policy for Systematic Reviews & Meta-Analyses (portal hard-gate forthcoming).</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white border border-border rounded-xl p-6">
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Case Reports</p>
@@ -295,11 +295,11 @@ export default function TemplatesPage() {
               </p>
             </div>
             <div className="bg-white border border-border rounded-xl p-6">
-              <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Review Articles</p>
+              <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Systematic Reviews & Meta-Analyses</p>
               <h3 className="font-serif text-xl text-brown-dark mb-1">PRISMA 2020 Checklist</h3>
               <p className="text-xs text-brown mb-3">Preferred Reporting Items for Systematic reviews and Meta-Analyses (2020) · 27 reporting items</p>
               <p className="text-sm text-ink mb-4 leading-relaxed">
-                The international standard for transparent reporting of systematic reviews and meta-analyses — covers protocol registration, eligibility criteria, search strategy, study selection, data extraction, risk-of-bias assessment, synthesis methods, and reporting of results. Recommended for every systematic-review or meta-analysis Review Article.
+                The international standard for transparent reporting of systematic reviews and meta-analyses — covers protocol registration, eligibility criteria, search strategy, study selection, data extraction, risk-of-bias assessment, synthesis methods, and reporting of results. Required for every Systematic Review & Meta-Analysis submission.
               </p>
               <a href="/downloads/oscrsj-prisma-checklist.pdf" download className="btn-primary-light inline-block">
                 Download PRISMA Checklist (.pdf)

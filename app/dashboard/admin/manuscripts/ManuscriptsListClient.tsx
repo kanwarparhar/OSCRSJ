@@ -32,7 +32,7 @@ const TYPE_LABELS: Record<string, string> = {
   surgical_technique: 'Surgical Technique',
   images_in_orthopedics: 'Images in Orthopedics',
   letter_to_editor: 'Letter to the Editor',
-  review_article: 'Review Article',
+  review_article: 'Systematic Review & Meta-Analysis',
 }
 
 export interface AdminManuscriptRow extends BulkSelectable {

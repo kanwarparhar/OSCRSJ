@@ -23,7 +23,7 @@ const MANUSCRIPT_TYPE_LABELS: Record<ManuscriptType, string> = {
   surgical_technique: 'Surgical Technique',
   images_in_orthopedics: 'Images in Orthopedics',
   letter_to_editor: 'Letter to the Editor',
-  review_article: 'Review Article',
+  review_article: 'Systematic Review & Meta-Analysis',
 }
 
 export interface SubmissionConfirmationParams {

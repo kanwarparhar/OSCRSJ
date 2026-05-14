@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     default: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
   },
   description:
-    'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
-  keywords: ['orthopedic surgery', 'case reports', 'open access', 'medical journal', 'orthopedics'],
+    'A peer-reviewed, open-access orthopedic journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor for the global orthopedic surgery community.',
+  keywords: ['orthopedic surgery', 'case reports', 'case series', 'systematic review', 'meta-analysis', 'open access', 'medical journal', 'orthopedics'],
   openGraph: {
     title: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
     description:
-      'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
+      'A peer-reviewed, open-access orthopedic journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor for the global orthopedic surgery community.',
     url: 'https://www.oscrsj.com',
     siteName: 'OSCRSJ',
     type: 'website',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
     description:
-      'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
+      'A peer-reviewed, open-access orthopedic journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor for the global orthopedic surgery community.',
   },
   icons: {
     icon: '/favicon.png',
@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
         url: 'https://www.oscrsj.com',
         description:
-          'A peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series.',
+          'A peer-reviewed, open-access journal publishing orthopedic case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor.',
         publisher: { '@id': 'https://www.oscrsj.com/#organization' },
         inLanguage: 'en-US',
       },
@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
         foundingDate: '2026',
         description:
-          'Independent, peer-reviewed, open-access journal publishing orthopedic surgery case reports and case series for the global orthopedic surgery community.',
+          'Independent, peer-reviewed, open-access orthopedic journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor for the global orthopedic surgery community.',
         // sameAs: Knowledge Graph entity disambiguation — when Google sees these URLs in
         // Organization JSON-LD, it links the OSCRSJ entity to the social profiles, strengthening
         // the brand SERP panel and AI-citation surface presence (ChatGPT, Claude, Perplexity, etc.).

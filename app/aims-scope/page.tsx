@@ -5,12 +5,12 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'Aims & Scope',
   description:
-    'The aims, scope, and subspecialty coverage of OSCRSJ — an independent, peer-reviewed orthopedic journal publishing case reports, case series, surgical techniques, images, letters, and invited reviews for the global orthopedic surgery community.',
+    'The aims, scope, and subspecialty coverage of OSCRSJ — an independent, peer-reviewed orthopedic journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor for the global orthopedic surgery community.',
   alternates: { canonical: 'https://www.oscrsj.com/aims-scope' },
   openGraph: {
     title: 'Aims & Scope | OSCRSJ',
     description:
-      'The aims, scope, and subspecialty coverage of OSCRSJ — an independent, peer-reviewed orthopedic journal publishing case reports, case series, surgical techniques, images, letters, and invited reviews.',
+      'The aims, scope, and subspecialty coverage of OSCRSJ — an independent, peer-reviewed orthopedic journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor.',
     url: 'https://www.oscrsj.com/aims-scope',
     type: 'website',
   },
@@ -28,22 +28,22 @@ export default function AimsScopePage() {
             <span className="section-label">Our Purpose</span>
             <h2 className="section-heading mb-3">Purpose</h2>
             <p className="text-ink">
-              The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is a peer-reviewed, open-access journal dedicated to the publication of case-based and short-form literature across all subspecialties of orthopedic surgery and musculoskeletal medicine. Our purpose is to disseminate clinically instructive, novel, and educationally valuable scholarship to the global orthopedic surgery community.
+              The Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ) is a peer-reviewed, open-access journal dedicated to the publication of clinically instructive scholarship across all subspecialties of orthopedic surgery and musculoskeletal medicine. We publish case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor — disseminating novel, educationally valuable work to the global orthopedic surgery community.
             </p>
           </section>
 
           <section className="mb-12">
             <span className="section-label">Article Types</span>
             <h2 className="section-heading mb-3">What We Publish</h2>
-            <p className="text-ink mb-3">OSCRSJ publishes six article types:</p>
+            <p className="text-ink mb-3">OSCRSJ publishes six article types, all evaluated under our standard double-blind peer review:</p>
             <ul className="space-y-2 pl-4">
               {[
                 'Case Reports (1-3 patients): detailed documentation of a clinical case with unusual presentation, rare diagnosis, novel treatment approach, or important teaching value.',
                 'Case Series (4+ patients): a collection of four or more cases sharing meaningful clinical features, analyzed collectively to identify patterns, outcomes, or complications.',
+                'Systematic Reviews & Meta-Analyses: rigorous syntheses of the existing orthopedic literature on a focused clinical question, conducted with a pre-defined search strategy, eligibility criteria, and (for meta-analyses) quantitative pooling of effect estimates. PRISMA 2020 reporting standards apply.',
                 'Surgical Techniques: step-by-step procedural descriptions of novel, modified, or technically demanding orthopedic operations, supported by figures and ideally a procedural video.',
                 'Images in Orthopedics: brief, image-driven submissions presenting striking clinical, radiographic, or intraoperative findings with a concise clinical description.',
                 'Letters to the Editor: short commentary on previously published work, raising methodological points, corrections, or alternative interpretations.',
-                'Review Articles (invited only in Year 1): scoping or narrative reviews on a focused orthopedic topic, commissioned from established authors and section editors.',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">→</span>
@@ -88,7 +88,7 @@ export default function AimsScopePage() {
             <span className="section-label">Access</span>
             <h2 className="section-heading mb-3">Open Access Policy</h2>
             <p className="text-ink">
-              All articles published in OSCRSJ are freely available to read, download, and share for non-commercial purposes under a Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND 4.0) license. We do not charge readers or institutions for access. The journal is sustained through article processing charges (APCs), which are waived for all manuscripts submitted before August 1, 2026. We believe that publicly relevant medical literature should be publicly accessible.
+              All articles published in OSCRSJ are freely available to read, download, share, and adapt under a Creative Commons Attribution 4.0 International (CC BY 4.0) license, with attribution to the original authors. We do not charge readers or institutions for access. The journal is sustained through article processing charges (APCs), which are waived for all manuscripts submitted before August 1, 2026. We believe that publicly relevant medical literature should be publicly accessible.
             </p>
           </section>
 

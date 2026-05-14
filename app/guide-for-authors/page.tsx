@@ -5,12 +5,12 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'Guide for Authors',
   description:
-    'Complete author guidelines for submitting case reports, case series, surgical techniques, and more to the Orthopedic Surgery Case Reports & Series Journal.',
+    'Complete author guidelines for submitting case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor to the Orthopedic Surgery Case Reports & Series Journal.',
   alternates: { canonical: 'https://www.oscrsj.com/guide-for-authors' },
   openGraph: {
     title: 'Guide for Authors | OSCRSJ',
     description:
-      'Complete author guidelines for submitting case reports, case series, surgical techniques, and reviews to OSCRSJ.',
+      'Complete author guidelines for the six article types accepted by OSCRSJ — case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor.',
     url: 'https://www.oscrsj.com/guide-for-authors',
     type: 'website',
   },
@@ -123,6 +123,45 @@ const articleTypes: Array<{
     ],
   },
   {
+    id: 'review-article',
+    label: 'Systematic Review & Meta-Analysis',
+    tagline: 'Evidence synthesis · 3,500 words',
+    definition:
+      'A systematic review or meta-analysis on a focused clinical question in orthopedic surgery. Authored with a pre-defined search strategy, transparent eligibility criteria, and (for meta-analyses) quantitative pooling of effect estimates. Unsolicited submissions are welcome and undergo our standard double-blind peer review.',
+    checklist: {
+      name: 'PRISMA 2020 Checklist',
+      fullName: 'Preferred Reporting Items for Systematic reviews and Meta-Analyses (PRISMA 2020)',
+      itemCount: '27 reporting items',
+      rationale:
+        'Required for every Systematic Review & Meta-Analysis submission. The PRISMA 2020 checklist is the international standard for transparent reporting of systematic reviews — it covers protocol registration, eligibility criteria, information sources, search strategy, study selection, data extraction, risk-of-bias assessment, synthesis methods, and reporting of results. Complete every item and upload the filled-in checklist as part of your submission (Step 2 of the portal).',
+      downloadHref: '/downloads/oscrsj-prisma-checklist.pdf',
+      sourceLabel: 'prisma-statement.org',
+      sourceHref: 'https://www.prisma-statement.org/prisma-2020-checklist',
+    },
+    specs: [
+      { label: 'Word Limit', value: '3,500 words (excluding abstract, references, figure legends, and tables)' },
+      { label: 'Abstract', value: '300 words maximum, structured (Background, Methods, Results, Conclusion)' },
+      { label: 'Keywords', value: '3-6 MeSH terms' },
+      { label: 'Figures', value: 'Maximum 6 (PRISMA flow diagram strongly recommended; forest plot for meta-analyses)' },
+      { label: 'Tables', value: 'Maximum 4 (study characteristics + outcomes tables strongly recommended)' },
+      { label: 'References', value: '20-60 in Vancouver style' },
+      { label: 'Required Checklist', value: 'PRISMA 2020 checklist (mandatory, submit as supplementary file)' },
+      { label: 'Protocol Registration', value: 'PROSPERO (or equivalent) registration ID strongly recommended; include in Methods' },
+    ],
+    sections: [
+      'Title Page: same format as Case Reports',
+      'Abstract: structured into Background (clinical question and rationale), Methods (search strategy, eligibility, synthesis approach), Results (study selection flow, key findings, pooled estimates if applicable), Conclusion (clinical implications and evidence gaps)',
+      'Keywords: 3-6 MeSH terms',
+      'Introduction: clinical context, gap in the existing literature, the specific PICO question this review answers',
+      'Methods: protocol registration (PROSPERO ID if applicable), eligibility criteria (PICO), information sources and search strategy (with dates), study selection process, data extraction, risk-of-bias assessment tool, synthesis methodology (narrative or meta-analytic — specify statistical software and pooling model if applicable)',
+      'Results: study selection (PRISMA flow diagram), study characteristics, risk-of-bias summary, narrative or quantitative synthesis of findings, subgroup or sensitivity analyses if performed',
+      'Discussion: synthesis of findings, comparison with prior reviews, strengths and limitations of the included evidence and of the review itself',
+      'Conclusion: clinical implications and directions for future research',
+      'References',
+      'Figure Legends',
+    ],
+  },
+  {
     id: 'surgical-technique',
     label: 'Surgical Technique',
     tagline: 'Step-by-step procedural',
@@ -188,56 +227,21 @@ const articleTypes: Array<{
       'State the point of agreement or disagreement with supporting evidence or reasoning',
     ],
   },
-  {
-    id: 'review-article',
-    label: 'Review Article',
-    tagline: 'Invited only (Year 1)',
-    definition:
-      'Comprehensive reviews of a focused topic in orthopedic surgery.',
-    checklist: {
-      name: 'PRISMA 2020 Checklist',
-      fullName: 'Preferred Reporting Items for Systematic reviews and Meta-Analyses (PRISMA 2020)',
-      itemCount: '27 reporting items',
-      rationale:
-        'Recommended for every systematic-review or meta-analysis Review Article submission. The PRISMA 2020 checklist is the international standard for transparent reporting of systematic reviews — it covers protocol registration, eligibility criteria, information sources, search strategy, study selection, data extraction, risk-of-bias assessment, synthesis methods, and reporting of results. Complete every item and upload the filled-in checklist as part of your submission (Step 2 of the portal). Narrative reviews are not required to use PRISMA but are encouraged to follow its reporting principles.',
-      downloadHref: '/downloads/oscrsj-prisma-checklist.pdf',
-      sourceLabel: 'prisma-statement.org',
-      sourceHref: 'https://www.prisma-statement.org/prisma-2020-checklist',
-    },
-    specs: [
-      { label: 'Word Limit', value: '3,500 words' },
-      { label: 'Abstract', value: '300 words maximum, structured (Background, Methods, Results, Conclusion)' },
-      { label: 'Keywords', value: '3-6 MeSH terms' },
-      { label: 'Figures', value: 'Maximum 6' },
-      { label: 'Tables', value: 'Maximum 4' },
-      { label: 'References', value: '20-60 in Vancouver style' },
-      { label: 'Required Checklist', value: 'PRISMA 2020 checklist (recommended for systematic reviews and meta-analyses)' },
-      { label: 'Submission', value: 'By editorial invitation only during Year 1' },
-    ],
-    sections: [
-      'Title Page: same format as Case Reports',
-      'Abstract: structured into Background, Methods, Results, Conclusion',
-      'Introduction: clinical context, why this review is needed',
-      'Methods: search strategy, databases searched, inclusion/exclusion criteria, date range',
-      'Results: organized by theme or chronology',
-      'Discussion: synthesis, clinical implications, gaps in current knowledge',
-      'Conclusion: key findings and future directions',
-      'References',
-    ],
-  },
 ]
 
 /* ------------------------------------------------------------------ */
 /*  Quick-reference comparison table                                   */
 /* ------------------------------------------------------------------ */
 
+// Column order matches articleTypes[] above:
+//   [Case Report, Case Series, Systematic Review & Meta-Analysis, Surgical Technique, Images in Orthopedics, Letter to the Editor]
 const comparisonRows = [
-  { param: 'Word Limit', values: ['2,000', '3,000', '1,500', '500', '600', '3,500'] },
-  { param: 'Abstract', values: ['300 (structured)', '300 (structured)', '300 (unstructured)', 'None', 'None', '300 (structured)'] },
-  { param: 'Max Figures', values: ['8', '10', '10', '4', '1', '6'] },
-  { param: 'Max Tables', values: ['3', '5', '2', '0', '1', '4'] },
-  { param: 'References', values: ['10-25', '15-40', '8-15', 'Max 5', 'Max 5', '20-60'] },
-  { param: 'Checklist', values: ['CARE', 'JBI', 'N/A', 'N/A', 'N/A', 'PRISMA'] },
+  { param: 'Word Limit', values: ['2,000', '3,000', '3,500', '1,500', '500', '600'] },
+  { param: 'Abstract', values: ['300 (structured)', '300 (structured)', '300 (structured)', '300 (unstructured)', 'None', 'None'] },
+  { param: 'Max Figures', values: ['8', '10', '6', '10', '4', '1'] },
+  { param: 'Max Tables', values: ['3', '5', '4', '2', '0', '1'] },
+  { param: 'References', values: ['10-25', '15-40', '20-60', '8-15', 'Max 5', 'Max 5'] },
+  { param: 'Checklist', values: ['CARE', 'JBI', 'PRISMA', 'N/A', 'N/A', 'N/A'] },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -285,10 +289,10 @@ const generalSections = [
     title: 'Ethical Requirements',
     items: [
       'Written patient consent for publication is required for all case-based submissions. The canonical OSCRSJ consent statements (5 variants — adult, pediatric, deceased, verbal-witnessed, IRB waiver) are at /templates#consent. Copy the variant matching your patient situation verbatim into your manuscript.',
-      'IRB approval or exemption must be documented for case series and review articles. The canonical OSCRSJ statements (2 branches — approved or exempt) are at /templates#irb. Copy the branch matching your institution’s determination verbatim.',
+      'IRB approval or exemption must be documented for case series. The canonical OSCRSJ statements (2 branches — approved or exempt) are at /templates#irb. Copy the branch matching your institution’s determination verbatim.',
       'Research involving human subjects must comply with the Declaration of Helsinki.',
       'All authors must disclose conflicts of interest. Disclosures live on the Title Page or in the submission portal’s Step 5 — not in the blinded manuscript.',
-      'CARE checklist is mandatory for case reports. JBI critical appraisal checklist is mandatory for case series. PRISMA recommended for systematic review articles.',
+      'CARE checklist is mandatory for case reports. JBI critical appraisal checklist is mandatory for case series. PRISMA 2020 checklist is mandatory for systematic reviews and meta-analyses.',
     ],
   },
   {
@@ -320,7 +324,7 @@ export default function GuideForAuthorsPage() {
         name: 'What types of manuscripts does OSCRSJ accept?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ accepts Case Reports, Case Series, Surgical Techniques, Images in Orthopedics, Letters to the Editor, and invited Review Articles across all orthopedic subspecialties.',
+          text: 'OSCRSJ accepts Case Reports, Case Series, Systematic Reviews & Meta-Analyses, Surgical Techniques, Images in Orthopedics, and Letters to the Editor across all orthopedic subspecialties. All six article types are evaluated under our standard double-blind peer review.',
         },
       },
       {

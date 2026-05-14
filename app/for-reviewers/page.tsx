@@ -5,7 +5,7 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'Guide for Reviewers',
   description:
-    'Guide for Reviewers at OSCRSJ. Standards, ethics, timeline, and review structure for peer reviewers of orthopedic case reports and case series. Reviews open with an overall comment and then walk the manuscript section by section with line-number citations.',
+    'Guide for Reviewers at OSCRSJ. Standards, ethics, timeline, and review structure for peer reviewers of orthopedic case reports, case series, systematic reviews and meta-analyses, and other manuscript types. Reviews open with an overall comment and then walk the manuscript section by section with line-number citations.',
   alternates: { canonical: 'https://www.oscrsj.com/for-reviewers' },
   openGraph: {
     title: 'Guide for Reviewers | OSCRSJ',

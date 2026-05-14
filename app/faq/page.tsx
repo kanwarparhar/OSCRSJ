@@ -30,7 +30,7 @@ const faqSections = [
       },
       {
         q: 'What types of articles does OSCRSJ accept?',
-        a: 'We accept Case Reports (1-3 patients), Case Series (4+ patients), Surgical Techniques, Images in Orthopedics, Letters to the Editor, and invited Review Articles. See our Guide for Authors for detailed requirements for each article type.',
+        a: 'We accept six article types: Case Reports (1-3 patients), Case Series (4+ patients), Systematic Reviews & Meta-Analyses, Surgical Techniques, Images in Orthopedics, and Letters to the Editor. All six are evaluated under our standard double-blind peer review. See our Guide for Authors for detailed requirements for each article type.',
       },
       {
         q: 'Can I submit a case that has been presented at a conference?',
@@ -116,8 +116,8 @@ const faqSections = [
         a: 'Yes. Vancouver style (numbered, in order of appearance). See our Guide for Authors for formatting examples.',
       },
       {
-        q: 'Is the CARE checklist required?',
-        a: 'Yes, for all case report submissions. For case series, the JBI Critical Appraisal Checklist is required. Both should be submitted as supplementary files. Manuscripts submitted without the appropriate checklist will be returned to authors.',
+        q: 'Which reporting checklist do I need to submit?',
+        a: 'CARE checklist for Case Reports; JBI Critical Appraisal Checklist for Case Series; PRISMA 2020 checklist for Systematic Reviews & Meta-Analyses. All three are mandatory for their respective article types and submitted as supplementary files at Step 2 of the submission portal. Manuscripts submitted without the appropriate checklist will be returned to authors.',
       },
       {
         q: 'How should I handle patient consent?',
@@ -125,7 +125,7 @@ const faqSections = [
       },
       {
         q: 'What are the word limits for each article type?',
-        a: 'Case Report: 2,000 words. Case Series: 3,000 words. Surgical Technique: 1,500 words. Images in Orthopedics: 500 words. Letter to the Editor: 600 words. Review Article: 3,500 words. All word limits exclude the abstract, references, figure legends, and tables.',
+        a: 'Case Report: 2,000 words. Case Series: 3,000 words. Systematic Review & Meta-Analysis: 3,500 words. Surgical Technique: 1,500 words. Images in Orthopedics: 500 words. Letter to the Editor: 600 words. All word limits exclude the abstract, references, figure legends, and tables.',
       },
     ],
   },

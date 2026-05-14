@@ -49,7 +49,7 @@ const TYPE_LABELS: Record<ManuscriptType, string> = {
   surgical_technique: 'Surgical Technique',
   images_in_orthopedics: 'Images in Orthopedics',
   letter_to_editor: 'Letter to the Editor',
-  review_article: 'Review Article',
+  review_article: 'Systematic Review & Meta-Analysis',
 }
 
 const SUBSPECIALTY_LABELS: Record<string, string> = Object.fromEntries(
@@ -194,7 +194,7 @@ export default async function HomePage() {
             Orthopedic Surgery Case Reports &amp; Series Journal
           </p>
           <p className="text-peach/60 text-base max-w-2xl mx-auto mb-8 leading-relaxed">
-            A peer-reviewed, open-access journal dedicated to the publication of case reports and case series in all subspecialties of orthopedic surgery and musculoskeletal medicine.
+            A peer-reviewed, open-access journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor across all orthopedic subspecialties.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/submit" className="btn-primary">
@@ -446,9 +446,9 @@ export default async function HomePage() {
               <div className="text-4xl mb-4">📚</div>
               <h3 className="section-heading mb-3">No Published Articles Yet</h3>
               <p className="text-ink leading-relaxed max-w-xl mx-auto mb-6">
-                OSCRSJ is in pre-launch. Our first peer-reviewed case
-                reports and series will appear here as they complete
-                editorial review.
+                OSCRSJ is in pre-launch. Our first peer-reviewed manuscripts —
+                across all six article types — will appear here as they
+                complete editorial review.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link href="/submit" className="btn-primary-light">
@@ -604,14 +604,14 @@ export default async function HomePage() {
             className="font-serif text-peach leading-tight mb-6"
             style={{ fontSize: 'clamp(28px, 4vw, 40px)', letterSpacing: '-0.02em' }}
           >
-            Raising the bar for orthopedic case reporting
+            Raising the bar for orthopedic scholarship
           </h2>
           <p className="text-peach/50 text-sm mb-8 max-w-lg mx-auto">
-            Join the global orthopedic surgery community publishing rigorous, peer-reviewed case reports.
+            Join the global orthopedic surgery community publishing rigorous, peer-reviewed case reports, case series, systematic reviews, and more.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/submit" className="btn-primary">
-              Submit Your Case
+              Submit a Manuscript
             </Link>
             <Link href="/aims-scope" className="btn-ghost">
               Learn More

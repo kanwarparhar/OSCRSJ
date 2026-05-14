@@ -14,6 +14,11 @@ const MANUSCRIPT_TYPES: { value: ManuscriptType; label: string; description: str
     description: 'A series of 4 or more patients with similar presentation. Up to 3,000 words. JBI checklist required.',
   },
   {
+    value: 'review_article',
+    label: 'Systematic Review & Meta-Analysis',
+    description: 'A systematic review or meta-analysis on a focused clinical question. Up to 3,500 words. PRISMA 2020 checklist required.',
+  },
+  {
     value: 'surgical_technique',
     label: 'Surgical Technique',
     description: 'A novel or modified surgical procedure. Up to 1,500 words. Minimum 4 figures, video encouraged.',
@@ -27,11 +32,6 @@ const MANUSCRIPT_TYPES: { value: ManuscriptType; label: string; description: str
     value: 'letter_to_editor',
     label: 'Letter to the Editor',
     description: 'Commentary on a previously published article. Up to 600 words.',
-  },
-  {
-    value: 'review_article',
-    label: 'Review Article (Invited Only)',
-    description: 'Comprehensive review of a clinical topic. Up to 3,500 words. Invited by the editorial board in Year 1.',
   },
 ]
 
