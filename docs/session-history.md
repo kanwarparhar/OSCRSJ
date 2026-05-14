@@ -62,6 +62,7 @@
 - [[#^backfill-2290bae]]
 
 ### Submission portal (author-facing wizard, file uploads, validation, templates)
+- [[#^session-52-templates-revision-resources-rewrite]]
 - [[#^session-36-revision-submission-requirements]]
 - [[#^session-36b-first-revision-wizard-gate-fix]]
 - [[#^session-29b-ai-disclosure-explicit-choice]]
@@ -72,6 +73,7 @@
 - [[#^backfill-5808bae]]
 
 ### Site / SEO / brand
+- [[#^session-52-templates-revision-resources-rewrite]]
 - [[#^session-49-aims-scope-audience-reframe-thin-bio]]
 - [[#^session-42-social-media-integration]]
 - [[#^session-41-john-ai-citation-baseline]]
@@ -249,6 +251,46 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 52 — 2026-05-14 — Franklin Cowork — /templates Revision Resources rewrite: removed Response Template .docx, replaced with structure-only Comment/Response/Changes instructions  ^session-52-templates-revision-resources-rewrite
+
+**2026-05-14 Session 52 (Franklin Cowork — single-file UI fix on `/templates#revision-resources` that removes the Word-template download offering and replaces it with a structured spec authors follow in their own `.docx`).** Single commit `846ac2a` on `main`, fast-forward push (`c230d2c..846ac2a`), explicit-path stage on 1 file (`app/templates/page.tsx`), +20/-20 lines, TypeScript clean. Kanwar surfaced as a screenshot of the live `/templates#revision-resources` section plus a directive: "Remove the response template and just provide instruction on how the reviewer response document should be structure. It should address comments one by one. Users should structure the document as below: Comment: / Response: / Changes: / Changes should reference line numbers."
+
+**The change.** Two new white cards inside the same `<section id="revision-resources">` (anchor preserved so transactional decision-email links from `editorialDecisionMinorRevisions.ts` + `editorialDecisionMajorRevisions.ts` still navigate correctly post-push):
+
+- **How to structure your Response to Reviewers document** — instructs authors to prepare a single Word doc (.docx) grouped by reviewer (Reviewer 1, Reviewer 2, …), addressing every comment one by one in the order reviewers raised them. A code-style `<pre>` block shows the three-label structure (`Comment:` / `Response:` / `Changes:`) followed by a `<ul>` defining each label. `Comment:` quotes the reviewer comment verbatim. `Response:` is the author's reply — agreement, disagreement, clarification, or explanation. `Changes:` describes the specific change made to the manuscript and explicitly cites line numbers in the revised manuscript. If the author declines to make a change, "No change" goes under `Changes:` and the rationale goes under `Response:`.
+- **How to format your tracked-changes manuscript** — preserved from before (RED font + YELLOW highlight on every changed/added word, separate file from clean revised manuscript), just moved into its own card with its own H3 heading.
+
+**What was removed.** The right-rail download button (`<a href="/downloads/oscrsj-revision-response-template.docx" download className="btn-primary-light">Download Response Template (.docx)</a>`) and the prose paragraph "A Word template for assembling your point-by-point response to reviewer comments. Includes a fully worked example (3 sample comments with author responses, change descriptions, and line-number references) plus pre-formatted blank response tables you populate." The two-column flex layout (text on left + sidebar button on right) collapsed into a single-column card stack.
+
+**Styling decisions.** Code-style `<pre>` block uses `bg-cream-alt border border-border rounded-lg p-4 text-sm text-ink font-mono leading-relaxed mb-4 whitespace-pre-wrap` — matches the design system's "subtle highlight surface" rule (cream-alt for chips/pills/code) and the existing `font-mono` usage elsewhere on the site (`app/page.tsx`, `app/for-reviewers/page.tsx`, admin manuscript pages). Bullet list under the code block uses `list-disc ml-5 space-y-2` for readable density. Em-dashes properly HTML-encoded as `&mdash;`, single quotes as `&rsquo;`, double quotes as `&ldquo;` / `&rdquo;` for typography-clean source — matches the existing typographic convention in `app/templates/page.tsx`.
+
+**Scope decision — Adjacent-Discrepancy Protocol invoked.** A pre-flight grep of `Revision Response Template|revision-response-template|Response Template` across the repo surfaced **4 downstream surfaces** that name the (now-removed) template by reference:
+
+- `lib/email/templates/editorialDecisionMinorRevisions.ts` line 81 (HTML body) + line 119 (plain-text body) — "Use the OSCRSJ Revision Response Template (worked example + pre-formatted response tables): https://www.oscrsj.com/templates#revision-resources"
+- `lib/email/templates/editorialDecisionMajorRevisions.ts` lines 82 + 120 — same lines
+- `app/dashboard/submit/Step2Files.tsx:193` Response-to-Reviewers file description — "Use the OSCRSJ Revision Response Template (download from /templates) — it contains a worked example and pre-formatted response tables. Accepted formats: .docx or .pdf (max 20 MB)."
+- `lib/reviewer-feedback/build.ts:228` author-facing italic note inside the blinded reviewer-feedback `.docx` itself — "Please address each comment point-by-point in your Response to Reviewers letter using the Revision Response Template available at oscrsj.com/templates."
+
+Plus 2 orphaned-but-unreferenced assets: `scripts/build-revision-response-template.py` (build script) and `public/downloads/oscrsj-revision-response-template.docx` (the `.docx` file itself, still served if the URL is memorized).
+
+Per Session 50's Adjacent-Discrepancy Protocol — "fix only what the user explicitly named + flag the rest as new follow-up items; never silently expand scope to 'while we're at it' sweeps" — this commit stayed scoped to the templates page Kanwar named, and the 4 stale surfaces are flagged in CLAUDE.md §11 Open Follow-ups for a coherent next-session sweep. Trade-off: until that sweep lands, decision emails + Step 2 wizard + reviewer-feedback `.docx` still tell users to use a template that doesn't exist on the page anymore. Severity assessed as low because the `#revision-resources` anchor still resolves cleanly post-commit — users following the email link land on the new structure cards and infer the right behavior even though the email language is slightly stale.
+
+**§6 cross-session orphan-files protocol noise.** Working tree at session start carried 21 untracked artifacts (lockfile remnants, downloaded sample docs, social-export drafts, draft tracking spreadsheets, `.cowork-push/` recovery patch from Sessions 49/50, `.test-uploads/`, `Logo/`, `pdf-design/`, `sources/`, `wave3_leftovers_flagged.csv`, etc.). None overlapped with the templates-page edit; all left untouched per §6 ("If `git status` shows pre-staged files you did not touch in the current session, STOP"). The recovery patch from Sessions 49/50 (`.cowork-push/session-49-50-orphan-decision-composer-feature.patch`) is now historical — Session 51 resolved it.
+
+**FUSE stale-lock event.** Hit `.git/index.lock` + `.git/HEAD.lock` simultaneously at first `git add`; cleared via the documented `mv .git/X.lock .git/.stale-junk/X.lock.$(date +%s%N)` workaround. Standard `tmp_obj_*` "Operation not permitted" unlink warnings during `git commit` — non-fatal per Conventions "FUSE stale-lock workaround" — commit + push completed cleanly.
+
+**TypeScript clean.** `npx tsc --noEmit -p tsconfig.json` exit 0 pre-commit. HEAD tree size 269 (healthy; Session 51 finished at 268, this commit adds 0 new files).
+
+**Risks.** (1) The 4 downstream stale references create a temporary "the email tells me to use a template I can't find" gap; severity low because the page anchor still navigates to coherent instructions and authors can copy the three-label structure directly into Word. (2) Visual spot-check at three breakpoints not run from sandbox — the `<pre>` block + bullet list layout at narrow mobile widths needs a Kanwar eyeball after Vercel deploys. (3) The `oscrsj-revision-response-template.docx` file in `public/downloads/` is now orphan-served — still accessible if someone has the URL memorized; cleanup deferred to the downstream-surfaces sweep.
+
+**Self-improvement note worth folding.** Suggested Conventions §3 addition (vault + CLAUDE.md): "**Removed-artifact downstream-surface inventory.** When removing a user-facing artifact (downloadable template, link target, brand asset, file from `public/`), grep for every surface that names it by reference *before* scoping the commit. Either bundle the rewrite into one coherent commit with permission, or flag every stale surface explicitly in the wrap-up so the user can decide. Silent half-fixes that leave emails or form descriptions pointing at deleted assets are worse than a slightly-broader commit." Codifying this would have made the scope-decision step here mechanical instead of judgment-call.
+
+**Kanwar follow-ups.** (1) Visual spot-check `/templates#revision-resources` post-Vercel-deploy (~60s after `846ac2a`) at three breakpoints — confirm the code-style `<pre>` block renders cleanly on mobile + the bullet list is readable + the tracked-changes card flows correctly below; (2) decide whether the 4 downstream stale references get fixed as a single coherent follow-up commit or stay deferred indefinitely (the `.docx` file orphan is harmless, the email references are mildly confusing); (3) consider whether `scripts/build-revision-response-template.py` and `public/downloads/oscrsj-revision-response-template.docx` should be deleted from the repo entirely once the downstream sweep lands.
+
+**Handoffs pushed: None.**
+
+---
 
 ### Session 51 — 2026-05-14 — Sushant Cowork — reviewer-feedback Word doc attaches to Minor/Major Revisions decision emails (orphan-cluster recovery + lib/admin/actions.ts wiring)  ^session-51-reviewer-feedback-attachment
 
