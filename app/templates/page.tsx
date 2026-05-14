@@ -326,27 +326,27 @@ export default function TemplatesPage() {
         <section id="revision-resources">
           <h2 className="font-serif text-3xl text-brown-dark mb-2">Revision Resources</h2>
           <p className="text-brown mb-6">For authors responding to a Minor or Major Revisions decision. Every revision must include a Response to Reviewers document AND a tracked-changes manuscript with edits in red and yellow highlight.</p>
+
+          <div className="bg-white border border-border rounded-xl p-6 mb-5">
+            <h3 className="font-serif text-xl text-brown-dark mb-2">How to structure your Response to Reviewers document</h3>
+            <p className="text-sm text-ink leading-relaxed mb-4">
+              Prepare a single Word document (.docx) that addresses every reviewer comment one by one, in the order the reviewers raised them. Group the document by reviewer — <em>Reviewer 1</em>, <em>Reviewer 2</em>, etc. — and work through every comment from that reviewer before moving on. For each comment, use three labelled lines exactly as shown below. Required upload in Step 2 of the revision wizard.
+            </p>
+            <pre className="bg-cream-alt border border-border rounded-lg p-4 text-sm text-ink font-mono leading-relaxed mb-4 whitespace-pre-wrap">{`Comment:
+Response:
+Changes:`}</pre>
+            <ul className="text-sm text-ink leading-relaxed list-disc ml-5 space-y-2">
+              <li><strong>Comment:</strong> quote the reviewer&rsquo;s comment verbatim.</li>
+              <li><strong>Response:</strong> your reply to the reviewer &mdash; agreement, disagreement, clarification, or explanation.</li>
+              <li><strong>Changes:</strong> describe the specific change you made to the manuscript and <strong>cite the line numbers</strong> in the revised manuscript where the change appears. If you decline to make a change, write &ldquo;No change&rdquo; here and explain why under <strong>Response:</strong>.</li>
+            </ul>
+          </div>
+
           <div className="bg-white border border-border rounded-xl p-6">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
-              <div className="flex-1">
-                <h3 className="font-serif text-xl text-brown-dark mb-2">Revision Response Template</h3>
-                <p className="text-sm text-ink leading-relaxed mb-3">
-                  A Word template for assembling your point-by-point response to reviewer comments. Includes a fully worked example (3 sample comments with author responses, change descriptions, and line-number references) plus pre-formatted blank response tables you populate. Required upload in Step 2 of the revision wizard.
-                </p>
-                <p className="text-sm text-ink leading-relaxed">
-                  <strong>How to format your tracked-changes manuscript:</strong> in your revised manuscript file, set every changed or added word to <span className="text-red-600 font-semibold">RED font</span> with a <span style={{ backgroundColor: '#FFF59D' }} className="px-1 font-semibold">YELLOW highlight</span>. The editor must be able to see at a glance which lines you modified. Save this as a separate file from your clean revised manuscript.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 flex-shrink-0 lg:w-64">
-                <a
-                  href="/downloads/oscrsj-revision-response-template.docx"
-                  download
-                  className="btn-primary-light text-center"
-                >
-                  Download Response Template (.docx)
-                </a>
-              </div>
-            </div>
+            <h3 className="font-serif text-xl text-brown-dark mb-2">How to format your tracked-changes manuscript</h3>
+            <p className="text-sm text-ink leading-relaxed">
+              In your revised manuscript file, set every changed or added word to <span className="text-red-600 font-semibold">RED font</span> with a <span style={{ backgroundColor: '#FFF59D' }} className="px-1 font-semibold">YELLOW highlight</span>. The editor must be able to see at a glance which lines you modified. Save this as a separate file from your clean revised manuscript.
+            </p>
           </div>
         </section>
 
