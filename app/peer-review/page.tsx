@@ -5,12 +5,12 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'Peer Review Policy',
   description:
-    'OSCRSJ uses double-blind peer review. Two independent subspecialty reviewers per manuscript; initial editorial response within 10 days of submission.',
+    'OSCRSJ uses double-blind peer review by reviewers outside of our network. Two independent subspecialty reviewers per manuscript; initial editorial response within 10 days of submission.',
   alternates: { canonical: 'https://www.oscrsj.com/peer-review' },
   openGraph: {
     title: 'Peer Review Policy | OSCRSJ',
     description:
-      'OSCRSJ uses double-blind peer review. Two independent subspecialty reviewers per manuscript; initial editorial response within 10 days of submission.',
+      'OSCRSJ uses double-blind peer review by reviewers outside of our network. Two independent subspecialty reviewers per manuscript; initial editorial response within 10 days of submission.',
     url: 'https://www.oscrsj.com/peer-review',
     type: 'website',
   },
@@ -26,7 +26,7 @@ export default function PeerReviewPage() {
         name: 'What type of peer review does OSCRSJ use?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ uses double-blind peer review. Neither authors nor reviewers know each other\'s identities during the review process.',
+          text: 'OSCRSJ uses double-blind peer review by reviewers outside of our network. Neither authors nor reviewers know each other\'s identities during the review process, and reviewers are recruited from outside the OSCRSJ editorial board so that no editor evaluates work by their own collaborators.',
         },
       },
       {
@@ -34,7 +34,7 @@ export default function PeerReviewPage() {
         name: 'How many reviewers evaluate each manuscript?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Each manuscript is reviewed by at least two independent reviewers with expertise in the relevant orthopedic subspecialty.',
+          text: 'Each manuscript is reviewed by at least two independent reviewers from outside the OSCRSJ editorial board, with expertise in the relevant orthopedic subspecialty.',
         },
       },
     ],
@@ -57,7 +57,7 @@ export default function PeerReviewPage() {
           <span className="section-label">Our Approach</span>
           <h2 className="section-heading mb-3">Double-Blind Peer Review</h2>
           <p className="text-ink leading-relaxed">
-            All manuscripts submitted to OSCRSJ undergo double-blind peer review. Neither the authors nor the reviewers know each other's identities during the review process. This ensures that every submission is evaluated solely on its scientific merit, clinical significance, and adherence to reporting standards — regardless of the author's institution, training level, or reputation.
+            All manuscripts submitted to OSCRSJ undergo double-blind peer review by reviewers outside of our network. Neither the authors nor the reviewers know each other's identities during the review process, and reviewers are recruited from outside the OSCRSJ editorial board — subspecialty-matched orthopedic surgeons and clinician-researchers — so that no editor evaluates work by their own collaborators. This ensures that every submission is evaluated solely on its scientific merit, clinical significance, and adherence to reporting standards — regardless of the author's institution, training level, or reputation.
           </p>
         </section>
 
@@ -67,7 +67,7 @@ export default function PeerReviewPage() {
           <div className="space-y-3">
             {[
               { step: '1', title: 'Initial Editorial Response', desc: 'The Editor-in-Chief screens submissions for scope, completeness, and basic quality. Authors receive a screening decision (advance to peer review or desk-reject with feedback) within 10 days of submission.', time: '≤ 10 days' },
-              { step: '2', title: 'Reviewer Assignment', desc: 'Suitable manuscripts are assigned to at least two independent reviewers with expertise in the relevant orthopedic subspecialty.', time: '1–3 days' },
+              { step: '2', title: 'Reviewer Assignment', desc: 'Suitable manuscripts are assigned to at least two independent reviewers recruited from outside the OSCRSJ editorial board, with expertise in the relevant orthopedic subspecialty.', time: '1–3 days' },
               { step: '3', title: 'Peer Review', desc: 'Reviewers evaluate the manuscript for clinical significance, novelty, methodology, ethical compliance, and clarity of presentation. Structured review forms are used.', time: '14–21 days' },
               { step: '4', title: 'Editorial Decision', desc: 'Based on reviewer recommendations, the editor issues one of four decisions: Accept, Minor Revisions, Major Revisions, or Reject.', time: '1–3 days' },
               { step: '5', title: 'Revision & Resubmission', desc: 'Authors are given clear, constructive feedback and a deadline for revision. Revised manuscripts may undergo additional review.', time: '14 days' },

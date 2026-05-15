@@ -127,7 +127,7 @@ const articleTypes: Array<{
     label: 'Systematic Review & Meta-Analysis',
     tagline: 'Evidence synthesis · 3,500 words',
     definition:
-      'A systematic review or meta-analysis on a focused clinical question in orthopedic surgery. Authored with a pre-defined search strategy, transparent eligibility criteria, and (for meta-analyses) quantitative pooling of effect estimates. Unsolicited submissions are welcome and undergo our standard double-blind peer review.',
+      'A systematic review or meta-analysis on a focused clinical question in orthopedic surgery. Authored with a pre-defined search strategy, transparent eligibility criteria, and (for meta-analyses) quantitative pooling of effect estimates. Unsolicited submissions are welcome and undergo our standard double-blind peer review by reviewers outside of our network.',
     checklist: {
       name: 'PRISMA 2020 Checklist',
       fullName: 'Preferred Reporting Items for Systematic reviews and Meta-Analyses (PRISMA 2020)',
@@ -296,6 +296,17 @@ const generalSections = [
     ],
   },
   {
+    id: 'peer-review',
+    label: 'Peer Review',
+    title: 'Peer Review',
+    items: [
+      'Every submission undergoes double-blind peer review by reviewers outside of our network. Neither authors nor reviewers know each other’s identities during the review process.',
+      'Reviewers are recruited from outside the OSCRSJ editorial board — subspecialty-matched orthopedic surgeons and clinician-researchers — so that no editor evaluates work by their own collaborators.',
+      'Each manuscript is read by at least two independent reviewers using structured review forms covering scientific merit, methodology, clarity, and ethical compliance.',
+      'Initial editorial response within 10 days of submission; full peer-reviewed decision within 30–35 days. Full process at /peer-review.',
+    ],
+  },
+  {
     id: 'cover-letter',
     label: 'Cover Letter',
     title: 'Cover Letter',
@@ -324,7 +335,7 @@ export default function GuideForAuthorsPage() {
         name: 'What types of manuscripts does OSCRSJ accept?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ accepts Case Reports, Case Series, Systematic Reviews & Meta-Analyses, Surgical Techniques, Images in Orthopedics, and Letters to the Editor across all orthopedic subspecialties. All six article types are evaluated under our standard double-blind peer review.',
+          text: 'OSCRSJ accepts Case Reports, Case Series, Systematic Reviews & Meta-Analyses, Surgical Techniques, Images in Orthopedics, and Letters to the Editor across all orthopedic subspecialties. All six article types are evaluated under our standard double-blind peer review by reviewers outside of our network.',
         },
       },
       {
