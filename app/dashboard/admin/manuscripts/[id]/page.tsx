@@ -25,6 +25,7 @@ import DecisionHistoryPanel from './DecisionHistoryPanel'
 import RevisionsPanel from './RevisionsPanel'
 import PublishedPdfPanel from './PublishedPdfPanel'
 import PublishedJatsPanel from './PublishedJatsPanel'
+import PublishPipelinePanel from './PublishPipelinePanel'
 
 const RESCIND_WINDOW_MS = 15 * 60 * 1000
 
@@ -435,6 +436,8 @@ export default async function AdminManuscriptDetailPage({
       />
 
       <RevisionsPanel manuscriptId={manuscript.id} />
+
+      <PublishPipelinePanel manuscriptId={manuscript.id} />
 
       <PublishedPdfPanel manuscriptId={manuscript.id} />
 

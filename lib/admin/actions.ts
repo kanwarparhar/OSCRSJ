@@ -1577,3 +1577,202 @@ async function reInviteOriginalReviewers(
 
   return out
 }
+
+// ============================================================
+// Phase 4: publish go-live / unpublish (Session 53, 2026-05-15)
+// ============================================================
+// Manual go-live gate per Manvir's 2026-05-15 decision: the renderer
+// produces PDF + JATS + render-report and writes their storage paths
+// to `manuscripts`, but STATUS stays at 'accepted' until an admin
+// explicitly clicks "Publish (go live)". That seam lets Kanwar
+// review the rendered PDF + send author proof before the article
+// shows up on /articles. UnpublishManuscript reverses the flip for
+// emergency retraction (extra-friction confirm in the UI).
+
+export interface PublishGoLiveResult {
+  ok?: true
+  error?: string
+  forbidden?: true
+  notFound?: true
+}
+
+export async function publishGoLive(
+  manuscriptId: string
+): Promise<PublishGoLiveResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { forbidden: true, error: gate.error }
+
+  if (!manuscriptId || typeof manuscriptId !== 'string') {
+    return { notFound: true, error: 'Manuscript id is required.' }
+  }
+
+  const admin = createAdminClient()
+
+  const { data: mData, error: mErr } = await admin
+    .from('manuscripts')
+    .select('id, status, published_pdf_storage_path, published_date')
+    .eq('id', manuscriptId)
+    .maybeSingle()
+
+  if (mErr || !mData) {
+    return { notFound: true, error: 'Manuscript not found.' }
+  }
+  const m = mData as Pick<
+    ManuscriptRow,
+    'id' | 'status' | 'published_pdf_storage_path' | 'published_date'
+  >
+
+  if (m.status === 'published') {
+    // Idempotent — already public, no-op.
+    return { ok: true }
+  }
+
+  if (m.status !== 'accepted') {
+    return {
+      error: `Cannot publish a manuscript in status "${m.status}". Required: "accepted".`,
+    }
+  }
+
+  if (!m.published_pdf_storage_path) {
+    return {
+      error:
+        'Cannot publish: no published_pdf_storage_path on this manuscript. Run the renderer first.',
+    }
+  }
+
+  // Use the existing published_date set by the renderer; only stamp
+  // it here if for some reason the renderer didn't (defensive).
+  const updatePayload: Record<string, unknown> = { status: 'published' }
+  if (!m.published_date) {
+    updatePayload.published_date = new Date().toISOString()
+  }
+
+  const { error: updErr } = await admin
+    .from('manuscripts')
+    .update(updatePayload as never)
+    .eq('id', manuscriptId)
+
+  if (updErr) {
+    return { error: `Update failed: ${updErr.message}` }
+  }
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'publish_go_live',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: {
+        manuscript_id: manuscriptId,
+        prior_status: m.status,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath(`/dashboard/admin/manuscripts/${manuscriptId}`)
+  revalidatePath('/articles')
+  revalidatePath('/articles/in-press')
+
+  return { ok: true }
+}
+
+export interface UnpublishManuscriptResult {
+  ok?: true
+  error?: string
+  forbidden?: true
+  notFound?: true
+}
+
+// Emergency retract — flips `published` → `accepted`. The PDF + JATS
+// artifacts remain in Supabase Storage (we never delete those); only
+// the public visibility flips. Standard practice in editorial
+// workflows even though it's rarely used.
+export async function unpublishManuscript(
+  manuscriptId: string,
+  reason: string
+): Promise<UnpublishManuscriptResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { forbidden: true, error: gate.error }
+
+  if (!manuscriptId || typeof manuscriptId !== 'string') {
+    return { notFound: true, error: 'Manuscript id is required.' }
+  }
+  const trimmedReason = (reason || '').trim()
+  if (trimmedReason.length < 10) {
+    return {
+      error:
+        'A retraction reason of at least 10 characters is required. Logged in audit_logs for the editorial record.',
+    }
+  }
+
+  const admin = createAdminClient()
+
+  const { data: mData, error: mErr } = await admin
+    .from('manuscripts')
+    .select('id, status, submission_id')
+    .eq('id', manuscriptId)
+    .maybeSingle()
+
+  if (mErr || !mData) {
+    return { notFound: true, error: 'Manuscript not found.' }
+  }
+  const m = mData as Pick<ManuscriptRow, 'id' | 'status' | 'submission_id'>
+
+  if (m.status !== 'published') {
+    return {
+      error: `Cannot unpublish a manuscript in status "${m.status}". Required: "published".`,
+    }
+  }
+
+  const { error: updErr } = await admin
+    .from('manuscripts')
+    .update({ status: 'accepted' } as never)
+    .eq('id', manuscriptId)
+
+  if (updErr) {
+    return { error: `Update failed: ${updErr.message}` }
+  }
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'publish_unpublish',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: {
+        manuscript_id: manuscriptId,
+        submission_id: m.submission_id,
+        reason: trimmedReason,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath(`/dashboard/admin/manuscripts/${manuscriptId}`)
+  revalidatePath('/articles')
+  revalidatePath('/articles/in-press')
+
+  return { ok: true }
+}
+
+// Renderer-launch helper: returns the URL of the local renderer's
+// /render/[id] page given a manuscript id. Centralized so the UI
+// doesn't hard-code the path. Falls back to the documented dev
+// default localhost:3001 when NEXT_PUBLIC_RENDERER_URL is unset.
+export async function getRendererLaunchUrl(
+  manuscriptId: string
+): Promise<{ url?: string; error?: string }> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { error: gate.error }
+
+  const base =
+    process.env.NEXT_PUBLIC_RENDERER_URL ||
+    process.env.RENDERER_URL ||
+    'http://localhost:3001'
+  // strip trailing slash defensively
+  const trimmed = base.replace(/\/+$/, '')
+  return { url: `${trimmed}/render/${manuscriptId}` }
+}
