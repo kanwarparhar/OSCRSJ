@@ -464,7 +464,7 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     workLocation: 'Denver, Colorado, United States',
   },
   'chingiz-alizade': {
-    photo: '/brand/chingiz-alizade.jpg',
+    photo: '/brand/chingiz-alizade.png',
     summary:
       'A distinguished orthopedic surgeon with over 40 years of dedicated service at the Azerbaijan Scientific Research Institute of Traumatology and Orthopedics, recognized for founding a new scientific direction in the study of infectious complications in traumatology and orthopedics in Azerbaijan.',
     education: [
