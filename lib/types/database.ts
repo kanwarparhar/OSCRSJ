@@ -161,6 +161,11 @@ export interface ManuscriptAuthorRow {
   degrees: string | null
   contribution: string | null
   is_corresponding: boolean
+  // Migration 022 (Sushant Session 57). Per-author equal-contribution
+  // flag drives the Pre-Render Metadata Editor's §3 Authors checkbox +
+  // the renderer's JATS <contrib equal-contrib="yes"> emit. Defaulted
+  // false; populated by the metadata editor.
+  is_equal_contribution: boolean
   created_at: string
 }
 
@@ -176,6 +181,15 @@ export interface ManuscriptFileRow {
   version: number
   upload_date: string
 }
+
+export type PatientConsentVariant =
+  | 'adult_living'
+  | 'pediatric_minor'
+  | 'deceased_next_of_kin'
+  | 'deceased_irb_waiver'
+  | 'incapacitated_irb_waiver'
+  | 'deidentified_no_consent_required'
+  | 'not_applicable'
 
 export interface ManuscriptMetadataRow {
   id: string
@@ -207,6 +221,17 @@ export interface ManuscriptMetadataRow {
   reviewer_package_storage_path: string | null
   reviewer_package_built_at: string | null
   reviewer_package_version: number | null
+  // Migration 022 (Sushant Session 57). Pre-Render Metadata Editor
+  // columns. patient_consent_variant uses CHECK constraint (not
+  // enum) per Janine §4 — cheaper to extend if a future variant
+  // emerges. Waiver-branch institution + protocol populated only
+  // when variant ∈ {deceased_irb_waiver, incapacitated_irb_waiver}.
+  patient_consent_variant: PatientConsentVariant | null
+  patient_consent_statement: string | null
+  patient_consent_irb_institution: string | null
+  patient_consent_irb_protocol: string | null
+  acknowledgments: string | null
+  equal_contribution_statement: string | null
   created_at: string
   updated_at: string
 }
