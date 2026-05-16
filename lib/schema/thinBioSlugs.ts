@@ -22,7 +22,6 @@ export const THIN_BIO_SLUGS = new Set<string>([
   'sukhman-singh',
   'shreya-chaudhuri',
   'abhijit-jayan',
-  'damarla-meghana',
   'akshay-phupate',
   'adithyaa-sivaramakrishnan',
 ])

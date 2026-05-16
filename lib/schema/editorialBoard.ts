@@ -305,17 +305,22 @@ export const BOARD_MEMBERS: BoardMember[] = [
     slug: 'abhijit-jayan',
   },
   {
-    // Telugu/South Indian naming convention: surname-first ordering. If
-    // the member prefers Western-style ordering for byline rendering,
-    // swap given/family at next confirmation.
-    name: 'Damarla Meghana, MBBS, MS',
+    // Western given-then-family ordering confirmed by member's own bio
+    // document supplied 2026-05-15 ("Dr. Meghana Damarla, MBBS, MS
+    // (Orthopaedics)"). Earlier Telugu surname-first assumption (Session 24)
+    // superseded; slug flipped damarla-meghana → meghana-damarla in lock-step.
+    // Ortho marker stripped per the post-MBBS specialty-marker convention
+    // (Session 48): MS (Orthopaedics) → MS. Bio narrative retains the
+    // orthopaedic training descriptors.
+    name: 'Meghana Damarla, MBBS, MS',
     givenName: 'Meghana',
     familyName: 'Damarla',
     honorificSuffix: 'MBBS, MS',
     jobTitle: 'Associate Editor',
     medicalSpecialty: 'Orthopedic Surgery',
+    affiliation: 'ESIC Medical College and Hospital, Hyderabad',
     sameAs: [],
-    slug: 'damarla-meghana',
+    slug: 'meghana-damarla',
   },
   {
     name: 'Akshay Phupate, MBBS, MS',
@@ -713,9 +718,21 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
     summary:
       'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
   },
-  'damarla-meghana': {
+  'meghana-damarla': {
+    photo: '/brand/meghana-damarla.png',
     summary:
-      'Associate Editor at OSCRSJ. Contributes to peer review and editorial decision-making across orthopedic case reports and series.',
+      'Orthopaedic surgeon with clinical and academic interests in general orthopaedics and trauma. Senior Resident in the Department of Orthopaedics at ESIC Medical College and Hospital, Sanathnagar, Hyderabad, with prior postgraduate training at Dr. D.Y. Patil Medical College Hospital & Research Centre, Pimpri, Pune. Active in patient care, surgical training, and academic activities, with a focus on evidence-based orthopaedic practice, trauma management, and continuous medical education.',
+    education: [
+      'MBBS',
+      'MS Orthopaedics — Dr. D.Y. Patil Medical College Hospital & Research Centre, Pimpri, Pune',
+    ],
+    experience: [
+      'Senior Resident, Department of Orthopaedics, ESIC Medical College and Hospital, Sanathnagar, Hyderabad, Telangana — current.',
+      'Postgraduate training in Orthopaedics at Dr. D.Y. Patil Medical College Hospital & Research Centre, Pimpri, Pune.',
+      'Clinical and academic interests in general orthopaedics and trauma, with active involvement in patient care, surgical training, and academic activities.',
+      'Focused on evidence-based orthopaedic practice, trauma management, and continuous medical education; ongoing interest in research and advancements in orthopaedic surgery.',
+    ],
+    workLocation: 'Hyderabad, Telangana, India',
   },
   'akshay-phupate': {
     summary:
