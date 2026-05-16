@@ -32,6 +32,7 @@ import type {
 } from '@/lib/publish/synthesize'
 import AuthorCard, { type AuthorState } from './AuthorCard'
 import ValidationSummary from './ValidationSummary'
+import PreviewRenderCluster from './PreviewRenderCluster'
 
 interface InitialState {
   manuscript_id: string
@@ -552,10 +553,16 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
         : null
 
   function onOpenPreview() {
-    // Phase 1.C wires this to /api/preview/[id]; Phase 1.B placeholder.
-    alert(
-      'Preview render lands in Phase 1.C. For Phase 1.B (this commit) use the Render published PDF button to drive the chain via the renderer.'
-    )
+    // Phase 1.C — wires to <PreviewRenderCluster /> rendered below
+    // §5. Scroll into view + flash; the cluster owns its own state.
+    const target = document.querySelector('[data-target="preview-cluster"]') as HTMLElement | null
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      target.classList.add('ring-2', 'ring-amber-400', 'ring-offset-2')
+      setTimeout(() => {
+        target.classList.remove('ring-2', 'ring-amber-400', 'ring-offset-2')
+      }, 1500)
+    }
   }
 
   function onRenderPublish() {
@@ -1142,6 +1149,21 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
           previewDisabledReason={previewDisabledReason}
           renderDisabled={renderDisabled}
           renderDisabledReason={renderDisabledReason}
+        />
+      </div>
+
+      {/* §6 Preview Render Cluster (Franklin §6 four-state inline-card) */}
+      <div className="editor-section" data-target="preview-cluster">
+        <p className="editor-section-label">§6 — Preview Render</p>
+        <p className="text-xs text-brown italic mb-3">
+          Generates a non-publishing PDF artifact so the editor can inspect
+          rendering before committing to publish. Disabled while errors are
+          present or unsaved changes exist.
+        </p>
+        <PreviewRenderCluster
+          manuscriptId={initial.manuscript_id}
+          disabled={previewDisabled}
+          disabledReason={previewDisabledReason}
         />
       </div>
 
