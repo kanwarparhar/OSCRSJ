@@ -85,6 +85,105 @@ a {
     color: var(--peach);
   }
 
+  /* ============================================================
+   * Pre-Render Metadata Editor classes (Sushant Session 57,
+   * Phase 1.B). Franklin §10 class spec — 27 new classes;
+   * Tailwind @apply form. All color/spacing tokens grounded in
+   * v2.3 Neutral Elegance palette + existing admin conventions.
+   * ============================================================ */
+
+  .editor-section {
+    @apply bg-white border border-border rounded-xl p-6 mb-6 space-y-4;
+  }
+  .editor-section-label {
+    @apply text-[11px] uppercase text-brown mb-2 block font-medium;
+    letter-spacing: 0.12em;
+  }
+  .editor-field-row {
+    @apply grid grid-cols-1 md:grid-cols-[180px_1fr] gap-2 md:gap-4 items-start mb-4;
+  }
+  .editor-field-row-stacked {
+    @apply block mb-4;
+  }
+  .editor-field-label {
+    @apply text-sm font-medium text-brown-dark md:mt-2 block;
+  }
+  .editor-field-hint {
+    @apply text-xs text-brown italic mt-1 block;
+  }
+  .editor-field-counter {
+    @apply text-xs text-brown;
+  }
+  .editor-field-counter.warn {
+    @apply text-amber-700;
+  }
+  .editor-field-counter.error {
+    @apply text-red-700;
+  }
+  .editor-suggested-default {
+    @apply bg-cream-alt/60 border border-dashed border-brown/30 rounded-lg p-3 mb-2;
+  }
+  .editor-save-bar {
+    @apply sticky bottom-0 bg-white/95 backdrop-blur border-t border-border px-6 py-3 flex items-center justify-end gap-4 z-20;
+  }
+  .abstract-field-label {
+    @apply font-serif text-base text-brown-dark font-normal mb-1 block;
+  }
+  .draggable-author-card {
+    @apply relative bg-white border border-border rounded-lg p-4 pl-10 mb-3 transition-all;
+  }
+  .draggable-author-card:hover {
+    @apply border-tan shadow-sm;
+  }
+  .draggable-author-card-dragging {
+    @apply opacity-60 ring-2 ring-peach-dark ring-offset-2;
+  }
+  .author-drop-target {
+    @apply border-t-2 border-peach pt-2 -mt-1;
+  }
+  .credit-chip-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3 bg-cream-alt/40 rounded-lg;
+  }
+  .credit-chip-selected {
+    @apply inline-flex items-center gap-1 bg-peach-dark/30 text-brown-dark text-xs font-medium px-2.5 py-1 rounded-full border border-peach-dark/40;
+  }
+  .validation-card {
+    @apply bg-white border border-border rounded-xl p-6 space-y-4;
+  }
+  .validation-row-error {
+    @apply flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-900;
+  }
+  .validation-row-warning {
+    @apply flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-900;
+  }
+  .validation-row-clear {
+    @apply bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-900;
+  }
+  .validation-jump-link {
+    @apply text-xs font-medium text-brown-dark hover:text-peach-dark underline-offset-2 hover:underline ml-auto whitespace-nowrap cursor-pointer;
+  }
+  .validation-summary-chip {
+    @apply fixed top-24 right-6 z-30 hidden lg:flex items-center gap-2 bg-white border border-border rounded-full px-4 py-2 shadow-md text-sm font-medium;
+  }
+  .preview-status-card {
+    @apply bg-cream-alt/60 border border-border rounded-lg p-4 text-sm space-y-1;
+  }
+  .preview-result-success {
+    @apply bg-green-50 border border-green-200 rounded-lg p-4 space-y-2;
+  }
+  .preview-result-failure {
+    @apply bg-red-50 border border-red-200 rounded-lg p-4 space-y-2;
+  }
+  .conditional-reveal-block {
+    @apply mt-3 pl-4 border-l-2 border-peach-dark/40 transition-all duration-200;
+  }
+  .handling-editor-display {
+    @apply bg-cream-alt/40 border border-border rounded-lg p-3 text-sm text-brown;
+  }
+  .equal-contribution-statement-block {
+    @apply mt-4 pt-4 border-t border-border;
+  }
+
 }
 
 /* Scroll reveal */

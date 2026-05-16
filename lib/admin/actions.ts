@@ -36,10 +36,16 @@ import type {
   EditorialDecisionRow,
   UserRow,
   ManuscriptAuthorRow,
+  ManuscriptMetadataRow,
   ReviewInvitationRow,
   PreRevisionSnapshot,
   SnapshotAuthor,
 } from '@/lib/types/database'
+import {
+  validateMetadataForRender,
+  type ManuscriptDraftOverlay,
+  type ValidationRow,
+} from '@/lib/publish/synthesize'
 
 // Admin-scoped server actions. Every export here re-checks editor/admin
 // role on the authenticated user before touching the admin (service-role)
@@ -1775,4 +1781,450 @@ export async function getRendererLaunchUrl(
   // strip trailing slash defensively
   const trimmed = base.replace(/\/+$/, '')
   return { url: `${trimmed}/render/${manuscriptId}` }
+}
+
+// ============================================================
+// Pre-Render Metadata Editor (Sushant Session 57, Phase 1.B).
+// Tracks Sushant Build Brief §2 "Three new server actions".
+// (Imports already at top of file.)
+// ============================================================
+
+export interface PreviewMetadataValidationResult {
+  ok?: true
+  errors?: ValidationRow[]
+  warnings?: ValidationRow[]
+  forbidden?: true
+  notFound?: true
+  serverError?: string
+}
+
+// previewMetadataValidation — debounced 500ms from the editor form;
+// runs the validator against the in-memory draft overlay WITHOUT
+// writing to DB. Returns the §5 Validation Summary rows for the
+// three-tier display per Franklin §5 wireframe.
+export async function previewMetadataValidation(
+  manuscriptId: string,
+  draft: ManuscriptDraftOverlay
+): Promise<PreviewMetadataValidationResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { forbidden: true, serverError: gate.error }
+
+  if (!manuscriptId || typeof manuscriptId !== 'string') {
+    return { notFound: true, serverError: 'Manuscript id is required.' }
+  }
+
+  const admin = createAdminClient()
+
+  // Fetch the read-side data we need to merge with the draft.
+  const [mRes, aRes, metaRes, affCountRes] = await Promise.all([
+    admin
+      .from('manuscripts')
+      .select(
+        'id, title, running_title, doi, manuscript_type, keywords, abstract, submission_date'
+      )
+      .eq('id', manuscriptId)
+      .maybeSingle(),
+    admin
+      .from('manuscript_authors')
+      .select('*')
+      .eq('manuscript_id', manuscriptId)
+      .order('author_order', { ascending: true }),
+    admin
+      .from('manuscript_metadata')
+      .select('*')
+      .eq('manuscript_id', manuscriptId)
+      .maybeSingle(),
+    admin
+      .from('manuscript_affiliations')
+      .select('id', { count: 'exact', head: true })
+      .eq('manuscript_id', manuscriptId),
+  ])
+
+  if (!mRes.data) return { notFound: true, serverError: 'Manuscript not found.' }
+
+  type ManuscriptHead = {
+    id: string
+    title: string | null
+    running_title: string | null
+    doi: string | null
+    manuscript_type: import('@/lib/types/database').ManuscriptType | null
+    keywords: string[] | null
+    abstract: string | null
+    submission_date: string | null
+  }
+  const m = mRes.data as unknown as ManuscriptHead
+  const dbAuthors = (aRes.data as ManuscriptAuthorRow[] | null) ?? []
+  const meta = (metaRes.data as ManuscriptMetadataRow | null) ?? null
+  const affCount = affCountRes.count ?? 0
+
+  // Overlay draft onto DB rows
+  const title = draft.title ?? m.title ?? ''
+  const running_title = draft.running_title ?? m.running_title ?? ''
+  const doi = draft.doi ?? m.doi ?? ''
+  const keywords = draft.keywords ?? m.keywords ?? []
+  const abstract = draft.abstract ?? m.abstract ?? ''
+
+  // Authors overlay: if draft.authors present, use it; otherwise fall
+  // back to DB rows.
+  const mergedAuthors = (draft.authors ?? dbAuthors).map((a, idx) => {
+    if ('id' in a && a.id) {
+      const dbRow = dbAuthors.find((d) => d.id === a.id)
+      return {
+        full_name: (a.full_name ?? dbRow?.full_name) || '',
+        email: (a.email ?? dbRow?.email) || '',
+        affiliation: (a.affiliation ?? dbRow?.affiliation) || '',
+        orcid_id: (a.orcid_id ?? dbRow?.orcid_id) || '',
+        contribution: (a.contribution ?? dbRow?.contribution) || '',
+        is_corresponding: a.is_corresponding ?? dbRow?.is_corresponding ?? false,
+        is_equal_contribution:
+          a.is_equal_contribution ?? dbRow?.is_equal_contribution ?? false,
+      }
+    }
+    // No id — treat as draft-only author (e.g., DB row order or full overlay)
+    const fallback = dbAuthors[idx]
+    return {
+      full_name: (a.full_name ?? fallback?.full_name) || '',
+      email: (a.email ?? fallback?.email) || '',
+      affiliation: (a.affiliation ?? fallback?.affiliation) || '',
+      orcid_id: (a.orcid_id ?? fallback?.orcid_id) || '',
+      contribution: (a.contribution ?? fallback?.contribution) || '',
+      is_corresponding: a.is_corresponding ?? fallback?.is_corresponding ?? false,
+      is_equal_contribution:
+        a.is_equal_contribution ?? fallback?.is_equal_contribution ?? false,
+    }
+  })
+
+  const merged = {
+    manuscript_type: m.manuscript_type,
+    title,
+    running_title,
+    doi,
+    keywords,
+    abstract,
+    submission_date: m.submission_date,
+    authors: mergedAuthors,
+    conflict_of_interest:
+      (draft.conflict_of_interest ?? meta?.conflict_of_interest) || '',
+    funding_sources:
+      (draft.funding_sources ?? meta?.funding_sources) || [],
+    data_availability_statement:
+      (draft.data_availability_statement ?? meta?.data_availability_statement) || '',
+    ai_tools_used:
+      draft.ai_tools_used !== undefined ? draft.ai_tools_used : meta?.ai_tools_used ?? null,
+    ai_tools_details:
+      (draft.ai_tools_details ?? meta?.ai_tools_details) || '',
+    patient_consent_variant:
+      (draft.patient_consent_variant !== undefined
+        ? draft.patient_consent_variant
+        : meta?.patient_consent_variant) ?? null,
+    patient_consent_statement:
+      (draft.patient_consent_statement ?? meta?.patient_consent_statement) || '',
+    patient_consent_irb_institution:
+      (draft.patient_consent_irb_institution ?? meta?.patient_consent_irb_institution) || '',
+    patient_consent_irb_protocol:
+      (draft.patient_consent_irb_protocol ?? meta?.patient_consent_irb_protocol) || '',
+    equal_contribution_statement:
+      (draft.equal_contribution_statement ?? meta?.equal_contribution_statement) || '',
+    has_affiliations_table_data: affCount > 0,
+  }
+
+  const result = await validateMetadataForRender(merged)
+  return { ok: true, errors: result.errors, warnings: result.warnings }
+}
+
+export interface UpdateManuscriptMetadataResult {
+  ok?: true
+  error?: string
+  forbidden?: true
+  notFound?: true
+  fieldsChanged?: string[]
+}
+
+// updateManuscriptMetadata — transactional save across 3 tables:
+// manuscripts, manuscript_authors, manuscript_metadata. Audit log
+// row metadata_edit written on success. Gates: requireAdminOnly +
+// status ∈ {'accepted', 'published'} per Janine §10 (post-acceptance
+// edit only).
+//
+// Phase 1.B caveat: Supabase JS client has no .transaction() — writes
+// are sequential. On partial failure, surface the error + the field
+// list that did persist. Production rollback is not implemented; the
+// editor can retry the save. Per §7 Risk #5 in the build brief.
+export async function updateManuscriptMetadata(
+  manuscriptId: string,
+  patch: ManuscriptDraftOverlay & {
+    authors_full?: Array<{
+      id?: string | null
+      full_name: string
+      degrees: string | null
+      email: string
+      affiliation: string | null
+      orcid_id: string | null
+      contribution: string | null
+      is_corresponding: boolean
+      is_equal_contribution: boolean
+      author_order: number
+    }>
+    handling_editor_id?: string | null
+  }
+): Promise<UpdateManuscriptMetadataResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { forbidden: true, error: gate.error }
+
+  if (!manuscriptId || typeof manuscriptId !== 'string') {
+    return { notFound: true, error: 'Manuscript id is required.' }
+  }
+
+  const admin = createAdminClient()
+
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('id, status')
+    .eq('id', manuscriptId)
+    .maybeSingle()
+
+  const m = mData as { id: string; status: ManuscriptStatus } | null
+  if (!m) return { notFound: true, error: 'Manuscript not found.' }
+  if (m.status !== 'accepted' && m.status !== 'published') {
+    return {
+      error: `Cannot edit metadata for manuscript in status "${m.status}". Required: "accepted" or "published".`,
+    }
+  }
+
+  const fieldsChanged: string[] = []
+
+  // ---- Update manuscripts row ----
+  const manuscriptUpdate: Record<string, unknown> = {}
+  if (patch.title !== undefined) {
+    manuscriptUpdate.title = patch.title
+    fieldsChanged.push('title')
+  }
+  if (patch.running_title !== undefined) {
+    manuscriptUpdate.running_title = patch.running_title
+    fieldsChanged.push('running_title')
+  }
+  if (patch.doi !== undefined) {
+    manuscriptUpdate.doi = patch.doi
+    fieldsChanged.push('doi')
+  }
+  if (patch.keywords !== undefined) {
+    manuscriptUpdate.keywords = patch.keywords
+    fieldsChanged.push('keywords')
+  }
+  if (patch.abstract !== undefined) {
+    manuscriptUpdate.abstract = patch.abstract
+    fieldsChanged.push('abstract')
+  }
+
+  if (Object.keys(manuscriptUpdate).length > 0) {
+    const { error: mErr } = await admin
+      .from('manuscripts')
+      .update(manuscriptUpdate as never)
+      .eq('id', manuscriptId)
+    if (mErr) {
+      return { error: `manuscripts update failed: ${mErr.message}` }
+    }
+  }
+
+  // ---- Update manuscript_metadata ----
+  // Ensure a row exists; insert blank if missing.
+  let metaRowId: string | null = null
+  const { data: metaProbe } = await admin
+    .from('manuscript_metadata')
+    .select('id')
+    .eq('manuscript_id', manuscriptId)
+    .maybeSingle()
+  metaRowId = (metaProbe as { id: string } | null)?.id ?? null
+
+  if (!metaRowId) {
+    const { data: ins, error: insErr } = await admin
+      .from('manuscript_metadata')
+      .insert({ manuscript_id: manuscriptId } as never)
+      .select('id')
+      .single()
+    if (insErr) {
+      return {
+        error: `manuscript_metadata insert failed: ${insErr.message}`,
+      }
+    }
+    metaRowId = (ins as { id: string }).id
+  }
+
+  const metaUpdate: Record<string, unknown> = {}
+  const metaPatchFields: Array<keyof ManuscriptDraftOverlay> = [
+    'conflict_of_interest',
+    'funding_sources',
+    'data_availability_statement',
+    'ethics_approval_number',
+    'ai_tools_used',
+    'ai_tools_details',
+    'patient_consent_variant',
+    'patient_consent_statement',
+    'patient_consent_irb_institution',
+    'patient_consent_irb_protocol',
+    'acknowledgments',
+    'equal_contribution_statement',
+  ]
+  for (const f of metaPatchFields) {
+    if (patch[f] !== undefined) {
+      metaUpdate[f] = patch[f]
+      fieldsChanged.push(`metadata.${f}`)
+    }
+  }
+
+  if (Object.keys(metaUpdate).length > 0) {
+    const { error: mUpdErr } = await admin
+      .from('manuscript_metadata')
+      .update(metaUpdate as never)
+      .eq('manuscript_id', manuscriptId)
+    if (mUpdErr) {
+      return {
+        error: `manuscript_metadata update failed (${fieldsChanged.length} prior fields persisted): ${mUpdErr.message}`,
+      }
+    }
+  }
+
+  // ---- Replace manuscript_authors (delete + bulk insert) ----
+  // Authors are full-array overlay because reordering changes
+  // author_order on every row and per-author CRediT/equal-contrib
+  // flags are independent. Insert order matches editor display.
+  if (patch.authors_full && patch.authors_full.length > 0) {
+    const { error: delErr } = await admin
+      .from('manuscript_authors')
+      .delete()
+      .eq('manuscript_id', manuscriptId)
+    if (delErr) {
+      return {
+        error: `manuscript_authors delete failed (${fieldsChanged.length} prior fields persisted): ${delErr.message}`,
+      }
+    }
+
+    const inserts = patch.authors_full.map((a) => ({
+      manuscript_id: manuscriptId,
+      author_order: a.author_order,
+      full_name: a.full_name,
+      degrees: a.degrees,
+      email: a.email,
+      affiliation: a.affiliation,
+      orcid_id: a.orcid_id,
+      contribution: a.contribution,
+      is_corresponding: a.is_corresponding,
+      is_equal_contribution: a.is_equal_contribution,
+    }))
+
+    const { error: insErr } = await admin
+      .from('manuscript_authors')
+      .insert(inserts as never)
+    if (insErr) {
+      return {
+        error: `manuscript_authors insert failed (authors deleted!): ${insErr.message}. Recovery required — contact Sushant.`,
+      }
+    }
+    fieldsChanged.push(`authors (${inserts.length})`)
+  }
+
+  // ---- Audit log ----
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'metadata_edit',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: {
+        manuscript_id: manuscriptId,
+        fields_changed: fieldsChanged,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath(`/dashboard/admin/manuscripts/${manuscriptId}`)
+  return { ok: true, fieldsChanged }
+}
+
+// resolveOrcid — server-side proxy for the public ORCID API. Used
+// by the §3 Authors "Resolve from ORCID ↗" button. Server-side to
+// dodge any browser CORS quirks; the public-record API does allow
+// CORS but proxying it through our server lets us log usage in
+// audit_logs for rate-tracking + retry-on-429 (Franklin Risk #3).
+export interface ResolveOrcidResult {
+  ok?: true
+  given_name?: string
+  family_name?: string
+  current_affiliation?: string | null
+  error?: string
+  forbidden?: true
+}
+
+export async function resolveOrcid(orcidId: string): Promise<ResolveOrcidResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { forbidden: true, error: gate.error }
+
+  const trimmed = (orcidId || '').trim()
+  const m = trimmed.match(/^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/)
+  if (!m) {
+    return { error: 'ORCID format must be XXXX-XXXX-XXXX-XXXX (16 chars, hyphens, last char digit or X).' }
+  }
+
+  try {
+    const resp = await fetch(`https://pub.orcid.org/v3.0/${trimmed}/person`, {
+      headers: { Accept: 'application/json' },
+      // 429 retry handled by caller; one shot here.
+    })
+    if (resp.status === 429) {
+      return { error: 'ORCID rate-limited (429). Wait a few seconds and try again.' }
+    }
+    if (resp.status === 404) {
+      return { error: `ORCID iD ${trimmed} not found in the public registry.` }
+    }
+    if (!resp.ok) {
+      return { error: `ORCID API returned ${resp.status} ${resp.statusText}.` }
+    }
+    const json = (await resp.json()) as Record<string, unknown>
+    const name = (json.name as Record<string, unknown> | undefined) ?? {}
+    const given = ((name['given-names'] as Record<string, unknown> | undefined) ?? {})['value'] as string | undefined
+    const family = ((name['family-name'] as Record<string, unknown> | undefined) ?? {})['value'] as string | undefined
+
+    // current affiliation is exposed via /employments not /person;
+    // for Phase 1 we surface name only. Affiliation lookup adds a
+    // second request — defer to Phase 1.B+ if time permits.
+    return {
+      ok: true,
+      given_name: given,
+      family_name: family,
+      current_affiliation: null,
+    }
+  } catch (err) {
+    return { error: `ORCID fetch failed: ${err instanceof Error ? err.message : String(err)}` }
+  }
+}
+
+// listEditorialBoardMembers — for the handling-editor override
+// dropdown. Sources from lib/schema/editorialBoard.ts so the
+// editor pool matches what's on /editorial-board.
+export interface BoardMemberOption {
+  user_id: string | null
+  name: string
+  role: string | null
+}
+
+export async function listAvailableEditors(): Promise<BoardMemberOption[]> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return []
+
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('users')
+    .select('id, full_name, role')
+    .in('role', ['editor', 'admin'])
+    .order('full_name', { ascending: true })
+
+  type EditorRow = { id: string; full_name: string; role: string }
+  const rows = (data as EditorRow[] | null) ?? []
+  return rows.map((r) => ({
+    user_id: r.id,
+    name: r.full_name,
+    role: r.role,
+  }))
 }

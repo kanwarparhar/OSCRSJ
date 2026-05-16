@@ -209,6 +209,352 @@ const MONTH_SHORT = [
 ]
 
 // ============================================================
+// Draft overlay shape for live editor validation (Session 57,
+// Phase 1.B). Allows previewMetadataValidation to overlay
+// in-progress editor state onto DB rows BEFORE running the
+// synthesizer; gives Franklin §5 the 500ms-debounced live
+// validation without writing to DB on every keystroke.
+// ============================================================
+
+export interface ManuscriptDraftOverlay {
+  // Article Identity
+  title?: string | null
+  running_title?: string | null
+  keywords?: string[] | null
+  doi?: string | null
+  // Abstract
+  abstract?: string | null
+  // Authors (full author array overlay; ordered as displayed in editor)
+  authors?: Array<{
+    id?: string | null
+    full_name?: string
+    degrees?: string | null
+    email?: string
+    affiliation?: string | null
+    orcid_id?: string | null
+    contribution?: string | null
+    is_corresponding?: boolean
+    is_equal_contribution?: boolean
+    author_order?: number
+  }>
+  // Declarations
+  conflict_of_interest?: string | null
+  funding_sources?: string[] | null
+  data_availability_statement?: string | null
+  ethics_approval_number?: string | null
+  ai_tools_used?: boolean | null
+  ai_tools_details?: string | null
+  patient_consent_variant?: PatientConsentVariant | null
+  patient_consent_statement?: string | null
+  patient_consent_irb_institution?: string | null
+  patient_consent_irb_protocol?: string | null
+  acknowledgments?: string | null
+  equal_contribution_statement?: string | null
+}
+
+// ============================================================
+// Janine §8 + baseline validation rules — runs on whatever
+// shape the editor has on screen. Surfaces as the §5
+// Validation Summary three-tier red/amber/green.
+// ============================================================
+
+export interface ValidationRow {
+  severity: 'error' | 'warning'
+  rule: string
+  message: string
+  // CSS selector or anchor token the §5 "Jump to fix" link
+  // scrolls to. Optional — some checks (e.g., affiliations
+  // table empty) have no editable target in Phase 1.
+  targetField?: string
+}
+
+// Pure validator — accepts the fully-merged editor draft shape,
+// returns the validator output. NO DB calls. Async because the
+// enclosing module carries 'use server' (Next.js 14 server-function
+// rule). Called both by the live previewMetadataValidation server
+// action and by synthesizeRendererPayload (which feeds DB rows
+// through the same validator after overlay).
+export async function validateMetadataForRender(merged: {
+  manuscript_type: ManuscriptType | null
+  title: string
+  running_title: string
+  doi: string
+  keywords: string[]
+  abstract: string
+  submission_date: string | null
+  authors: Array<{
+    full_name: string
+    email: string
+    affiliation: string
+    orcid_id: string
+    contribution: string
+    is_corresponding: boolean
+    is_equal_contribution: boolean
+  }>
+  conflict_of_interest: string
+  funding_sources: string[]
+  data_availability_statement: string
+  ai_tools_used: boolean | null
+  ai_tools_details: string
+  patient_consent_variant: PatientConsentVariant | null
+  patient_consent_statement: string
+  patient_consent_irb_institution: string
+  patient_consent_irb_protocol: string
+  equal_contribution_statement: string
+  has_affiliations_table_data: boolean
+}): Promise<{ errors: ValidationRow[]; warnings: ValidationRow[] }> {
+  const errors: ValidationRow[] = []
+  const warnings: ValidationRow[] = []
+
+  // ---- Baseline synthesizer rules (kept consistent with main path) ----
+
+  if (!merged.manuscript_type) {
+    errors.push({
+      severity: 'error',
+      rule: 'manuscript_type-required',
+      message: 'Article type is missing. This is locked at submission; contact Sushant if it needs to change.',
+      targetField: 'manuscript_type',
+    })
+  }
+
+  if (!merged.title.trim()) {
+    errors.push({
+      severity: 'error',
+      rule: 'title-required',
+      message: 'Title is empty.',
+      targetField: 'title',
+    })
+  }
+
+  if (merged.authors.length === 0) {
+    errors.push({
+      severity: 'error',
+      rule: 'authors-required',
+      message: 'At least one author is required.',
+      targetField: 'authors',
+    })
+  }
+
+  const correspondingAuthors = merged.authors.filter((a) => a.is_corresponding)
+  if (correspondingAuthors.length === 0) {
+    errors.push({
+      severity: 'error',
+      rule: 'corresponding-author-required',
+      message: 'Exactly one author must be flagged corresponding. Currently zero are flagged.',
+      targetField: 'authors',
+    })
+  } else if (correspondingAuthors.length > 1) {
+    errors.push({
+      severity: 'error',
+      rule: 'corresponding-author-unique',
+      message: `Exactly one author must be flagged corresponding. Currently ${correspondingAuthors.length} are flagged.`,
+      targetField: 'authors',
+    })
+  }
+
+  // Per-author affiliation
+  for (let i = 0; i < merged.authors.length; i++) {
+    const a = merged.authors[i]
+    if (!a.full_name.trim()) {
+      errors.push({
+        severity: 'error',
+        rule: `author-${i}-name-required`,
+        message: `Author ${i + 1} has no name.`,
+        targetField: `author-${i}-name`,
+      })
+    }
+    if (!a.email.trim()) {
+      errors.push({
+        severity: 'error',
+        rule: `author-${i}-email-required`,
+        message: `Author "${a.full_name || `#${i + 1}`}" has no email.`,
+        targetField: `author-${i}-email`,
+      })
+    }
+    if (!a.affiliation.trim()) {
+      errors.push({
+        severity: 'error',
+        rule: `author-${i}-affiliation-required`,
+        message: `Author "${a.full_name || `#${i + 1}`}" has no affiliation.`,
+        targetField: `author-${i}-affiliation`,
+      })
+    }
+    if (!a.contribution.trim()) {
+      warnings.push({
+        severity: 'warning',
+        rule: `author-${i}-credit-empty`,
+        message: `Author "${a.full_name || `#${i + 1}`}" has no CRediT roles. JATS sanity test will fail.`,
+        targetField: `author-${i}-credit`,
+      })
+    }
+  }
+
+  // Keywords cardinality
+  if (merged.keywords.length < 3 || merged.keywords.length > 5) {
+    warnings.push({
+      severity: 'warning',
+      rule: 'keywords-cardinality',
+      message: `Keywords cardinality is ${merged.keywords.length}; renderer sanity test requires 3–5.`,
+      targetField: 'keywords',
+    })
+  }
+
+  // Running title length
+  if (merged.running_title.length > RUNNING_TITLE_MAX) {
+    warnings.push({
+      severity: 'warning',
+      rule: 'running-title-length',
+      message: `running_title is ${merged.running_title.length} chars (max ${RUNNING_TITLE_MAX} — will truncate in @top-center header).`,
+      targetField: 'running_title',
+    })
+  }
+
+  // Affiliations table empty
+  if (!merged.has_affiliations_table_data) {
+    warnings.push({
+      severity: 'warning',
+      rule: 'affiliations-table-empty',
+      message: 'Affiliations table empty — synthesizing from author free-text strings. Multi-affiliation authors will collapse to single-affiliation.',
+    })
+  }
+
+  // Abstract structure (per article type)
+  if (merged.manuscript_type) {
+    const expected = STRUCTURED_ABSTRACT_COUNT[merged.manuscript_type]
+    if (expected) {
+      const txt = merged.abstract || ''
+      const ANCHORS = ['Introduction', 'Background', 'Case Presentation', 'Methods', 'Results', 'Discussion', 'Conclusion', 'Conclusions']
+      const anchorRe = new RegExp(
+        `(^|\\n|\\.\\s+|\\;\\s+|\\s)\\s*(${ANCHORS.join('|')})\\s*[:\\.]\\s*`,
+        'gi'
+      )
+      const matches: string[] = []
+      let m: RegExpExecArray | null
+      while ((m = anchorRe.exec(txt)) !== null) matches.push(m[2])
+      if (matches.length < expected) {
+        errors.push({
+          severity: 'error',
+          rule: 'abstract-structure',
+          message: `Abstract for ${TYPE_DISPLAY[merged.manuscript_type]} expects ${expected} labeled sections; found ${matches.length}. Add labels (Introduction:/Case Presentation:/Discussion:/Conclusion: etc.) or use the Paste-and-Parse assist.`,
+          targetField: 'abstract',
+        })
+      }
+    } else if (UNSTRUCTURED_TYPES.has(merged.manuscript_type) && !merged.abstract.trim()) {
+      errors.push({
+        severity: 'error',
+        rule: 'abstract-required',
+        message: `${TYPE_DISPLAY[merged.manuscript_type]} requires an abstract.`,
+        targetField: 'abstract',
+      })
+    }
+  }
+
+  // ---- Janine §8 hard-required rules (8.1–8.4) ----
+
+  // §8.1 — corresponding author must have ORCID
+  const corr = correspondingAuthors[0]
+  if (corr && !corr.orcid_id.trim()) {
+    errors.push({
+      severity: 'error',
+      rule: 'janine-8.1-corresponding-orcid',
+      message: 'Corresponding author must have an ORCID iD (Janine §8.1 / JATS 1.3 best-practice / DOAJ requirement).',
+      targetField: 'authors',
+    })
+  }
+
+  // §8.2 — title trailing period
+  if (merged.title.trim().endsWith('.')) {
+    errors.push({
+      severity: 'error',
+      rule: 'janine-8.2-title-trailing-period',
+      message: 'Title cannot end in a period (Janine §8.2 — NLM Vancouver style; PMC ingest warns on double-period).',
+      targetField: 'title',
+    })
+  }
+
+  // §8.3 — letter_to_editor requires related_article_doi
+  // Phase 2 column; surfacing as informational warning for now per
+  // Janine §7.2.e Phase 1 deferral.
+  if (merged.manuscript_type === 'letter_to_editor') {
+    warnings.push({
+      severity: 'warning',
+      rule: 'janine-8.3-letter-related-article-doi',
+      message: 'Letter to the Editor requires <related-article> DOI (Janine §8.3). Column lands Phase 2 trigger — first letter to reach accepted.',
+    })
+  }
+
+  // §8.4 — IRB waiver requires institution + protocol
+  if (
+    merged.patient_consent_variant === 'deceased_irb_waiver' ||
+    merged.patient_consent_variant === 'incapacitated_irb_waiver'
+  ) {
+    if (!merged.patient_consent_irb_institution.trim() || !merged.patient_consent_irb_protocol.trim()) {
+      warnings.push({
+        severity: 'warning',
+        rule: 'janine-8.4-irb-waiver-fields',
+        message: `Patient consent variant "${merged.patient_consent_variant}" requires both IRB institution and protocol (Janine §8.4). Without them, the statement will ship with <institution>/<IRB-####> placeholders visible.`,
+        targetField: 'patient_consent_irb',
+      })
+    }
+  }
+
+  // ---- §8.6 (cheap to ship — column already exists) ----
+  // ICMJE 2024 negative-attestation date guard
+  if (merged.ai_tools_used === null || merged.ai_tools_used === undefined) {
+    const submittedDate = merged.submission_date ? new Date(merged.submission_date) : null
+    const icmjeThreshold = new Date('2024-01-01')
+    if (!submittedDate || submittedDate >= icmjeThreshold) {
+      warnings.push({
+        severity: 'warning',
+        rule: 'janine-8.6-ai-disclosure-null',
+        message: 'ICMJE 2024 update requires explicit AI-use disclosure (even when no AI was used — negative attestation). Click either radio in §4 Declarations.',
+        targetField: 'ai_disclosure',
+      })
+    }
+  }
+
+  // ---- Patient consent (Janine §3) ----
+  if (!merged.patient_consent_variant) {
+    errors.push({
+      severity: 'error',
+      rule: 'patient-consent-variant-required',
+      message: 'Patient consent variant must be selected (Janine §3 — 7 locked options).',
+      targetField: 'patient_consent_variant',
+    })
+  } else if (
+    merged.patient_consent_variant !== 'not_applicable' &&
+    !merged.patient_consent_statement.trim()
+  ) {
+    errors.push({
+      severity: 'error',
+      rule: 'patient-consent-statement-required',
+      message: `Patient consent statement is empty for variant "${merged.patient_consent_variant}". Pre-fill from the variant default or write a custom statement.`,
+      targetField: 'patient_consent_statement',
+    })
+  }
+
+  // ---- Equal contribution coherence ----
+  const equalAuthors = merged.authors.filter((a) => a.is_equal_contribution).length
+  if (equalAuthors === 1) {
+    warnings.push({
+      severity: 'warning',
+      rule: 'equal-contribution-only-one',
+      message: 'Only 1 author is flagged equal-contribution; shared-first-authorship needs ≥2. Either flag another author or uncheck this one.',
+      targetField: 'authors',
+    })
+  } else if (equalAuthors >= 2 && !merged.equal_contribution_statement.trim()) {
+    warnings.push({
+      severity: 'warning',
+      rule: 'equal-contribution-statement-empty',
+      message: `${equalAuthors} authors flagged equal-contribution but the statement is empty. Add the verbatim default or write a custom statement.`,
+      targetField: 'equal_contribution_statement',
+    })
+  }
+
+  return { errors, warnings }
+}
+
+// ============================================================
 // Main entry point.
 // ============================================================
 
