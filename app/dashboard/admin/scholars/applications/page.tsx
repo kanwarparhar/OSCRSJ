@@ -1,11 +1,11 @@
 import Link from 'next/link'
+import { listCohortApplications } from '@/lib/scholars/actions'
 import {
-  listCohortApplications,
   TRACK_LABELS,
   TIER_LABELS,
   type CohortApplicationStatus,
   type CohortTrack,
-} from '@/lib/scholars/actions'
+} from '@/lib/scholars/types'
 
 export const dynamic = 'force-dynamic'
 

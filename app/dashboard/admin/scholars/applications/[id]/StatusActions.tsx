@@ -2,10 +2,8 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  updateCohortApplicationStatus,
-  type CohortApplicationStatus,
-} from '@/lib/scholars/actions'
+import { updateCohortApplicationStatus } from '@/lib/scholars/actions'
+import type { CohortApplicationStatus } from '@/lib/scholars/types'
 
 const STATUS_OPTIONS: Array<{
   value: CohortApplicationStatus

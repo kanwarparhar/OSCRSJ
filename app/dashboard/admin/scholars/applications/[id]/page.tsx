@@ -1,10 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import {
-  getCohortApplication,
-  TRACK_LABELS,
-  TIER_LABELS,
-} from '@/lib/scholars/actions'
+import { getCohortApplication } from '@/lib/scholars/actions'
+import { TRACK_LABELS, TIER_LABELS } from '@/lib/scholars/types'
 import StatusActions from './StatusActions'
 
 export const dynamic = 'force-dynamic'

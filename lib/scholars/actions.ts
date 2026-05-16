@@ -11,6 +11,16 @@ import {
   renderCohortApplicationInternalNotification,
   getCohortApplicationInternalSubject,
 } from '@/lib/email/templates/cohortApplicationInternalNotification'
+import {
+  TRACK_LABELS,
+  TIER_LABELS,
+  TIER_TO_TRACK,
+  type CohortTrack,
+  type CohortTier,
+  type CohortApplicationStatus,
+  type CohortApplicationReference,
+  type CohortApplicationRow,
+} from './types'
 
 // ---------------------------------------------------------------
 // Constants
@@ -41,88 +51,17 @@ const ALLOWED_CV_MIME_TYPES = new Set<string>([
 const ORCID_REGEX = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/
 
 // ---------------------------------------------------------------
-// Track + tier label tables (used by emails + admin UI)
+// Result types — local to this server-action module
 // ---------------------------------------------------------------
+// Per Next.js 14 rule, only async functions may be exported from a
+// 'use server' file. Plain `interface` declarations are erased at
+// compile time so they're safe to keep here; type aliases, runtime
+// constants, and label tables live in ./types.ts instead.
 
-export type CohortTrack = 'pre_med' | 'med_student' | 'img'
-export type CohortTier =
-  | 'pre_med_tier_1'
-  | 'pre_med_tier_2'
-  | 'med_student_tier_1'
-  | 'med_student_tier_2'
-  | 'img'
-
-export const TRACK_LABELS: Record<CohortTrack, string> = {
-  pre_med: 'Pre-Med Scholar',
-  med_student: 'Med Student Scholar',
-  img: 'IMG Scholar',
-}
-
-export const TIER_LABELS: Record<CohortTier, string> = {
-  pre_med_tier_1: 'Tier 1 — 6-month program ($499)',
-  pre_med_tier_2: 'Tier 2 — 1-year program ($999)',
-  med_student_tier_1: 'Tier 1 — 6-month program ($499)',
-  med_student_tier_2: 'Tier 2 — 1-year program ($999)',
-  img: '6-month program ($299)',
-}
-
-// Tier-to-track mapping for validation
-const TIER_TO_TRACK: Record<CohortTier, CohortTrack> = {
-  pre_med_tier_1: 'pre_med',
-  pre_med_tier_2: 'pre_med',
-  med_student_tier_1: 'med_student',
-  med_student_tier_2: 'med_student',
-  img: 'img',
-}
-
-// ---------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------
-
-export interface CohortApplicationReference {
-  name: string
-  email: string
-  relationship: string
-  institution: string
-}
-
-export interface SubmitCohortApplicationResult {
+interface SubmitCohortApplicationResult {
   success?: true
   applicationId?: string
   error?: string
-}
-
-export type CohortApplicationStatus =
-  | 'submitted'
-  | 'under_review'
-  | 'accepted'
-  | 'waitlisted'
-  | 'rejected'
-  | 'withdrawn'
-
-export interface CohortApplicationRow {
-  id: string
-  created_at: string
-  first_name: string
-  last_name: string
-  email: string
-  orcid_id: string | null
-  country_of_residence: string
-  school: string
-  year_in_school: string
-  preferred_track: CohortTrack
-  preferred_tier: CohortTier
-  personal_statement: string
-  research_experience: string
-  why_oscrsj: string
-  references_json: CohortApplicationReference[]
-  cv_storage_path: string | null
-  ai_disclosure_ack: boolean
-  participant_agreement_ack: boolean
-  status: CohortApplicationStatus
-  reviewed_by: string | null
-  reviewed_at: string | null
-  admin_notes: string | null
 }
 
 // ---------------------------------------------------------------
@@ -455,12 +394,12 @@ async function requireEditorOrAdmin(): Promise<
   return { userId: user.id }
 }
 
-export interface ListCohortApplicationsArgs {
+interface ListCohortApplicationsArgs {
   status?: CohortApplicationStatus | 'all'
   track?: CohortTrack | 'all'
 }
 
-export interface ListCohortApplicationsResult {
+interface ListCohortApplicationsResult {
   applications?: CohortApplicationRow[]
   error?: string
 }
@@ -488,7 +427,7 @@ export async function listCohortApplications(
   return { applications: (data || []) as CohortApplicationRow[] }
 }
 
-export interface GetCohortApplicationResult {
+interface GetCohortApplicationResult {
   application?: CohortApplicationRow
   cvSignedUrl?: string | null
   error?: string
@@ -520,13 +459,13 @@ export async function getCohortApplication(
   return { application, cvSignedUrl }
 }
 
-export interface UpdateCohortApplicationStatusArgs {
+interface UpdateCohortApplicationStatusArgs {
   applicationId: string
   newStatus: CohortApplicationStatus
   adminNotes?: string | null
 }
 
-export interface UpdateCohortApplicationStatusResult {
+interface UpdateCohortApplicationStatusResult {
   success?: true
   error?: string
 }
