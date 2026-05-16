@@ -1,11 +1,31 @@
 'use server'
 
-// Renderer payload synthesizer — Session 53 (2026-05-15).
+// Renderer payload synthesizer — Session 53 (2026-05-15) + Session 57
+// (2026-05-15) Pre-Render Metadata Editor extension.
 //
 // Joins the manuscripts row + manuscript_authors + manuscript_affiliations +
-// manuscript_metadata + the corresponding author's `users` row into the
-// Franklin v1.0 payload shape consumed by the OSCRSJ Renderer chain
-// (~/Documents/oscrsj-renderer/lib/renderer/sanityTests.ts ArticlePayload).
+// manuscript_metadata + the corresponding author's `users` row + the
+// latest editorial_decisions row (for handling-editor) into the Franklin
+// v1.0 payload shape consumed by the OSCRSJ Renderer chain.
+//
+// Session 57 deltas (Janine compliance spec sign-off):
+//   - Reads 6 new metadata columns from migration 022:
+//       patient_consent_variant (7-variant CHECK constraint)
+//       patient_consent_statement
+//       patient_consent_irb_institution
+//       patient_consent_irb_protocol
+//       acknowledgments
+//       equal_contribution_statement
+//   - Reads is_equal_contribution per manuscript_author (migration 022).
+//   - Derives equal_contribution.present = (≥2 authors flagged AND
+//     statement non-null).
+//   - Resolves handling_editor from editorial_decisions.editor_id →
+//     users join. Renders as JATS <contrib contrib-type="editor">.
+//   - Emits xmpRights_WebStatement in xmp_metadata block per Janine
+//     §7.2.g (carryforward from ^handoff-pdf-template-license-fix).
+//     Renderer xmp.ts emits the actual XMP packet field; this just
+//     ships the data.
+//   - Removes the adult_living hardcode for patient_consent.
 //
 // Scope decision (Kanwar, 2026-05-15):
 //   - body: []    — body content comes from the renderer's cleanedHtml
@@ -14,9 +34,9 @@
 //                   migration 021 next session. PMC indexing blocked until
 //                   refs land, but PDF/A-1b ships fine without them.
 //
-// Tracks Manvir handoff ^handoff-renderer-payload-synthesizer-2026-05-15.
-// Source spec: vault `02 - OSCRSJ/Notes/2026-05-15 Renderer Payload
-// Synthesizer - Manvir Brief for Sushant.md`.
+// Tracks Manvir handoff ^handoff-renderer-payload-synthesizer-2026-05-15
+// + Sushant build brief 02 - OSCRSJ/Projects/Pre-Render Metadata Editor —
+// Sushant Build Brief.md.
 
 import { createAdminClient } from '@/lib/supabase/server'
 import type {
@@ -24,6 +44,7 @@ import type {
   ManuscriptAuthorRow,
   ManuscriptAffiliationRow,
   ManuscriptType,
+  PatientConsentVariant,
   UserRow,
 } from '@/lib/types/database'
 
@@ -92,6 +113,15 @@ export interface RendererPayload {
     present: boolean
     statement: string | null
   }
+  // Session 57 — handling-editor JOIN. Surfaced in the Pre-Render
+  // Metadata Editor §3 Authors display block and emitted by the
+  // renderer as JATS <contrib contrib-type="editor">. Null when no
+  // editorial_decisions row exists (e.g., desk-accepted manuscripts
+  // — rare).
+  handling_editor: {
+    display_name: string
+    affiliation: string | null
+  } | null
   abstract: {
     format: 'structured' | 'unstructured'
     sections?: Array<{ label: string; text: string }>
@@ -254,6 +284,42 @@ export async function synthesizeRendererPayload(
 
   const correspondingUser = cuData as UserRow | null
 
+  // ---- Fetch handling editor — latest non-rescinded editorial
+  //      decision row → editor user. Per Janine §7.2.f + Franklin
+  //      §3 wireframe. Rendered in the editor as a display-only block;
+  //      synthesizer surfaces the data so the renderer can emit
+  //      <contrib contrib-type="editor"> in JATS.
+  const { data: latestDecisionData } = await admin
+    .from('editorial_decisions')
+    .select('editor_id')
+    .eq('manuscript_id', manuscriptId)
+    .is('rescinded_at', null)
+    .order('decision_date', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  let handlingEditor: RendererPayload['handling_editor'] = null
+  const latestDecision = latestDecisionData as { editor_id: string } | null
+  if (latestDecision?.editor_id) {
+    const { data: editorData } = await admin
+      .from('users')
+      .select('full_name, degrees, affiliation')
+      .eq('id', latestDecision.editor_id)
+      .maybeSingle()
+    const editorRow = editorData as
+      | { full_name: string; degrees: string | null; affiliation: string | null }
+      | null
+    if (editorRow?.full_name) {
+      const degs = (editorRow.degrees || '').trim()
+      handlingEditor = {
+        display_name: degs
+          ? `${editorRow.full_name.trim()}, ${degs}`
+          : editorRow.full_name.trim(),
+        affiliation: editorRow.affiliation,
+      }
+    }
+  }
+
   // ============================================================
   // Build the payload sections.
   // ============================================================
@@ -406,7 +472,9 @@ export async function synthesizeRendererPayload(
       orcid_url: orcidUrl,
       affiliation_refs: affRefs,
       is_corresponding: a.is_corresponding,
-      is_equal_contribution: false,
+      // Session 57 — migration 022 added is_equal_contribution per author.
+      // Defaults false on pre-migration rows.
+      is_equal_contribution: !!a.is_equal_contribution,
       credit_roles: creditRoles,
     }
   })
@@ -442,8 +510,26 @@ export async function synthesizeRendererPayload(
       : null,
   }
 
-  // ---- equal_contribution ----
-  const equalContribution = { present: false, statement: null }
+  // ---- equal_contribution (Session 57 — Janine §7.2.b) ----
+  // Derive .present from (≥2 flagged authors) AND (statement non-null).
+  // Both gates must hold so a stray single checkbox doesn't surface a
+  // shared-first-authorship footnote with no statement to back it.
+  const equalAuthorCount = payloadAuthors.filter((a) => a.is_equal_contribution).length
+  const equalStmtRaw = ((meta.equal_contribution_statement as string | null) || '').trim()
+  const equalPresent = equalAuthorCount >= 2 && equalStmtRaw.length > 0
+  if (equalAuthorCount >= 2 && equalStmtRaw.length === 0) {
+    warnings.push(
+      `${equalAuthorCount} authors are flagged equal-contribution but equal_contribution_statement is empty. Editor must add the statement before render.`
+    )
+  } else if (equalAuthorCount === 1) {
+    warnings.push(
+      'Only 1 author is flagged equal-contribution; shared-first-authorship needs at least 2. Either flag another author or uncheck this one.'
+    )
+  }
+  const equalContribution = {
+    present: equalPresent,
+    statement: equalPresent ? equalStmtRaw : null,
+  }
 
   // ---- abstract ----
   const abstract = parseAbstract(
@@ -505,14 +591,55 @@ export async function synthesizeRendererPayload(
     })
     .join('; ')
 
+  // ---- patient_consent — Session 57, Janine §3 7-variant taxonomy ----
+  // Pull from migration 022 columns; fall back to red error when null
+  // (the editor surfaces the same in §5 Validation Summary).
+  const consentVariantRaw =
+    (meta.patient_consent_variant as PatientConsentVariant | null) || null
+  let consentStatement = ((meta.patient_consent_statement as string | null) || '').trim()
+  const irbInstitution = ((meta.patient_consent_irb_institution as string | null) || '').trim()
+  const irbProtocol = ((meta.patient_consent_irb_protocol as string | null) || '').trim()
+
+  if (!consentVariantRaw) {
+    errors.push(
+      'patient_consent_variant is not set. Editor must select one of the 7 Janine §3 variants before render.'
+    )
+  } else if (consentVariantRaw !== 'not_applicable' && consentStatement.length === 0) {
+    errors.push(
+      `patient_consent_statement is empty for variant "${consentVariantRaw}". Editor must add (or accept the verbatim default) before render.`
+    )
+  }
+
+  // For IRB-waiver branches, substitute the <institution> + <IRB-####>
+  // placeholders the editor may have left in the statement default with
+  // the structured columns. Janine §3 + §4. Missing IRB data surfaces
+  // as Janine §8.4 conditional warning.
+  const isWaiverVariant =
+    consentVariantRaw === 'deceased_irb_waiver' ||
+    consentVariantRaw === 'incapacitated_irb_waiver'
+  if (isWaiverVariant) {
+    if (!irbInstitution || !irbProtocol) {
+      warnings.push(
+        `patient_consent_variant is "${consentVariantRaw}" but IRB institution/protocol is incomplete (institution="${irbInstitution || '(empty)'}", protocol="${irbProtocol || '(empty)'}"). Editor must populate both before render or the statement will ship with <institution>/<IRB-####> placeholders visible.`
+      )
+    }
+    if (irbInstitution) {
+      consentStatement = consentStatement.replace(/<institution>/gi, irbInstitution)
+    }
+    if (irbProtocol) {
+      consentStatement = consentStatement.replace(/<IRB-####>/gi, irbProtocol)
+    }
+  }
+
+  const acknowledgmentsRaw = ((meta.acknowledgments as string | null) || '').trim()
+
   const declarations = {
     funding,
     conflicts_of_interest: coiLong,
     coi_short: coiShort,
     patient_consent: {
-      variant: 'adult_living',
-      statement:
-        'Written informed consent was obtained from the patient for publication of this case report and any accompanying images. A copy of the consent form is available on request.',
+      variant: consentVariantRaw || 'adult_living',
+      statement: consentStatement || 'Patient consent statement not provided.',
     },
     irb_ethics: {
       branch: ethicsBranch,
@@ -522,7 +649,7 @@ export async function synthesizeRendererPayload(
     credit_author_contributions:
       creditLines || authors.map((a) => `${a.full_name.trim()} — contributed to the manuscript.`).join('; '),
     ai_disclosure: { used: aiUsed, statement: aiStatement },
-    acknowledgments: null,
+    acknowledgments: acknowledgmentsRaw.length > 0 ? acknowledgmentsRaw : null,
   }
 
   // ---- suggested_citation_html ----
@@ -542,6 +669,13 @@ export async function synthesizeRendererPayload(
   const suggestedCitation = `${authorCitation}. ${titleCitation}. <em>${JOURNAL_SHORT}</em>. ${issue.year};${issue.volume}(${issue.issue_number}):${elocationId}.`
 
   // ---- xmp_metadata ----
+  // Session 57: xmpRights_WebStatement carryforward from Janine
+  // ^handoff-pdf-template-license-fix-2026-05-11 deliverable #3. The
+  // PDF Compliance Brief v3 §6.5 requires `xmpRights:WebStatement` in
+  // the XMP packet pointing at the CC BY 4.0 URL — readers (and PMC
+  // ingest) inspect it to confirm reuse rights. The renderer's
+  // xmp.ts adds the namespace + element emit; this synthesizer ships
+  // the data so the renderer has it on payload-load.
   const xmpMetadata = {
     dc_title: manuscript.title || '',
     dc_creator: authors.map((a) => a.full_name.trim()),
@@ -555,6 +689,7 @@ export async function synthesizeRendererPayload(
     prism_number: String(issue.issue_number),
     prism_doi: doi,
     xmp_CreatorTool: 'OSCRSJ Render Pipeline v1.0 (WeasyPrint 68.1)',
+    xmpRights_WebStatement: LICENSE_URL,
     pdfaid_part: '1',
     pdfaid_conformance: 'B',
   }
@@ -568,6 +703,7 @@ export async function synthesizeRendererPayload(
     affiliations,
     corresponding_author: correspondingAuthor,
     equal_contribution: equalContribution,
+    handling_editor: handlingEditor,
     abstract,
     keywords,
     body: [],
