@@ -42,8 +42,15 @@ const navItems = [
       { label: 'Editorial Board', href: '/editorial-board' },
       { label: 'Aims & Scope', href: '/aims-scope' },
       { label: 'Review Process', href: '/peer-review' },
-      { label: 'Research Scholars', href: '/scholars' },
       { label: 'Subscribe', href: '/subscribe' },
+    ],
+  },
+  {
+    label: 'Scholars',
+    href: '/scholars',
+    dropdown: [
+      { label: 'Program Overview', href: '/scholars' },
+      { label: 'Apply', href: '/scholars/apply' },
     ],
   },
   { label: 'Contact', href: '/contact', dropdown: null },
