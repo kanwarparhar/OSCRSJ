@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'OSCRSJ Research Scholars',
     description:
-      'A structured research-training program for pre-med students, medical students, and IMG candidates — Cochrane-trained methodology and mentorship, peer-reviewed journal output.',
+      'A structured research-training program for pre-med students, medical students, and IMG candidates. Cochrane-trained methodology, mentorship, and peer-reviewed journal output.',
     url: 'https://www.oscrsj.com/scholars',
     type: 'website',
   },
@@ -37,7 +37,7 @@ const TRACKS: Track[] = [
     name: 'Pre-Med Scholar',
     audience: 'For pre-med students',
     blurb:
-      'Equips students early with the research skills needed to be competitive applicants to surgical specialties — particularly students with no medical school guidance or first-generation pre-meds.',
+      'Builds the research skills you need to be a competitive applicant to surgical specialties early in your training. Best for first-generation pre-meds and students without an established mentor network.',
     tiers: [
       {
         label: 'Tier 1',
@@ -56,10 +56,10 @@ const TRACKS: Track[] = [
         price: '$999',
         duration: '1 year',
         highlights: [
-          'Two research projects (one first-author on a database study OR second author on SR/MA)',
+          'Two research projects (one first-author on a database study or second author on SR/MA)',
           'Mock interview with feedback',
-          'Pre-med to residency path roadmap workshop',
-          'Conditional medical-school LOR on successful completion of 2 projects + 1 conference presentation',
+          'Pre-med to residency roadmap workshop',
+          'Conditional medical-school LOR after completing 2 projects and 1 conference presentation',
           'Monthly project meeting + monthly "how to match" Q&A',
         ],
       },
@@ -70,7 +70,7 @@ const TRACKS: Track[] = [
     name: 'Med Student Scholar',
     audience: 'For medical students',
     blurb:
-      'Best for med students at schools without a home orthopedics program — or those wanting more research experience to be competitive for surgical residencies.',
+      'Best for medical students at schools without a home orthopedics program, or for students who want a stronger research record going into a surgical residency application.',
     tiers: [
       {
         label: 'Tier 1',
@@ -92,7 +92,7 @@ const TRACKS: Track[] = [
           '5-6 research projects (mix of SR/MA + database studies)',
           '2-3 first-author projects',
           'Full conference planning + submission support',
-          'Shared calendar with all submission dates',
+          'Shared calendar of conference and journal submission deadlines',
           'Away rotation planning + academic-researcher outreach templates',
         ],
       },
@@ -103,14 +103,14 @@ const TRACKS: Track[] = [
     name: 'IMG Scholar',
     audience: 'For international medical graduates',
     blurb:
-      'US research credentials and mentor letters from US-practicing orthopedic surgeons — for IMGs applying through ECFMG to US residency.',
+      'US research credentials and mentor letters from US-practicing orthopedic surgeons, for IMGs applying through ECFMG to US residency.',
     tiers: [
       {
         label: '',
         price: '$299',
         duration: '6 months',
         highlights: [
-          '2-3 research projects — all first-author (deliberate)',
+          '2-3 research projects, all first-author (deliberate)',
           'Abstract + manuscript writing instruction',
           'Zotero reference-management training',
           'How to respond to reviewer feedback',
@@ -125,32 +125,32 @@ const FAQ_ENTRIES: Array<{ question: string; answer: string }> = [
   {
     question: 'Who is the ideal candidate for this program?',
     answer:
-      'We see this as a learning opportunity in the world of research — how to be efficient in writing manuscripts and abstracts, while working on real projects that let you have meaningful conversations with PDs and attendings at conferences. This program is best for someone from a medical school with no home orthopedics program who wants research experience, or someone who wants more research experience on their resume. If you come from a school with a home ortho program, we strongly suggest checking in with your department first — that face-to-face interaction and clinical/research-experience-based LOR is invaluable. In a scenario where your home program is fully saturated with students, this program is a good fit to continue working towards something.',
+      'We see this as a learning opportunity in research methodology: how to write manuscripts and abstracts efficiently while working on real projects that give you meaningful conversations with program directors and attendings at conferences. The program is best suited to medical students at schools without a home orthopedics program who want research experience, and to students who want a stronger research record on their application. If your school does have a home ortho program, we strongly suggest checking in with your department first. That face-to-face interaction, and a letter of recommendation grounded in shared clinical and research work, is invaluable. If your home program is fully saturated, our program is a good way to keep building your research record while you wait for an opening.',
   },
   {
     question: 'How do people publish so much?',
     answer:
-      'You cannot reach the top alone. You must work in groups. Divide and conquer. Look up research profiles for students matching at the top orthopedic residency programs — search them on PubMed and you will see they (a) took a research year at a program other than their med school, (b) had a research mentor who put them on all their projects, or (c) worked in a research team with candidates cross-pollinating each other on their projects. That is the reality of the process. This is significantly difficult for students coming from medical schools without a strong ortho research department, and worse for those without any ortho program at all. This program is built for those specific candidates — we want to break that barrier and create a version of that opportunity for students.',
+      'You cannot reach the top alone. You have to work in groups. Look up the research profiles of students matching at the top orthopedic residency programs, search them on PubMed, and you will see the same pattern repeat: (a) a research year at a program other than their medical school, (b) a research mentor who put them on every project, or (c) a research team where candidates cross-pollinate on each other\'s work. That is the reality of how the publication numbers happen. It is significantly harder to reach for students from medical schools without a strong ortho research department, and nearly impossible for students at schools without an ortho program at all. This program is built for those specific candidates. We want to break the barrier and create a version of that opportunity inside a real peer-reviewed journal.',
   },
   {
     question: 'Is publication guaranteed?',
     answer:
-      'No. This is not a guaranteed-publication program. It is based on your work ethic. We provide the structure, tools, education, and projects. Publication of any work submitted to OSCRSJ is conditional on independent peer review through the journal\'s standard editorial pipeline. Due to strict deadlines, failure to meet program requirements will result in removal from the program.',
+      'No. This is not a guaranteed-publication program. It is based on your work ethic. We provide the structure, tools, education, and projects. Publication of any work submitted to OSCRSJ is conditional on independent peer review through the journal\'s standard editorial pipeline. The program runs on strict deadlines; failure to meet program requirements will result in removal from the cohort.',
   },
   {
     question: 'Will OSCRSJ write me a letter of recommendation?',
     answer:
-      'For residency applications, an LOR from someone who knows you and has worked with you in an in-person setting holds significant weight. The virtual nature of this program makes it difficult for our attendings to write LORs in that capacity. For students completing all their projects with at least 3 first-author projects, we can write an LOR if they are lacking letters when ERAS comes around — but we strongly recommend letters from those whom you have met and worked closely with in person.',
+      'For residency applications, a letter of recommendation from someone who knows you and has worked with you in person carries the most weight. The virtual nature of this program makes it difficult for our attendings to write letters at that level. Scholars who complete the full program with at least three first-author projects can request a letter from us if they are short on letters when ERAS opens. We still strongly recommend prioritizing letters from people you have met and worked with in person.',
   },
   {
     question: 'How does OSCRSJ use AI in research?',
     answer:
-      'AI in research is the reality of 2026. We are a strong proponent of "work smarter, not harder" — and an even bigger proponent of not pumping out useless papers and fake citations into the literature. AI should be used as a writing assistant for introductions and discussions, to confirm claims when citing, to draft methods and results sections, and to generate analysis code (RStudio / Python). AI should NOT be used to find citations (unreliable) or to write the introduction and background draft (this is the heart of the manuscript, where you learn about your topic). OSCRSJ has built Claude Skills for orthopedic abstract writing, methods, results, and claim verification — these are made available to scholars as part of the curriculum.',
+      'AI in research is the reality of 2026. We are strong proponents of working smarter, not harder, and even stronger proponents of not flooding the orthopedic literature with low-value papers and inflated citations. AI should be used as a writing assistant for tightening introductions and discussions after you have written them, for confirming claims you cite, for drafting methods and results sections, and for generating analysis code (RStudio / Python). AI should not be used to find citations (still unreliable at the level research demands), or to write the first draft of your introduction or background. The introduction is the heart of the manuscript and the section where you actually learn the topic. OSCRSJ has built Claude Skills for orthopedic abstract writing, methods, results, and claim verification, made available to scholars as part of the curriculum.',
   },
   {
     question: 'What is the peer-review firewall?',
     answer:
-      'Manuscripts produced in the program go through OSCRSJ\'s standard double-blind peer review by reviewers outside of our network — recruited from outside the OSCRSJ editorial board. Cohort manuscripts carry an explicit COI disclosure: "This manuscript was developed as part of the OSCRSJ Research Scholars program. Cohort mentors were not involved in the editorial decision." We publish our cohort manuscript acceptance rate publicly each year. Transparency is part of the design.',
+      'Manuscripts produced in the program go through OSCRSJ\'s standard double-blind peer review by reviewers recruited from outside the OSCRSJ editorial board. Cohort manuscripts carry an explicit COI disclosure: "This manuscript was developed as part of the OSCRSJ Research Scholars program. Cohort mentors were not involved in the editorial decision." We publish our cohort manuscript acceptance rate publicly each year. Transparency is part of the design.',
   },
   {
     question: 'When does the next cohort start?',
@@ -160,7 +160,7 @@ const FAQ_ENTRIES: Array<{ question: string; answer: string }> = [
   {
     question: 'What happens to program materials?',
     answer:
-      'All program materials are confidential. Sharing of any program content — from the moment you sign up — will result in legal action.',
+      'All program materials are confidential. Sharing any program content from the moment you sign up will result in legal action.',
   },
 ]
 
@@ -229,28 +229,29 @@ export default function ScholarsPage() {
           <div className="prose-like space-y-4 text-sm leading-relaxed text-ink">
             <p>
               You cannot reach the top of orthopedics alone. You have to work
-              in groups. Look up research profiles for students matching at
-              the top orthopedic residency programs and you will see the same
-              pattern: a research year somewhere with a strong department, or
-              a mentor putting them on every project, or a research team where
-              candidates cross-pollinate on each other&apos;s work. That is
-              how the publication numbers happen.
+              in groups. Look up the research profiles of students matching
+              at the top orthopedic residency programs and you will see the
+              same pattern: a research year in a strong department, a mentor
+              placing them on every project, or a team where candidates
+              cross-pollinate on each other&apos;s work. That is how the
+              publication numbers happen.
             </p>
             <p>
               That ecosystem is much harder to access from a medical school
-              without a strong orthopedic research department — and nearly
-              impossible without an ortho program at all. The OSCRSJ Research
-              Scholars program is built specifically for those candidates: we
-              teach the methodological skills of being a successful researcher
-              while giving you the structured opportunity to work on real
-              projects in front of a real peer-reviewed journal.
+              without a strong orthopedic research department, and nearly
+              impossible without an orthopedic program at all. The OSCRSJ
+              Research Scholars program is built for those candidates. We
+              teach the methodological skills that make a successful
+              researcher, and we give you the structured opportunity to work
+              on real projects in front of a real peer-reviewed journal.
             </p>
             <p>
-              We are a strong proponent of <em>work smarter, not harder</em>
-              {' '}— and an even bigger proponent of not pumping out useless
-              papers and fake citations into orthopedic literature. The
-              program emphasizes methodological rigor, careful attribution,
-              and clinically meaningful questions.
+              We are strong proponents of{' '}
+              <em>working smarter, not harder</em>. We are even stronger
+              proponents of not flooding the orthopedic literature with
+              low-value papers and inflated citations. The program emphasizes
+              methodological rigor, careful attribution, and clinically
+              meaningful questions.
             </p>
           </div>
         </section>
@@ -260,10 +261,10 @@ export default function ScholarsPage() {
           <span className="section-label">Choose your track</span>
           <h2 className="section-heading mb-4">Three tracks, one community</h2>
           <p className="text-sm text-ink leading-relaxed mb-8 max-w-3xl">
-            Every scholar — regardless of track — joins the same cohort
+            Every scholar, regardless of track, joins the same cohort
             community, shares mentor meetings and journal clubs, and learns
-            the same core methodology. Track and tier differ only in project
-            scope and timeline.
+            the same core methodology. Tracks and tiers differ only in
+            project scope and timeline.
           </p>
 
           <div className="space-y-6">
@@ -332,8 +333,8 @@ export default function ScholarsPage() {
           <h2 className="section-heading mb-4">Real training, real rigor</h2>
           <p className="text-sm text-ink leading-relaxed mb-6 max-w-3xl">
             What turns &quot;students writing reviews&quot; into a credible
-            research training program is the methodology. Every cohort
-            project — regardless of track — is built on the same scaffolding.
+            research-training program is the methodology. Every cohort
+            project, regardless of track, is built on the same scaffolding.
           </p>
           <div className="grid sm:grid-cols-3 gap-4">
             <div className="bg-white border border-border rounded-xl p-5">
@@ -355,9 +356,9 @@ export default function ScholarsPage() {
               </h3>
               <p className="text-sm text-ink leading-relaxed">
                 Every systematic review and meta-analysis is registered with
-                PROSPERO before screening begins. The registration becomes
-                an external commitment to the protocol — a defining feature
-                of credible SR/MA work.
+                PROSPERO before screening begins. The registration is an
+                external commitment to the protocol, and that commitment is
+                a defining feature of credible SR/MA work.
               </p>
             </div>
             <div className="bg-white border border-border rounded-xl p-5">
@@ -389,7 +390,7 @@ export default function ScholarsPage() {
                 OSCRSJ&apos;s standard editorial pipeline.
               </strong>{' '}
               The program promises training, mentorship, and structured
-              project opportunities — it does not promise publication.
+              project opportunities. It does not promise publication.
             </p>
             <p>
               Manuscripts produced in the program go through{' '}
@@ -406,8 +407,8 @@ export default function ScholarsPage() {
             </p>
             <p>
               We publish our cohort manuscript acceptance rate publicly each
-              year. Transparency is part of the design — it is the strongest
-              signal that the peer review is real.
+              year. Transparency is part of the design, and it is the
+              strongest signal that the peer review is real.
             </p>
           </div>
         </section>
@@ -464,8 +465,9 @@ export default function ScholarsPage() {
                     ✗
                   </span>
                   <span>
-                    Writing the introduction / background draft — the heart
-                    of the manuscript, where you learn about your topic
+                    Writing the first draft of your introduction or
+                    background section (the heart of the manuscript, where
+                    you actually learn your topic)
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -473,14 +475,14 @@ export default function ScholarsPage() {
                     ✗
                   </span>
                   <span>
-                    Finding citations — not yet reliable at the level
-                    research demands
+                    Finding citations (still unreliable at the level
+                    research demands)
                   </span>
                 </li>
               </ul>
               <p className="text-xs text-brown mt-4 leading-relaxed">
                 OSCRSJ has built Claude Skills for abstract writing, methods,
-                results, and claim verification — made available to scholars
+                results, and claim verification, made available to scholars
                 as part of the curriculum.
               </p>
             </div>
