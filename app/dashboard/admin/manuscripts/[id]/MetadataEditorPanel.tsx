@@ -1,8 +1,10 @@
+import { headers } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/server'
 import {
   synthesizeRendererPayload,
   validateMetadataForRender,
 } from '@/lib/publish/synthesize'
+import type { ExtractResponse, ExtractedFields } from '@/lib/publish/extractedMetadata'
 import { getRendererLaunchUrl } from '@/lib/admin/actions'
 import type {
   ManuscriptRow,
@@ -41,7 +43,7 @@ export default async function MetadataEditorPanel({ manuscriptId }: Props) {
     return null
   }
 
-  const [authorsRes, metadataRes, synthResult, launch, affCountRes] =
+  const [authorsRes, metadataRes, synthResult, launch, affCountRes, extractResult] =
     await Promise.all([
       admin
         .from('manuscript_authors')
@@ -59,11 +61,14 @@ export default async function MetadataEditorPanel({ manuscriptId }: Props) {
         .from('manuscript_affiliations')
         .select('id', { count: 'exact', head: true })
         .eq('manuscript_id', manuscriptId),
+      fetchExtractedMetadata(manuscriptId),
     ])
 
   const authors = (authorsRes.data as ManuscriptAuthorRow[] | null) ?? []
   const metadata = (metadataRes.data as ManuscriptMetadataRow | null) ?? null
   const affCount = affCountRes.count ?? 0
+  const extracted: ExtractedFields | null = extractResult.fields ?? null
+  const extractError: string | null = extractResult.error
 
   const authorStates: AuthorState[] = authors.map((a) => ({
     id: a.id,
@@ -159,9 +164,135 @@ export default async function MetadataEditorPanel({ manuscriptId }: Props) {
           handling_editor: handlingEditor,
           initial_errors: initialValidation.errors,
           initial_warnings: initialValidation.warnings,
+          extracted,
+          extract_error: extractError,
+          extracted_source_file_type: extractResult.source_file_type ?? null,
         }}
         rendererUrl={launch.url || ''}
       />
     </section>
   )
+}
+
+// Server-side fetch of the renderer's /api/extract-metadata endpoint.
+// Phase 1.5 (Session 58): regex-first heuristic .docx extraction via
+// Pandoc. The renderer-side runs Pandoc + parses canonical heading
+// anchors and returns confidence-scored pre-fill values for the
+// editor's six metadata regions (abstract sections / CoI / funding /
+// IRB / patient consent / acknowledgments).
+//
+// We call the renderer DIRECTLY (not via our own proxy) on first
+// page-load because:
+//   1. We're already server-side here — bearer auth comes from env,
+//      no CORS concerns.
+//   2. The proxy exists at /api/extract-metadata for future client-
+//      side re-extraction (e.g., an "Re-extract from latest .docx"
+//      button) where the editor's browser can't carry the bearer.
+//   3. Skipping the proxy saves one HTTP hop on every page-load.
+//
+// Audit-log written best-effort regardless of fetch outcome.
+async function fetchExtractedMetadata(manuscriptId: string): Promise<{
+  fields: ExtractedFields | null
+  error: string | null
+  source_file_type: 'manuscript' | 'blinded_manuscript' | null
+}> {
+  // Headers are read defensively (route hydration changes between
+  // Next.js versions); we don't actually need anything from headers,
+  // but the import keeps Next.js from treating this as a static page
+  // and caching the result.
+  try {
+    headers()
+  } catch {
+    // ignore
+  }
+
+  const secret = process.env.RENDERER_SHARED_SECRET
+  if (!secret) {
+    return {
+      fields: null,
+      error:
+        'RENDERER_SHARED_SECRET not configured. Set on Vercel + renderer .env.local (must match).',
+      source_file_type: null,
+    }
+  }
+
+  const rendererBase =
+    process.env.NEXT_PUBLIC_RENDERER_URL ||
+    process.env.RENDERER_URL ||
+    'http://localhost:3001'
+  const rendererUrl = `${rendererBase.replace(/\/+$/, '')}/api/extract-metadata/${manuscriptId}`
+
+  let resp: Response
+  try {
+    resp = await fetch(rendererUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${secret}`,
+      },
+      cache: 'no-store',
+      // Renderer extraction is local Pandoc; budget a bit higher than
+      // the synthesizer's expected RTT to avoid premature timeouts on
+      // larger .docx files (10-page case reports can take ~2s on
+      // Pandoc 3.x with cold cache).
+      signal: AbortSignal.timeout(90_000),
+    })
+  } catch (err) {
+    return {
+      fields: null,
+      error: `Could not reach renderer at ${rendererUrl}: ${err instanceof Error ? err.message : String(err)}. Is the local renderer dev server running on Kanwar's Mac?`,
+      source_file_type: null,
+    }
+  }
+
+  let body: ExtractResponse
+  try {
+    body = (await resp.json()) as ExtractResponse
+  } catch {
+    return {
+      fields: null,
+      error: `Renderer returned non-JSON (status ${resp.status}).`,
+      source_file_type: null,
+    }
+  }
+
+  // Best-effort audit-log row — handoff acceptance criterion
+  try {
+    const adminClient = createAdminClient()
+    const summary = body.fields
+      ? {
+          abstract_sections_count: body.fields.abstract_sections?.length ?? 0,
+          coi_confidence: body.fields.conflict_of_interest?.confidence ?? 'none',
+          funding_confidence: body.fields.funding?.confidence ?? 'none',
+          irb_confidence: body.fields.irb?.statement?.confidence ?? 'none',
+          consent_confidence: body.fields.patient_consent?.confidence ?? 'none',
+          consent_variant_guess:
+            body.fields.patient_consent?.variant_guess ?? null,
+          ack_confidence: body.fields.acknowledgments?.confidence ?? 'none',
+          source_file_type: body.source_file_type ?? null,
+        }
+      : { fetch_failed: true, renderer_status: resp.status }
+    await (adminClient.from('audit_logs') as any).insert({
+      action: 'metadata_extracted_from_docx',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: { manuscript_id: manuscriptId, ...summary },
+    })
+  } catch {
+    // swallow — audit-log failure must not break editor page
+  }
+
+  if (!resp.ok || !body.ok || !body.fields) {
+    return {
+      fields: null,
+      error: body.error ?? `Renderer returned ${resp.status}.`,
+      source_file_type: null,
+    }
+  }
+
+  return {
+    fields: body.fields,
+    error: null,
+    source_file_type: body.source_file_type ?? null,
+  }
 }
