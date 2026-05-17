@@ -30,6 +30,11 @@ import type {
   ManuscriptDraftOverlay,
   ValidationRow,
 } from '@/lib/publish/synthesize'
+import type {
+  ExtractedFields,
+  ExtractionConfidence,
+  ExtractedField,
+} from '@/lib/publish/extractedMetadata'
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import AuthorCard, { type AuthorState } from './AuthorCard'
 import ValidationSummary from './ValidationSummary'
@@ -65,6 +70,10 @@ interface InitialState {
   } | null
   initial_errors: ValidationRow[]
   initial_warnings: ValidationRow[]
+  // Phase 1.5 (Session 58) — .docx extraction pre-fill
+  extracted: ExtractedFields | null
+  extract_error: string | null
+  extracted_source_file_type: 'manuscript' | 'blinded_manuscript' | null
 }
 
 interface Props {
@@ -184,7 +193,239 @@ function flattenAbstractSections(sections: Record<string, string>, labels: strin
     .join('\n\n')
 }
 
+// ============================================================
+// Phase 1.5 (Session 58) — .docx-extracted metadata pre-fill
+// ============================================================
+//
+// PreFillDecision describes what the editor sees on first page-load
+// for a single field. Mutable: the editor can click "Use .docx" /
+// "Keep DB" / "Dismiss" buttons to flip decisions per field.
+//
+// Why we don't auto-overwrite DB values that diverge from extraction:
+// the DB may carry edits the author made post-submission that aren't
+// in the .docx, OR the .docx may be the fresher source (most common
+// case after 1-2 revisions). We refuse to guess; the editor decides
+// per field.
+
+type PreFillDecision =
+  | {
+      kind: 'extracted_applied'
+      confidence: ExtractionConfidence
+      extractedValue: string
+      dbOriginal: string
+    }
+  | {
+      kind: 'db_kept_diverges'
+      confidence: ExtractionConfidence
+      extractedValue: string
+      dbValue: string
+    }
+  | {
+      kind: 'db_matches_extraction'
+      confidence: ExtractionConfidence
+    }
+  | { kind: 'no_extraction' }
+  | { kind: 'dismissed' }
+
+function valuesMatch(a: string, b: string): boolean {
+  const norm = (s: string) =>
+    s.trim().toLowerCase().replace(/\s+/g, ' ')
+  const na = norm(a)
+  const nb = norm(b)
+  if (!na || !nb) return false
+  if (na === nb) return true
+  // Loose match: one is contained in the other AND the shorter is at
+  // least 80% of the longer. Catches "DB has summary; .docx has full
+  // paragraph" cases where they're substantively the same.
+  const shorter = na.length < nb.length ? na : nb
+  const longer = na.length < nb.length ? nb : na
+  if (longer.includes(shorter) && shorter.length / longer.length >= 0.8) {
+    return true
+  }
+  return false
+}
+
+function resolvePrefill(
+  dbValue: string,
+  extracted: ExtractedField | null | undefined
+): PreFillDecision {
+  if (
+    !extracted ||
+    extracted.confidence === 'none' ||
+    extracted.confidence === 'low' ||
+    !extracted.value.trim()
+  ) {
+    return { kind: 'no_extraction' }
+  }
+  const dbTrim = dbValue.trim()
+  if (!dbTrim) {
+    return {
+      kind: 'extracted_applied',
+      confidence: extracted.confidence,
+      extractedValue: extracted.value,
+      dbOriginal: dbValue,
+    }
+  }
+  if (valuesMatch(dbValue, extracted.value)) {
+    return { kind: 'db_matches_extraction', confidence: extracted.confidence }
+  }
+  return {
+    kind: 'db_kept_diverges',
+    confidence: extracted.confidence,
+    extractedValue: extracted.value,
+    dbValue,
+  }
+}
+
+interface InitialDecisions {
+  conflict_of_interest: PreFillDecision
+  funding: PreFillDecision
+  ethics_approval_number: PreFillDecision
+  patient_consent_variant: PreFillDecision
+  patient_consent_statement: PreFillDecision
+  patient_consent_irb_institution: PreFillDecision
+  patient_consent_irb_protocol: PreFillDecision
+  acknowledgments: PreFillDecision
+  abstract_sections: Record<string, PreFillDecision>
+}
+
+function computeInitialDecisions(
+  initial: InitialState
+): InitialDecisions {
+  const ex = initial.extracted
+  if (!ex) {
+    return {
+      conflict_of_interest: { kind: 'no_extraction' },
+      funding: { kind: 'no_extraction' },
+      ethics_approval_number: { kind: 'no_extraction' },
+      patient_consent_variant: { kind: 'no_extraction' },
+      patient_consent_statement: { kind: 'no_extraction' },
+      patient_consent_irb_institution: { kind: 'no_extraction' },
+      patient_consent_irb_protocol: { kind: 'no_extraction' },
+      acknowledgments: { kind: 'no_extraction' },
+      abstract_sections: {},
+    }
+  }
+
+  // Wrap patient-consent sub-fields in synthetic ExtractedField shape
+  // so they can flow through the same resolvePrefill helper.
+  const consentStatementField: ExtractedField = {
+    value: ex.patient_consent.statement,
+    confidence: ex.patient_consent.confidence,
+    score: ex.patient_consent.score,
+    source: ex.patient_consent.source,
+  }
+  const consentInstitutionField: ExtractedField = {
+    value: ex.patient_consent.irb_institution,
+    confidence:
+      ex.patient_consent.irb_institution && ex.patient_consent.confidence !== 'none'
+        ? ex.patient_consent.confidence
+        : 'none',
+    score: ex.patient_consent.score,
+    source: ex.patient_consent.source,
+  }
+  const consentProtocolField: ExtractedField = {
+    value: ex.patient_consent.irb_protocol,
+    confidence:
+      ex.patient_consent.irb_protocol && ex.patient_consent.confidence !== 'none'
+        ? ex.patient_consent.confidence
+        : 'none',
+    score: ex.patient_consent.score,
+    source: ex.patient_consent.source,
+  }
+  const consentVariantField: ExtractedField = {
+    value: ex.patient_consent.variant_guess ?? '',
+    confidence: ex.patient_consent.variant_confidence,
+    score: ex.patient_consent.score,
+    source: ex.patient_consent.source,
+  }
+  const irbProtocolField: ExtractedField = {
+    value: ex.irb.protocol_number ?? '',
+    confidence: ex.irb.statement.confidence,
+    score: ex.irb.statement.score,
+    source: ex.irb.statement.source,
+  }
+
+  // Abstract — per-label decisions, only for article types with
+  // structured abstracts (case_report, case_series, review_article).
+  // Build the same label set the form uses (ABSTRACT_LABEL_SETS) so
+  // keys round-trip cleanly.
+  const abstractDecisions: Record<string, PreFillDecision> = {}
+  if (initial.manuscript_type && ABSTRACT_LABEL_SETS[initial.manuscript_type]) {
+    const labels = ABSTRACT_LABEL_SETS[initial.manuscript_type]
+    const parsedDb = parseAbstractIntoSections(initial.abstract, labels)
+    for (const label of labels) {
+      const extractedSection = ex.abstract_sections.find(
+        (s) =>
+          s.label.toLowerCase() === label.toLowerCase() ||
+          // Match "Conclusions" → "Conclusion"
+          (s.label === 'Conclusions' && label === 'Conclusion')
+      )
+      if (!extractedSection) {
+        abstractDecisions[label] = { kind: 'no_extraction' }
+        continue
+      }
+      const dbForLabel = parsedDb[label] || ''
+      abstractDecisions[label] = resolvePrefill(dbForLabel, {
+        value: extractedSection.text,
+        confidence: extractedSection.confidence,
+        score: extractedSection.score,
+        source: extractedSection.source as
+          | 'native_heading'
+          | 'bold_paragraph'
+          | 'none',
+      })
+    }
+  }
+
+  return {
+    conflict_of_interest: resolvePrefill(
+      initial.conflict_of_interest,
+      ex.conflict_of_interest
+    ),
+    funding: resolvePrefill(
+      initial.funding_sources.join(' '),
+      ex.funding
+    ),
+    ethics_approval_number: resolvePrefill(
+      initial.ethics_approval_number,
+      irbProtocolField
+    ),
+    patient_consent_variant: resolvePrefill(
+      initial.patient_consent_variant ?? '',
+      consentVariantField
+    ),
+    patient_consent_statement: resolvePrefill(
+      initial.patient_consent_statement,
+      consentStatementField
+    ),
+    patient_consent_irb_institution: resolvePrefill(
+      initial.patient_consent_irb_institution,
+      consentInstitutionField
+    ),
+    patient_consent_irb_protocol: resolvePrefill(
+      initial.patient_consent_irb_protocol,
+      consentProtocolField
+    ),
+    acknowledgments: resolvePrefill(
+      initial.acknowledgments,
+      ex.acknowledgments
+    ),
+    abstract_sections: abstractDecisions,
+  }
+}
+
+function pickInitialString(decision: PreFillDecision, dbValue: string): string {
+  return decision.kind === 'extracted_applied' ? decision.extractedValue : dbValue
+}
+
 export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
+  // ---- Pre-fill decisions (Phase 1.5, Session 58) ----
+  // Computed once from initial props; mutable so user clicks on
+  // divergence-banner action buttons can flip per-field decisions.
+  const initialDecisions = useMemo(() => computeInitialDecisions(initial), [initial])
+  const [decisions, setDecisions] = useState<InitialDecisions>(initialDecisions)
+
   // ---- State ----
   const [title, setTitle] = useState(initial.title)
   const [runningTitle, setRunningTitle] = useState(initial.running_title)
@@ -197,33 +438,95 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
     ? ABSTRACT_LABEL_SETS[initial.manuscript_type] || null
     : null
   const [abstractSections, setAbstractSections] = useState<Record<string, string>>(
-    abstractLabels
-      ? parseAbstractIntoSections(initial.abstract, abstractLabels)
-      : {}
+    () => {
+      const baseline = abstractLabels
+        ? parseAbstractIntoSections(initial.abstract, abstractLabels)
+        : {}
+      if (!abstractLabels) return baseline
+      // Apply per-label extracted_applied decisions
+      const merged: Record<string, string> = { ...baseline }
+      for (const label of abstractLabels) {
+        const d = initialDecisions.abstract_sections[label]
+        if (d?.kind === 'extracted_applied') {
+          merged[label] = d.extractedValue
+        }
+      }
+      return merged
+    }
   )
   const [abstractUnstructured, setAbstractUnstructured] = useState<string>(
-    abstractLabels ? '' : initial.abstract
+    () => {
+      if (abstractLabels) return ''
+      // No structured labels for this article type — use the raw
+      // unstructured extraction if DB abstract is empty, else keep DB.
+      if (
+        !initial.abstract.trim() &&
+        initial.extracted?.abstract_unstructured.value &&
+        (initial.extracted.abstract_unstructured.confidence === 'high' ||
+          initial.extracted.abstract_unstructured.confidence === 'amber')
+      ) {
+        return initial.extracted.abstract_unstructured.value
+      }
+      return initial.abstract
+    }
   )
   const [abstractPaste, setAbstractPaste] = useState('')
 
   const [authors, setAuthors] = useState<AuthorState[]>(initial.authors)
-  const [conflictOfInterest, setConflictOfInterest] = useState(initial.conflict_of_interest)
+  const [conflictOfInterest, setConflictOfInterest] = useState(
+    pickInitialString(initialDecisions.conflict_of_interest, initial.conflict_of_interest)
+  )
   const [fundingSources, setFundingSources] = useState<string[]>(initial.funding_sources)
   const [noFunding, setNoFunding] = useState(initial.funding_sources.length === 0)
   const [dataAvailability, setDataAvailability] = useState(initial.data_availability_statement)
-  const [ethicsApprovalNumber, setEthicsApprovalNumber] = useState(initial.ethics_approval_number)
+  const [ethicsApprovalNumber, setEthicsApprovalNumber] = useState(
+    pickInitialString(initialDecisions.ethics_approval_number, initial.ethics_approval_number)
+  )
   const [aiUsed, setAiUsed] = useState<boolean | null>(initial.ai_tools_used)
   const [aiDetails, setAiDetails] = useState(initial.ai_tools_details)
   const [consentVariant, setConsentVariant] = useState<PatientConsentVariant | null>(
-    initial.patient_consent_variant
+    () => {
+      const d = initialDecisions.patient_consent_variant
+      if (d.kind === 'extracted_applied' && d.extractedValue) {
+        return d.extractedValue as PatientConsentVariant
+      }
+      return initial.patient_consent_variant
+    }
   )
-  const [consentStatement, setConsentStatement] = useState(initial.patient_consent_statement)
-  const [irbInstitution, setIrbInstitution] = useState(initial.patient_consent_irb_institution)
-  const [irbProtocol, setIrbProtocol] = useState(initial.patient_consent_irb_protocol)
-  const [acknowledgments, setAcknowledgments] = useState(initial.acknowledgments)
+  const [consentStatement, setConsentStatement] = useState(
+    pickInitialString(initialDecisions.patient_consent_statement, initial.patient_consent_statement)
+  )
+  const [irbInstitution, setIrbInstitution] = useState(
+    pickInitialString(initialDecisions.patient_consent_irb_institution, initial.patient_consent_irb_institution)
+  )
+  const [irbProtocol, setIrbProtocol] = useState(
+    pickInitialString(initialDecisions.patient_consent_irb_protocol, initial.patient_consent_irb_protocol)
+  )
+  const [acknowledgments, setAcknowledgments] = useState(
+    pickInitialString(initialDecisions.acknowledgments, initial.acknowledgments)
+  )
   const [equalContribStatement, setEqualContribStatement] = useState(initial.equal_contribution_statement)
 
-  const [isDirty, setIsDirty] = useState(false)
+  // Mark dirty immediately if any decision auto-applied an extracted
+  // value — the editor's first save should persist those pre-fills
+  // back to the DB so subsequent loads start from a clean "no
+  // pre-fill needed" state (the DB value matches the .docx after
+  // save, so resolvePrefill returns 'db_matches_extraction' next time).
+  const hasAutoApplied = useMemo(() => {
+    if (initialDecisions.conflict_of_interest.kind === 'extracted_applied') return true
+    if (initialDecisions.ethics_approval_number.kind === 'extracted_applied') return true
+    if (initialDecisions.patient_consent_statement.kind === 'extracted_applied') return true
+    if (initialDecisions.patient_consent_variant.kind === 'extracted_applied') return true
+    if (initialDecisions.patient_consent_irb_institution.kind === 'extracted_applied') return true
+    if (initialDecisions.patient_consent_irb_protocol.kind === 'extracted_applied') return true
+    if (initialDecisions.acknowledgments.kind === 'extracted_applied') return true
+    for (const label of Object.keys(initialDecisions.abstract_sections)) {
+      if (initialDecisions.abstract_sections[label].kind === 'extracted_applied') return true
+    }
+    return false
+  }, [initialDecisions])
+
+  const [isDirty, setIsDirty] = useState(hasAutoApplied)
   const [errors, setErrors] = useState<ValidationRow[]>(initial.initial_errors)
   const [warnings, setWarnings] = useState<ValidationRow[]>(initial.initial_warnings)
   const [acknowledged, setAcknowledged] = useState<Set<string>>(new Set())
@@ -590,10 +893,183 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
     window.open(rendererUrl, '_blank', 'noopener,noreferrer')
   }
 
+  // ---- Pre-fill decision flips (Phase 1.5) ----
+
+  function dismissDecision(key: keyof Omit<InitialDecisions, 'abstract_sections'>) {
+    setDecisions((prev) => ({ ...prev, [key]: { kind: 'dismissed' } }))
+  }
+  function dismissAbstractDecision(label: string) {
+    setDecisions((prev) => ({
+      ...prev,
+      abstract_sections: { ...prev.abstract_sections, [label]: { kind: 'dismissed' } },
+    }))
+  }
+
+  function useDocxFor(
+    key: keyof Omit<InitialDecisions, 'abstract_sections'>,
+    apply: (value: string) => void
+  ) {
+    const d = decisions[key]
+    if (d.kind !== 'db_kept_diverges') return
+    apply(d.extractedValue)
+    setDecisions((prev) => ({
+      ...prev,
+      [key]: {
+        kind: 'extracted_applied',
+        confidence: d.confidence,
+        extractedValue: d.extractedValue,
+        dbOriginal: d.dbValue,
+      },
+    }))
+    markDirty()
+  }
+
+  function useDocxForAbstract(label: string) {
+    const d = decisions.abstract_sections[label]
+    if (d?.kind !== 'db_kept_diverges') return
+    setAbstractSections((prev) => ({ ...prev, [label]: d.extractedValue }))
+    setDecisions((prev) => ({
+      ...prev,
+      abstract_sections: {
+        ...prev.abstract_sections,
+        [label]: {
+          kind: 'extracted_applied',
+          confidence: d.confidence,
+          extractedValue: d.extractedValue,
+          dbOriginal: d.dbValue,
+        },
+      },
+    }))
+    markDirty()
+  }
+
+  function keepDbFor(key: keyof Omit<InitialDecisions, 'abstract_sections'>) {
+    const d = decisions[key]
+    if (d.kind !== 'db_kept_diverges') return
+    setDecisions((prev) => ({ ...prev, [key]: { kind: 'dismissed' } }))
+  }
+
+  function keepDbForAbstract(label: string) {
+    setDecisions((prev) => ({
+      ...prev,
+      abstract_sections: { ...prev.abstract_sections, [label]: { kind: 'dismissed' } },
+    }))
+  }
+
+  // Renders the small "Pre-filled from .docx" chip next to a field
+  // label, with a × dismiss button. Returns null when decision is
+  // 'no_extraction' / 'dismissed' / 'db_matches_extraction'.
+  function PreFillChip({
+    decision,
+    onDismiss,
+  }: {
+    decision: PreFillDecision
+    onDismiss: () => void
+  }) {
+    if (decision.kind !== 'extracted_applied') return null
+    const label =
+      decision.confidence === 'high'
+        ? 'Pre-filled from .docx (HIGH)'
+        : 'Pre-filled — verify (AMBER)'
+    const tone =
+      decision.confidence === 'high'
+        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+        : 'bg-amber-50 text-amber-800 border-amber-200'
+    return (
+      <span
+        className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${tone} ml-2`}
+      >
+        {label}
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="text-current/70 hover:text-current ml-0.5"
+          aria-label="Dismiss pre-fill chip"
+          title="Dismiss this chip — value stays as-is"
+        >
+          ×
+        </button>
+      </span>
+    )
+  }
+
+  // Renders an inline yellow banner when DB value diverges from
+  // extracted; two action buttons let editor pick which to keep.
+  function DivergenceBanner({
+    decision,
+    onUseDocx,
+    onKeepDb,
+  }: {
+    decision: PreFillDecision
+    onUseDocx: () => void
+    onKeepDb: () => void
+  }) {
+    if (decision.kind !== 'db_kept_diverges') return null
+    return (
+      <div className="mt-2 p-2.5 rounded-lg border border-amber-200 bg-amber-50/60 text-xs">
+        <p className="text-amber-900 mb-1.5">
+          <span className="font-semibold">DB value differs from .docx-extracted value</span>
+          {' '}({decision.confidence === 'high' ? 'HIGH' : 'AMBER'} confidence).
+          The DB value is shown above; the .docx version is:
+        </p>
+        <p className="text-ink bg-white border border-amber-100 rounded px-2 py-1.5 mb-2 whitespace-pre-wrap font-mono text-[11px] leading-snug max-h-32 overflow-y-auto">
+          {decision.extractedValue.length > 600
+            ? decision.extractedValue.slice(0, 600) + '…'
+            : decision.extractedValue}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={onUseDocx}
+            className="btn-ghost text-[11px] border border-amber-300 hover:bg-amber-100"
+          >
+            Use .docx version
+          </button>
+          <button
+            type="button"
+            onClick={onKeepDb}
+            className="btn-ghost text-[11px]"
+          >
+            Keep DB version
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   // ---- Render ----
 
   return (
     <div className="space-y-6" data-target="metadata-editor-form">
+      {/* Phase 1.5 (Session 58) — .docx extraction status notice */}
+      {initial.extract_error ? (
+        <div className="p-3 rounded-lg border border-amber-200 bg-amber-50/60 text-xs text-amber-900">
+          <p className="font-semibold mb-0.5">
+            ⚠ Could not pre-fill from .docx — extraction unavailable
+          </p>
+          <p className="text-amber-800">{initial.extract_error}</p>
+          <p className="text-amber-800 mt-1">
+            Form is pre-filled from the DB only. Edit fields manually to match the
+            accepted .docx before render.
+          </p>
+        </div>
+      ) : initial.extracted ? (
+        <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50/60 text-xs text-emerald-900">
+          <p className="font-medium">
+            ✓ Pre-filled from accepted{' '}
+            <code className="text-[11px] bg-white border border-emerald-100 px-1 py-0.5 rounded">
+              {initial.extracted_source_file_type ?? 'manuscript'}.docx
+            </code>{' '}
+            via Pandoc + heuristic anchor parser
+          </p>
+          <p className="text-emerald-800 mt-1 italic">
+            HIGH-confidence pre-fills auto-applied; AMBER pre-fills surface with
+            &quot;verify&quot; chip; divergent DB values show a banner with
+            [Use .docx] / [Keep DB] choice. LOW-confidence extractions left blank.
+          </p>
+        </div>
+      ) : null}
+
       {/* Sticky desktop chip */}
       <div className="validation-summary-chip">
         <span className="text-red-700">🚨 {errors.length}</span>
@@ -786,23 +1262,38 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
               </button>
             </div>
             <div className="border-t border-border pt-3 space-y-4" data-target="abstract">
-              {abstractLabels.map((label) => (
-                <div key={label}>
-                  <label className="abstract-field-label">{label}:</label>
-                  <textarea
-                    value={abstractSections[label] || ''}
-                    onChange={(e) => {
-                      setAbstractSections((prev) => ({ ...prev, [label]: e.target.value }))
-                      markDirty()
-                    }}
-                    rows={4}
-                    className="bg-white border border-border rounded-lg px-3 py-2 text-sm text-ink w-full focus:ring-2 focus:ring-peach-dark min-h-[100px] resize-vertical"
-                  />
-                  <p className="editor-field-hint">
-                    {(abstractSections[label] || '').length} characters · Recommended 50–500.
-                  </p>
-                </div>
-              ))}
+              {abstractLabels.map((label) => {
+                const sectionDecision =
+                  decisions.abstract_sections[label] ?? { kind: 'no_extraction' as const }
+                return (
+                  <div key={label}>
+                    <label className="abstract-field-label">
+                      {label}:
+                      <PreFillChip
+                        decision={sectionDecision}
+                        onDismiss={() => dismissAbstractDecision(label)}
+                      />
+                    </label>
+                    <textarea
+                      value={abstractSections[label] || ''}
+                      onChange={(e) => {
+                        setAbstractSections((prev) => ({ ...prev, [label]: e.target.value }))
+                        markDirty()
+                      }}
+                      rows={4}
+                      className="bg-white border border-border rounded-lg px-3 py-2 text-sm text-ink w-full focus:ring-2 focus:ring-peach-dark min-h-[100px] resize-vertical"
+                    />
+                    <p className="editor-field-hint">
+                      {(abstractSections[label] || '').length} characters · Recommended 50–500.
+                    </p>
+                    <DivergenceBanner
+                      decision={sectionDecision}
+                      onUseDocx={() => useDocxForAbstract(label)}
+                      onKeepDb={() => keepDbForAbstract(label)}
+                    />
+                  </div>
+                )
+              })}
             </div>
           </>
         ) : (
@@ -911,6 +1402,33 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
         {/* Funding */}
         <div>
           <label className="editor-field-label">Funding</label>
+          {decisions.funding.kind === 'db_kept_diverges' ||
+          (decisions.funding.kind === 'extracted_applied' && fundingSources.length === 0) ? (
+            <div className="mb-2 p-2.5 rounded-lg border border-amber-200 bg-amber-50/60 text-xs">
+              <p className="text-amber-900 mb-1">
+                <span className="font-semibold">.docx contains a funding statement</span>{' '}
+                ({decisions.funding.confidence === 'high' ? 'HIGH' : 'AMBER'} confidence).
+                Auto-splitting into individual sources is unreliable — the editor must
+                copy + format manually per the <code className="bg-white px-1 py-0.5 rounded border border-amber-100">Funder Name (Grant ID)</code> convention below.
+              </p>
+              <p className="text-ink bg-white border border-amber-100 rounded px-2 py-1.5 mb-2 whitespace-pre-wrap font-mono text-[11px] leading-snug max-h-32 overflow-y-auto">
+                {decisions.funding.kind === 'db_kept_diverges' ||
+                decisions.funding.kind === 'extracted_applied'
+                  ? (decisions.funding.kind === 'extracted_applied'
+                      ? decisions.funding.extractedValue
+                      : decisions.funding.extractedValue
+                    ).slice(0, 600)
+                  : ''}
+              </p>
+              <button
+                type="button"
+                onClick={() => dismissDecision('funding')}
+                className="btn-ghost text-[11px]"
+              >
+                Dismiss
+              </button>
+            </div>
+          ) : null}
           <label className="inline-flex items-center gap-2 text-sm cursor-pointer mb-2">
             <input
               type="checkbox"
@@ -951,7 +1469,13 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
 
         {/* Conflicts of interest */}
         <div className="pt-3 border-t border-border">
-          <label className="editor-field-label">Conflict of interest</label>
+          <label className="editor-field-label">
+            Conflict of interest
+            <PreFillChip
+              decision={decisions.conflict_of_interest}
+              onDismiss={() => dismissDecision('conflict_of_interest')}
+            />
+          </label>
           <textarea
             value={conflictOfInterest}
             onChange={(e) => {
@@ -964,11 +1488,22 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
           <p className="editor-field-hint">
             ICMJE format — disclose all financial + non-financial competing interests in the past 36 months, or state none.
           </p>
+          <DivergenceBanner
+            decision={decisions.conflict_of_interest}
+            onUseDocx={() => useDocxFor('conflict_of_interest', setConflictOfInterest)}
+            onKeepDb={() => keepDbFor('conflict_of_interest')}
+          />
         </div>
 
         {/* IRB / Ethics */}
         <div className="pt-3 border-t border-border">
-          <label className="editor-field-label">IRB / Ethics approval number</label>
+          <label className="editor-field-label">
+            IRB / Ethics approval number
+            <PreFillChip
+              decision={decisions.ethics_approval_number}
+              onDismiss={() => dismissDecision('ethics_approval_number')}
+            />
+          </label>
           <input
             type="text"
             value={ethicsApprovalNumber}
@@ -978,6 +1513,11 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             }}
             className="bg-white border border-border rounded-lg px-3 py-2 text-sm text-ink w-full focus:ring-2 focus:ring-peach-dark"
             placeholder="e.g., IRB-2024-1184 (leave blank if exempt / not required)"
+          />
+          <DivergenceBanner
+            decision={decisions.ethics_approval_number}
+            onUseDocx={() => useDocxFor('ethics_approval_number', setEthicsApprovalNumber)}
+            onKeepDb={() => keepDbFor('ethics_approval_number')}
           />
         </div>
 
@@ -1086,7 +1626,13 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
 
           {consentVariant && (
             <div className="mt-3">
-              <label className="editor-field-label">Statement</label>
+              <label className="editor-field-label">
+                Statement
+                <PreFillChip
+                  decision={decisions.patient_consent_statement}
+                  onDismiss={() => dismissDecision('patient_consent_statement')}
+                />
+              </label>
               <textarea
                 value={consentStatement}
                 onChange={(e) => {
@@ -1100,6 +1646,11 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
               <p className="editor-field-hint">
                 Pre-filled verbatim from Janine §3 on variant selection; editor may free-edit. Persists to manuscript_metadata.patient_consent_statement.
               </p>
+              <DivergenceBanner
+                decision={decisions.patient_consent_statement}
+                onUseDocx={() => useDocxFor('patient_consent_statement', setConsentStatement)}
+                onKeepDb={() => keepDbFor('patient_consent_statement')}
+              />
             </div>
           )}
 
@@ -1108,7 +1659,13 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             <div className="conditional-reveal-block" data-target="patient_consent_irb">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="editor-field-label">IRB institution</label>
+                  <label className="editor-field-label">
+                    IRB institution
+                    <PreFillChip
+                      decision={decisions.patient_consent_irb_institution}
+                      onDismiss={() => dismissDecision('patient_consent_irb_institution')}
+                    />
+                  </label>
                   <input
                     type="text"
                     value={irbInstitution}
@@ -1119,9 +1676,22 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
                     className="bg-white border border-border rounded-lg px-3 py-2 text-sm text-ink w-full focus:ring-2 focus:ring-peach-dark"
                     placeholder="e.g., University of Pittsburgh"
                   />
+                  <DivergenceBanner
+                    decision={decisions.patient_consent_irb_institution}
+                    onUseDocx={() =>
+                      useDocxFor('patient_consent_irb_institution', setIrbInstitution)
+                    }
+                    onKeepDb={() => keepDbFor('patient_consent_irb_institution')}
+                  />
                 </div>
                 <div>
-                  <label className="editor-field-label">IRB protocol</label>
+                  <label className="editor-field-label">
+                    IRB protocol
+                    <PreFillChip
+                      decision={decisions.patient_consent_irb_protocol}
+                      onDismiss={() => dismissDecision('patient_consent_irb_protocol')}
+                    />
+                  </label>
                   <input
                     type="text"
                     value={irbProtocol}
@@ -1131,6 +1701,13 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
                     }}
                     className="bg-white border border-border rounded-lg px-3 py-2 text-sm text-ink w-full focus:ring-2 focus:ring-peach-dark"
                     placeholder="e.g., IRB-2024-1184"
+                  />
+                  <DivergenceBanner
+                    decision={decisions.patient_consent_irb_protocol}
+                    onUseDocx={() =>
+                      useDocxFor('patient_consent_irb_protocol', setIrbProtocol)
+                    }
+                    onKeepDb={() => keepDbFor('patient_consent_irb_protocol')}
                   />
                 </div>
               </div>
@@ -1143,7 +1720,13 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
 
         {/* Acknowledgments */}
         <div className="pt-3 border-t border-border">
-          <label className="editor-field-label">Acknowledgments (optional)</label>
+          <label className="editor-field-label">
+            Acknowledgments (optional)
+            <PreFillChip
+              decision={decisions.acknowledgments}
+              onDismiss={() => dismissDecision('acknowledgments')}
+            />
+          </label>
           <textarea
             value={acknowledgments}
             onChange={(e) => {
@@ -1153,6 +1736,11 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             rows={3}
             className="bg-white border border-border rounded-lg px-3 py-2 text-sm text-ink w-full focus:ring-2 focus:ring-peach-dark"
             placeholder="ICMJE reminder: thanked persons need written permission."
+          />
+          <DivergenceBanner
+            decision={decisions.acknowledgments}
+            onUseDocx={() => useDocxFor('acknowledgments', setAcknowledgments)}
+            onKeepDb={() => keepDbFor('acknowledgments')}
           />
         </div>
       </CollapsibleSection>
