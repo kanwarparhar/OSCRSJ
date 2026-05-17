@@ -30,6 +30,7 @@ import type {
   ManuscriptDraftOverlay,
   ValidationRow,
 } from '@/lib/publish/synthesize'
+import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import AuthorCard, { type AuthorState } from './AuthorCard'
 import ValidationSummary from './ValidationSummary'
 import PreviewRenderCluster from './PreviewRenderCluster'
@@ -234,6 +235,22 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
   const validationAbortRef = useRef<AbortController | null>(null)
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const initialMountRef = useRef(true)
+
+  // Phase 1.B+ collapsibles (Kanwar UX ask, 2026-05-16). All sections
+  // default to expanded; chevron toggles per-session state. Franklin
+  // recommended against accordions originally (decision #3 in his
+  // UX pass — "all sections expanded, no accordions"); Kanwar
+  // overrode after first-touch. Default-expanded preserves Franklin's
+  // intent for editors who don't collapse anything.
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set())
+  function toggleSection(id: string) {
+    setCollapsedSections((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   // ---- Helpers ----
 
@@ -598,8 +615,12 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
       </div>
 
       {/* §1 Article Identity */}
-      <div className="editor-section" data-target="section-article-identity">
-        <p className="editor-section-label">§1 — Article Identity</p>
+      <CollapsibleSection
+        id="article-identity"
+        label="§1 — Article Identity"
+        collapsed={collapsedSections.has('article-identity')}
+        onToggle={() => toggleSection('article-identity')}
+      >
         <div className="editor-field-row">
           <label className="editor-field-label">Title</label>
           <div>
@@ -733,11 +754,15 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             <p className="editor-field-hint">Auto-incremented per issue. Format: e####.</p>
           </div>
         </div>
-      </div>
+      </CollapsibleSection>
 
       {/* §2 Abstract */}
-      <div className="editor-section" data-target="section-abstract">
-        <p className="editor-section-label">§2 — Abstract</p>
+      <CollapsibleSection
+        id="abstract"
+        label="§2 — Abstract"
+        collapsed={collapsedSections.has('abstract')}
+        onToggle={() => toggleSection('abstract')}
+      >
         {abstractLabels ? (
           <>
             <div className="editor-suggested-default">
@@ -794,15 +819,16 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             />
           </div>
         )}
-      </div>
+      </CollapsibleSection>
 
       {/* §3 Authors */}
-      <div className="editor-section" data-target="section-authors">
-        <p className="editor-section-label">§3 — Authors ({authors.length})</p>
-        <p className="text-xs text-brown italic mb-3">
-          Drag the handle on the left to reorder. Exactly one must be flagged corresponding.
-          Tick &quot;Equal contribution&quot; on ≥2 authors to surface the shared-first-authorship statement.
-        </p>
+      <CollapsibleSection
+        id="authors"
+        label={`§3 — Authors (${authors.length})`}
+        subtitle="Drag the handle on the left to reorder. Exactly one must be flagged corresponding. Tick &quot;Equal contribution&quot; on ≥2 authors to surface the shared-first-authorship statement."
+        collapsed={collapsedSections.has('authors')}
+        onToggle={() => toggleSection('authors')}
+      >
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={authors.map((a) => a.id)} strategy={verticalListSortingStrategy}>
             {authors.map((a, idx) => (
@@ -872,11 +898,15 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             per Janine §7.2.f. Override dropdown lands in a follow-up.
           </p>
         </div>
-      </div>
+      </CollapsibleSection>
 
       {/* §4 Declarations */}
-      <div className="editor-section" data-target="section-declarations">
-        <p className="editor-section-label">§4 — Declarations</p>
+      <CollapsibleSection
+        id="declarations"
+        label="§4 — Declarations"
+        collapsed={collapsedSections.has('declarations')}
+        onToggle={() => toggleSection('declarations')}
+      >
 
         {/* Funding */}
         <div>
@@ -1125,7 +1155,7 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             placeholder="ICMJE reminder: thanked persons need written permission."
           />
         </div>
-      </div>
+      </CollapsibleSection>
 
       {/* §5 Validation Summary */}
       <div data-target="validation-summary">
@@ -1153,19 +1183,20 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
       </div>
 
       {/* §6 Preview Render Cluster (Franklin §6 four-state inline-card) */}
-      <div className="editor-section" data-target="preview-cluster">
-        <p className="editor-section-label">§6 — Preview Render</p>
-        <p className="text-xs text-brown italic mb-3">
-          Generates a non-publishing PDF artifact so the editor can inspect
-          rendering before committing to publish. Disabled while errors are
-          present or unsaved changes exist.
-        </p>
+      <CollapsibleSection
+        id="preview"
+        label="§6 — Preview Render"
+        subtitle="Generates a non-publishing PDF artifact so the editor can inspect rendering before committing to publish. Disabled while errors are present or unsaved changes exist."
+        collapsed={collapsedSections.has('preview')}
+        onToggle={() => toggleSection('preview')}
+        dataTarget="preview-cluster"
+      >
         <PreviewRenderCluster
           manuscriptId={initial.manuscript_id}
           disabled={previewDisabled}
           disabledReason={previewDisabledReason}
         />
-      </div>
+      </CollapsibleSection>
 
       {/* Sticky save bar */}
       <div className="editor-save-bar">
@@ -1203,6 +1234,70 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
           {savePending ? 'Saving…' : 'Save changes'}
         </button>
       </div>
+    </div>
+  )
+}
+
+// Phase 1.B+ chevron-collapsible wrapper (Sushant follow-up commit,
+// 2026-05-16, per Kanwar UX ask). Replaces the bare <div className=
+// "editor-section"> + <p className="editor-section-label"> pattern
+// with a clickable header that toggles content visibility. Default
+// expanded so Franklin §3 UX intent ("all sections expanded") is
+// preserved for editors who never touch the chevron. Local state
+// only (per-session; not localStorage).
+//
+// Caveat: jump-to-fix anchors land their target into the page but
+// won't be visible if the containing section is collapsed. Phase
+// 1.5 auto-expand-on-jump is a small follow-up if editors hit this
+// in practice.
+function CollapsibleSection({
+  id,
+  label,
+  subtitle,
+  collapsed,
+  onToggle,
+  dataTarget,
+  children,
+}: {
+  id: string
+  label: string
+  subtitle?: string
+  collapsed: boolean
+  onToggle: () => void
+  dataTarget?: string
+  children: React.ReactNode
+}) {
+  const target = dataTarget ?? `section-${id}`
+  return (
+    <div className="editor-section" data-target={target}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={!collapsed}
+        aria-controls={`${id}-content`}
+        className="w-full flex items-start justify-between gap-3 text-left group"
+      >
+        <div className="flex-1 min-w-0">
+          <p className="editor-section-label group-hover:text-brown-dark transition-colors">
+            {label}
+          </p>
+          {subtitle && (
+            <p className="text-xs text-brown italic mt-1">{subtitle}</p>
+          )}
+        </div>
+        <span className="text-tan group-hover:text-brown-dark mt-0.5 flex-shrink-0">
+          {collapsed ? (
+            <ChevronRightIcon className="w-5 h-5" aria-hidden="true" />
+          ) : (
+            <ChevronDownIcon className="w-5 h-5" aria-hidden="true" />
+          )}
+        </span>
+      </button>
+      {!collapsed && (
+        <div id={`${id}-content`} className="space-y-4">
+          {children}
+        </div>
+      )}
     </div>
   )
 }
