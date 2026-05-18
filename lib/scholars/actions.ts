@@ -18,7 +18,6 @@ import {
   type CohortTrack,
   type CohortTier,
   type CohortApplicationStatus,
-  type CohortApplicationReference,
   type CohortApplicationRow,
 } from './types'
 
@@ -47,8 +46,6 @@ const ALLOWED_CV_MIME_TYPES = new Set<string>([
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ])
-
-const ORCID_REGEX = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/
 
 // ---------------------------------------------------------------
 // Result types — local to this server-action module
@@ -82,22 +79,6 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254
 }
 
-function parseReferences(raw: unknown): CohortApplicationReference[] {
-  if (!Array.isArray(raw)) return []
-  const out: CohortApplicationReference[] = []
-  for (const entry of raw.slice(0, 3)) {
-    if (!entry || typeof entry !== 'object') continue
-    const row = entry as Record<string, unknown>
-    const name = normalizeString(row.name, 200)
-    const email = normalizeString(row.email, 254).toLowerCase()
-    const relationship = normalizeString(row.relationship, 200)
-    const institution = normalizeString(row.institution, 200)
-    if (!name && !email && !relationship && !institution) continue
-    out.push({ name, email, relationship, institution })
-  }
-  return out
-}
-
 function getCvExtension(filename: string): string {
   const dot = filename.lastIndexOf('.')
   if (dot === -1 || dot === filename.length - 1) return 'pdf'
@@ -117,7 +98,6 @@ export async function submitCohortApplication(
   const firstName = normalizeString(formData.get('firstName'), 120)
   const lastName = normalizeString(formData.get('lastName'), 120)
   const email = normalizeString(formData.get('email'), 254).toLowerCase()
-  const orcidId = normalizeOptional(formData.get('orcidId'), 40)
   const countryOfResidence = normalizeString(
     formData.get('countryOfResidence'),
     120
@@ -138,28 +118,15 @@ export async function submitCohortApplication(
     formData.get('researchExperience'),
     5000
   )
-  const whyOscrsj = normalizeString(formData.get('whyOscrsj'), 5000)
   const aiDisclosureAck = formData.get('aiDisclosureAck') === 'true'
   const participantAgreementAck =
     formData.get('participantAgreementAck') === 'true'
-
-  let references: CohortApplicationReference[] = []
-  const rawReferences = formData.get('referencesJson')
-  if (typeof rawReferences === 'string' && rawReferences.length > 0) {
-    try {
-      references = parseReferences(JSON.parse(rawReferences))
-    } catch {
-      // fall through with empty array
-    }
-  }
 
   // ---- Validate ----
   if (!firstName) return { error: 'First name is required.' }
   if (!lastName) return { error: 'Last name is required.' }
   if (!email || !isValidEmail(email))
     return { error: 'A valid email address is required.' }
-  if (orcidId && !ORCID_REGEX.test(orcidId))
-    return { error: 'ORCID iD must match the format 0000-0000-0000-0000.' }
   if (!countryOfResidence) return { error: 'Country is required.' }
   if (!school) return { error: 'School / institution is required.' }
   if (!yearInSchool) return { error: 'Current year in school is required.' }
@@ -182,11 +149,6 @@ export async function submitCohortApplication(
   if (!researchExperience || researchExperience.length < 50)
     return {
       error: 'Please describe your research experience (≥50 characters).',
-    }
-  if (!whyOscrsj || whyOscrsj.length < 50)
-    return {
-      error:
-        'Please tell us why you want to join OSCRSJ specifically (≥50 characters).',
     }
   if (!aiDisclosureAck)
     return {
@@ -233,7 +195,6 @@ export async function submitCohortApplication(
       first_name: firstName,
       last_name: lastName,
       email,
-      orcid_id: orcidId,
       country_of_residence: countryOfResidence,
       school,
       year_in_school: yearInSchool,
@@ -241,8 +202,6 @@ export async function submitCohortApplication(
       preferred_tier: preferredTier,
       personal_statement: personalStatement,
       research_experience: researchExperience,
-      why_oscrsj: whyOscrsj,
-      references_json: references,
       ai_disclosure_ack: aiDisclosureAck,
       participant_agreement_ack: participantAgreementAck,
     })
@@ -330,7 +289,6 @@ export async function submitCohortApplication(
       firstName,
       lastName,
       email,
-      orcidId,
       countryOfResidence,
       school,
       yearInSchool,
@@ -338,8 +296,6 @@ export async function submitCohortApplication(
       preferredTierLabel: tierLabel,
       personalStatement,
       researchExperience,
-      whyOscrsj,
-      referencesCount: references.length,
       cvFilename: cvOriginalFilename,
       aiDisclosureAck,
       participantAgreementAck,

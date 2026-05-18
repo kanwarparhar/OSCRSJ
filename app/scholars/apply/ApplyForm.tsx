@@ -87,20 +87,6 @@ const TRACK_OPTIONS: TrackOption[] = [
   },
 ]
 
-interface ReferenceEntry {
-  name: string
-  email: string
-  relationship: string
-  institution: string
-}
-
-const EMPTY_REFERENCE: ReferenceEntry = {
-  name: '',
-  email: '',
-  relationship: '',
-  institution: '',
-}
-
 export default function ApplyForm() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -110,7 +96,6 @@ export default function ApplyForm() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
-  const [orcidId, setOrcidId] = useState('')
   const [countryOfResidence, setCountryOfResidence] = useState('')
 
   // School
@@ -124,12 +109,8 @@ export default function ApplyForm() {
   // Essays
   const [personalStatement, setPersonalStatement] = useState('')
   const [researchExperience, setResearchExperience] = useState('')
-  const [whyOscrsj, setWhyOscrsj] = useState('')
 
-  // References + CV
-  const [references, setReferences] = useState<ReferenceEntry[]>([
-    { ...EMPTY_REFERENCE },
-  ])
+  // CV
   const [cv, setCv] = useState<File | null>(null)
 
   // Disclosures
@@ -145,28 +126,6 @@ export default function ApplyForm() {
     } else {
       setPreferredTier('')
     }
-  }
-
-  const handleReferenceChange = (
-    index: number,
-    field: keyof ReferenceEntry,
-    value: string
-  ) => {
-    setReferences((prev) => {
-      const next = [...prev]
-      next[index] = { ...next[index], [field]: value }
-      return next
-    })
-  }
-
-  const addReference = () => {
-    if (references.length >= 3) return
-    setReferences((prev) => [...prev, { ...EMPTY_REFERENCE }])
-  }
-
-  const removeReference = (index: number) => {
-    if (references.length <= 1) return
-    setReferences((prev) => prev.filter((_, i) => i !== index))
   }
 
   const handleCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -189,7 +148,6 @@ export default function ApplyForm() {
     fd.set('firstName', firstName)
     fd.set('lastName', lastName)
     fd.set('email', email)
-    fd.set('orcidId', orcidId)
     fd.set('countryOfResidence', countryOfResidence)
     fd.set('school', school)
     fd.set('yearInSchool', yearInSchool)
@@ -197,8 +155,6 @@ export default function ApplyForm() {
     fd.set('preferredTier', preferredTier)
     fd.set('personalStatement', personalStatement)
     fd.set('researchExperience', researchExperience)
-    fd.set('whyOscrsj', whyOscrsj)
-    fd.set('referencesJson', JSON.stringify(references))
     fd.set('aiDisclosureAck', aiDisclosureAck ? 'true' : 'false')
     fd.set(
       'participantAgreementAck',
@@ -324,40 +280,6 @@ export default function ApplyForm() {
               placeholder="you@example.com"
               className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
             />
-          </div>
-
-          <div>
-            <label
-              htmlFor="orcidId"
-              className="block text-sm font-medium text-ink mb-1"
-            >
-              ORCID iD
-            </label>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-brown flex-shrink-0">
-                https://orcid.org/
-              </span>
-              <input
-                id="orcidId"
-                type="text"
-                value={orcidId}
-                onChange={(e) => setOrcidId(e.target.value)}
-                placeholder="0000-0000-0000-0000"
-                pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"
-                className="flex-1 border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
-              />
-            </div>
-            <p className="text-xs text-brown mt-1">
-              Optional but encouraged.{' '}
-              <a
-                href="https://orcid.org/register"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brown hover:underline"
-              >
-                Get an ORCID iD
-              </a>
-            </p>
           </div>
 
           <div>
@@ -600,26 +522,6 @@ export default function ApplyForm() {
             </p>
           </div>
 
-          <div>
-            <label
-              htmlFor="whyOscrsj"
-              className="block text-sm font-medium text-ink mb-1"
-            >
-              Why OSCRSJ specifically? *
-            </label>
-            <textarea
-              id="whyOscrsj"
-              required
-              rows={3}
-              value={whyOscrsj}
-              onChange={(e) => setWhyOscrsj(e.target.value)}
-              placeholder="What drew you to OSCRSJ rather than a generic research-prep program."
-              className="w-full border border-border rounded-lg px-4 py-2.5 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors leading-relaxed"
-            />
-            <p className="text-xs text-brown mt-1">
-              {whyOscrsj.length} / 5000 characters (min 50)
-            </p>
-          </div>
         </div>
       </div>
 
@@ -641,93 +543,6 @@ export default function ApplyForm() {
             Selected: {cv.name} ({(cv.size / 1024).toFixed(0)} KB)
           </p>
         )}
-      </div>
-
-      {/* References */}
-      <div className="bg-white border border-border rounded-xl p-6">
-        <h2 className="font-serif text-xl text-brown-dark mb-1">References</h2>
-        <p className="text-sm text-brown mb-5">
-          Up to three people we can reach out to. Optional but helpful.
-        </p>
-
-        <div className="space-y-5">
-          {references.map((ref, index) => (
-            <div
-              key={index}
-              className="border border-border rounded-lg p-4 bg-cream-alt"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-brown-dark">
-                  Reference {index + 1}
-                </h3>
-                {references.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeReference(index)}
-                    className="text-xs text-brown hover:text-brown-dark hover:underline"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  value={ref.name}
-                  onChange={(e) =>
-                    handleReferenceChange(index, 'name', e.target.value)
-                  }
-                  className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={ref.email}
-                  onChange={(e) =>
-                    handleReferenceChange(index, 'email', e.target.value)
-                  }
-                  className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
-                />
-                <input
-                  type="text"
-                  placeholder="Relationship (e.g., mentor, professor)"
-                  value={ref.relationship}
-                  onChange={(e) =>
-                    handleReferenceChange(
-                      index,
-                      'relationship',
-                      e.target.value
-                    )
-                  }
-                  className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
-                />
-                <input
-                  type="text"
-                  placeholder="Institution"
-                  value={ref.institution}
-                  onChange={(e) =>
-                    handleReferenceChange(
-                      index,
-                      'institution',
-                      e.target.value
-                    )
-                  }
-                  className="w-full border border-border rounded-lg px-3 py-2 text-sm text-ink bg-white placeholder:text-brown/70 focus:outline-none focus:ring-2 focus:ring-peach-dark/50 focus:border-peach-dark transition-colors"
-                />
-              </div>
-            </div>
-          ))}
-          {references.length < 3 && (
-            <button
-              type="button"
-              onClick={addReference}
-              className="text-sm text-brown hover:text-brown-dark hover:underline"
-            >
-              + Add another reference
-            </button>
-          )}
-        </div>
       </div>
 
       {/* Disclosures */}
@@ -768,9 +583,9 @@ export default function ApplyForm() {
               className="mt-1 accent-brown w-4 h-4"
             />
             <span className="text-sm text-ink leading-relaxed">
-              I understand that the program promises training, mentorship,
-              and structured project opportunities — not a guarantee of
-              publication. Publication of any work I submit to OSCRSJ is
+              I understand that the program promises structured project
+              opportunities — not a guarantee of publication. Publication of
+              any work I submit to OSCRSJ is
               conditional on independent peer review through the journal&apos;s
               standard editorial pipeline. If I am accepted to the program, I
               will be asked to sign a formal participant agreement before

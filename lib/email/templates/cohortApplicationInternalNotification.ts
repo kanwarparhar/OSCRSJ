@@ -21,7 +21,6 @@ export interface CohortApplicationInternalParams {
   firstName: string
   lastName: string
   email: string
-  orcidId: string | null
   countryOfResidence: string
   school: string
   yearInSchool: string
@@ -29,8 +28,6 @@ export interface CohortApplicationInternalParams {
   preferredTierLabel: string
   personalStatement: string
   researchExperience: string
-  whyOscrsj: string
-  referencesCount: number
   cvFilename: string | null
   aiDisclosureAck: boolean
   participantAgreementAck: boolean
@@ -50,7 +47,6 @@ export function renderCohortApplicationInternalNotification(
     firstName,
     lastName,
     email,
-    orcidId,
     countryOfResidence,
     school,
     yearInSchool,
@@ -58,8 +54,6 @@ export function renderCohortApplicationInternalNotification(
     preferredTierLabel,
     personalStatement,
     researchExperience,
-    whyOscrsj,
-    referencesCount,
     cvFilename,
     aiDisclosureAck,
     participantAgreementAck,
@@ -75,16 +69,14 @@ export function renderCohortApplicationInternalNotification(
     ['Year', yearInSchool],
     ['Track', preferredTrackLabel],
     ['Tier', preferredTierLabel],
-    ['References', `${referencesCount} provided`],
     ['CV', cvFilename || '— not uploaded —'],
     ['AI policy acknowledged', aiDisclosureAck ? 'Yes' : 'No'],
     [
       'Participant agreement acknowledged',
       participantAgreementAck ? 'Yes' : 'No',
     ],
+    ['Application ID', applicationId],
   ]
-  if (orcidId) details.push(['ORCID', orcidId])
-  details.push(['Application ID', applicationId])
 
   const bodyHtml = [
     paragraph(
@@ -95,8 +87,6 @@ export function renderCohortApplicationInternalNotification(
     paragraph(`<em>${truncate(personalStatement)}</em>`),
     paragraph(`<strong>Research experience (excerpt):</strong>`),
     paragraph(`<em>${truncate(researchExperience)}</em>`),
-    paragraph(`<strong>Why OSCRSJ (excerpt):</strong>`),
-    paragraph(`<em>${truncate(whyOscrsj)}</em>`),
     cta(adminReviewUrl, 'Review in admin'),
     paragraph(
       `Full applicant record is stored in <code>cohort_applications</code> (status: <strong>submitted</strong>). Reply to this message to reach the applicant directly.`
@@ -120,22 +110,17 @@ export function renderCohortApplicationInternalNotification(
     `Year: ${yearInSchool}`,
     `Track: ${preferredTrackLabel}`,
     `Tier: ${preferredTierLabel}`,
-    `References: ${referencesCount} provided`,
     `CV: ${cvFilename || '— not uploaded —'}`,
     `AI policy acknowledged: ${aiDisclosureAck ? 'Yes' : 'No'}`,
     `Participant agreement acknowledged: ${participantAgreementAck ? 'Yes' : 'No'}`,
+    `Application ID: ${applicationId}`,
   ]
-  if (orcidId) textLines.push(`ORCID: ${orcidId}`)
-  textLines.push(`Application ID: ${applicationId}`)
   textLines.push('')
   textLines.push(`Why this program (excerpt):`)
   textLines.push(truncate(personalStatement))
   textLines.push('')
   textLines.push(`Research experience (excerpt):`)
   textLines.push(truncate(researchExperience))
-  textLines.push('')
-  textLines.push(`Why OSCRSJ (excerpt):`)
-  textLines.push(truncate(whyOscrsj))
   textLines.push('')
   textLines.push(`Review in admin: ${adminReviewUrl}`)
   textLines.push('')
