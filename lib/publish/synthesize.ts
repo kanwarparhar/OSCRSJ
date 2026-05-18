@@ -451,13 +451,16 @@ export async function validateMetadataForRender(merged: {
 
   // ---- Janine §8 hard-required rules (8.1–8.4) ----
 
-  // §8.1 — corresponding author must have ORCID
+  // §8.1 — corresponding author SHOULD have ORCID (amber warning per Kanwar CEO override 2026-05-17)
+  // Originally: hard-error per Janine §8.1 / JATS 1.3 / DOAJ. Downgraded to warning so editor can publish
+  // without blocking on ORCID chase; ORCID still strongly recommended for DOAJ + PMC indexing trail.
+  // Companion: Janine spec amendment ^handoff-janine-orcid-compliance-spec-amendment-2026-05-17.
   const corr = correspondingAuthors[0]
   if (corr && !corr.orcid_id.trim()) {
-    errors.push({
-      severity: 'error',
+    warnings.push({
+      severity: 'warning',
       rule: 'janine-8.1-corresponding-orcid',
-      message: 'Corresponding author must have an ORCID iD (Janine §8.1 / JATS 1.3 best-practice / DOAJ requirement).',
+      message: 'Corresponding author has no ORCID iD — strongly recommended for DOAJ + PMC indexing. Ask author to register free at orcid.org (~2 min) and paste here. Render proceeds without it.',
       targetField: 'authors',
     })
   }
