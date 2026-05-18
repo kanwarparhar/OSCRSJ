@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { sendEmail } from '@/lib/email/resend'
+import { appendRowToSheet } from '@/lib/integrations/googleSheets'
 import {
   renderCohortApplicationConfirmation,
   getCohortApplicationConfirmationSubject,
@@ -46,6 +47,18 @@ const ALLOWED_CV_MIME_TYPES = new Set<string>([
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ])
+
+// 1-year TTL for the CV signed URL that gets dropped into the
+// Google Sheet. Supabase signed URLs are JWT-signed against the
+// project's JWT secret; the exp claim is the only expiration
+// mechanism. 1 year is long enough to be useful (sheet stays
+// clickable) without being indefinite.
+const CV_SHEET_LINK_TTL_SECONDS = 365 * 24 * 60 * 60
+
+// Sheet tab name. Apps Script will auto-create the tab on first
+// row if it doesn't already exist (see the script in
+// docs/google-sheets-apps-script.gs).
+const COHORT_APPLICATIONS_SHEET_TAB = 'Scholars Applications'
 
 // ---------------------------------------------------------------
 // Result types — local to this server-action module
@@ -318,7 +331,61 @@ export async function submitCohortApplication(
     // Same — internal notification is convenience, not correctness.
   }
 
-  void cvStoragePath // keep for future analytics / lint silencing
+  // ---- Google Sheets append (fire-and-forget) ----
+  // Posts one row per submission to Kanwar's Google Sheet via
+  // an Apps Script web app. No-op if env vars unset (see
+  // lib/integrations/googleSheets.ts). The CV signed URL has a
+  // 1-year TTL; if it expires the admin URL still works.
+  try {
+    let cvSheetUrl: string = ''
+    if (cvStoragePath) {
+      const { data: signed } = await admin.storage
+        .from(STORAGE_BUCKET)
+        .createSignedUrl(cvStoragePath, CV_SHEET_LINK_TTL_SECONDS)
+      cvSheetUrl = signed?.signedUrl || ''
+    }
+
+    const submittedAtIso = new Date().toISOString()
+    const adminDetailUrl = `${adminReviewUrl}/${applicationId}`
+
+    // Column order MUST match the header row written by the
+    // Apps Script's first-run auto-init. Changing the order
+    // here without updating the Apps Script header will misalign
+    // data with column labels.
+    const row: Array<string | number | boolean | null> = [
+      submittedAtIso,
+      applicationId,
+      firstName,
+      lastName,
+      email,
+      countryOfResidence,
+      school,
+      yearInSchool,
+      trackLabel,
+      tierLabel,
+      personalStatement,
+      researchExperience,
+      cvOriginalFilename || '',
+      cvSheetUrl,
+      adminDetailUrl,
+      aiDisclosureAck ? 'Yes' : 'No',
+      participantAgreementAck ? 'Yes' : 'No',
+    ]
+
+    // Await (rather than fire-and-forget void) so the row write
+    // completes before the Vercel serverless function shuts down.
+    // appendRowToSheet has its own 10s timeout + never throws, so
+    // a Sheets outage cannot hang or fail the submission flow.
+    await appendRowToSheet({
+      sheetName: COHORT_APPLICATIONS_SHEET_TAB,
+      row,
+    })
+  } catch (sheetsErr) {
+    console.error(
+      '[submitCohortApplication] Sheets append threw:',
+      sheetsErr
+    )
+  }
 
   return { success: true, applicationId }
 }
