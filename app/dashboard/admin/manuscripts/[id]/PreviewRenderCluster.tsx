@@ -372,10 +372,24 @@ export default function PreviewRenderCluster({
             </summary>
             <pre className="font-mono text-xs text-brown bg-white border border-border rounded-md p-3 mt-2 whitespace-pre-wrap max-h-80 overflow-y-auto">
               {state.fullReport
-                .map(
-                  (e) =>
-                    `[${e.wallclockSeconds.toFixed(1)}s] ${e.stage} · ${e.status}${e.message ? ` — ${e.message}` : ''}`
-                )
+                .map((e) => {
+                  const summary = `[${e.wallclockSeconds.toFixed(1)}s] ${e.stage} · ${e.status}${e.message ? ` — ${e.message}` : ''}`
+                  // Surface event.data on fail/warn events so the JATS validator's
+                  // actual error array (and any other diagnostic payload the
+                  // renderer emits) is visible directly in the failure card
+                  // instead of being silently dropped. Without this the editor
+                  // has no way to see *what* failed, only *that* it failed.
+                  if ((e.status === 'fail' || e.status === 'warn') && e.data && Object.keys(e.data).length > 0) {
+                    let dataBlock: string
+                    try {
+                      dataBlock = JSON.stringify(e.data, null, 2)
+                    } catch {
+                      dataBlock = String(e.data)
+                    }
+                    return `${summary}\n${dataBlock}`
+                  }
+                  return summary
+                })
                 .join('\n')}
             </pre>
           </details>
