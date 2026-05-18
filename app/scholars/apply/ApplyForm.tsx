@@ -455,16 +455,8 @@ export default function ApplyForm() {
 
         {selectedTrack && selectedTrack.tiers.length === 1 && (
           <div className="mt-4 bg-cream-alt border border-border rounded-lg p-3">
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm font-medium text-ink">
-                {selectedTrack.tiers[0].label}
-              </span>
-              <span className="text-sm font-semibold text-brown-dark">
-                {selectedTrack.tiers[0].price}
-              </span>
-            </div>
-            <p className="text-xs text-brown mt-1">
-              {selectedTrack.tiers[0].summary}
+            <p className="text-xs text-brown">
+              Program information will be sent after your application is complete.
             </p>
           </div>
         )}
