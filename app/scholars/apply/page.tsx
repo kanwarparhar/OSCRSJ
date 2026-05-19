@@ -42,9 +42,9 @@ export default function ScholarsApplyPage() {
               and structured projects, never publication itself.
             </li>
             <li>
-              You will be asked to acknowledge our AI-use policy and
-              participant agreement before submitting. These document what
-              we provide and what we don&apos;t promise.
+              You will be asked to acknowledge our participant agreement
+              before submitting. It documents what we provide and what we
+              don&apos;t promise.
             </li>
           </ul>
         </div>

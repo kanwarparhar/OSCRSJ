@@ -154,21 +154,9 @@ export default async function AdminCohortApplicationDetail({
 
           <div className="bg-white border border-border rounded-xl p-6">
             <h2 className="font-serif text-lg text-brown-dark mb-3">
-              Acknowledgments
+              Acknowledgment
             </h2>
             <ul className="space-y-1.5 text-sm text-ink">
-              <li className="flex items-center gap-2">
-                <span
-                  className={
-                    application.ai_disclosure_ack
-                      ? 'text-green-700'
-                      : 'text-red-700'
-                  }
-                >
-                  {application.ai_disclosure_ack ? '✓' : '✗'}
-                </span>
-                <span>AI-use policy acknowledged</span>
-              </li>
               <li className="flex items-center gap-2">
                 <span
                   className={

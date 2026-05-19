@@ -131,7 +131,6 @@ export async function submitCohortApplication(
     formData.get('researchExperience'),
     5000
   )
-  const aiDisclosureAck = formData.get('aiDisclosureAck') === 'true'
   const participantAgreementAck =
     formData.get('participantAgreementAck') === 'true'
 
@@ -162,10 +161,6 @@ export async function submitCohortApplication(
   if (!researchExperience || researchExperience.length < 50)
     return {
       error: 'Please describe your research experience (≥50 characters).',
-    }
-  if (!aiDisclosureAck)
-    return {
-      error: 'Please acknowledge the AI-use policy before submitting.',
     }
   if (!participantAgreementAck)
     return {
@@ -215,7 +210,6 @@ export async function submitCohortApplication(
       preferred_tier: preferredTier,
       personal_statement: personalStatement,
       research_experience: researchExperience,
-      ai_disclosure_ack: aiDisclosureAck,
       participant_agreement_ack: participantAgreementAck,
     })
     .select('id')
@@ -310,7 +304,6 @@ export async function submitCohortApplication(
       personalStatement,
       researchExperience,
       cvFilename: cvOriginalFilename,
-      aiDisclosureAck,
       participantAgreementAck,
       applicationId,
       adminReviewUrl,
@@ -368,7 +361,6 @@ export async function submitCohortApplication(
       cvOriginalFilename || '',
       cvSheetUrl,
       adminDetailUrl,
-      aiDisclosureAck ? 'Yes' : 'No',
       participantAgreementAck ? 'Yes' : 'No',
     ]
 

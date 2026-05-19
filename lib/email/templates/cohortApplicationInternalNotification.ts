@@ -29,7 +29,6 @@ export interface CohortApplicationInternalParams {
   personalStatement: string
   researchExperience: string
   cvFilename: string | null
-  aiDisclosureAck: boolean
   participantAgreementAck: boolean
   applicationId: string
   adminReviewUrl: string
@@ -55,7 +54,6 @@ export function renderCohortApplicationInternalNotification(
     personalStatement,
     researchExperience,
     cvFilename,
-    aiDisclosureAck,
     participantAgreementAck,
     applicationId,
     adminReviewUrl,
@@ -70,7 +68,6 @@ export function renderCohortApplicationInternalNotification(
     ['Track', preferredTrackLabel],
     ['Tier', preferredTierLabel],
     ['CV', cvFilename || '— not uploaded —'],
-    ['AI policy acknowledged', aiDisclosureAck ? 'Yes' : 'No'],
     [
       'Participant agreement acknowledged',
       participantAgreementAck ? 'Yes' : 'No',
@@ -111,7 +108,6 @@ export function renderCohortApplicationInternalNotification(
     `Track: ${preferredTrackLabel}`,
     `Tier: ${preferredTierLabel}`,
     `CV: ${cvFilename || '— not uploaded —'}`,
-    `AI policy acknowledged: ${aiDisclosureAck ? 'Yes' : 'No'}`,
     `Participant agreement acknowledged: ${participantAgreementAck ? 'Yes' : 'No'}`,
     `Application ID: ${applicationId}`,
   ]

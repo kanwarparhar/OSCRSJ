@@ -114,7 +114,6 @@ export default function ApplyForm() {
   const [cv, setCv] = useState<File | null>(null)
 
   // Disclosures
-  const [aiDisclosureAck, setAiDisclosureAck] = useState(false)
   const [participantAgreementAck, setParticipantAgreementAck] = useState(false)
 
   const handleTrackChange = (track: TrackValue) => {
@@ -155,7 +154,6 @@ export default function ApplyForm() {
     fd.set('preferredTier', preferredTier)
     fd.set('personalStatement', personalStatement)
     fd.set('researchExperience', researchExperience)
-    fd.set('aiDisclosureAck', aiDisclosureAck ? 'true' : 'false')
     fd.set(
       'participantAgreementAck',
       participantAgreementAck ? 'true' : 'false'
@@ -532,30 +530,13 @@ export default function ApplyForm() {
       {/* Disclosures */}
       <div className="bg-white border border-border rounded-xl p-6">
         <h2 className="font-serif text-xl text-brown-dark mb-1">
-          Acknowledgments
+          Acknowledgment
         </h2>
         <p className="text-sm text-brown mb-5">
-          Both required.
+          Required.
         </p>
 
         <div className="space-y-4">
-          <label className="flex items-start gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              required
-              checked={aiDisclosureAck}
-              onChange={(e) => setAiDisclosureAck(e.target.checked)}
-              className="mt-1 accent-brown w-4 h-4"
-            />
-            <span className="text-sm text-ink leading-relaxed">
-              I have read and agree to OSCRSJ&apos;s AI-use policy: AI is a
-              writing and statistics assistant, not a substitute for learning
-              the material. I will not use AI to generate citations or to
-              write the introduction / background sections of my manuscripts.
-              I will disclose AI use in methods sections as required.
-            </span>
-          </label>
-
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"

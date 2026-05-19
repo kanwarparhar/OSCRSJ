@@ -45,7 +45,6 @@ const HEADERS = {
     'CV Filename',
     'CV Download Link (1-year)',
     'Admin Detail URL',
-    'AI Policy Ack',
     'Participant Agreement Ack',
   ],
 }
