@@ -30,7 +30,7 @@ const TRACK_OPTIONS: TrackOption[] = [
     value: 'pre_med',
     label: 'Pre-Med Scholar',
     blurb:
-      'For pre-med students aiming at surgical-specialty competitiveness.',
+      'For pre-med students aiming to become competitive applicants with publishable and conference presentable research experience.',
     tiers: [
       {
         value: 'pre_med_tier_1',
@@ -52,21 +52,21 @@ const TRACK_OPTIONS: TrackOption[] = [
     value: 'med_student',
     label: 'Med Student Scholar',
     blurb:
-      'For medical students seeking structured research experience and ERAS-ready output.',
+      'For medical students seeking structured research experience.',
     tiers: [
       {
         value: 'med_student_tier_1',
         label: 'Tier 1 — 6-month program',
         price: '$499',
         summary:
-          '2-3 research projects (1 first-author), abstract + manuscript writing, Zotero, monthly project meeting.',
+          '2-3 SR/MA projects (1 first-author), abstract + manuscript writing, Zotero, monthly project meeting.',
       },
       {
         value: 'med_student_tier_2',
         label: 'Tier 2 — 1-year program',
         price: '$999',
         summary:
-          '5-6 projects (2-3 first-author, mix of SR/MA + database studies), conference support, away rotation planning.',
+          '5-6 NIS Database studies (2-3 first-author), conference support, away rotation planning.',
       },
     ],
   },
@@ -78,10 +78,10 @@ const TRACK_OPTIONS: TrackOption[] = [
     tiers: [
       {
         value: 'img',
-        label: '6-month program',
-        price: '$299',
+        label: 'Tier 1 — 6-month program',
+        price: '$499',
         summary:
-          '2-3 first-author projects, abstract + manuscript writing, Zotero, mentorship from US-practicing orthopedic surgeons.',
+          '3-4 SR/MA projects (students must have prior experience), residency application overview, research letter of recommendation, conference abstract submission and support, monthly project meetings.',
       },
     ],
   },
@@ -403,7 +403,7 @@ export default function ApplyForm() {
           </div>
         </fieldset>
 
-        {selectedTrack && selectedTrack.tiers.length > 1 && (
+        {selectedTrack && selectedTrack.tiers.length >= 1 && (
           <fieldset className="mt-6">
             <legend className="block text-sm font-medium text-ink mb-2">
               Tier *
@@ -451,14 +451,6 @@ export default function ApplyForm() {
               })}
             </div>
           </fieldset>
-        )}
-
-        {selectedTrack && selectedTrack.tiers.length === 1 && (
-          <div className="mt-4 bg-cream-alt border border-border rounded-lg p-3">
-            <p className="text-xs text-brown">
-              Program information will be sent after your application is complete.
-            </p>
-          </div>
         )}
       </div>
 
