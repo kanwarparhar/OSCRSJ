@@ -39,22 +39,41 @@ const WHAT_YOU_GET: Array<{ heading: string; body: string }> = [
   {
     heading: 'Cochrane-trained methodology',
     body:
-      'Protocol development, PICO formulation, search strategy, risk-of-bias assessment, GRADE quality rating, PRISMA reporting — the real research toolkit, taught in cohort.',
+      'Protocol development, PICO formulation, search strategy, risk-of-bias assessment, GRADE quality rating, and PRISMA reporting — the full methodological toolkit, taught in cohort.',
   },
   {
-    heading: 'A real peer-reviewed journal',
+    heading: 'Mentorship and a research team',
     body:
-      'Cohort projects route through OSCRSJ’s standard double-blind peer review by reviewers outside our network. Your publication record is built on real editorial decisions, not internal handoffs.',
+      'Monthly project meetings, cohort journal clubs, and a working group of pre-medical students, medical students, and IMGs collaborating on real projects under faculty supervision.',
   },
   {
-    heading: 'Mentorship and a cohort community',
+    heading: 'Structured pipeline, milestone deadlines',
     body:
-      'Monthly project meetings, cohort journal clubs, and a working group of pre-meds, med students, and IMGs collaborating on real projects in front of a real journal.',
+      'Topic → PICO → PROSPERO registration → systematic search → screening → extraction → synthesis → manuscript draft → submission. Each milestone reviewed and signed off by your mentor.',
+  },
+]
+
+const WHO_SHOULD_APPLY: Array<{ group: string; bullets: string[] }> = [
+  {
+    group: 'Pre-medical students',
+    bullets: [
+      'Applicants who want to be a competitive medical school candidate and position themselves for success when applying to competitive residencies during medical school.',
+    ],
   },
   {
-    heading: 'Structured pipeline, strict deadlines',
-    body:
-      'Topic → PICO → PROSPERO → search → screening → extraction → synthesis → draft → submission. Milestone gates with mentor sign-off. Real training, not vibes.',
+    group: 'Medical students',
+    bullets: [
+      'Students at institutions without a home orthopedic surgery program.',
+      'Students with a home program but limited research opportunities within it.',
+      'Students preparing to apply to an orthopedic surgery residency who need additional research experience.',
+    ],
+  },
+  {
+    group: 'International medical graduates (IMGs)',
+    bullets: [
+      'IMGs committed to orthopedic surgery and seeking a competitive residency application.',
+      'IMGs who require a research letter of recommendation from a sustained, mentored project.',
+    ],
   },
 ]
 
@@ -93,36 +112,99 @@ export default function ScholarsPage() {
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* The pitch */}
+        {/* Why we created this program */}
         <section className="mb-14">
-          <span className="section-label">Why this program</span>
+          <span className="section-label">Why we created this program</span>
           <h2 className="section-heading mb-4">
-            The opportunity gap is real. We were built to close it.
+            The gap in matching into orthopedic surgery is widening. We would
+            like to help close it.
           </h2>
           <div className="prose-like space-y-4 text-sm leading-relaxed text-ink max-w-3xl">
             <p>
-              Students matching at top orthopedic residency programs share the
-              same pattern: a research year in a strong department, a mentor
-              placing them on every project, or a team where members
-              cross-pollinate on each other&apos;s work. That ecosystem is much
-              harder to access from a medical school without a strong
-              orthopedic department, and nearly impossible without an ortho
-              program at all.
+              The{' '}
+              <a
+                href="https://www.nrmp.org/wp-content/uploads/2026/03/Advance-Data-Tables-2026_Public.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brown hover:text-brown-dark underline-offset-2 hover:underline font-medium"
+              >
+                2026 NRMP Main Residency Match results
+              </a>{' '}
+              illustrate the scale of the challenge. Across 223 orthopedic
+              surgery programs, 963 PGY-1 positions were offered and 100% were
+              filled, with zero positions remaining unfilled — one of only a
+              handful of specialties to fill every position nationally.{' '}
+              <span className="whitespace-nowrap">1,129</span> active U.S. MD
+              senior applicants competed for those 963 positions, and only 765
+              of them matched into orthopedic surgery — an in-specialty match
+              rate of roughly 68% for U.S. MD seniors who pursued the field.
+              U.S. MD seniors accounted for 79.4% of every matched position;
+              121 osteopathic seniors, 5 non-U.S. IMG applicants, and zero
+              U.S. citizen IMG applicants matched into the specialty
+              nationwide.
             </p>
             <p>
-              The OSCRSJ Research Scholars program is built for those
-              candidates. Cohort scholars learn the methodological skills that
-              define a credible researcher, work on real projects with mentor
-              sign-off at every milestone, and submit those projects to a real
-              peer-reviewed journal &mdash; not a vanity outlet.
+              Beneath those numbers is a consistent pattern. Applicants who
+              match into orthopedic surgery share a common credential:
+              substantial, mentored research experience. To build that
+              experience, many medical students now take a dedicated research
+              year at a strong orthopedic department, work alongside a faculty
+              mentor who places them on multiple projects, or join a research
+              team in which members contribute meaningfully to each other&apos;s
+              work to accumulate the scholarly output the specialty expects.
+            </p>
+            <p>
+              That ecosystem is far harder to access for students at medical
+              schools with limited orthopedic research infrastructure, and it
+              is largely inaccessible to students at institutions without a
+              home orthopedic surgery program. The OSCRSJ Research Scholars
+              program was built to make structured research training, faculty
+              mentorship, and meaningful project authorship available to
+              candidates who do not have those resources at their home
+              institution.
             </p>
           </div>
+        </section>
+
+        {/* Who should apply */}
+        <section className="mb-14">
+          <span className="section-label">Who should apply</span>
+          <h2 className="section-heading mb-6">
+            The candidates this program was designed for
+          </h2>
+          <p className="text-sm text-ink leading-relaxed mb-6 max-w-3xl">
+            The OSCRSJ Research Scholars program is structured to support the
+            following applicants:
+          </p>
+          <ol className="space-y-5 max-w-3xl list-decimal list-outside pl-5 marker:text-brown marker:font-serif marker:text-base">
+            {WHO_SHOULD_APPLY.map((group) => (
+              <li key={group.group} className="pl-2 text-sm leading-relaxed text-ink">
+                <span className="font-serif text-base text-brown-dark block mb-2">
+                  {group.group}
+                </span>
+                {group.bullets.length === 1 ? (
+                  <p className="leading-relaxed">{group.bullets[0]}</p>
+                ) : (
+                  <ul className="list-disc list-outside pl-5 space-y-1.5 marker:text-brown">
+                    {group.bullets.map((bullet) => (
+                      <li key={bullet} className="leading-relaxed">
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ol>
         </section>
 
         {/* What you get */}
         <section className="mb-14">
           <span className="section-label">What you get</span>
-          <h2 className="section-heading mb-6">The training, the team, the credential</h2>
+          <h2 className="section-heading mb-6">
+            The training, the team, and the projects to be an efficient
+            researcher
+          </h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {WHAT_YOU_GET.map((item) => (
               <div
@@ -138,17 +220,10 @@ export default function ScholarsPage() {
           </div>
         </section>
 
-        {/* Who this is for */}
+        {/* Tracks */}
         <section className="mb-14">
-          <span className="section-label">Who this is for</span>
-          <h2 className="section-heading mb-6">Three tracks, one cohort</h2>
-          <p className="text-sm text-ink leading-relaxed mb-6 max-w-3xl">
-            Every scholar, regardless of track, joins the same cohort
-            community, shares mentor meetings and journal clubs, and learns
-            the same core methodology. Project scope and timeline are matched
-            to where you are in your training. Full curriculum, deliverables,
-            and tuition for your track are sent privately after you apply.
-          </p>
+          <span className="section-label">Tracks</span>
+          <h2 className="section-heading mb-6">Three tracks</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {TRACKS.map((track) => (
               <div
@@ -163,32 +238,6 @@ export default function ScholarsPage() {
                 </p>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* Credibility line */}
-        <section className="mb-14">
-          <span className="section-label">The guardrail</span>
-          <h2 className="section-heading mb-4">
-            Publication is conditional on peer review
-          </h2>
-          <div className="prose-like space-y-4 text-sm leading-relaxed text-ink max-w-3xl">
-            <p>
-              The program promises training, mentorship, and structured
-              project opportunities. It does not promise publication. Every
-              cohort manuscript routes through{' '}
-              <Link
-                href="/peer-review"
-                className="text-brown hover:text-brown-dark underline-offset-2 hover:underline font-medium"
-              >
-                OSCRSJ&apos;s double-blind peer review
-              </Link>{' '}
-              by reviewers outside our network, carries an explicit
-              conflict-of-interest disclosure, and is decided by editors who
-              were never involved in the project. We publish the cohort
-              acceptance rate publicly each year. Transparency is part of the
-              design.
-            </p>
           </div>
         </section>
 
