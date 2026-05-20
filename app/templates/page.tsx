@@ -38,6 +38,15 @@ const articleTypes = [
     exampleFile: 'oscrsj-example-review-article.docx',
   },
   {
+    id: 'narrative-review',
+    label: 'Narrative Review',
+    tagline: 'Expert synthesis · 4,000 words · SANRA scored',
+    description:
+      'A structured expert synthesis of the orthopedic literature on a defined topic. Authored against the SANRA quality framework, with a mandatory Scope and Search statement. Standard track requires a senior author; Mentored Review track is open to trainee-led submissions paired with an OSCRSJ Section Editor as co-author and mentor. Structured abstract: Background · Scope · Findings · Conclusion.',
+    templateFile: 'oscrsj-template-narrative-review.docx',
+    exampleFile: 'oscrsj-example-narrative-review.docx',
+  },
+  {
     id: 'surgical-technique',
     label: 'Surgical Technique',
     tagline: 'Step-by-step · 1,500 words · video encouraged',
@@ -151,9 +160,9 @@ const submissionFiles = [
   },
   {
     name: 'Reporting Checklist',
-    filename: 'CARE-checklist.pdf · JBI-checklist.pdf · PRISMA-checklist.pdf',
+    filename: 'CARE-checklist.pdf · JBI-checklist.pdf · PRISMA-checklist.pdf · SANRA-self-rating.pdf',
     required: 'Per article type',
-    description: 'CARE checklist for case reports; JBI critical appraisal checklist for case series; PRISMA 2020 checklist for systematic reviews and meta-analyses. All three are mandatory for their respective article types. Submit as a supplementary file.',
+    description: 'CARE checklist for case reports; JBI critical appraisal checklist for case series; PRISMA 2020 checklist for systematic reviews and meta-analyses. All three are mandatory for their respective article types. Submit as a supplementary file. SANRA self-rating is mandatory for narrative reviews.',
   },
   {
     name: 'Cover Letter',
@@ -244,12 +253,12 @@ export default function TemplatesPage() {
         </section>
 
         {/* ============================================================
-            REPORTING CHECKLISTS — CARE (Case Reports) + JBI (Case Series) + PRISMA (Systematic Reviews & Meta-Analyses)
+            REPORTING CHECKLISTS — CARE (Case Reports) + JBI (Case Series) + PRISMA (Systematic Reviews & Meta-Analyses) + SANRA (Narrative Reviews)
             ============================================================ */}
         <section id="reporting-checklists">
           <h2 className="font-serif text-3xl text-brown-dark mb-2">Reporting Checklists</h2>
-          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series; PRISMA 2020 is required for every Systematic Review & Meta-Analysis. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for Case Reports and Case Series, and is required policy for Systematic Reviews & Meta-Analyses (portal hard-gate forthcoming).</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series; PRISMA 2020 is required for every Systematic Review & Meta-Analysis; SANRA Self-Rating is required for every Narrative Review. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for Case Reports and Case Series, and is required policy for Systematic Reviews & Meta-Analyses and Narrative Reviews (portal hard-gates forthcoming).</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white border border-border rounded-xl p-6">
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Case Reports</p>
               <h3 className="font-serif text-xl text-brown-dark mb-1">CARE Checklist</h3>
@@ -313,6 +322,29 @@ export default function TemplatesPage() {
                   className="underline hover:text-brown-dark"
                 >
                   prisma-statement.org
+                </a>{' '}
+                · CC BY 4.0
+              </p>
+            </div>
+            <div className="bg-white border border-border rounded-xl p-6">
+              <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Narrative Reviews</p>
+              <h3 className="font-serif text-xl text-brown-dark mb-1">SANRA Self-Rating</h3>
+              <p className="text-xs text-brown mb-3">Scale for the Assessment of Narrative Review Articles (Baethge 2019) · 6 items × 0–2 scale (12 max)</p>
+              <p className="text-sm text-ink mb-4 leading-relaxed">
+                Forces the author to self-rate the review against six quality items — importance, statement of aims, description of literature search, referencing, scientific reasoning, and appropriate presentation of data. Submissions scoring below 8/12 are returned for revision before peer review. Required for every Narrative Review submission.
+              </p>
+              <a href="/downloads/oscrsj-sanra-self-rating.pdf" download className="btn-primary-light inline-block">
+                Download SANRA Self-Rating (.pdf)
+              </a>
+              <p className="text-xs text-brown mt-3">
+                Source:{' '}
+                <a
+                  href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6434870/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-brown-dark"
+                >
+                  PMC6434870 (Baethge 2019)
                 </a>{' '}
                 · CC BY 4.0
               </p>
@@ -472,16 +504,16 @@ Changes:`}</pre>
         <section id="license">
           <h2 className="font-serif text-3xl text-brown-dark mb-2">Publication License</h2>
           <p className="text-brown mb-6">
-            All articles published in OSCRSJ are released under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0). The license clause is added to your article by the editorial office at publication — you do not need to include it in your manuscript file.
+            All articles published in OSCRSJ are released under the Creative Commons Attribution 4.0 International License (CC BY 4.0). The license clause is added to your article by the editorial office at publication — you do not need to include it in your manuscript file.
           </p>
           <div className="bg-white border border-border rounded-xl p-6">
             <p className="text-sm text-brown italic mb-2">For your reference, the published license clause reads:</p>
             <blockquote className="border-l-4 border-tan pl-4 text-ink leading-relaxed text-sm">
               <strong>&copy; YYYY The Author(s). Published by OSCRSJ.</strong>
               <br /><br />
-              This article is distributed under the terms of the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0), which permits use, distribution, and reproduction in any non-commercial medium, provided the original work is properly cited and is not altered, transformed, or built upon in any way. To view a copy of this license, visit{' '}
-              <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" className="text-brown-dark underline hover:text-brown" target="_blank" rel="noopener noreferrer">
-                https://creativecommons.org/licenses/by-nc-nd/4.0/
+              This article is distributed under the terms of the Creative Commons Attribution 4.0 International License (CC BY 4.0), which permits use, distribution, and reproduction in any medium, provided the original work is properly cited. To view a copy of this license, visit{' '}
+              <a href="https://creativecommons.org/licenses/by/4.0/" className="text-brown-dark underline hover:text-brown" target="_blank" rel="noopener noreferrer">
+                https://creativecommons.org/licenses/by/4.0/
               </a>
             </blockquote>
           </div>

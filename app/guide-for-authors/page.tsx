@@ -5,12 +5,12 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'Guide for Authors',
   description:
-    'Complete author guidelines for submitting case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor to the Orthopedic Surgery Case Reports & Series Journal.',
+    'Complete author guidelines for submitting case reports, case series, systematic reviews and meta-analyses, narrative reviews, surgical techniques, images in orthopedics, and letters to the editor to the Orthopedic Surgery Case Reports & Series Journal.',
   alternates: { canonical: 'https://www.oscrsj.com/guide-for-authors' },
   openGraph: {
     title: 'Guide for Authors | OSCRSJ',
     description:
-      'Complete author guidelines for the six article types accepted by OSCRSJ — case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor.',
+      'Complete author guidelines for the seven article types accepted by OSCRSJ — case reports, case series, systematic reviews and meta-analyses, narrative reviews, surgical techniques, images in orthopedics, and letters to the editor.',
     url: 'https://www.oscrsj.com/guide-for-authors',
     type: 'website',
   },
@@ -162,6 +162,51 @@ const articleTypes: Array<{
     ],
   },
   {
+    id: 'narrative-review',
+    label: 'Narrative Review',
+    tagline: 'Expert synthesis · 4,000 words · SANRA scored',
+    definition:
+      'A structured expert synthesis of the orthopedic literature on a defined topic. Narrative reviews are required at OSCRSJ when a topic is too broad or too theory-rich for a systematic review but a structured, expert-authored overview adds clinical value. Authored against the SANRA quality framework, with a mandatory Scope and Search statement so readers can judge the bounds of the synthesis. Standard track requires a senior author; the Mentored Review track is open to trainee-led submissions paired with a named OSCRSJ Section Editor as co-author and mentor.',
+    checklist: {
+      name: 'SANRA Self-Rating',
+      fullName: 'Scale for the Assessment of Narrative Review Articles (Baethge, Goldbeck-Wood, Mertens 2019)',
+      itemCount: '6 items × 0–2 scale (12 max)',
+      rationale:
+        'Mandatory for every Narrative Review submission. SANRA forces the author to self-rate the review against six quality items — importance, statement of aims, description of literature search, referencing, scientific reasoning, and appropriate presentation of data. Submissions scoring below 8/12 on the author self-rating are returned for revision before peer review. Complete the rating and upload the filled-in form at Step 2 of the submission portal.',
+      downloadHref: '/downloads/oscrsj-sanra-self-rating.pdf',
+      sourceLabel: 'PMC6434870 (Baethge 2019)',
+      sourceHref: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6434870/',
+    },
+    specs: [
+      { label: 'Word Limit', value: '4,000 words (excluding abstract, references, figure legends, and tables)' },
+      { label: 'Abstract', value: '300 words maximum, structured (Background, Scope, Findings, Conclusion)' },
+      { label: 'Keywords', value: '3-6 MeSH terms' },
+      { label: 'Figures', value: 'Maximum 4' },
+      { label: 'Tables', value: 'Maximum 3' },
+      { label: 'References', value: '30-80 in Vancouver style with DOI inline' },
+      { label: 'Authors', value: 'Maximum 6' },
+      { label: 'Required Checklist', value: 'SANRA Self-Rating (mandatory; entry threshold ≥8/12)' },
+      { label: 'Author Track', value: 'Standard (senior author required) OR Mentored Review (Section Editor as named co-author + mentor)' },
+    ],
+    sections: [
+      'Title Page: full title (max 20 words), all author names with degrees and superscript affiliation numbers, numbered affiliations, disclosures (Funding, Conflicts of Interest, Acknowledgements), and the corresponding-author block',
+      'Abstract: structured into Background (clinical importance of the topic), Scope (what the review covers and excludes), Findings (key synthesis points), Conclusion (clinical implications)',
+      'Keywords: 3-6 MeSH terms',
+      'Introduction: clinical importance, definition of the question, why a narrative synthesis (rather than systematic review) is the right format',
+      'Scope and Search: explicit statement of inclusion/exclusion criteria; databases searched; date range; search terms; this section is mandatory and a desk-reject gate if absent',
+      'Body sections: topic-driven structure; subheadings reflect the conceptual organization of the review',
+      'Synthesis and Clinical Implications: integrated discussion of the literature with explicit clinical relevance',
+      'Limitations: standalone subsection acknowledging non-systematic methodology, selection bias risk, and gaps in the evidence base',
+      'Conclusion: 1-2 key clinical takeaways',
+      'Author Track Declaration: explicit statement of Standard track (with named senior author) OR Mentored Review track (with named Section Editor as co-author and mentor)',
+      'AI Tools Used: ICMJE 2025-aligned disclosure of any AI tools used in writing, search, or synthesis — including a negative attestation if none were used',
+      'Conflict of Interest Disclosure',
+      'Acknowledgments (optional)',
+      'References',
+      'Figure Legends',
+    ],
+  },
+  {
     id: 'surgical-technique',
     label: 'Surgical Technique',
     tagline: 'Step-by-step procedural',
@@ -234,14 +279,14 @@ const articleTypes: Array<{
 /* ------------------------------------------------------------------ */
 
 // Column order matches articleTypes[] above:
-//   [Case Report, Case Series, Systematic Review & Meta-Analysis, Surgical Technique, Images in Orthopedics, Letter to the Editor]
+//   [Case Report, Case Series, Systematic Review & Meta-Analysis, Narrative Review, Surgical Technique, Images in Orthopedics, Letter to the Editor]
 const comparisonRows = [
-  { param: 'Word Limit', values: ['2,000', '3,000', '3,500', '1,500', '500', '600'] },
-  { param: 'Abstract', values: ['300 (structured)', '300 (structured)', '300 (structured)', '300 (unstructured)', 'None', 'None'] },
-  { param: 'Max Figures', values: ['8', '10', '6', '10', '4', '1'] },
-  { param: 'Max Tables', values: ['3', '5', '4', '2', '0', '1'] },
-  { param: 'References', values: ['10-25', '15-40', '20-60', '8-15', 'Max 5', 'Max 5'] },
-  { param: 'Checklist', values: ['CARE', 'JBI', 'PRISMA', 'N/A', 'N/A', 'N/A'] },
+  { param: 'Word Limit', values: ['2,000', '3,000', '3,500', '4,000', '1,500', '500', '600'] },
+  { param: 'Abstract', values: ['300 (structured)', '300 (structured)', '300 (structured)', '300 (structured)', '300 (unstructured)', 'None', 'None'] },
+  { param: 'Max Figures', values: ['8', '10', '6', '4', '10', '4', '1'] },
+  { param: 'Max Tables', values: ['3', '5', '4', '3', '2', '0', '1'] },
+  { param: 'References', values: ['10-25', '15-40', '20-60', '30-80', '8-15', 'Max 5', 'Max 5'] },
+  { param: 'Checklist', values: ['CARE', 'JBI', 'PRISMA', 'SANRA', 'N/A', 'N/A', 'N/A'] },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -292,7 +337,7 @@ const generalSections = [
       'IRB approval or exemption must be documented for case series. The canonical OSCRSJ statements (2 branches — approved or exempt) are at /templates#irb. Copy the branch matching your institution’s determination verbatim.',
       'Research involving human subjects must comply with the Declaration of Helsinki.',
       'All authors must disclose conflicts of interest. Disclosures live on the Title Page or in the submission portal’s Step 5 — not in the blinded manuscript.',
-      'CARE checklist is mandatory for case reports. JBI critical appraisal checklist is mandatory for case series. PRISMA 2020 checklist is mandatory for systematic reviews and meta-analyses.',
+      'CARE checklist is mandatory for case reports. JBI critical appraisal checklist is mandatory for case series. PRISMA 2020 checklist is mandatory for systematic reviews and meta-analyses. SANRA self-rating is mandatory for narrative reviews.',
     ],
   },
   {
@@ -335,7 +380,7 @@ export default function GuideForAuthorsPage() {
         name: 'What types of manuscripts does OSCRSJ accept?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ accepts Case Reports, Case Series, Systematic Reviews & Meta-Analyses, Surgical Techniques, Images in Orthopedics, and Letters to the Editor across all orthopedic subspecialties. All six article types are evaluated under our standard double-blind peer review by reviewers outside of our network.',
+          text: 'OSCRSJ accepts Case Reports, Case Series, Systematic Reviews & Meta-Analyses, Narrative Reviews, Surgical Techniques, Images in Orthopedics, and Letters to the Editor across all orthopedic subspecialties. All seven article types are evaluated under our standard double-blind peer review by reviewers outside of our network.',
         },
       },
       {
@@ -352,6 +397,14 @@ export default function GuideForAuthorsPage() {
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Yes. A completed CARE checklist is mandatory for all case report submissions and must be submitted as a supplementary file.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is a Narrative Review at OSCRSJ?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A Narrative Review is a structured expert synthesis of the orthopedic literature on a defined topic. Maximum 4,000 words, 30–80 references, with a required scope-and-search statement and a SANRA self-rating uploaded at submission. Narrative Reviews require a senior author or, for trainee-led work, a Section Editor named as a Mentored Review co-author. See the Guide for Authors for full structural and policy requirements.',
         },
       },
     ],

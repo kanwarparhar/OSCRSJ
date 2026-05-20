@@ -30,7 +30,15 @@ const faqSections = [
       },
       {
         q: 'What types of articles does OSCRSJ accept?',
-        a: 'We accept six article types: Case Reports (1-3 patients), Case Series (4+ patients), Systematic Reviews & Meta-Analyses, Surgical Techniques, Images in Orthopedics, and Letters to the Editor. All six are evaluated under our standard double-blind peer review. See our Guide for Authors for detailed requirements for each article type.',
+        a: 'We accept seven article types: Case Reports (1-3 patients), Case Series (4+ patients), Systematic Reviews & Meta-Analyses, Narrative Reviews, Surgical Techniques, Images in Orthopedics, and Letters to the Editor. All seven are evaluated under our standard double-blind peer review. See our Guide for Authors for detailed requirements for each article type.',
+      },
+      {
+        q: 'What is a Narrative Review at OSCRSJ?',
+        a: 'A Narrative Review is a structured expert synthesis of the orthopedic literature on a defined topic. Maximum 4,000 words, 30–80 references, with a required scope-and-search statement and a SANRA self-rating uploaded at submission. Narrative Reviews require a senior author or, for trainee-led work, a Section Editor named as a Mentored Review co-author. See the Guide for Authors for full structural and policy requirements.',
+      },
+      {
+        q: 'What is the Mentored Review track?',
+        a: 'The Mentored Review track is a sanctioned on-ramp for trainee-led Narrative Reviews. A trainee author (medical student, resident, fellow) pairs with a named OSCRSJ Section Editor who joins the author list as a co-author and named mentor. Peer review and structural requirements are identical to a Standard Narrative Review — only the authorship pathway differs. Email editorial@oscrsj.com to be matched with a Section Editor whose subspecialty aligns with your topic.',
       },
       {
         q: 'Can I submit a case that has been presented at a conference?',
@@ -117,7 +125,7 @@ const faqSections = [
       },
       {
         q: 'Which reporting checklist do I need to submit?',
-        a: 'CARE checklist for Case Reports; JBI Critical Appraisal Checklist for Case Series; PRISMA 2020 checklist for Systematic Reviews & Meta-Analyses. All three are mandatory for their respective article types and submitted as supplementary files at Step 2 of the submission portal. Manuscripts submitted without the appropriate checklist will be returned to authors.',
+        a: 'CARE checklist for Case Reports; JBI Critical Appraisal Checklist for Case Series; PRISMA 2020 checklist for Systematic Reviews & Meta-Analyses; SANRA self-rating for Narrative Reviews. All are mandatory for their respective article types and submitted as supplementary files at Step 2 of the submission portal. Manuscripts submitted without the appropriate checklist will be returned to authors.',
       },
       {
         q: 'How should I handle patient consent?',
@@ -125,7 +133,7 @@ const faqSections = [
       },
       {
         q: 'What are the word limits for each article type?',
-        a: 'Case Report: 2,000 words. Case Series: 3,000 words. Systematic Review & Meta-Analysis: 3,500 words. Surgical Technique: 1,500 words. Images in Orthopedics: 500 words. Letter to the Editor: 600 words. All word limits exclude the abstract, references, figure legends, and tables.',
+        a: 'Case Report: 2,000 words. Case Series: 3,000 words. Systematic Review & Meta-Analysis: 3,500 words. Narrative Review: 4,000 words. Surgical Technique: 1,500 words. Images in Orthopedics: 500 words. Letter to the Editor: 600 words. All word limits exclude the abstract, references, figure legends, and tables.',
       },
     ],
   },
