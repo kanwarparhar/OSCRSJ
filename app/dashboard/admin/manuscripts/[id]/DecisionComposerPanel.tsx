@@ -41,14 +41,18 @@ interface Props {
 const MIN_RESCIND_REASON = 50
 
 // Composer-side decision union. Maps to EditorialDecisionType when
-// submitting — `post_review_reject` is the new Session 13 enum value
-// for rejections issued after external review (distinct from
-// `desk_reject` for pre-review rejections).
+// submitting. `post_review_reject` is for rejections issued after
+// external review (Session 13). `desk_reject` (Session 65) is now a
+// peer radio option for rejections issued before external review —
+// scope mismatch, formatting non-compliance, ethical concerns, prior
+// overlap, etc. — and only renders selectable when the manuscript is
+// still in `submitted` status with no reviews submitted yet.
 type ComposerDecision =
   | 'accept'
   | 'minor_revisions'
   | 'major_revisions'
   | 'post_review_reject'
+  | 'desk_reject'
 
 const DECIDABLE_STATUSES: ManuscriptStatus[] = [
   'submitted',
@@ -61,6 +65,7 @@ const DECISION_LABELS: Record<ComposerDecision, string> = {
   minor_revisions: 'Minor Revisions',
   major_revisions: 'Major Revisions',
   post_review_reject: 'Reject (post-review)',
+  desk_reject: 'Reject (without external review)',
 }
 
 const DECISION_TARGET_STATUS: Record<ComposerDecision, string> = {
@@ -68,6 +73,7 @@ const DECISION_TARGET_STATUS: Record<ComposerDecision, string> = {
   minor_revisions: 'revision_requested',
   major_revisions: 'revision_requested',
   post_review_reject: 'rejected',
+  desk_reject: 'desk_rejected',
 }
 
 const MIN_LETTER_LENGTH = 120
@@ -101,8 +107,11 @@ function fillTemplate(
 }
 
 const TEMPLATES: Record<ComposerDecision, string> = {
-  // post_review_reject template lives at the bottom of this object —
-  // copy mirrors the prior `reject` template; only the label changed.
+  // post_review_reject + desk_reject templates live at the bottom of
+  // this object. The desk_reject template (Session 65, formerly the
+  // standalone DESK_REJECT_TEMPLATE constant) contains a bracket
+  // placeholder so editors can paste in the actual rationale —
+  // scope, formatting, ethics, methods, overlap, etc.
   accept: `Dear Authors,
 
 It is my pleasure to inform you that your manuscript "{{title}}" (submission {{submission_id}}) has been accepted for publication in the Orthopedic Surgery Case Reports & Series Journal.
@@ -145,18 +154,17 @@ This decision is not taken lightly. We recognise the effort that goes into every
 
 Sincerely,
 The OSCRSJ Editorial Office`,
-}
-
-const DESK_REJECT_TEMPLATE = `Dear Authors,
+  desk_reject: `Dear Authors,
 
 Thank you for submitting "{{title}}" (submission {{submission_id}}) to the Orthopedic Surgery Case Reports & Series Journal. After editorial review, I have decided that the manuscript is not a fit for OSCRSJ and will not proceed to external peer review.
 
-[State the specific reason the manuscript is being returned without review — scope mismatch, methodological concern, ethics issue, overlap with published work, etc.]
+[State the specific reason the manuscript is being returned without review — for example: scope mismatch with OSCRSJ's aims, formatting that does not meet the Guide for Authors, methodological concern, ethics issue, or substantial overlap with previously published work. Where applicable, describe the specific changes the authors would need to make before any future resubmission would be considered.]
 
 Desk decisions are issued without peer review when the editorial team can foresee that external review would not change the outcome. We recognise this is disappointing and wish you success as you place the work with a better-suited venue.
 
 Sincerely,
-The OSCRSJ Editorial Office`
+The OSCRSJ Editorial Office`,
+}
 
 export default function DecisionComposerPanel({
   manuscriptId,
@@ -176,7 +184,9 @@ export default function DecisionComposerPanel({
   const [deadline, setDeadline] = useState(defaultDeadline())
   const [confirmed, setConfirmed] = useState(false)
   const [reInviteReviewers, setReInviteReviewers] = useState(false)
-  const [deskRejectMode, setDeskRejectMode] = useState(false)
+  // Safety modal for desk_reject — opens on Submit click when
+  // `decision === 'desk_reject'`; the user clicks Continue to
+  // dispatch the actual transaction.
   const [deskRejectConfirmOpen, setDeskRejectConfirmOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<string | null>(null)
@@ -198,8 +208,7 @@ export default function DecisionComposerPanel({
   // an override; submitEditorialDecision will use the override
   // instead of regenerating fresh.
   const isRevisionDecision =
-    !deskRejectMode &&
-    (decision === 'minor_revisions' || decision === 'major_revisions')
+    decision === 'minor_revisions' || decision === 'major_revisions'
   const [feedbackPreviewLoading, setFeedbackPreviewLoading] = useState(false)
   const [feedbackPreviewMessage, setFeedbackPreviewMessage] = useState<
     string | null
@@ -220,8 +229,7 @@ export default function DecisionComposerPanel({
   } | null>(null)
 
   const requiresDeadline =
-    !deskRejectMode &&
-    (decision === 'minor_revisions' || decision === 'major_revisions')
+    decision === 'minor_revisions' || decision === 'major_revisions'
 
   const deadlineLabel = useMemo(() => {
     if (!deadline) return '(choose a date)'
@@ -238,16 +246,21 @@ export default function DecisionComposerPanel({
 
   const letterLength = letter.trim().length
   const letterValid = letterLength >= MIN_LETTER_LENGTH
+  // Desk reject is a peer radio option, but it only renders selectable
+  // when this manuscript is still in 'submitted' and has zero submitted
+  // reviews. If the user somehow has it picked while ineligible (state
+  // race), block submit.
+  const deskRejectGateOk =
+    decision !== 'desk_reject' || deskRejectEligible
+
   const canSubmit =
     decidable &&
     letterValid &&
     confirmed &&
-    (deskRejectMode || decision) &&
+    deskRejectGateOk &&
     (!requiresDeadline || !!deadline)
 
-  const targetStatus = deskRejectMode
-    ? 'desk_rejected'
-    : DECISION_TARGET_STATUS[decision]
+  const targetStatus = DECISION_TARGET_STATUS[decision]
 
   function flash(msg: string, err = false) {
     setMessage(msg)
@@ -261,29 +274,7 @@ export default function DecisionComposerPanel({
       submission_id: submissionId,
       deadline: deadlineLabel,
     }
-    const template = deskRejectMode
-      ? DESK_REJECT_TEMPLATE
-      : TEMPLATES[decision]
-    setLetter(fillTemplate(template, tokens))
-  }
-
-  function handleDeskRejectClick() {
-    setDeskRejectConfirmOpen(true)
-  }
-
-  function enterDeskRejectMode() {
-    setDeskRejectMode(true)
-    setDeskRejectConfirmOpen(false)
-    setLetter('')
-    setConfirmed(false)
-    setMessage(null)
-  }
-
-  function exitDeskRejectMode() {
-    setDeskRejectMode(false)
-    setLetter('')
-    setConfirmed(false)
-    setMessage(null)
+    setLetter(fillTemplate(TEMPLATES[decision], tokens))
   }
 
   // Trigger an in-browser download from a base64 .docx blob
@@ -415,12 +406,22 @@ export default function DecisionComposerPanel({
     setFeedbackPreviewIsError(false)
   }
 
+  // The Submit-decision click path. For every decision type except
+  // desk_reject we dispatch the transaction immediately. For
+  // desk_reject we open the safety confirmation modal first; the
+  // modal's Continue button then calls dispatchSubmit().
   function onSubmit() {
     if (!canSubmit) return
+    if (decision === 'desk_reject') {
+      setDeskRejectConfirmOpen(true)
+      return
+    }
+    dispatchSubmit()
+  }
 
-    const decisionType: EditorialDecisionType = deskRejectMode
-      ? 'desk_reject'
-      : (decision as EditorialDecisionType)
+  function dispatchSubmit() {
+    if (!canSubmit) return
+    const decisionType = decision as EditorialDecisionType
 
     startTransition(async () => {
       const result = await submitEditorialDecision({
@@ -431,9 +432,7 @@ export default function DecisionComposerPanel({
           ? new Date(`${deadline}T23:59:59Z`).toISOString()
           : null,
         reInviteOriginalReviewers:
-          decision === 'major_revisions' &&
-          !deskRejectMode &&
-          reInviteReviewers,
+          decision === 'major_revisions' && reInviteReviewers,
         reviewerFeedbackOverride:
           isRevisionDecision && feedbackOverride
             ? {
@@ -453,11 +452,11 @@ export default function DecisionComposerPanel({
       flash(`Decision recorded and author notified.${reInviteLine}`)
       setLetter('')
       setConfirmed(false)
-      setDeskRejectMode(false)
       setReInviteReviewers(false)
       setFeedbackOverride(null)
       setFeedbackReviewerCount(null)
       setFeedbackPreviewMessage(null)
+      setDeskRejectConfirmOpen(false)
       router.refresh()
     })
   }
@@ -518,85 +517,114 @@ export default function DecisionComposerPanel({
         />
       )}
 
-      {decidable && reviewCount === 0 && !deskRejectMode && (
+      {decidable && reviewCount === 0 && decision !== 'desk_reject' && (
         <div className="text-xs text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded">
           No reviews have been submitted yet. You may still issue a decision
           at your discretion.
         </div>
       )}
 
-      {deskRejectMode && (
-        <div className="text-xs text-red-800 bg-red-50 border border-red-200 px-3 py-2 rounded flex items-start justify-between gap-3">
-          <span>
-            <strong>Desk-reject mode.</strong> Manuscript will be returned
-            without external peer review. Please state the reasoning in the
-            letter below.
-          </span>
-          <button
-            type="button"
-            onClick={exitDeskRejectMode}
-            className="text-red-700 underline underline-offset-2 hover:text-red-900"
-          >
-            Cancel desk reject
-          </button>
+      {decision === 'desk_reject' && (
+        <div className="text-xs text-red-800 bg-red-50 border border-red-200 px-3 py-2 rounded">
+          <strong>Reject without external review.</strong> This returns the
+          manuscript to the author <em>without</em> sending it to peer
+          reviewers, and is reserved for clear scope mismatches, formatting
+          non-compliance, ethical concerns, or substantial overlap with
+          published work. State the full rationale and any actionable
+          guidance for the authors in the letter below. The decision letter
+          is delivered verbatim inside the email to the corresponding
+          author.
         </div>
       )}
 
-      {!deskRejectMode && (
-        <fieldset disabled={!decidable || isPending} className="space-y-2">
-          <legend className="block text-[11px] uppercase tracking-widest text-brown mb-1">
-            Decision type
-          </legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {(
-              [
-                'accept',
-                'minor_revisions',
-                'major_revisions',
-                'post_review_reject',
-              ] as ComposerDecision[]
-            ).map(
-              (d) => (
-                <label
-                  key={d}
-                  className={`flex items-start gap-2 border rounded-lg p-3 cursor-pointer transition-colors ${
-                    decision === d
-                      ? 'border-brown bg-cream-alt/60'
-                      : 'border-border hover:border-tan'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="decision"
-                    value={d}
-                    checked={decision === d}
-                    onChange={() => {
-                      setDecision(d)
-                      setConfirmed(false)
-                    }}
-                    className="mt-0.5"
-                  />
-                  <div>
-                    <p className="text-sm text-ink font-medium">
-                      {DECISION_LABELS[d]}
-                    </p>
-                    <p className="text-[11px] text-brown">
-                      Status → {DECISION_TARGET_STATUS[d].replace(/_/g, ' ')}
-                    </p>
-                  </div>
-                </label>
-              )
-            )}
-          </div>
-          {decision === 'post_review_reject' && (
-            <p className="text-[11px] text-brown mt-1 italic">
-              For decisions before any external review, use the
-              &ldquo;Desk reject without review&rdquo; button below
-              instead.
-            </p>
-          )}
-        </fieldset>
-      )}
+      <fieldset disabled={!decidable || isPending} className="space-y-2">
+        <legend className="block text-[11px] uppercase tracking-widest text-brown mb-1">
+          Decision type
+        </legend>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {(
+            [
+              'accept',
+              'minor_revisions',
+              'major_revisions',
+              'post_review_reject',
+            ] as ComposerDecision[]
+          ).map((d) => (
+            <label
+              key={d}
+              className={`flex items-start gap-2 border rounded-lg p-3 cursor-pointer transition-colors ${
+                decision === d
+                  ? 'border-brown bg-cream-alt/60'
+                  : 'border-border hover:border-tan'
+              }`}
+            >
+              <input
+                type="radio"
+                name="decision"
+                value={d}
+                checked={decision === d}
+                onChange={() => {
+                  setDecision(d)
+                  setConfirmed(false)
+                }}
+                className="mt-0.5"
+              />
+              <div>
+                <p className="text-sm text-ink font-medium">
+                  {DECISION_LABELS[d]}
+                </p>
+                <p className="text-[11px] text-brown">
+                  Status → {DECISION_TARGET_STATUS[d].replace(/_/g, ' ')}
+                </p>
+              </div>
+            </label>
+          ))}
+          {/* Desk reject — full-width 5th option, visually distinct.
+              Disabled when the manuscript is no longer eligible (status
+              moved past 'submitted' OR at least one review submitted). */}
+          <label
+            key="desk_reject"
+            className={`sm:col-span-2 flex items-start gap-2 border rounded-lg p-3 transition-colors ${
+              !deskRejectEligible
+                ? 'border-border bg-cream-alt/30 opacity-60 cursor-not-allowed'
+                : decision === 'desk_reject'
+                  ? 'border-red-400 bg-red-50/60 cursor-pointer'
+                  : 'border-red-200 hover:border-red-400 cursor-pointer'
+            }`}
+            title={
+              !deskRejectEligible
+                ? 'Available only before peer review (status "submitted" with no submitted reviews).'
+                : undefined
+            }
+          >
+            <input
+              type="radio"
+              name="decision"
+              value="desk_reject"
+              checked={decision === 'desk_reject'}
+              disabled={!deskRejectEligible}
+              onChange={() => {
+                setDecision('desk_reject')
+                setConfirmed(false)
+              }}
+              className="mt-0.5"
+            />
+            <div>
+              <p className="text-sm text-ink font-medium">
+                {DECISION_LABELS.desk_reject}
+              </p>
+              <p className="text-[11px] text-brown">
+                Status → {DECISION_TARGET_STATUS.desk_reject.replace(/_/g, ' ')}
+                {!deskRejectEligible && (
+                  <span className="ml-2 italic">
+                    (available only before peer review)
+                  </span>
+                )}
+              </p>
+            </div>
+          </label>
+        </div>
+      </fieldset>
 
       {requiresDeadline && (
         <div>
@@ -619,7 +647,7 @@ export default function DecisionComposerPanel({
         </div>
       )}
 
-      {!deskRejectMode && decision === 'major_revisions' && (
+      {decision === 'major_revisions' && (
         <label className="flex items-start gap-2 text-sm text-ink bg-cream-alt/40 border border-border rounded-lg p-3">
           <input
             type="checkbox"
@@ -806,26 +834,22 @@ export default function DecisionComposerPanel({
       </label>
 
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={onSubmit}
-            disabled={!canSubmit || isPending}
-            className="text-sm px-4 py-2 rounded-lg border border-brown bg-peach-dark text-ink hover:bg-peach disabled:opacity-40 disabled:cursor-not-allowed font-medium"
-          >
-            {isPending ? 'Submitting…' : 'Submit decision'}
-          </button>
-          {!deskRejectMode && deskRejectEligible && (
-            <button
-              type="button"
-              onClick={handleDeskRejectClick}
-              disabled={isPending}
-              className="text-xs text-red-700 border border-red-200 bg-red-50 px-2 py-1 rounded hover:bg-red-100 disabled:opacity-50"
-            >
-              Desk reject without review
-            </button>
-          )}
-        </div>
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={!canSubmit || isPending}
+          className={`text-sm px-4 py-2 rounded-lg border font-medium disabled:opacity-40 disabled:cursor-not-allowed ${
+            decision === 'desk_reject'
+              ? 'border-red-400 bg-red-100 text-red-800 hover:bg-red-200'
+              : 'border-brown bg-peach-dark text-ink hover:bg-peach'
+          }`}
+        >
+          {isPending
+            ? 'Submitting…'
+            : decision === 'desk_reject'
+              ? 'Submit desk reject'
+              : 'Submit decision'}
+        </button>
         {message && (
           <p
             className={`text-sm ${
@@ -846,23 +870,29 @@ export default function DecisionComposerPanel({
             <p className="text-sm text-ink">
               This returns the manuscript to the author without sending it to
               reviewers. It should be reserved for clear scope mismatches,
-              ethical concerns, or prior-publication overlap. The decision is
-              recorded in the manuscript history and cannot be undone.
+              formatting non-compliance, ethical concerns, or
+              prior-publication overlap. The decision letter you composed
+              above will be delivered to the corresponding author. The
+              decision is recorded in the manuscript history and cannot be
+              undone (a 15-minute rescind window does open afterwards if you
+              spot a mistake).
             </p>
             <div className="flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setDeskRejectConfirmOpen(false)}
-                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream-alt"
+                disabled={isPending}
+                className="text-sm px-3 py-1.5 rounded-lg border border-border text-brown hover:bg-cream-alt disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={enterDeskRejectMode}
-                className="text-sm px-3 py-1.5 rounded-lg border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 font-medium"
+                onClick={dispatchSubmit}
+                disabled={isPending}
+                className="text-sm px-3 py-1.5 rounded-lg border border-red-300 bg-red-50 text-red-700 hover:bg-red-100 font-medium disabled:opacity-50"
               >
-                Continue
+                {isPending ? 'Submitting…' : 'Continue and send'}
               </button>
             </div>
           </div>
