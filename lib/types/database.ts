@@ -126,6 +126,12 @@ export interface ManuscriptRow {
   // exist in prod — pre-launch).
   jats_xml_storage_path: string | null
   doi: string | null
+  // Sushant Session 64 (2026-05-19). Phase 2 HTML body editor (TipTap MVP)
+  // column added in migration 024. NULL until an editor saves cleaned
+  // HTML via the admin BodyEditor; when non-null, preview/publish
+  // endpoints pass this verbatim to the renderer as `cleanedHtml` and
+  // the renderer skips its extractBody auto-extraction path.
+  manuscript_body_cleaned_html: string | null
   created_at: string
   updated_at: string
 }

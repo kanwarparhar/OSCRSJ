@@ -1,5 +1,6 @@
 'use server'
 
+import sanitizeHtml from 'sanitize-html'
 import { revalidatePath } from 'next/cache'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { sendEmail, type SendEmailAttachment } from '@/lib/email/resend'
@@ -2227,4 +2228,198 @@ export async function listAvailableEditors(): Promise<BoardMemberOption[]> {
     name: r.full_name,
     role: r.role,
   }))
+}
+
+// ============================================================
+// Phase 2 HTML body editor — Sushant Session 64 (2026-05-19).
+// ============================================================
+// Persist editor-cleaned body HTML to
+// `manuscripts.manuscript_body_cleaned_html` (migration 024). The
+// renderer's preview + publish endpoints read this column and pass
+// it verbatim as `cleanedHtml` when non-null; when null/empty they
+// fall through to the Session 62 extractBody auto-extraction path.
+//
+// Status-gated to manuscript.status ∈ {accepted, published} mirroring
+// the metadata-editor gate above. Gates: requireAdminOnly per §6.1.
+// Audit log row `body_cleaned_html_saved` written on success.
+//
+// HTML SANITIZATION: TipTap's emitted HTML is already conservative
+// (no scripts, no event-handlers, only the extensions we configured),
+// but we re-sanitize server-side as defense-in-depth — a compromised
+// browser could ship arbitrary HTML directly to the server action.
+// The allowlist below mirrors the TipTap extension set + the table
+// tags the existing renderer cleanedHtml pathway tolerates (the
+// renderer's body extraction already emits <table>/<thead>/<tbody>/
+// <tr>/<th>/<td>; we accept them here for paste-from-renderer flows).
+
+export interface SaveManuscriptBodyCleanedHtmlResult {
+  ok: boolean
+  forbidden?: true
+  notFound?: true
+  error?: string
+}
+
+// Cap the persisted HTML at 2 MB. Word documents with embedded
+// base64 images can balloon HTML output; this catches accidental
+// 50-MB-of-base64 paste-from-renderer scenarios before they hit the
+// database column. Plenty of headroom for a normal case report
+// (~10-30 KB of HTML).
+const MAX_BODY_HTML_BYTES = 2 * 1024 * 1024
+
+export async function saveManuscriptBodyCleanedHtml(
+  manuscriptId: string,
+  html: string
+): Promise<SaveManuscriptBodyCleanedHtmlResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { ok: false, forbidden: true, error: gate.error }
+
+  if (!manuscriptId || typeof manuscriptId !== 'string') {
+    return { ok: false, notFound: true, error: 'Manuscript id is required.' }
+  }
+  if (typeof html !== 'string') {
+    return { ok: false, error: 'Body HTML must be a string.' }
+  }
+
+  // Trim + byte-cap before sanitization (cheap pre-check).
+  const incoming = html.trim()
+  if (Buffer.byteLength(incoming, 'utf8') > MAX_BODY_HTML_BYTES) {
+    return {
+      ok: false,
+      error: `Body HTML exceeds the ${Math.round(MAX_BODY_HTML_BYTES / 1024)} KB limit. Reduce embedded base64 images or split into a leaner body.`,
+    }
+  }
+
+  // Sanitize. Empty string passes through as empty (null in DB ->
+  // renderer auto-extract fallback path).
+  const cleaned =
+    incoming === ''
+      ? ''
+      : sanitizeHtml(incoming, {
+          allowedTags: [
+            // Block-level
+            'p',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'blockquote',
+            'pre',
+            'hr',
+            'div',
+            'section',
+            'figure',
+            'figcaption',
+            // Lists
+            'ul',
+            'ol',
+            'li',
+            // Inline
+            'strong',
+            'em',
+            'b',
+            'i',
+            'u',
+            's',
+            'sub',
+            'sup',
+            'span',
+            'code',
+            'br',
+            'a',
+            // Tables (read-only in MVP toolbar; preserved on paste from
+            // renderer cleanup pane)
+            'table',
+            'thead',
+            'tbody',
+            'tfoot',
+            'tr',
+            'th',
+            'td',
+            'caption',
+            // Images
+            'img',
+          ],
+          allowedAttributes: {
+            a: ['href', 'name', 'target', 'rel', 'title'],
+            img: ['src', 'alt', 'title', 'width', 'height'],
+            // Table cells often carry rowspan/colspan from Pandoc.
+            th: ['colspan', 'rowspan', 'scope', 'align'],
+            td: ['colspan', 'rowspan', 'align'],
+            // Keep generic class hooks the renderer's Jinja template
+            // may use (e.g., 'figure-caption').
+            '*': ['class', 'id'],
+          },
+          // Permit data: URLs for inline images (TipTap allows base64
+          // images via setImage). https:// + relative URLs also OK.
+          allowedSchemes: ['http', 'https', 'mailto', 'tel', 'data'],
+          allowedSchemesByTag: {
+            img: ['http', 'https', 'data'],
+          },
+          // Drop comments, script, style, iframe, object, embed
+          // implicitly (not on the allowlist).
+          disallowedTagsMode: 'discard',
+          // Preserve text inside disallowed tags rather than dropping
+          // the content along with the tag.
+          allowedSchemesAppliedToAttributes: ['href', 'src'],
+        })
+
+  const admin = createAdminClient()
+
+  const { data: mData } = await admin
+    .from('manuscripts')
+    .select('id, status')
+    .eq('id', manuscriptId)
+    .maybeSingle()
+
+  const m = mData as { id: string; status: ManuscriptStatus } | null
+  if (!m) return { ok: false, notFound: true, error: 'Manuscript not found.' }
+  if (m.status !== 'accepted' && m.status !== 'published') {
+    return {
+      ok: false,
+      error: `Cannot edit body HTML for manuscript in status "${m.status}". Required: "accepted" or "published".`,
+    }
+  }
+
+  // Persist. Empty string becomes NULL so the precedence chain in
+  // preview/publish endpoints can branch cleanly on null-vs-non-null
+  // without also having to check for empty.
+  const persistedValue: string | null = cleaned === '' ? null : cleaned
+
+  const { error: updateErr } = await admin
+    .from('manuscripts')
+    .update({ manuscript_body_cleaned_html: persistedValue } as never)
+    .eq('id', manuscriptId)
+
+  if (updateErr) {
+    return {
+      ok: false,
+      error: `Save failed: ${updateErr.message}`,
+    }
+  }
+
+  // Best-effort audit-log.
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: 'body_cleaned_html_saved',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: {
+        manuscript_id: manuscriptId,
+        bytes_persisted: Buffer.byteLength(cleaned, 'utf8'),
+        cleared: persistedValue === null,
+      },
+    })
+  } catch {
+    // swallow
+  }
+
+  // Revalidate the admin manuscript detail page so the editor surface
+  // re-renders with the saved state on next navigation. The TipTap
+  // editor itself already shows the saved state via local state.
+  revalidatePath(`/dashboard/admin/manuscripts/${manuscriptId}`)
+
+  return { ok: true }
 }

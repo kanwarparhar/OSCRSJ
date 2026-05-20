@@ -26,7 +26,7 @@
 // next "Try again" call picks up where the stream cut off.
 
 import { synthesizeRendererPayload } from '@/lib/publish/synthesize'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -98,6 +98,28 @@ export async function POST(_req: Request, context: RouteContext) {
     )
   }
 
+  // Phase 2 HTML body editor (Sushant Session 64) — when the admin
+  // has saved cleaned HTML to `manuscripts.manuscript_body_cleaned_html`
+  // via the OSCRSJ admin BodyEditor, pass it as `cleanedHtml` to the
+  // renderer. The renderer's extractBody auto-extract path (Session
+  // 62) only runs when this value is empty. Coexists with the
+  // renderer-side `/render/[id]` cleanup pane.
+  let storedCleanedHtml = ''
+  try {
+    const previewAdmin = createAdminClient()
+    const { data: bodyData } = await previewAdmin
+      .from('manuscripts')
+      .select('manuscript_body_cleaned_html')
+      .eq('id', id)
+      .maybeSingle()
+    storedCleanedHtml =
+      ((bodyData as { manuscript_body_cleaned_html: string | null } | null)
+        ?.manuscript_body_cleaned_html) ?? ''
+  } catch {
+    // If the column read fails, fall through with empty string — the
+    // renderer's auto-extract pathway will still produce a preview.
+  }
+
   // Audit log row for the preview-render kick. Janine §9 — the
   // audit-log row persists 90 days even though the artifact itself
   // is reaped after 7. Best-effort write.
@@ -126,8 +148,8 @@ export async function POST(_req: Request, context: RouteContext) {
       Authorization: `Bearer ${expectedSecret}`,
     },
     body: JSON.stringify({
-      cleanedHtml: '',
-      rawHtml: '',
+      cleanedHtml: storedCleanedHtml,
+      rawHtml: storedCleanedHtml,
       cleanupDurationSeconds: 0,
       cleanupDiffSummary: { linesAdded: 0, linesRemoved: 0, charactersChanged: 0 },
       splitReferencesCount: 0,

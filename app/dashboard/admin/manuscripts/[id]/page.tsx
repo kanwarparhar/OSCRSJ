@@ -27,6 +27,7 @@ import PublishedPdfPanel from './PublishedPdfPanel'
 import PublishedJatsPanel from './PublishedJatsPanel'
 import PublishPipelinePanel from './PublishPipelinePanel'
 import MetadataEditorPanel from './MetadataEditorPanel'
+import BodyEditorPanel from './BodyEditorPanel'
 
 const RESCIND_WINDOW_MS = 15 * 60 * 1000
 
@@ -439,6 +440,8 @@ export default async function AdminManuscriptDetailPage({
       <RevisionsPanel manuscriptId={manuscript.id} />
 
       <MetadataEditorPanel manuscriptId={manuscript.id} />
+
+      <BodyEditorPanel manuscriptId={manuscript.id} />
 
       <PublishPipelinePanel manuscriptId={manuscript.id} />
 

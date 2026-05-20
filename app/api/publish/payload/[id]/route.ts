@@ -16,6 +16,7 @@
 
 import { NextResponse } from 'next/server'
 import { synthesizeRendererPayload } from '@/lib/publish/synthesize'
+import { createAdminClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -66,10 +67,37 @@ export async function GET(req: Request, context: RouteContext) {
     )
   }
 
+  // Phase 2 HTML body editor (Sushant Session 64) — surface the editor-
+  // curated cleaned HTML if one is saved. The renderer's cleanup pane
+  // at `/render/[id]` reads this field to seed its textarea so admins
+  // who curated body HTML in the OSCRSJ admin BodyEditor don't have to
+  // re-paste on the renderer side. Null when nothing is saved → the
+  // cleanup pane behaves as today (Session 62 extractBody seeds, admin
+  // can paste/edit before publish).
+  let bodyCleanedHtml: string | null = null
+  try {
+    const admin = createAdminClient()
+    const { data } = await admin
+      .from('manuscripts')
+      .select('manuscript_body_cleaned_html')
+      .eq('id', id)
+      .maybeSingle()
+    bodyCleanedHtml =
+      ((data as { manuscript_body_cleaned_html: string | null } | null)
+        ?.manuscript_body_cleaned_html) ?? null
+  } catch {
+    // swallow — non-fatal; falls through to null
+  }
+
   return NextResponse.json({
     ok: true,
     payload: result.payload,
     warnings: result.warnings,
     errors: [],
+    // Sushant Session 64 — additive field. Renderer cleanup pane MAY
+    // read this to seed its textarea. Field is backward-compatible:
+    // older renderers that ignore it produce the same output as
+    // pre-Session-64 behaviour.
+    manuscriptBodyCleanedHtml: bodyCleanedHtml,
   })
 }
