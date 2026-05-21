@@ -219,6 +219,7 @@ async function loadPublishedArticles(): Promise<BrowserArticle[]> {
       date,
       abstract: m.abstract || '',
       publishedDate: m.published_date,
+      pdfStoragePath: m.published_pdf_storage_path ?? null,
     }
   })
 }
