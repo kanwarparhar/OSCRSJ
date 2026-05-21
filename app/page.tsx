@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import ArticleFigureImage from '@/components/ArticleFigureImage'
 import { createAdminClient } from '@/lib/supabase/server'
 import { SUBSPECIALTIES } from '@/lib/constants'
 import type {
@@ -469,12 +470,13 @@ export default async function HomePage() {
                     key={article.id}
                     className={`card flex flex-col ${i === 0 ? 'md:row-span-2' : ''}`}
                   >
-                    <div
-                      className={`w-full rounded-lg mb-4 flex items-center justify-center ${i === 0 ? 'h-48' : 'h-32'}`}
-                      style={{ background: 'linear-gradient(135deg, var(--cream-alt) 0%, var(--taupe) 100%)' }}
-                    >
-                      <span className="text-ink/50 text-xs uppercase tracking-widest">Radiograph</span>
-                    </div>
+                    <Link href={`/articles/${article.id}`} className="block">
+                      <ArticleFigureImage
+                        articleId={article.id}
+                        title={article.title}
+                        height={i === 0 ? 'tall' : 'short'}
+                      />
+                    </Link>
                     <div className="flex items-center gap-2 mb-3">
                       <span className="text-xs font-medium text-ink bg-tan/20 px-2.5 py-1 rounded-full">
                         {article.type}
