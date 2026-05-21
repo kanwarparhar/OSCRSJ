@@ -38,7 +38,11 @@
 - [[#^session-27-discount-and-contact-form-backends]]
 - [[#^session-06-email-pipeline-and-apex-www]]
 
+### Public article display (reader-facing pages, PDF/figure serving)
+- [[#^session-67-article-display-pipeline]]
+
 ### Editorial decisions / publishing pipeline
+- [[#^session-67-article-display-pipeline]]
 - [[#^session-62-publish-extractbody-figure-zip]]
 - [[#^session-60-preview-shows-full-article]]
 - [[#^session-58-docx-extract-tailscale-funnel]]
@@ -267,6 +271,41 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 67 — 2026-05-21 — Sushant Cowork — Public article display pipeline: PDF proxy + figure proxy + article detail page + homepage figures + in-press status fix — 3 OSCRSJ commits `8a55c08` + `4006ab6` + `a77920d`  ^session-67-article-display-pipeline
+
+Single Sushant Cowork sitting that built the full public-facing article display pipeline, triggered by Kanwar observing the published article showing "Full text available soon" with no way to read it, no individual article page, and the homepage still rendering its empty-state despite the article being live.
+
+**Session start diagnostics.** Two immediate action items identified from §11: (1) push renderer commits `d44ef23` + `4b49660` that were Mac-only and at risk of being lost on reboot. Computer-use tools loaded; Terminal is click-only tier (no typing), so command written to clipboard via `write_clipboard` and Kanwar pasted + confirmed push (`d44ef23..4b49660  main -> main`). Both renderer commits now safely on `origin/main`. (2) Article page audit: `/articles` showed the card with "Full text available soon" hardcoded; `/articles/in-press` showed empty ("No Articles in Press Yet"). Root cause: `BrowserArticle` type had no `pdfStoragePath` field, the listing rendered the text unconditionally, `in-press` queried only `status='in_production'` (article went `accepted` → `published` directly), and no individual article page existed.
+
+**Five display gaps audited and closed:**
+
+1. **"Full text available soon" — hardcoded text, no PDF link.** `BrowserArticle` type had no `pdfStoragePath`. `loadPublishedArticles()` never passed `published_pdf_storage_path` through. Submissions bucket is private (signed URLs used throughout codebase) so a public endpoint was needed. Fix: new route `/api/articles/[id]/pdf` — public GET, `status='published'` gate, admin client for private-bucket access, streams PDF bytes with `Content-Disposition: inline`, filename derived from `elocation_id` (→ `oscrsj-e0001.pdf`), 1h CDN cache. `BrowserArticle` gains `pdfStoragePath`; article card footer conditionally renders "Full Text (PDF) ↓" link or the italic fallback. Commit `8a55c08`.
+
+2. **No individual article page.** No `/articles/[id]` route existed anywhere. Built `app/articles/[id]/page.tsx` (~430 LoC) as a server component. Shows: dark hero header with article type + subspecialty chips, title, authors line (corresponding author starred in peach, with degrees), affiliations numbered list, Volume/Issue/eLocation identifiers, DOI or "pending", peach Download PDF button. Body: Abstract section (plain text with keyword row), Declarations section (COI, funding, data availability, AI tools from `manuscript_metadata`). Sidebar: Citation string (Vancouver-style, select-all mono block), CC BY 4.0 license card with link, corresponding author card (name, affiliation, ORCID), sidebar PDF download button, ← All Articles back link. `generateMetadata` emits title, description (abstract truncated to 200 chars), canonical URL, OG article type with author array. 404 for any non-published manuscript ID. Commit `4006ab6`.
+
+3. **Article titles unlinked.** `/articles` listing: article `<h2>` wrapped in `<Link href=/articles/[id]>` with `group-hover:text-ink` transition. Homepage cards: title `<h3>` wrapped in Link + "Read article" button changed from DOI-gated `<a href=doi.org/...>` to always-visible `<Link href=/articles/[id]>`. Commit `4006ab6`.
+
+4. **In-press never triggered.** Page queried `eq('status', 'in_production')`. Article went `accepted` → `published` via `publish-one.mjs`, skipping `in_production` entirely — so it never surfaced on the in-press page. Fix: changed both the count query (for `generateMetadata` noindex logic) and the main fetch to `in(['accepted', 'in_production'])`. Future articles will appear in In Press as soon as they are accepted. Commit `4006ab6`.
+
+5. **Homepage figure placeholder never replaced.** Homepage article card showed a cream/taupe CSS gradient with "Radiograph" text. Built new public proxy route `/api/articles/[id]/figure` — same security pattern as PDF proxy, fetches `manuscript_files` row with `file_type='figure'` and `file_order ASC LIMIT 1`, downloads from submissions bucket, infers Content-Type from extension (jpeg/png/gif/webp/tiff/svg), returns image bytes with 1h CDN cache. Since the homepage is a server component and `onError` is a browser event handler that can't live in RSC JSX, created `components/ArticleFigureImage.tsx` as a `'use client'` island: renders `<img src=/api/articles/[id]/figure>` with a `useState` fallback to the gradient when `onError` fires (404 from proxy = no figure). Homepage card figure div replaced with `<ArticleFigureImage>`. Figure tile is also wrapped in a `<Link>` to the article detail page. Commit `a77920d`.
+
+**File-level changes across 3 commits (+606 LoC net):**
+- `app/api/articles/[id]/pdf/route.ts` — new (85 LoC)
+- `app/api/articles/[id]/figure/route.ts` — new (87 LoC)
+- `app/articles/[id]/page.tsx` — new (434 LoC)
+- `components/ArticleFigureImage.tsx` — new (46 LoC)
+- `app/articles/ArticlesBrowser.tsx` — modified (pdfStoragePath field + title Link + PDF conditional)
+- `app/articles/in-press/page.tsx` — modified (status filter expanded)
+- `app/page.tsx` — modified (FeaturedArticle type + ArticleFigureImage + Link titles + unconditional Read article)
+
+**Verification.** `npx tsc --noEmit -p tsconfig.json` exit 0 after each commit. Tree size 301 → 302 → 303 → 305 (3 new routes + 1 component added across 3 commits). Explicit-path stage for all commits; `app/faq/page.tsx` orphan identified as Janine's CC BY-NC-ND fix and left unstaged per Convention §6. FUSE stale-lock sweep (`mv .git/*.lock`) before each commit.
+
+**Cross-session orphan noted.** `app/faq/page.tsx` has Janine's CC BY-NC-ND → CC BY 4.0 fix for two FAQ Q&As already applied to the working tree but never committed. Good change, belongs in Janine's commit. Filed in §11.
+
+**Risks named.** (1) Figure proxy returns 404 if no `manuscript_files` row with `file_type='figure'` exists for the article — `ArticleFigureImage` fallback handles this gracefully. Kanwar should verify figure rows exist in Supabase Studio → manuscript_files for `f8596ce8`. (2) Article detail page shows abstract as a single `whitespace-pre-line` block — structured sub-sections (Background/Case/Discussion/Conclusion) from the PDF are not broken out. Acceptable for MVP; a future enhancement would parse the structured abstract. (3) Homepage card "Radiograph" placeholder copy was changed to "Figure" in the fallback — minor cosmetic. (4) No visual spot-check from sandbox post-deploy; filed as §11 follow-up.
+
+**Kanwar follow-ups.** (1) Hard-refresh `/articles`, `/articles/[uuid]`, and homepage post-Vercel-deploy (~60s). (2) Verify figure appears on homepage card (if gradient shows, check Supabase Studio `manuscript_files` for figure rows). (3) Verify `/articles/in-press` now shows the article on the next accepted manuscript. Full narrative here. **Handoffs pushed: None.**
 
 ### Session 66 — 2026-05-20 — Franklin Cowork — Narrative Review category launch (Phase 1: site copy sweep across 4 author-facing pages + CC BY-NC-ND → CC BY 4.0 license fix bundled) — 1 OSCRSJ commit `d1207bc`  ^session-66-narrative-review-site-copy
 
