@@ -104,7 +104,7 @@ const faqSections = [
       },
       {
         q: 'Is OSCRSJ open access?',
-        a: 'Yes. All published articles are immediately and permanently free to read, download, and share for non-commercial purposes under a Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND 4.0) license.',
+        a: 'Yes. All published articles are immediately and permanently free to read, download, share, and adapt under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. You must give appropriate credit to the original authors and indicate if changes were made.',
       },
       {
         q: 'Does OSCRSJ assign DOIs?',
@@ -150,7 +150,7 @@ const faqSections = [
       },
       {
         q: 'Can I share my published article on social media or my personal website?',
-        a: 'Absolutely. As an open-access journal with CC BY-NC-ND 4.0 licensing, you are encouraged to share your work widely for non-commercial purposes (teaching, social media, your personal website, conference handouts). We provide shareable links and citation information for every published article. Authors retain copyright and may reuse their own work without restriction.',
+        a: 'Absolutely. All OSCRSJ articles are published under CC BY 4.0, which means you are free to share and adapt your work for any purpose — including social media, your personal website, conference handouts, and teaching materials — provided you give appropriate credit. Authors retain copyright and may reuse their own work without restriction.',
       },
       {
         q: 'How do I correct an error in a published article?',
