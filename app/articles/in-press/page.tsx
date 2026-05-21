@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { count } = await admin
     .from('manuscripts')
     .select('id', { count: 'exact', head: true })
-    .eq('status', 'in_production')
+    .in('status', ['accepted', 'in_production'])
 
   const isEmpty = !count || count === 0
 
@@ -87,7 +87,7 @@ async function loadInPressArticles(): Promise<InPressArticle[]> {
   const { data: mData } = await admin
     .from('manuscripts')
     .select('*')
-    .eq('status', 'in_production')
+    .in('status', ['accepted', 'in_production'])
     .order('accepted_date', { ascending: false })
 
   const manuscripts = (mData as ManuscriptRow[] | null) || []

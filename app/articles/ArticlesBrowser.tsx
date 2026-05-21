@@ -235,9 +235,14 @@ function ArticlesBrowserInner({ articles }: { articles: BrowserArticle[] }) {
                       <span className="text-xs text-brown ml-auto">{article.date}</span>
                     )}
                   </div>
-                  <h2 className="font-serif text-xl font-normal text-brown-dark leading-snug mb-2">
-                    {article.title}
-                  </h2>
+                  <Link
+                    href={`/articles/${article.id}`}
+                    className="group block"
+                  >
+                    <h2 className="font-serif text-xl font-normal text-brown-dark leading-snug mb-2 group-hover:text-ink transition-colors">
+                      {article.title}
+                    </h2>
+                  </Link>
                   {article.authors && (
                     <p className="text-sm text-brown mb-3">{article.authors}</p>
                   )}

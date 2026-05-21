@@ -41,6 +41,7 @@ type FeaturedArticle = {
   authors: string
   doi: string | null
   topic: string
+  pdfStoragePath: string | null
 }
 
 const TYPE_LABELS: Record<ManuscriptType, string> = {
@@ -100,6 +101,7 @@ async function loadFeaturedArticles(): Promise<FeaturedArticle[]> {
       authors: authorsLine,
       doi: m.doi,
       topic: subspecialtyLabel,
+      pdfStoragePath: m.published_pdf_storage_path ?? null,
     }
   })
 }
@@ -483,26 +485,26 @@ export default async function HomePage() {
                         </span>
                       )}
                     </div>
-                    <h3 className="font-serif text-lg font-normal text-black leading-snug mb-3 flex-1">
-                      {article.title}
-                    </h3>
+                    <Link href={`/articles/${article.id}`} className="group block flex-1">
+                      <h3 className="font-serif text-lg font-normal text-black leading-snug mb-3 group-hover:text-brown-dark transition-colors">
+                        {article.title}
+                      </h3>
+                    </Link>
                     {article.authors && (
                       <p className="text-xs text-ink mb-2">{article.authors}</p>
                     )}
                     {article.doi && (
                       <p className="text-xs text-ink font-mono">{article.doi}</p>
                     )}
-                    {article.doi && (
-                      <a
-                        href={`https://doi.org/${article.doi}`}
-                        className="mt-4 text-sm text-ink font-medium hover:text-black transition-colors flex items-center gap-1"
-                      >
-                        Read article
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </a>
-                    )}
+                    <Link
+                      href={`/articles/${article.id}`}
+                      className="mt-4 text-sm text-ink font-medium hover:text-black transition-colors flex items-center gap-1"
+                    >
+                      Read article
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   </article>
                 ))}
               </div>
