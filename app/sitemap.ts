@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { AI_ORTHO_BRIEFS } from '@/lib/ai-ortho/data'
 import { BOARD_MEMBER_BIOS } from '@/lib/schema/editorialBoard'
 import { THIN_BIO_SLUGS } from '@/lib/schema/thinBioSlugs'
+import { createAdminClient } from '@/lib/supabase/server'
 
 const AI_ORTHO_CATEGORY_SLUGS = [
   'imaging',
@@ -12,8 +13,31 @@ const AI_ORTHO_CATEGORY_SLUGS = [
   'research-tools',
 ]
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.oscrsj.com'
+
+  // Fetch all published article IDs for dynamic URL generation.
+  // Failures here are non-fatal — sitemap falls back to static pages only.
+  let articlePages: MetadataRoute.Sitemap = []
+  try {
+    const admin = createAdminClient()
+    const { data } = await admin
+      .from('manuscripts')
+      .select('id, updated_at')
+      .eq('status', 'published')
+      .order('updated_at', { ascending: false })
+      .returns<{ id: string; updated_at: string | null }[]>()
+    if (data) {
+      articlePages = data.map((m) => ({
+        url: `${baseUrl}/articles/${m.id}`,
+        lastModified: m.updated_at ? new Date(m.updated_at) : new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.9,
+      }))
+    }
+  } catch {
+    // Supabase unavailable at build time — omit article URLs gracefully
+  }
 
   const aiOrthoPages: MetadataRoute.Sitemap = [
     {
@@ -252,5 +276,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  return [...staticPages, ...aiOrthoPages]
+  return [...articlePages, ...staticPages, ...aiOrthoPages]
 }

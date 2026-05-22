@@ -95,14 +95,46 @@ export async function generateMetadata({
   if (!data) return { title: 'Article Not Found' }
 
   const { manuscript, authors } = data
-  const authorsStr = authors.map((a) => a.full_name).join(', ')
   const description = manuscript.abstract
     ? manuscript.abstract.slice(0, 200) + '…'
     : 'Published in OSCRSJ — Orthopedic Surgery Case Reports & Series Journal.'
 
+  const articleKeywords =
+    manuscript.keywords && manuscript.keywords.length > 0
+      ? manuscript.keywords
+      : undefined
+
+  // Highwire Press citation_* meta tags — required for Google Scholar indexing.
+  // Google Scholar reads ONLY these tags; it ignores JSON-LD and OG for indexing.
+  const citationDate = manuscript.published_date
+    ? new Date(manuscript.published_date)
+        .toLocaleDateString('en-CA') // YYYY-MM-DD
+        .replace(/-/g, '/')           // YYYY/MM/DD (Scholar format)
+    : undefined
+
+  const citationMeta: Record<string, string | string[]> = {
+    citation_title: manuscript.title || '',
+    citation_author: authors.map((a) => a.full_name), // one <meta> per author
+    citation_journal_title:
+      'Orthopedic Surgery Case Reports and Series Journal',
+    citation_publisher: 'OSCRSJ',
+    citation_volume: '1',
+    citation_issue: '1',
+    citation_pdf_url: `https://www.oscrsj.com/api/articles/${params.id}/pdf`,
+    citation_fulltext_html_url: `https://www.oscrsj.com/articles/${params.id}`,
+  }
+  if (citationDate) citationMeta.citation_publication_date = citationDate
+  if (manuscript.elocation_id)
+    citationMeta.citation_firstpage = manuscript.elocation_id
+  if (manuscript.abstract)
+    citationMeta.citation_abstract = manuscript.abstract
+  if (articleKeywords)
+    citationMeta.citation_keyword = articleKeywords // one <meta> per keyword
+
   return {
     title: manuscript.title || 'Article',
     description,
+    keywords: articleKeywords,
     alternates: {
       canonical: `https://www.oscrsj.com/articles/${params.id}`,
     },
@@ -113,6 +145,12 @@ export async function generateMetadata({
       type: 'article',
       authors: authors.map((a) => a.full_name),
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: manuscript.title || 'Article',
+      description,
+    },
+    other: citationMeta,
   }
 }
 
@@ -166,7 +204,55 @@ export default async function ArticlePage({
   // Build corresponding author info
   const corresponding = authors.find((a) => a.is_corresponding)
 
+  // Build MedicalScholarlyArticle JSON-LD for AI tools and rich results.
+  // Google Scholar uses citation_* meta tags (above); this targets AI chat
+  // tools (Perplexity, ChatGPT, Gemini) and Google's rich-result system.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalScholarlyArticle',
+    '@id': `https://www.oscrsj.com/articles/${manuscript.id}`,
+    headline: manuscript.title || undefined,
+    url: `https://www.oscrsj.com/articles/${manuscript.id}`,
+    datePublished: manuscript.published_date ?? undefined,
+    description: manuscript.abstract
+      ? manuscript.abstract.slice(0, 300)
+      : undefined,
+    author: authors.map((a) => ({
+      '@type': 'Person',
+      name: a.full_name,
+      ...(a.affiliation
+        ? { affiliation: { '@type': 'Organization', name: a.affiliation } }
+        : {}),
+      ...(a.orcid_id
+        ? { sameAs: `https://orcid.org/${a.orcid_id}` }
+        : {}),
+    })),
+    publisher: { '@id': 'https://www.oscrsj.com/#organization' },
+    isPartOf: { '@id': 'https://www.oscrsj.com/#periodical' },
+    isAccessibleForFree: true,
+    license: 'https://creativecommons.org/licenses/by/4.0/',
+    ...(manuscript.subspecialty
+      ? {
+          about: {
+            '@type': 'MedicalCondition',
+            name: subspecialtyLabel || manuscript.subspecialty,
+          },
+        }
+      : {}),
+    ...(manuscript.elocation_id
+      ? { pagination: manuscript.elocation_id }
+      : {}),
+    ...(manuscript.keywords && manuscript.keywords.length > 0
+      ? { keywords: manuscript.keywords.join(', ') }
+      : {}),
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <div className="bg-cream min-h-screen">
       {/* Breadcrumb */}
       <div className="bg-dark border-b border-white/10">
@@ -430,5 +516,6 @@ export default async function ArticlePage({
         </div>
       </div>
     </div>
+    </>
   )
 }
