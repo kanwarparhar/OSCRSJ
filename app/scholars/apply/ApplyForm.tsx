@@ -20,7 +20,6 @@ interface TrackOption {
   tiers: Array<{
     value: TierValue
     label: string
-    price: string
     summary: string
   }>
 }
@@ -35,14 +34,12 @@ const TRACK_OPTIONS: TrackOption[] = [
       {
         value: 'pre_med_tier_1',
         label: 'Tier 1 — 6-month program',
-        price: '$499',
         summary:
           'Middle author on one database study supervised by a med student, abstract + manuscript writing, Zotero, monthly Q&A.',
       },
       {
         value: 'pre_med_tier_2',
         label: 'Tier 2 — 1-year program',
-        price: '$999',
         summary:
           '2 projects (1 first-author or SR/MA co-author), conditional LOR on completion, mock interview, pre-med to residency roadmap.',
       },
@@ -57,14 +54,12 @@ const TRACK_OPTIONS: TrackOption[] = [
       {
         value: 'med_student_tier_1',
         label: 'Tier 1 — 6-month program',
-        price: '$499',
         summary:
           '2-3 SR/MA projects (1 first-author), abstract + manuscript writing, Zotero, monthly project meeting.',
       },
       {
         value: 'med_student_tier_2',
         label: 'Tier 2 — 1-year program',
-        price: '$999',
         summary:
           '5-6 NIS Database studies (2-3 first-author), conference support, away rotation planning.',
       },
@@ -79,7 +74,6 @@ const TRACK_OPTIONS: TrackOption[] = [
       {
         value: 'img',
         label: 'Tier 1 — 6-month program',
-        price: '$499',
         summary:
           '3-4 SR/MA projects (students must have prior experience), residency application overview, research letter of recommendation, conference abstract submission and support, monthly project meetings.',
       },
@@ -431,13 +425,8 @@ export default function ApplyForm() {
                         required
                       />
                       <div className="flex-1">
-                        <div className="flex flex-wrap items-baseline gap-x-2">
-                          <span className="text-sm font-medium text-ink">
-                            {tier.label}
-                          </span>
-                          <span className="text-sm font-semibold text-brown-dark">
-                            {tier.price}
-                          </span>
+                        <div className="text-sm font-medium text-ink">
+                          {tier.label}
                         </div>
                         <p className="text-xs text-brown mt-1 leading-relaxed">
                           {tier.summary}
