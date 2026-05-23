@@ -707,7 +707,6 @@ export async function submitManuscript(manuscriptId: string) {
     .eq('manuscript_id', manuscriptId)
 
   const fileTypes = (fileData as { file_type: string }[] | null) || []
-  if (!fileTypes.some(f => f.file_type === 'manuscript')) return { error: 'Main manuscript file is required' }
   if (!fileTypes.some(f => f.file_type === 'blinded_manuscript')) return { error: 'Blinded manuscript file is required' }
 
   // Check authors
@@ -1182,9 +1181,6 @@ export async function submitRevision(
 
   const fileTypes = (fileData as { file_type: string }[] | null) || []
   const hasFileType = (t: string) => fileTypes.some((f) => f.file_type === t)
-  if (!hasFileType('manuscript')) {
-    return { error: 'Revised manuscript file is required.' }
-  }
   if (!hasFileType('blinded_manuscript')) {
     return { error: 'Revised blinded manuscript file is required.' }
   }

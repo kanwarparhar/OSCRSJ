@@ -19,15 +19,6 @@ interface FileCategory {
 
 const BASE_CATEGORIES_FIXED: FileCategory[] = [
   {
-    type: 'manuscript',
-    label: 'Main Manuscript',
-    required: true,
-    accept: '.docx,.pdf',
-    maxSizeMB: 50,
-    maxFiles: 1,
-    description: 'Your complete manuscript with all author information. Accepted formats: .docx or .pdf (max 50 MB).',
-  },
-  {
     type: 'blinded_manuscript',
     label: 'Blinded Manuscript',
     required: true,
@@ -138,15 +129,6 @@ function buildBaseCategories(manuscriptType: ManuscriptType | null): FileCategor
 }
 
 const REVISION_CATEGORIES: FileCategory[] = [
-  {
-    type: 'manuscript',
-    label: 'Original Unblinded Manuscript',
-    required: true,
-    accept: '.docx,.pdf',
-    maxSizeMB: 50,
-    maxFiles: 1,
-    description: 'Clean revised manuscript with all author information — no track-changes formatting (no red, no highlighting). Accepted formats: .docx or .pdf (max 50 MB).',
-  },
   {
     type: 'blinded_manuscript',
     label: 'Revised Blinded Manuscript',
@@ -465,7 +447,7 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
           ? 'Upload the revised manuscript set. Original v1 files stay on record — new uploads land in the v' +
             currentVersion +
             '/ folder. Required: revised manuscript (clean), revised blinded manuscript (clean), tracked-changes manuscript (every edit in red text + yellow highlight), and the Response to Reviewers document (point-by-point with line numbers).'
-          : 'Upload your manuscript files below. Main manuscript and blinded manuscript are required.'}
+          : 'Upload your manuscript files below. Blinded manuscript is required.'}
       </p>
 
       {error && (

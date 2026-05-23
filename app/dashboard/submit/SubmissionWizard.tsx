@@ -207,7 +207,6 @@ function initialStateFromDraft(
 
 function computeInitialStep(state: WizardState): number {
   if (!state.manuscriptType) return 1
-  const hasMain = state.files.some(f => f.file_type === 'manuscript')
   const hasBlinded = state.files.some(f => f.file_type === 'blinded_manuscript')
   // Pre-flight reporting-checklist requirement matches step2Complete.
   const hasCare = state.files.some(f => f.file_type === 'care_checklist')
@@ -216,7 +215,7 @@ function computeInitialStep(state: WizardState): number {
     state.manuscriptType === 'case_report' ? hasCare
     : state.manuscriptType === 'case_series' ? hasJbi
     : true
-  if (!hasMain || !hasBlinded || !checklistOk) return 2
+  if (!hasBlinded || !checklistOk) return 2
   const abstractWords = state.abstract.trim()
     ? state.abstract.trim().split(/\s+/).length
     : 0
@@ -491,7 +490,6 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
     state.allAuthorsAgreed
   )
 
-  const hasMainManuscript = state.files.some(f => f.file_type === 'manuscript')
   const hasBlindedManuscript = state.files.some(f => f.file_type === 'blinded_manuscript')
   // Reporting-checklist gate (Session 43, 2026-05-04): Case Reports must
   // ship with a CARE checklist; Case Series must ship with a JBI Case
@@ -508,7 +506,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
       : state.manuscriptType === 'case_series'
         ? hasJbiChecklist
         : true
-  const step2Complete = hasMainManuscript && hasBlindedManuscript && reportingChecklistOk
+  const step2Complete = hasBlindedManuscript && reportingChecklistOk
 
   // Step 3 abstract gate: required (non-empty) AND ≤300 words.
   // Mirror Step3Info's word count.
