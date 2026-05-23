@@ -130,6 +130,14 @@ Operational rules every session must follow. New entries land here only when a n
 
 The 3 most recent sessions, full narrative. Older sessions surface as 1-line pointers in the next section; full narrative for any session lives in [docs/session-history.md](docs/session-history.md).
 
+### Session 72 — 2026-05-22 — Sushant Cowork — Remove main manuscript upload from submission wizard — 1 OSCRSJ commit `8cbb869`
+
+Kanwar request: remove the "Main Manuscript" (`file_type='manuscript'`) upload slot from the submission portal. The unblinded copy was a third redundant file given that OSCRSJ already requires (a) a Blinded Manuscript for peer review and (b) a Title Page carrying all author information.
+
+**Commit `8cbb869` — 3 files, net -24 lines.** `Step2Files.tsx`: removed `manuscript` entry from `BASE_CATEGORIES_FIXED` and "Original Unblinded Manuscript" entry from `REVISION_CATEGORIES`; updated Step 2 hint text. `SubmissionWizard.tsx`: dropped `hasMainManuscript` from `step2Complete` gate and `computeInitialStep`. `lib/submission/actions.ts`: removed `manuscript` file-type server-side check from both `submitManuscript` and `submitRevision`. TypeScript clean; pushed `9f590f2..8cbb869`.
+
+Full narrative at [docs/session-history.md#session-72-remove-main-manuscript-upload](docs/session-history.md). **Handoffs pushed: None.**
+
 ### Session 71 — 2026-05-22 — John Cowork — Article discoverability audit: Highwire Press `citation_*` tags + `MedicalScholarlyArticle` JSON-LD + async sitemap with dynamic article URLs + GSC sitemap resubmission — 1 OSCRSJ commit `9f590f2`
 
 Audited discoverability of OSCRSJ's first published article (e0001, manuscript ID `f8596ce8`, "Bilateral acute exertional compartment syndrome of the forearms in a sport climber: a case report") across Google Scholar, Google Search, and AI citation tools. Shipped fixes as Franklin, then did the GSC resubmission.
@@ -164,26 +172,13 @@ Closed the Session 62 publication-arc follow-up "Diagnose cleanup pane Publish b
 
 **Self-improvement: codify "curl + grep `"b":"development"` is the first diagnostic for any Funnel-served / Vercel-served UI button bug"** — saved hours of speculative debugging. Full narrative at [docs/session-history.md#session-70-cleanup-pane-publish-button-fix](docs/session-history.md). **Handoffs pushed: None.**
 
-### Session 69 — 2026-05-21 — Sushant Cowork — C1/C3 post-publish hotfixes (handling editor name + verapdf false-positive) + article 1 re-publish — 1 renderer commit `8f1888b`
-
-Single sitting closing the two remaining 🔴 critical items from Janine's Session 68 compliance audit. C2 (contradictory consent) had already been resolved by Kanwar in Session 68.
-
-**C1 fix (data, not code):** Kanwar's `users` row had the email address in `full_name`. `synthesize.ts` code is correct — it reads `users.full_name`. Fix: `UPDATE users SET full_name = 'Kanwar Parhar' WHERE email = 'kanwarparhar@gmail.com'` in Supabase Studio. Confirmed via SELECT.
-
-**C3 fix — renderer commit `8f1888b`:** `lib/renderer/verapdf.ts` `parseVerapdfTextOutput()` had regex `/^(PASS|FAIL)\s+PDF\/A-1B/i` which matched old verapdf format but not verapdf 1.30.1 batch format (`FAIL /path/to/file.pdf 1b`). The fallback heuristic silently returned `'pass'` since zero Rule lines exist on any PDF. One-line fix: broaden to `/^(PASS|FAIL)\s+/i`. Pushed to `origin/main` by Kanwar.
-
-**Re-publish:** Article 1 re-published via `node scripts/publish-one.mjs f8596ce8-... 2>&1`. Both fixes baked into new JATS XML + render-report.json artifacts.
-
-**Session wrap-up.** Compliance audit note updated (all 3 C-items resolved). CLAUDE.md + session-history.md + Vault State updated per M1-M4.
-
-Full narrative at [docs/session-history.md#session-69-c1-c3-hotfixes-republish](docs/session-history.md). **Handoffs pushed: None.**
-
 ---
 
 ## Recent Sessions (pointers)
 
 Sessions from the last 14 days as 1-line pointers (newest first). Older sessions reachable via grep on the archive.
 
+- **Session 69 — 2026-05-21 — Sushant Cowork — C1/C3 post-publish hotfixes (handling editor name + verapdf false-positive) + article 1 re-publish — 1 renderer commit `8f1888b`** — see [docs/session-history.md#session-69-c1-c3-hotfixes-republish](docs/session-history.md)
 - **Session 68 — 2026-05-21 — Janine Cowork — First-publish compliance audit of e0001 (3 🔴 C1/C2/C3 found, C2 resolved same-session) + /faq CC BY-NC-ND → CC BY 4.0 fix + ISSN Application Prep vault file** — see [docs/session-history.md#session-68-janine-first-publish-compliance-audit](docs/session-history.md)
 - **Session 67 — 2026-05-21 — Sushant Cowork — Full public article display pipeline: PDF proxy + figure proxy + article landing page + in-press status fix + homepage wiring; 4 OSCRSJ commits `8a55c08` + `6218853` + `4006ab6` + `a77920d`** — see [docs/session-history.md#session-67-public-article-display-pipeline](docs/session-history.md)
 - **Session 66 — 2026-05-20 — Franklin Cowork — Narrative Review category launch (Phase 1: site copy sweep across 4 author-facing pages + CC BY-NC-ND → CC BY 4.0 bundled); 1 OSCRSJ commit `d1207bc`** — see [docs/session-history.md#session-66-narrative-review-site-copy](docs/session-history.md)

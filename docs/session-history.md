@@ -272,6 +272,24 @@
 
 *Newest first.*
 
+### Session 72 — 2026-05-22 — Sushant Cowork — Remove main manuscript upload from submission wizard — 1 OSCRSJ commit `8cbb869`  ^session-72-remove-main-manuscript-upload
+
+Kanwar request: "From the submission portal system, can you remove the main manuscript upload section. I don't think it is adding much value."
+
+The "Main Manuscript" (`file_type='manuscript'`) slot was the unblinded copy of the manuscript — i.e., the full version with all author information. OSCRSJ's submission structure already requires (a) a **Blinded Manuscript** for peer review and (b) a **Title Page** carrying all author information as a separate file. The unblinded main manuscript was a third copy that duplicated information already split across those two files, adding friction for submitters without adding editorial value.
+
+**Commit `8cbb869` — 3 files, net -24 lines.**
+
+`app/dashboard/submit/Step2Files.tsx` — Removed the `manuscript` entry (first item) from `BASE_CATEGORIES_FIXED`; removed the "Original Unblinded Manuscript" `manuscript` entry (first item) from `REVISION_CATEGORIES`. Updated the Step 2 sub-heading hint text from "Main manuscript and blinded manuscript are required." → "Blinded manuscript is required."
+
+`app/dashboard/submit/SubmissionWizard.tsx` — Removed `hasMainManuscript` variable and its use in `step2Complete` (was `hasMainManuscript && hasBlindedManuscript && reportingChecklistOk`, now `hasBlindedManuscript && reportingChecklistOk`). Removed the `hasMain` check from `computeInitialStep` so the wizard auto-advances past Step 2 once the blinded manuscript (+ checklist if applicable) is present.
+
+`lib/submission/actions.ts` — Removed the `manuscript` file-type server-side guard in `submitManuscript` (line ~710) and the equivalent guard in `submitRevision` (line ~1185-1187). Both functions now only require `blinded_manuscript` (initial) plus `blinded_manuscript` + `tracked_changes` + `response_to_reviewers` (revision).
+
+TypeScript clean (`npx tsc --noEmit` — exit 0). Pushed to `origin/main` (`9f590f2..8cbb869`).
+
+**Handoffs pushed: None.**
+
 ### Session 71 — 2026-05-22 — John + Franklin Cowork — Article e0001 SEO: citation_* Highwire tags + MedicalScholarlyArticle JSON-LD + sitemap injection + GSC resubmission — 1 OSCRSJ commit `9f590f2`  ^session-71-article-seo-citation-tags-sitemap
 
 Triggered by Kanwar: "What is the SEO status of our first manuscript. Is it discoverable everywhere it needs to be?" Loaded John (Search, Trust & Discoverability Director) and ran a full three-surface discoverability audit of the live article page for e0001 (Bilateral acute exertional compartment syndrome of the forearms in a sport climber — `f8596ce8-2424-4a47-8537-5af9e8a2f5cd`, published 2026-05-19).
