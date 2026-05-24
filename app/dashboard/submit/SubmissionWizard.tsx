@@ -18,6 +18,7 @@ import Step3Info from './Step3Info'
 import Step4Authors from './Step4Authors'
 import type { AuthorEntry } from './Step4Authors'
 import Step5Declarations from './Step5Declarations'
+import Step6Review from './Step6Review'
 import RevisionStep0 from './RevisionStep0'
 
 // ---- Step definitions ----
@@ -28,6 +29,7 @@ const STEPS_BASE = [
   { number: 3, label: 'Manuscript Info' },
   { number: 4, label: 'Authors' },
   { number: 5, label: 'Declarations' },
+  { number: 6, label: 'Review & Submit' },
 ]
 
 const STEPS_REVISING = [
@@ -37,6 +39,7 @@ const STEPS_REVISING = [
   { number: 3, label: 'Manuscript Info' },
   { number: 4, label: 'Authors' },
   { number: 5, label: 'Declarations' },
+  { number: 6, label: 'Review & Submit' },
 ]
 
 // ---- Wizard state types ----
@@ -227,7 +230,24 @@ function computeInitialStep(state: WizardState): number {
     !state.subspecialty
   ) return 3
   if (state.authors.length === 0 || !state.authorConsentCertified) return 4
-  return 5
+  // Step 5 declarations gate — mirrors step5Complete in the component.
+  const coiOk = state.noConflicts || state.conflictOfInterest.trim().length > 0
+  const fundingOk = state.noFunding || state.fundingSources.length > 0
+  const dataOk =
+    state.dataAvailability.length > 0 &&
+    (state.dataAvailability !== 'Data available in a public repository' ||
+      state.dataAvailabilityUrl.trim().length > 0)
+  const ethicsOk =
+    !state.ethicsInvolved || state.ethicsApprovalNumber.trim().length > 0
+  const trialOk =
+    !state.clinicalTrial || state.clinicalTrialId.trim().length > 0
+  const aiAnswered = state.aiToolsUsed !== null
+  const aiDetailsOk =
+    state.aiToolsUsed !== true || state.aiToolsDetails.trim().length > 0
+  const declarationsOk =
+    coiOk && fundingOk && dataOk && ethicsOk && trialOk && aiAnswered && aiDetailsOk
+  if (!declarationsOk) return 5
+  return 6
 }
 
 export default function SubmissionWizard({ draft, userProfile, revisionContext }: SubmissionWizardProps) {
@@ -399,7 +419,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
     // Step 2+ with a null manuscriptId and a misleading "complete Step
     // 1 first" error on file upload.
     if (!result.ok) return
-    if (currentStep < 5) setCurrentStep(prev => prev + 1)
+    if (currentStep < 6) setCurrentStep(prev => prev + 1)
   }, [currentStep, saveDraft, isRevising])
 
   const goBack = useCallback(async () => {
@@ -535,12 +555,27 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
   const aiToolsOk = aiAnswered && aiDetailsOk
   const step5Complete = coiOk && fundingOk && dataOk && ethicsOk && trialOk && aiToolsOk
 
+  // Revision response is required only in revising mode.
+  const revisionResponseOk =
+    !isRevising || (revisionResponse || '').trim().length >= 50
+
+  // The wizard-level "everything except the final review checkbox is
+  // satisfied" gate that Step 6 reads to enable Submit.
+  const allComplete =
+    step1Complete &&
+    step2Complete &&
+    step3Complete &&
+    step4Complete &&
+    step5Complete &&
+    revisionResponseOk
+
   // Can we move to the next step?
   const canProceed = (step: number) => {
     if (step === 1) return step1Complete
     if (step === 2) return step2Complete
     if (step === 3) return step3Complete
     if (step === 4) return step4Complete
+    if (step === 5) return step5Complete && revisionResponseOk
     return false
   }
 
@@ -567,7 +602,11 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
               (step.number === 1 && step1Complete && currentStep > 1) ||
               (step.number === 2 && step2Complete && currentStep > 2) ||
               (step.number === 3 && step3Complete && currentStep > 3) ||
-              (step.number === 4 && step4Complete && currentStep > 4)
+              (step.number === 4 && step4Complete && currentStep > 4) ||
+              (step.number === 5 &&
+                step5Complete &&
+                revisionResponseOk &&
+                currentStep > 5)
             const isCurrent = step.number === currentStep
 
             return (
@@ -691,22 +730,45 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             aiToolsUsed={state.aiToolsUsed}
             aiToolsDetails={state.aiToolsDetails}
             noteToEditor={state.noteToEditor}
+            onChange={updateState}
+            isRevising={isRevising}
+            revisionResponse={revisionResponse}
+            onRevisionResponseChange={setRevisionResponse}
+          />
+        )}
+
+        {currentStep === 6 && (
+          <Step6Review
             manuscriptType={state.manuscriptType}
             files={state.files}
             title={state.title}
             abstract={state.abstract}
             keywords={state.keywords}
             subspecialty={state.subspecialty}
+            suggestedReviewers={state.suggestedReviewers}
+            nonPreferredReviewers={state.nonPreferredReviewers}
             authors={state.authors}
             authorConsentCertified={state.authorConsentCertified}
-            onChange={updateState}
+            conflictOfInterest={state.conflictOfInterest}
+            noConflicts={state.noConflicts}
+            fundingSources={state.fundingSources}
+            noFunding={state.noFunding}
+            dataAvailability={state.dataAvailability}
+            dataAvailabilityUrl={state.dataAvailabilityUrl}
+            ethicsInvolved={state.ethicsInvolved}
+            ethicsApprovalNumber={state.ethicsApprovalNumber}
+            clinicalTrial={state.clinicalTrial}
+            clinicalTrialId={state.clinicalTrialId}
+            aiToolsUsed={state.aiToolsUsed}
+            aiToolsDetails={state.aiToolsDetails}
+            noteToEditor={state.noteToEditor}
             onGoToStep={goToStep}
             onSubmit={handleSubmit}
             submitting={submitting}
             submitError={submitError}
+            allComplete={allComplete}
             isRevising={isRevising}
             revisionResponse={revisionResponse}
-            onRevisionResponseChange={setRevisionResponse}
           />
         )}
       </div>
@@ -748,7 +810,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             {saving ? 'Saving...' : 'Save & Continue Later'}
           </button>
 
-          {currentStep < 5 && (
+          {currentStep < 6 && (
             <button
               onClick={goNext}
               disabled={

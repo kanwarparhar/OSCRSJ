@@ -118,6 +118,34 @@ export default async function AdminReviewerApplicationsPage({
             who are awaiting editor triage.
           </p>
         </div>
+
+        {/* Suggested-reviewer export — sourced from the
+            suggested_reviewers JSON on every submitted manuscript's
+            manuscript_metadata row, deduplicated by (name, email). The
+            server route enforces editor/admin role before streaming the
+            .xlsx. Lives on the reviewer roster page because that's where
+            editors triage and recruit new reviewers; the export feeds
+            the recruitment pipeline. */}
+        <a
+          href="/api/admin/exports/suggested-reviewers"
+          download
+          className="inline-flex items-center gap-2 rounded-full border border-brown/20 bg-white px-4 py-2 text-xs font-medium text-brown hover:bg-cream-alt transition-colors"
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
+            />
+          </svg>
+          Download suggested reviewers (.xlsx)
+        </a>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap border-b border-border pb-3">

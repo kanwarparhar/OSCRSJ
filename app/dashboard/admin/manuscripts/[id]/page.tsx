@@ -72,6 +72,41 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }
 
+function formatUploadDate(iso: string | null | undefined): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return ''
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+// Group files by their `version` column. version=1 is the original
+// submission; version=N (N>1) is revision N-1 (per Step2Files'
+// `currentVersion = isRevising ? revisionNumber! + 1 : 1`). Returns
+// sections sorted by version ascending so the admin sees newest-on-
+// bottom (matching the chronological feel of an editorial inbox).
+function groupFilesByRevision(files: ManuscriptFileRow[]): Array<{
+  version: number
+  label: string
+  files: ManuscriptFileRow[]
+}> {
+  const byVersion = new Map<number, ManuscriptFileRow[]>()
+  for (const f of files) {
+    const v = f.version ?? 1
+    if (!byVersion.has(v)) byVersion.set(v, [])
+    byVersion.get(v)!.push(f)
+  }
+  const versions = Array.from(byVersion.keys()).sort((a, b) => a - b)
+  return versions.map((v) => ({
+    version: v,
+    label: v === 1 ? 'Original Submission' : `Revision ${v - 1}`,
+    files: byVersion.get(v)!,
+  }))
+}
+
 export default async function AdminManuscriptDetailPage({
   params,
 }: {
@@ -341,30 +376,40 @@ export default async function AdminManuscriptDetailPage({
         )}
       </div>
 
-      <div className="bg-white border border-border rounded-xl p-6 space-y-3">
+      <div className="bg-white border border-border rounded-xl p-6 space-y-5">
         <h2 className="font-serif text-lg text-brown-dark">
           Files ({files.length})
         </h2>
         {files.length === 0 ? (
           <p className="text-sm text-brown">No files uploaded.</p>
         ) : (
-          <ul className="space-y-2 text-sm">
-            {files.map((f) => (
-              <li
-                key={f.id}
-                className="flex items-center justify-between gap-3 text-ink"
-              >
-                <span className="truncate flex-1">{f.original_filename}</span>
-                <span className="text-xs uppercase tracking-widest text-brown whitespace-nowrap">
-                  {f.file_type.replace(/_/g, ' ')}
-                </span>
-                <span className="text-xs text-brown whitespace-nowrap">
-                  {formatBytes(f.file_size_bytes)}
-                </span>
-                <AdminFileDownloadButton fileId={f.id} />
-              </li>
-            ))}
-          </ul>
+          groupFilesByRevision(files).map((section) => (
+            <div key={section.version} className="space-y-2">
+              <h3 className="text-xs uppercase tracking-widest text-brown border-b border-border pb-2">
+                {section.label} ({section.files.length})
+              </h3>
+              <ul className="space-y-2 text-sm">
+                {section.files.map((f) => (
+                  <li
+                    key={f.id}
+                    className="flex items-center justify-between gap-3 text-ink"
+                  >
+                    <span className="truncate flex-1">{f.original_filename}</span>
+                    <span className="text-xs uppercase tracking-widest text-brown whitespace-nowrap">
+                      {f.file_type.replace(/_/g, ' ')}
+                    </span>
+                    <span className="text-xs text-brown whitespace-nowrap">
+                      {formatUploadDate(f.upload_date)}
+                    </span>
+                    <span className="text-xs text-brown whitespace-nowrap">
+                      {formatBytes(f.file_size_bytes)}
+                    </span>
+                    <AdminFileDownloadButton fileId={f.id} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
         )}
       </div>
 
