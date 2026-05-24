@@ -90,13 +90,6 @@ export default function Step3Info({
   }
 
   const removeSuggestedReviewer = (idx: number) => {
-    // Always keep at least one row visible — the field is required
-    // (≥1 reviewer suggestion). If the editor is removing the last
-    // populated row, blank it out instead of dropping it.
-    if (suggestedReviewers.length <= 1) {
-      onChange({ suggestedReviewers: [{ name: '', email: '', expertise: '' }] })
-      return
-    }
     onChange({ suggestedReviewers: suggestedReviewers.filter((_, i) => i !== idx) })
   }
 
@@ -254,10 +247,10 @@ export default function Step3Info({
       <>
       <div className="mb-6 border-t border-border pt-6">
         <h3 className="font-serif text-lg text-brown-dark mb-1">
-          Suggested Reviewers <span className="text-red-500">*</span>
+          Suggested Reviewers
         </h3>
         <p className="text-xs text-brown mb-4">
-          Suggest at least one reviewer with relevant expertise (up to 5). Provide name,
+          Optional. Suggest up to 5 reviewers with relevant expertise. Provide name,
           email, and area of expertise for each. Suggested reviewers should not be co-authors
           or close collaborators on this work.
         </p>
