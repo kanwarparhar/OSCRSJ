@@ -1,20 +1,34 @@
 // ============================================================
-// Co-author dispute handler
+// Co-author authorship confirmation / dispute handler
 // ============================================================
-// GET /api/submissions/[id]/co-author-dispute?token=<jwt>
+// A co-author who was listed on a submission clicks the link in their
+// notification email. The link carries a signed JWT bound to a single
+// (manuscriptId, coAuthorEmail) pair.
 //
-// A co-author who did not consent to authorship clicks the link in
-// their notification email. We:
-//   1. Verify the JWT and ensure the manuscriptId in the URL matches
-//      the one inside the token (defends against URL tampering)
-//   2. Append the dispute to manuscript_metadata.co_author_disputes
-//   3. Insert an audit_logs row with the disputing email in details
-//   4. Notify the corresponding author and the editorial office
-//   5. Render a confirmation HTML page (or an error page if invalid)
+//   GET  /api/submissions/[id]/co-author-dispute?token=<jwt>
+//        Renders a READ-ONLY landing page that shows the submission and
+//        offers two explicit choices: confirm authorship, or object.
+//        GET performs NO database mutation. This is deliberate:
+//          - A bare GET that mutates state means any email security
+//            scanner / link-preview bot (Outlook SafeLinks, Mimecast,
+//            Gmail, antivirus) that auto-prefetches the URL would file a
+//            phantom objection with no human action. (Root cause of the
+//            repeated false "co-author objected" reports.)
+//          - A single objection-only button also led co-authors who
+//            wanted to CONFIRM to accidentally object by clicking the
+//            only link in the email.
 //
-// Until an editor role exists, dispute notifications are sent to a
-// hardcoded `admin@oscrsj.com` address. This will be replaced with the
-// assigned editor in Phase 3.
+//   POST /api/submissions/[id]/co-author-dispute
+//        Body (form-encoded): token=<jwt>&action=confirm|object
+//        Performs the actual state change. Because it requires a real
+//        form submission (a button click), scanners and prefetchers
+//        cannot trigger it.
+//          - action=object  → append to manuscript_metadata.co_author_disputes,
+//            audit-log, and notify the corresponding author + editorial office.
+//          - action=confirm → audit-log an affirmative consent record.
+//
+// Until an editor role exists, dispute notifications are sent to the
+// journal's primary Gmail.
 // ============================================================
 
 import { NextRequest } from 'next/server'
@@ -36,6 +50,16 @@ import type {
 // until a Google Workspace editorial mailbox is provisioned.
 const ADMIN_NOTIFY_EMAIL = 'oscrsjournal@gmail.com'
 
+interface ManuscriptContext {
+  manuscript: ManuscriptRow
+  metadata: ManuscriptMetadataRow | null
+  authors: ManuscriptAuthorRow[]
+  correspondingAuthor: ManuscriptAuthorRow | null
+}
+
+// ============================================================
+// GET — render the safe, read-only landing page (no mutation)
+// ============================================================
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -44,31 +68,140 @@ export async function GET(
   const token = url.searchParams.get('token')
   const manuscriptId = params.id
 
-  if (!token) {
+  const validation = await validateToken(token, manuscriptId)
+  if ('error' in validation) {
+    return validation.error
+  }
+  const { email } = validation.payload
+
+  const admin = createAdminClient()
+  const ctx = await loadContext(admin, manuscriptId)
+  if (!ctx) {
     return errorResponse(
-      'Missing dispute token',
-      'This link is incomplete. Please use the original link from your email.'
+      'Submission not found',
+      'We could not locate this submission. Contact the editorial office for help.'
     )
   }
 
-  const payload = await verifyDisputeToken(token)
-  if (!payload) {
+  // If this co-author has already objected, show that state instead of
+  // offering the choice again.
+  const alreadyDisputed = getDisputes(ctx.metadata).some(
+    (d) => d.email?.toLowerCase() === email.toLowerCase()
+  )
+  if (alreadyDisputed) {
+    return objectionRecordedResponse(ctx.manuscript.submission_id)
+  }
+
+  return landingResponse({
+    manuscriptId,
+    token: token as string,
+    submissionId: ctx.manuscript.submission_id,
+    title: ctx.manuscript.title || '(untitled submission)',
+    correspondingAuthorName:
+      ctx.correspondingAuthor?.full_name || 'the corresponding author',
+  })
+}
+
+// ============================================================
+// POST — perform the mutation (requires a real button click)
+// ============================================================
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const manuscriptId = params.id
+
+  let form: FormData
+  try {
+    form = await request.formData()
+  } catch {
     return errorResponse(
-      'Link expired or invalid',
-      'This dispute link is no longer valid. If you believe this is an error, contact the editorial office.'
+      'Could not process your response',
+      'Please return to your email and use the original link.'
     )
   }
 
-  if (payload.manuscriptId !== manuscriptId) {
+  const token = (form.get('token') as string | null) || null
+  const action = (form.get('action') as string | null) || null
+
+  const validation = await validateToken(token, manuscriptId)
+  if ('error' in validation) {
+    return validation.error
+  }
+  const { email } = validation.payload
+
+  if (action !== 'confirm' && action !== 'object') {
     return errorResponse(
-      'Link does not match this submission',
-      'This link does not match the submission it points to. Please use the original link from your email.'
+      'No choice was recorded',
+      'Please return to the page and select either "I agreed to be a co-author" or "I did not agree."'
     )
   }
 
   const admin = createAdminClient()
+  const ctx = await loadContext(admin, manuscriptId)
+  if (!ctx) {
+    return errorResponse(
+      'Submission not found',
+      'We could not locate this submission. Contact the editorial office for help.'
+    )
+  }
 
-  // Load manuscript + metadata + corresponding author
+  if (action === 'confirm') {
+    await recordConfirmation(admin, ctx, email)
+    return confirmationRecordedResponse(ctx.manuscript.submission_id)
+  }
+
+  // action === 'object'
+  await recordObjection(admin, ctx, email)
+  return objectionRecordedResponse(ctx.manuscript.submission_id)
+}
+
+// ============================================================
+// Shared helpers
+// ============================================================
+
+async function validateToken(
+  token: string | null,
+  manuscriptId: string
+): Promise<
+  | { payload: { manuscriptId: string; email: string } }
+  | { error: Response }
+> {
+  if (!token) {
+    return {
+      error: errorResponse(
+        'Missing link token',
+        'This link is incomplete. Please use the original link from your email.'
+      ),
+    }
+  }
+
+  const payload = await verifyDisputeToken(token)
+  if (!payload) {
+    return {
+      error: errorResponse(
+        'Link expired or invalid',
+        'This link is no longer valid. If you believe this is an error, contact the editorial office.'
+      ),
+    }
+  }
+
+  if (payload.manuscriptId !== manuscriptId) {
+    return {
+      error: errorResponse(
+        'Link does not match this submission',
+        'This link does not match the submission it points to. Please use the original link from your email.'
+      ),
+    }
+  }
+
+  return { payload }
+}
+
+async function loadContext(
+  admin: ReturnType<typeof createAdminClient>,
+  manuscriptId: string
+): Promise<ManuscriptContext | null> {
   const { data: manuscriptData } = await admin
     .from('manuscripts')
     .select('*')
@@ -76,12 +209,7 @@ export async function GET(
     .single()
 
   const manuscript = manuscriptData as ManuscriptRow | null
-  if (!manuscript) {
-    return errorResponse(
-      'Submission not found',
-      'We could not locate this submission. Contact the editorial office for help.'
-    )
-  }
+  if (!manuscript) return null
 
   const { data: metaData } = await admin
     .from('manuscript_metadata')
@@ -101,102 +229,128 @@ export async function GET(
   const correspondingAuthor =
     authors.find((a) => a.is_corresponding) || authors[0] || null
 
-  // Append dispute to manuscript_metadata.co_author_disputes
-  const disputedAt = new Date().toISOString()
-  const newDispute: CoAuthorDispute = {
-    email: payload.email,
-    disputed_at: disputedAt,
-  }
+  return { manuscript, metadata, authors, correspondingAuthor }
+}
 
-  const existingDisputes: CoAuthorDispute[] = Array.isArray(
-    metadata?.co_author_disputes
-  )
+function getDisputes(metadata: ManuscriptMetadataRow | null): CoAuthorDispute[] {
+  return Array.isArray(metadata?.co_author_disputes)
     ? (metadata!.co_author_disputes as CoAuthorDispute[])
     : []
+}
+
+async function recordConfirmation(
+  admin: ReturnType<typeof createAdminClient>,
+  ctx: ManuscriptContext,
+  email: string
+): Promise<void> {
+  // Affirmative consent is recorded to the audit trail only (no metadata
+  // column required). Idempotent enough: a duplicate confirmation simply
+  // logs a second audit row, which is harmless.
+  await (admin.from('audit_logs') as any).insert({
+    action: 'co_author_confirmed',
+    resource_type: 'manuscript',
+    resource_id: ctx.manuscript.id,
+    details: {
+      co_author_email: email,
+      submission_id: ctx.manuscript.submission_id,
+      confirmed_at: new Date().toISOString(),
+    },
+  })
+}
+
+async function recordObjection(
+  admin: ReturnType<typeof createAdminClient>,
+  ctx: ManuscriptContext,
+  email: string
+): Promise<void> {
+  const { manuscript, metadata, correspondingAuthor } = ctx
+  const manuscriptId = manuscript.id
+
+  const disputedAt = new Date().toISOString()
+  const existingDisputes = getDisputes(metadata)
 
   // Idempotency: don't double-append if the same email has already disputed
   const alreadyDisputed = existingDisputes.some(
-    (d) => d.email?.toLowerCase() === payload.email.toLowerCase()
+    (d) => d.email?.toLowerCase() === email.toLowerCase()
   )
-  const updatedDisputes = alreadyDisputed
-    ? existingDisputes
-    : [...existingDisputes, newDispute]
+  if (alreadyDisputed) return
 
-  if (!alreadyDisputed) {
-    if (metadata) {
-      await (admin.from('manuscript_metadata') as any)
-        .update({ co_author_disputes: updatedDisputes })
-        .eq('manuscript_id', manuscriptId)
-    } else {
-      await (admin.from('manuscript_metadata') as any).insert({
-        manuscript_id: manuscriptId,
-        co_author_disputes: updatedDisputes,
-      })
-    }
+  const newDispute: CoAuthorDispute = { email, disputed_at: disputedAt }
+  const updatedDisputes = [...existingDisputes, newDispute]
 
-    // Audit log
-    await (admin.from('audit_logs') as any).insert({
-      action: 'co_author_dispute',
-      resource_type: 'manuscript',
-      resource_id: manuscriptId,
-      details: {
-        co_author_email: payload.email,
-        submission_id: manuscript.submission_id,
-        disputed_at: disputedAt,
-      },
+  if (metadata) {
+    await (admin.from('manuscript_metadata') as any)
+      .update({ co_author_disputes: updatedDisputes })
+      .eq('manuscript_id', manuscriptId)
+  } else {
+    await (admin.from('manuscript_metadata') as any).insert({
+      manuscript_id: manuscriptId,
+      co_author_disputes: updatedDisputes,
     })
-
-    // Send notification emails (fire-and-forget; don't fail the page if these error)
-    const correspondingName =
-      correspondingAuthor?.full_name || 'Corresponding Author'
-    const submissionId = manuscript.submission_id
-    const title = manuscript.title || '(untitled submission)'
-
-    if (correspondingAuthor?.email) {
-      const { html, text } = renderCoAuthorDisputeNotification({
-        recipientName: correspondingName,
-        correspondingAuthorName: correspondingName,
-        coAuthorEmail: payload.email,
-        submissionId,
-        title,
-        disputedAt,
-        forEditor: false,
-      })
-      await sendEmail({
-        to: correspondingAuthor.email,
-        subject: getCoAuthorDisputeSubject(submissionId),
-        html,
-        text,
-        emailType: 'co_author_dispute_to_corresponding',
-        manuscriptId,
-      })
-    }
-
-    {
-      const { html, text } = renderCoAuthorDisputeNotification({
-        recipientName: 'Editorial Office',
-        correspondingAuthorName: correspondingName,
-        coAuthorEmail: payload.email,
-        submissionId,
-        title,
-        disputedAt,
-        forEditor: true,
-      })
-      await sendEmail({
-        to: ADMIN_NOTIFY_EMAIL,
-        subject: getCoAuthorDisputeSubject(submissionId),
-        html,
-        text,
-        emailType: 'co_author_dispute_to_editor',
-        manuscriptId,
-      })
-    }
   }
 
-  return confirmationResponse(manuscript.submission_id)
+  // Audit log
+  await (admin.from('audit_logs') as any).insert({
+    action: 'co_author_dispute',
+    resource_type: 'manuscript',
+    resource_id: manuscriptId,
+    details: {
+      co_author_email: email,
+      submission_id: manuscript.submission_id,
+      disputed_at: disputedAt,
+    },
+  })
+
+  // Send notification emails (fire-and-forget; don't fail the page if these error)
+  const correspondingName =
+    correspondingAuthor?.full_name || 'Corresponding Author'
+  const submissionId = manuscript.submission_id
+  const title = manuscript.title || '(untitled submission)'
+
+  if (correspondingAuthor?.email) {
+    const { html, text } = renderCoAuthorDisputeNotification({
+      recipientName: correspondingName,
+      correspondingAuthorName: correspondingName,
+      coAuthorEmail: email,
+      submissionId,
+      title,
+      disputedAt,
+      forEditor: false,
+    })
+    await sendEmail({
+      to: correspondingAuthor.email,
+      subject: getCoAuthorDisputeSubject(submissionId),
+      html,
+      text,
+      emailType: 'co_author_dispute_to_corresponding',
+      manuscriptId,
+    })
+  }
+
+  {
+    const { html, text } = renderCoAuthorDisputeNotification({
+      recipientName: 'Editorial Office',
+      correspondingAuthorName: correspondingName,
+      coAuthorEmail: email,
+      submissionId,
+      title,
+      disputedAt,
+      forEditor: true,
+    })
+    await sendEmail({
+      to: ADMIN_NOTIFY_EMAIL,
+      subject: getCoAuthorDisputeSubject(submissionId),
+      html,
+      text,
+      emailType: 'co_author_dispute_to_editor',
+      manuscriptId,
+    })
+  }
 }
 
-// ---- HTML response helpers ----
+// ============================================================
+// HTML response helpers
+// ============================================================
 
 function pageShell(title: string, bodyHtml: string): string {
   return `<!DOCTYPE html>
@@ -204,6 +358,7 @@ function pageShell(title: string, bodyHtml: string): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
   <title>${escapeHtml(title)} — OSCRSJ</title>
   <style>
     body {
@@ -240,6 +395,47 @@ function pageShell(title: string, bodyHtml: string): string {
       text-transform: uppercase;
       margin-bottom: 8px;
     }
+    .details {
+      margin: 4px 0 28px 0;
+      padding: 16px 20px;
+      background-color: #F7F6F4;
+      border-left: 3px solid #3d2a18;
+      font-size: 14px;
+      line-height: 22px;
+    }
+    .details strong { color: #1c0f05; }
+    .choices {
+      margin-top: 8px;
+    }
+    .choice-form { margin: 0 0 14px 0; }
+    button {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 14px 22px;
+      width: 100%;
+      border-radius: 3px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+    .btn-confirm {
+      background-color: #3d2a18;
+      color: #FFDBBB;
+    }
+    .btn-object {
+      background-color: #FFFFFF;
+      color: #664930;
+      border: 1px solid rgba(153,126,103,0.45);
+    }
+    .btn-sub {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.85;
+    }
     a {
       color: #664930;
     }
@@ -254,10 +450,80 @@ function pageShell(title: string, bodyHtml: string): string {
 </html>`
 }
 
-function confirmationResponse(submissionId: string): Response {
+interface LandingParams {
+  manuscriptId: string
+  token: string
+  submissionId: string
+  title: string
+  correspondingAuthorName: string
+}
+
+function landingResponse(p: LandingParams): Response {
+  const actionUrl = `/api/submissions/${encodeURIComponent(
+    p.manuscriptId
+  )}/co-author-dispute`
+  const hidden = `<input type="hidden" name="token" value="${escapeHtml(
+    p.token
+  )}" />`
+
   const body = `
-    <h1>Thank you. Your objection has been recorded.</h1>
-    <p>We have logged your objection to being listed as a co-author on submission <strong>${escapeHtml(submissionId)}</strong> and notified the editorial office. The manuscript is held pending review.</p>
+    <h1>Confirm your authorship</h1>
+    <p>${escapeHtml(
+      p.correspondingAuthorName
+    )} has submitted a manuscript to OSCRSJ and listed you as a co-author. Please let us know whether you agreed to be included.</p>
+    <div class="details">
+      <div><strong>Submission ID:</strong> ${escapeHtml(p.submissionId)}</div>
+      <div><strong>Title:</strong> ${escapeHtml(p.title)}</div>
+      <div><strong>Corresponding author:</strong> ${escapeHtml(
+        p.correspondingAuthorName
+      )}</div>
+    </div>
+    <div class="choices">
+      <form class="choice-form" method="post" action="${actionUrl}">
+        ${hidden}
+        <input type="hidden" name="action" value="confirm" />
+        <button type="submit" class="btn-confirm">
+          Yes — I agreed to be a co-author
+          <span class="btn-sub">Confirm my authorship and let the submission proceed.</span>
+        </button>
+      </form>
+      <form class="choice-form" method="post" action="${actionUrl}">
+        ${hidden}
+        <input type="hidden" name="action" value="object" />
+        <button type="submit" class="btn-object">
+          No — I did not agree to be listed
+          <span class="btn-sub">File an objection. The submission will be held pending editorial review.</span>
+        </button>
+      </form>
+    </div>
+    <p style="font-size:13px;color:#997E67;">If neither applies, or you have questions, reply to the original notification email and a member of the editorial office will respond.</p>
+  `
+  return new Response(pageShell('Confirm your authorship', body), {
+    status: 200,
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  })
+}
+
+function confirmationRecordedResponse(submissionId: string): Response {
+  const body = `
+    <h1>Thank you. Your authorship is confirmed.</h1>
+    <p>We have recorded that you agreed to be listed as a co-author on submission <strong>${escapeHtml(
+      submissionId
+    )}</strong>. No further action is needed from you.</p>
+    <p>You may close this window.</p>
+  `
+  return new Response(pageShell('Authorship confirmed', body), {
+    status: 200,
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  })
+}
+
+function objectionRecordedResponse(submissionId: string): Response {
+  const body = `
+    <h1>Your objection has been recorded.</h1>
+    <p>We have logged your objection to being listed as a co-author on submission <strong>${escapeHtml(
+      submissionId
+    )}</strong> and notified the editorial office. The manuscript is held pending review.</p>
     <p>A member of the editorial office will be in touch shortly. If you have additional context to share, simply reply to the original notification email.</p>
     <p>You may close this window.</p>
   `
@@ -271,7 +537,7 @@ function errorResponse(title: string, message: string): Response {
   const body = `
     <h1>${escapeHtml(title)}</h1>
     <p>${escapeHtml(message)}</p>
-    <p>You can reach the editorial office at <a href="mailto:editorial@oscrsj.com">editorial@oscrsj.com</a>.</p>
+    <p>You can reach the editorial office at <a href="mailto:oscrsjournal@gmail.com">oscrsjournal@gmail.com</a>.</p>
   `
   return new Response(pageShell(title, body), {
     status: 400,

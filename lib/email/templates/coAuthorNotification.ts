@@ -51,12 +51,12 @@ export function renderCoAuthorNotification(
       ['Corresponding author', correspondingAuthorName],
     ]),
     paragraph(
-      `We follow COPE guidance, which requires that every listed co-author be given the opportunity to confirm or dispute authorship. If you consented to being listed, no action is needed; you will receive a further email if your input is requested during review.`
+      `We follow COPE guidance, which requires that every listed co-author have the opportunity to confirm or dispute authorship. Please open the page below to review the submission and record your response — you will be able to <strong>confirm</strong> that you agreed to be a co-author, or <strong>object</strong> if you did not.`
     ),
+    cta(disputeUrl, 'Review your authorship listing'),
     paragraph(
-      `If you did not agree to be listed as a co-author, please let us know using the link below. The submission will be held pending review by the editorial office.`
+      `Opening the page does not change anything on its own; your response is only recorded when you select a choice. If you object, the submission will be held pending review by the editorial office.`
     ),
-    cta(disputeUrl, 'I did not agree to be listed'),
     paragraph(
       `The link above is unique to you and expires in 30 days. If you have any other questions, reply to this message and a member of the editorial office will respond.`
     ),
@@ -76,9 +76,9 @@ export function renderCoAuthorNotification(
     `Submission ID: ${submissionId}\n` +
     `Title: ${title}\n` +
     `Corresponding author: ${correspondingAuthorName}\n\n` +
-    `We follow COPE guidance, which requires that every listed co-author be given the opportunity to confirm or dispute authorship. If you consented to being listed, no action is needed.\n\n` +
-    `If you did not agree to be listed as a co-author, please open the link below. The submission will be held pending review by the editorial office.\n\n` +
-    `Dispute link: ${disputeUrl}\n\n` +
+    `We follow COPE guidance, which requires that every listed co-author have the opportunity to confirm or dispute authorship. Please open the page below to review the submission and record your response — you can CONFIRM that you agreed to be a co-author, or OBJECT if you did not.\n\n` +
+    `Opening the page does not change anything on its own; your response is only recorded when you select a choice. If you object, the submission will be held pending review by the editorial office.\n\n` +
+    `Review your authorship listing: ${disputeUrl}\n\n` +
     `The link above is unique to you and expires in 30 days.\n\n` +
     `With appreciation,\nThe OSCRSJ Editorial Office` +
     plainTextFooter()
