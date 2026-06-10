@@ -122,8 +122,12 @@
 - [[#^session-28-e2e-test-bug-triage]]
 - [[#^session-05-apex-www-discovery]]
 
+### Finance / Business admin (LLC, EIN, banking, taxes, Crossref, DOI)
+- [[#^session-74-brad-llc-formation]]
+
 ## Sequential Index (chronological — newest first)
 
+- Session 74 — 2026-05-24 — Brad — OSCRSJ LLC filed (WA SOS, $200) + receipt filed + expense logged + B&O paused pending UBI — `^session-74-brad-llc-formation`
 - Session 58 — 2026-05-16/17 — Sushant — Phase 1.5 docx-extract pre-fills + Tailscale Funnel deployment fixes Vercel→localhost reach gap — `^session-58-...`
 - Session 57 — 2026-05-15/16 — Sushant — Pre-Render Metadata Editor shipped end-to-end (Phases 1.A–1.C + 1.B+ collapsibles) — `^session-57-...`
 - Session 56 — 2026-05-15 — Sushant — first-publish operational push + Pre-Render Metadata Editor project planned — `^session-56-...`
@@ -271,6 +275,105 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 75 — 2026-05-27 — Brad Cowork — LLC official docs filed + EIN 42-2798301 obtained + WA B&O license filed (Confirmation #0-052-600-818, $50) + Financial Tracker updated — 0 OSCRSJ commits  ^session-75-brad-ein-bo-registration
+
+Kanwar request: continuing from Session 74 (context cutoff). Three threads completed: (1) file official SOS LLC formation documents that arrived; (2) obtain EIN from IRS; (3) file WA B&O business license. Full walk-through of B&O online application via screenshots.
+
+**LLC official documents received and filed.** Four official WA SOS PDFs uploaded: Certificate of Formation (official), Congratulation Letter (with UBI), and two Online Report filing records. Key finding: effective date on official documents is **2026-05-26** (not 2026-05-24 as filed — SOS processed the next business day). UBI confirmed from Congratulation Letter: **606 228 761**. All four docs filed to new `02 - OSCRSJ/Resources/Legal/` folder (created this session — distinct from Receipts/, which holds expense receipts only):
+- `oscrsj-llc_certificate-of-formation_2026-05-26.pdf`
+- `oscrsj-llc_wa-sos-congratulation-letter_2026-05-26.pdf`
+- `oscrsj-llc_certificate-of-formation-filing_2026-05-26.pdf`
+- `oscrsj-llc_initial-report-filing_2026-05-26.pdf`
+
+Brad Agent.md updated: UBI ✅ 606 228 761, effective date corrected 05/24 → 05/26, annual report due 05/31/2027.
+
+**EIN obtained.** Kanwar completed the IRS online application at irs.gov and uploaded the confirmation PDF. Key details from the confirmation:
+- **EIN: 42-2798301**
+- Legal name: OSCRSJ LLC
+- Name control: OSCR
+- Organization type: Single Member LLC
+- County: King County, WA
+- Principal activity: OTHER → Academic Journal Publishing
+- Responsible party: Kanwar Partap S Parhar
+- Usable immediately for: bank account, business licenses, tax return by mail
+- Wait ~2 weeks for: electronic returns, electronic payments, TIN matching
+
+Confirmation PDF filed at `02 - OSCRSJ/Resources/Legal/oscrsj-llc_ein-confirmation_2026-05-27.pdf`. Brad Agent.md updated: EIN ✅ 42-2798301, bank account status changed from "Blocked on EIN" → "Now fully unblocked."
+
+**WA B&O Business License Application filed.** Walked Kanwar through the full 5-section dor.wa.gov online application via screenshots:
+- Section 1 (About Your Business): Selected "I want to enter the UBI of the business I want to update" → entered 606-228-761. System pulled up OSCRSJ LLC correctly. Entered Year of formation: 2026, FEIN: 42-2798301, No employees within 90 days, No lottery tickets. DBA field left blank. No trade names registered. Prior business: None, No use-tax equipment, No business affiliations, No structure change, No prior business history.
+- Section 2 (Location → City and County): No business in other cities; No to all unincorporated county areas (digital business only, operates from Kent WA).
+- Section 3 (Activity Search): "Book Publishing" was already pre-selected — correct.
+- Section 4 (State Endorsements): System determined no additional endorsements required; selected No to viewing full list.
+- Section 5: Completed and submitted.
+
+**Confirmation:** #0-052-600-818, filed 2026-05-27 12:09:34 PM, $50.00 via Bank Account. License will be emailed within 10 business days to SAW account.
+
+**Receipt and expense filed.** Confirmation PDF saved in two places:
+- `02 - OSCRSJ/Resources/Legal/oscrsj-llc_wa-bo-registration_2026-05-27.pdf` (legal doc)
+- `02 - OSCRSJ/Resources/Receipts/receipt_wa-dor_2026-05.pdf` (expense receipt)
+
+Financial Tracker Expense Log row 10:
+- Date: 2026-05-27
+- Category: Legal
+- Vendor: Washington Department of Revenue — OSCRSJ LLC WA Business License Application (B&O registration)
+- Amount: $50.00
+- Receipt File: receipt_wa-dor_2026-05.pdf
+- Notes: Confirmation #0-052-600-818 — Bank Account payment — license pending (10 business days)
+
+Running expense total: GoDaddy domain $13.19, GoDaddy email $11.88, Anthropic Claude $263.13, WA SOS LLC $200.00, WA DOR B&O $50.00 = **$538.20 total pre-revenue expenses**.
+
+**Business compliance stack — complete as of 2026-05-27:**
+- ✅ LLC: OSCRSJ LLC, WA, filed 2026-05-24, effective 2026-05-26
+- ✅ UBI: 606-228-761
+- ✅ EIN: 42-2798301
+- ✅ WA B&O: filed 2026-05-27, Confirmation #0-052-600-818
+
+**Next gates unblocked:** Mercury or Relay business bank account (mercury.com or relayfi.com, ~10 min online, requires EIN + LLC docs). Crossref membership (~$275/yr) now also unblocked.
+
+**Handoffs pushed: None.**
+
+---
+
+### Session 74 — 2026-05-24 — Brad Cowork — OSCRSJ LLC filed (WA SOS, $200) + receipt organized + expense logged in Financial Tracker + B&O registration paused pending UBI — 0 OSCRSJ commits  ^session-74-brad-llc-formation
+
+Kanwar request: walk through the LLC / Crossref / DOI dependency chain, file the WA LLC live, and log the expense properly. No code commits — pure entity formation and financial admin work.
+
+**Context review.** Brad Agent.md read at session open. Entity Status section confirmed "Current entity: None — OSCRSJ has no legal entity yet." Crossref handoff (`^handoff-brad-crossref-membership-2026-05-16`) showed the full 7-step membership spec (Crossref membership → DOI prefix → JATS Crossref deposit → real DOI registration), gated on LLC formation. DOI placeholder currently `10.XXXXX/oscrsj.{year}.{padded-elocation}` in both the rendered PDF/A-1b and JATS XML. Dependency chain confirmed: LLC → EIN → Crossref membership (~$275/yr) → DOI prefix → retroactive registration of e0001 + automation for future articles.
+
+**WA vs CA comparison.** Discussed entity-formation state options. WA chosen over CA: no state income tax (CA levies income tax), no franchise tax (CA charges $800/yr minimum even at $0 revenue — $800 for Year 1 alone regardless of APC revenue). WA Year 1 total: $200 filing + $70 annual report due by first anniversary = ~$270. Single-member LLC (not multi-member, not corporation) because OSCRSJ has one owner (Kanwar), no employees yet, and single-member LLCs are treated as "disregarded entities" by the IRS — pass-through to Schedule C, no double taxation, no corporate formalities. S-Corp discussion: paying a co-worker $35K/year from another job to justify S-Corp salary-split was discussed and ruled out — OSCRSJ has $0 revenue today and the payroll + accountant overhead ($1-2K/yr) outweighs the tax savings. Decision: S-Corp election is deferred; when net profit consistently exceeds $40-50K/yr, convert via IRS Form 2553 without dissolving the LLC.
+
+**WA LLC formation — filed live.** Navigated sos.wa.gov CCFS system via screenshots. Key decisions made during the form:
+
+- Entity type: Limited Liability Company (LLC)
+- "Defer Initial Report" NOT checked — combined the Certificate of Formation + Initial Report into a single submission (saves a second filing)
+- Nature of Business: PROFESSIONAL, SCIENTIFIC & TECHNICAL SERVICES (NAICS 54 — covers academic publishing / scientific journals)
+- Registered Agent: "I am the Registered Agent" + "Non Commercial Registered Agent" — saves $100-150/yr vs a paid registered-agent service; Kanwar's address is the registered address
+- Duration: Perpetual
+- Effective date: Date of Filing (no reason to delay)
+- Authorized Person Title: "Member" (correct LLC owner terminology, not "manager" unless manager-managed)
+- Payment: VISA ••4654
+
+**Receipt filed.** Payment receipt PDF (Work Order #2026052400418054, $200.00, 2026-05-24, VISA ••4654, $180 service + $20 processing) uploaded to vault. Named per convention `receipt_wa-sos_2026-05.pdf` and saved to `02 - OSCRSJ/Resources/Receipts/receipt_wa-sos_2026-05.pdf`. Receipts folder was new this session — README naming convention already existed.
+
+**Financial Tracker updated.** `02 - OSCRSJ/Resources/OSCRSJ Financial Tracker.xlsx` Expense Log tab updated via openpyxl (preserving all existing formatting). New row 9:
+- Date: 2026-05-24
+- Category: Legal (confirmed as valid category in Settings tab)
+- Vendor: Washington Secretary of State — OSCRSJ LLC Certificate of Formation with Initial Report
+- Amount: $200.00
+- Receipt File: receipt_wa-sos_2026-05.pdf
+- Notes: Work Order #2026052400418054 — VISA ••4654 — $180 service + $20 processing
+
+Running expense total now includes: GoDaddy domain $13.19, GoDaddy email $11.88, Anthropic Claude $20.00 + $91.12 + $152.01, WA SOS LLC $200.00.
+
+**EIN deferred.** irs.gov was down at time of session. EIN is free, takes ~5 minutes online, available at https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online. Needed before opening a business bank account and before Crossref membership (requires legal entity + EIN). Filed as §11 follow-up.
+
+**WA B&O registration paused.** Attempted dor.wa.gov → My DOR → Apply for New Business License. Site redirected to sos.wa.gov because UBI (Unified Business Identifier) not yet assigned — LLC was filed same day and SOS processing takes a few hours to one business day. UBI will arrive via email from SOS. Process to resume: log into dor.wa.gov → My DOR → Apply for New Business License → enter UBI. WA B&O tax is Business & Occupation tax on gross revenue; effectively exempt below ~$28K/quarter but registration is required. Filed as §11 follow-up (wait for UBI email from SOS).
+
+Full narrative here. **Handoffs pushed: None.**
+
+---
 
 ### Session 73 — 2026-05-24 — Sushant Cowork — Suggested-reviewer required gate removed + admin Files panel per-revision grouping + Download-suggested-reviewers relocation + Step 6 Review page + Step 5 stale-checks cleanup — 2 OSCRSJ commits `c136f54` + `f5bc325`  ^session-73-suggested-reviewer-gate-step6-review-files-grouping
 
