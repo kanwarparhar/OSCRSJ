@@ -11,6 +11,7 @@ const MANUSCRIPT_TYPE_LABELS: Record<string, string> = {
   images_in_orthopedics: 'Images in Orthopedics',
   letter_to_editor: 'Letter to the Editor',
   review_article: 'Systematic Review & Meta-Analysis',
+  narrative_review: 'Narrative Review',
 }
 
 const FILE_TYPE_LABELS: Record<string, string> = {
@@ -22,6 +23,7 @@ const FILE_TYPE_LABELS: Record<string, string> = {
   cover_letter: 'Cover Letter',
   ethics_approval: 'Ethics Approval',
   care_checklist: 'CARE Checklist',
+  sanra_self_rating: 'SANRA Self-Rating',
   jbi_case_series_checklist: 'JBI Case Series Checklist',
   tracked_changes: 'Tracked Changes',
   response_to_reviewers: 'Response to Reviewers',

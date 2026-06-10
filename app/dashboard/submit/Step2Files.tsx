@@ -112,6 +112,17 @@ const JBI_CHECKLIST_SLOT: FileCategory = {
     'Mandatory for every Case Series submission. Download the JBI Critical Appraisal Checklist for Case Series from /guide-for-authors#case-series (or directly at /downloads/oscrsj-jbi-case-series-checklist.pdf), complete every item, and upload the filled-in checklist as a PDF or .docx.',
 }
 
+const SANRA_SLOT: FileCategory = {
+  type: 'sanra_self_rating',
+  label: 'SANRA Self-Rating',
+  required: true,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description:
+    'Mandatory for every Narrative Review submission. Download the SANRA self-rating from /guide-for-authors#narrative-review (or directly at /downloads/oscrsj-sanra-self-rating.pdf), complete every item (6 items \u00d7 0\u20132 scale), and upload the filled-in form. Self-score \u22658/12 is the entry threshold \u2014 submissions scoring below 8 cannot proceed.',
+}
+
 function buildBaseCategories(manuscriptType: ManuscriptType | null): FileCategory[] {
   const categories: FileCategory[] = [...BASE_CATEGORIES_FIXED]
   // Insert position 4 = immediately after `tables` (index 3) and before
@@ -124,6 +135,8 @@ function buildBaseCategories(manuscriptType: ManuscriptType | null): FileCategor
     categories.splice(4, 0, CARE_CHECKLIST_SLOT)
   } else if (manuscriptType === 'case_series') {
     categories.splice(4, 0, JBI_CHECKLIST_SLOT)
+  } else if (manuscriptType === 'narrative_review') {
+    categories.splice(4, 0, SANRA_SLOT)
   }
   return categories
 }
@@ -218,6 +231,16 @@ const JBI_CHECKLIST_REVISION_SLOT: FileCategory = {
   description: 'Re-upload the JBI checklist only if the patient cohort, methods, or outcomes changed during revision. The original v1 checklist stays on file. Accepted formats: .pdf or .docx (max 10 MB).',
 }
 
+const SANRA_REVISION_SLOT: FileCategory = {
+  type: 'sanra_self_rating',
+  label: 'SANRA Self-Rating (if updated)',
+  required: false,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description: 'Re-upload the SANRA self-rating only if the scope, search, or synthesis changed enough during revision to alter the item scores. The original v1 self-rating stays on file. Accepted formats: .pdf or .docx (max 10 MB).',
+}
+
 function buildRevisionCategories(manuscriptType: ManuscriptType | null): FileCategory[] {
   const categories: FileCategory[] = [...REVISION_CATEGORIES]
   // Insert position 5 (after `tables`, index 4) so the optional checklist
@@ -226,6 +249,8 @@ function buildRevisionCategories(manuscriptType: ManuscriptType | null): FileCat
     categories.splice(5, 0, CARE_CHECKLIST_REVISION_SLOT)
   } else if (manuscriptType === 'case_series') {
     categories.splice(5, 0, JBI_CHECKLIST_REVISION_SLOT)
+  } else if (manuscriptType === 'narrative_review') {
+    categories.splice(5, 0, SANRA_REVISION_SLOT)
   }
   return categories
 }

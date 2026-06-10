@@ -19,6 +19,7 @@ const TYPE_LABELS: Record<string, string> = {
   images_in_orthopedics: 'Images in Orthopedics',
   letter_to_editor: 'Letter to the Editor',
   review_article: 'Systematic Review & Meta-Analysis',
+  narrative_review: 'Narrative Review',
 }
 
 const STATUS_BADGE: Record<InvitationStatus, string> = {

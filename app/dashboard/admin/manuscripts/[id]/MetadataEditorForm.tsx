@@ -134,6 +134,7 @@ const ABSTRACT_LABEL_SETS: Record<string, string[]> = {
   case_report: ['Introduction', 'Case Presentation', 'Discussion', 'Conclusion'],
   case_series: ['Background', 'Methods', 'Results', 'Discussion', 'Conclusion'],
   review_article: ['Background', 'Methods', 'Results', 'Conclusion'],
+  narrative_review: ['Background', 'Scope', 'Findings', 'Conclusion'],
 }
 
 const RUNNING_TITLE_MAX = 45

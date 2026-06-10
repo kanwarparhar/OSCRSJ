@@ -708,6 +708,12 @@ export async function submitManuscript(manuscriptId: string) {
 
   const fileTypes = (fileData as { file_type: string }[] | null) || []
   if (!fileTypes.some(f => f.file_type === 'blinded_manuscript')) return { error: 'Blinded manuscript file is required' }
+  // Reporting-checklist server gates (Session 78, 2026-06-10) \u2014 the
+  // Step 2 wizard renders these as required slots, but client gates are
+  // bypassable; the site states both as mandatory, so enforce here too.
+  if (m.manuscript_type === 'narrative_review' && !fileTypes.some(f => f.file_type === 'sanra_self_rating')) {
+    return { error: 'SANRA Self-Rating is required for Narrative Review submissions. Upload it in Step 2 before submitting.' }
+  }
 
   // Check authors
   const { data: authorData } = await supabase

@@ -178,6 +178,7 @@ const TYPE_DISPLAY: Record<ManuscriptType, string> = {
   // decision (changing it would require migration + data migration);
   // display label is the canonical SR/MA wording.
   review_article: 'Review Article',
+  narrative_review: 'Narrative Review',
 }
 
 // ManuscriptType → URL fragment matching /guide-for-authors anchors.
@@ -188,6 +189,7 @@ const TYPE_SLUG: Record<ManuscriptType, string> = {
   images_in_orthopedics: 'images-in-orthopedics',
   letter_to_editor: 'letter-to-the-editor',
   review_article: 'systematic-review-meta-analysis',
+  narrative_review: 'narrative-review',
 }
 
 // Expected abstract section count by article type. Matches
@@ -196,6 +198,8 @@ const STRUCTURED_ABSTRACT_COUNT: Partial<Record<ManuscriptType, number>> = {
   case_report: 4,
   case_series: 5,
   review_article: 4,
+  // Session 78 — Narrative Review: Background / Scope / Findings / Conclusion
+  narrative_review: 4,
 }
 const UNSTRUCTURED_TYPES = new Set<ManuscriptType>(['surgical_technique'])
 const NO_ABSTRACT_TYPES = new Set<ManuscriptType>([

@@ -16,6 +16,7 @@ export type ManuscriptType =
   | 'images_in_orthopedics'
   | 'letter_to_editor'
   | 'review_article'
+  | 'narrative_review'            // Session 78 (2026-06-10) — 7th article type, migration 025
 
 export type ManuscriptStatus =
   | 'draft'
@@ -44,6 +45,8 @@ export type FileType =
   | 'tables'                      // Session 19 (2026-04-25) — v1.1 multi-file submissions
   | 'care_checklist'              // Session 43 (2026-05-04) — mandatory for case_report
   | 'jbi_case_series_checklist'   // Session 43 (2026-05-04) — mandatory for case_series
+  | 'sanra_self_rating'           // Session 78 (2026-06-10) — mandatory for narrative_review, migration 025
+  | 'prisma_checklist'            // Session 78 (2026-06-10) — mandatory for review_article (SR/MA), migration 025
 
 export type WaiverType = 'none' | 'full' | 'trainee' | 'first_pub' | 'custom'
 

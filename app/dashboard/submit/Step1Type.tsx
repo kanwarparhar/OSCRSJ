@@ -19,6 +19,11 @@ const MANUSCRIPT_TYPES: { value: ManuscriptType; label: string; description: str
     description: 'A systematic review or meta-analysis on a focused clinical question. Up to 3,500 words. PRISMA 2020 checklist required.',
   },
   {
+    value: 'narrative_review',
+    label: 'Narrative Review',
+    description: 'A structured expert synthesis on a defined orthopedic topic. Up to 4,000 words. SANRA self-rating required (\u22658/12 to submit). Senior author required (or Section Editor for Mentored Review track).',
+  },
+  {
     value: 'surgical_technique',
     label: 'Surgical Technique',
     description: 'A novel or modified surgical procedure. Up to 1,500 words. Minimum 4 figures, video encouraged.',

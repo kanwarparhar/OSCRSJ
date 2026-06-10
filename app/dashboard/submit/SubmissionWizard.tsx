@@ -214,9 +214,11 @@ function computeInitialStep(state: WizardState): number {
   // Pre-flight reporting-checklist requirement matches step2Complete.
   const hasCare = state.files.some(f => f.file_type === 'care_checklist')
   const hasJbi = state.files.some(f => f.file_type === 'jbi_case_series_checklist')
+  const hasSanra = state.files.some(f => f.file_type === 'sanra_self_rating')
   const checklistOk =
     state.manuscriptType === 'case_report' ? hasCare
     : state.manuscriptType === 'case_series' ? hasJbi
+    : state.manuscriptType === 'narrative_review' ? hasSanra
     : true
   if (!hasBlinded || !checklistOk) return 2
   const abstractWords = state.abstract.trim()
@@ -514,13 +516,16 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
   // record (revision-mode slots are optional, per buildRevisionCategories).
   const hasCareChecklist = state.files.some(f => f.file_type === 'care_checklist')
   const hasJbiChecklist = state.files.some(f => f.file_type === 'jbi_case_series_checklist')
+  const hasSanraSelfRating = state.files.some(f => f.file_type === 'sanra_self_rating')
   const reportingChecklistOk = isRevising
     ? true
     : state.manuscriptType === 'case_report'
       ? hasCareChecklist
       : state.manuscriptType === 'case_series'
         ? hasJbiChecklist
-        : true
+        : state.manuscriptType === 'narrative_review'
+          ? hasSanraSelfRating
+          : true
   const step2Complete = hasBlindedManuscript && reportingChecklistOk
 
   // Step 3 abstract gate: required (non-empty) AND ≤300 words.
