@@ -117,7 +117,7 @@ Operational rules every session must follow. New entries land here only when a n
 ## Business Context
 
 - **No publisher.** Fully independent.
-- **APC model:** Manuscripts submitted before **August 1, 2026** publish free; afterwards, single $499 standard rate per accepted manuscript. Discounts case-by-case via the inquiry form on `/apc`. Pricing history at [docs/session-history.md#apc-pricing-history](docs/session-history.md).
+- **APC model:** Manuscripts submitted before **July 1, 2026** publish free; afterwards, single $499 standard rate per accepted manuscript. Discounts case-by-case via the inquiry form on `/apc`. Pricing history at [docs/session-history.md#apc-pricing-history](docs/session-history.md).
 - **License:** CC BY 4.0 (reverted 2026-05-04 same-session after Janine surfaced the DOAJ + Plan S + NIH-funded-author indexing trade-off as a structured option-set; prior CC BY-NC-ND 4.0 lock from Session 25 superseded). Resolution at vault `02 - OSCRSJ/Notes/2026-05-04 License Reversion to CC BY 4.0 (Janine).md`.
 - **Backend:** Custom LLM-powered submission system (built — see Phase 3.5 sessions). Renderer at `~/Documents/oscrsj-renderer/`.
 - **Goal:** PubMed indexing (~2-year path requiring monthly releases).

@@ -5,7 +5,7 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'Submit a Manuscript',
   description:
-    'Submit a manuscript to OSCRSJ — peer-reviewed open-access orthopedic case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor. Full APC fee waiver for manuscripts submitted before August 1, 2026.',
+    'Submit a manuscript to OSCRSJ — peer-reviewed open-access orthopedic case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor. Full APC fee waiver for manuscripts submitted before July 1, 2026.',
   alternates: { canonical: 'https://www.oscrsj.com/submit' },
   openGraph: {
     title: 'Submit a Manuscript | OSCRSJ',
@@ -91,9 +91,9 @@ export default function SubmitPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-sm font-semibold text-brown">Full APC Fee Waiver — Submit Before August 1, 2026</p>
+            <p className="text-sm font-semibold text-brown">Full APC Fee Waiver — Submit Before July 1, 2026</p>
             <p className="text-sm text-brown mt-0.5">
-              The full article processing charge (APC) is waived for every manuscript submitted before August 1, 2026.{' '}
+              The full article processing charge (APC) is waived for every manuscript submitted before July 1, 2026.{' '}
               <Link href="/apc" className="text-brown hover:text-brown underline">Learn about our APC policy →</Link>
             </p>
           </div>
