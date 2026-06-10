@@ -112,6 +112,17 @@ const JBI_CHECKLIST_SLOT: FileCategory = {
     'Mandatory for every Case Series submission. Download the JBI Critical Appraisal Checklist for Case Series from /guide-for-authors#case-series (or directly at /downloads/oscrsj-jbi-case-series-checklist.pdf), complete every item, and upload the filled-in checklist as a PDF or .docx.',
 }
 
+const PRISMA_CHECKLIST_SLOT: FileCategory = {
+  type: 'prisma_checklist',
+  label: 'PRISMA 2020 Checklist',
+  required: true,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description:
+    'Mandatory for every Systematic Review & Meta-Analysis submission. Download the PRISMA 2020 checklist from /templates#reporting-checklists (or directly at /downloads/oscrsj-prisma-checklist.pdf), complete every item with the page number where each is reported, and upload the filled-in checklist as a PDF or .docx.',
+}
+
 const SANRA_SLOT: FileCategory = {
   type: 'sanra_self_rating',
   label: 'SANRA Self-Rating',
@@ -137,6 +148,8 @@ function buildBaseCategories(manuscriptType: ManuscriptType | null): FileCategor
     categories.splice(4, 0, JBI_CHECKLIST_SLOT)
   } else if (manuscriptType === 'narrative_review') {
     categories.splice(4, 0, SANRA_SLOT)
+  } else if (manuscriptType === 'review_article') {
+    categories.splice(4, 0, PRISMA_CHECKLIST_SLOT)
   }
   return categories
 }
@@ -231,6 +244,16 @@ const JBI_CHECKLIST_REVISION_SLOT: FileCategory = {
   description: 'Re-upload the JBI checklist only if the patient cohort, methods, or outcomes changed during revision. The original v1 checklist stays on file. Accepted formats: .pdf or .docx (max 10 MB).',
 }
 
+const PRISMA_CHECKLIST_REVISION_SLOT: FileCategory = {
+  type: 'prisma_checklist',
+  label: 'PRISMA 2020 Checklist (if updated)',
+  required: false,
+  accept: '.pdf,.docx',
+  maxSizeMB: 10,
+  maxFiles: 1,
+  description: 'Re-upload the PRISMA checklist only if the search, eligibility criteria, included studies, or synthesis changed during revision. The original v1 checklist stays on file. Accepted formats: .pdf or .docx (max 10 MB).',
+}
+
 const SANRA_REVISION_SLOT: FileCategory = {
   type: 'sanra_self_rating',
   label: 'SANRA Self-Rating (if updated)',
@@ -251,6 +274,8 @@ function buildRevisionCategories(manuscriptType: ManuscriptType | null): FileCat
     categories.splice(5, 0, JBI_CHECKLIST_REVISION_SLOT)
   } else if (manuscriptType === 'narrative_review') {
     categories.splice(5, 0, SANRA_REVISION_SLOT)
+  } else if (manuscriptType === 'review_article') {
+    categories.splice(5, 0, PRISMA_CHECKLIST_REVISION_SLOT)
   }
   return categories
 }

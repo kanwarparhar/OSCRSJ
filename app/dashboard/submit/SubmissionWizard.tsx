@@ -215,10 +215,12 @@ function computeInitialStep(state: WizardState): number {
   const hasCare = state.files.some(f => f.file_type === 'care_checklist')
   const hasJbi = state.files.some(f => f.file_type === 'jbi_case_series_checklist')
   const hasSanra = state.files.some(f => f.file_type === 'sanra_self_rating')
+  const hasPrisma = state.files.some(f => f.file_type === 'prisma_checklist')
   const checklistOk =
     state.manuscriptType === 'case_report' ? hasCare
     : state.manuscriptType === 'case_series' ? hasJbi
     : state.manuscriptType === 'narrative_review' ? hasSanra
+    : state.manuscriptType === 'review_article' ? hasPrisma
     : true
   if (!hasBlinded || !checklistOk) return 2
   const abstractWords = state.abstract.trim()
@@ -517,6 +519,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
   const hasCareChecklist = state.files.some(f => f.file_type === 'care_checklist')
   const hasJbiChecklist = state.files.some(f => f.file_type === 'jbi_case_series_checklist')
   const hasSanraSelfRating = state.files.some(f => f.file_type === 'sanra_self_rating')
+  const hasPrismaChecklist = state.files.some(f => f.file_type === 'prisma_checklist')
   const reportingChecklistOk = isRevising
     ? true
     : state.manuscriptType === 'case_report'
@@ -525,7 +528,9 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
         ? hasJbiChecklist
         : state.manuscriptType === 'narrative_review'
           ? hasSanraSelfRating
-          : true
+          : state.manuscriptType === 'review_article'
+            ? hasPrismaChecklist
+            : true
   const step2Complete = hasBlindedManuscript && reportingChecklistOk
 
   // Step 3 abstract gate: required (non-empty) AND ≤300 words.

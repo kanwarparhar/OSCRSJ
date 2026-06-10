@@ -257,7 +257,7 @@ export default function TemplatesPage() {
             ============================================================ */}
         <section id="reporting-checklists">
           <h2 className="font-serif text-3xl text-brown-dark mb-2">Reporting Checklists</h2>
-          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series; PRISMA 2020 is required for every Systematic Review & Meta-Analysis; SANRA Self-Rating is required for every Narrative Review. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for Case Reports and Case Series, and is required policy for Systematic Reviews & Meta-Analyses and Narrative Reviews (portal hard-gates forthcoming).</p>
+          <p className="text-brown mb-6">EQUATOR-mandated reporting tools. CARE is required for every Case Report; JBI Case Series is required for every Case Series; PRISMA 2020 is required for every Systematic Review & Meta-Analysis; SANRA Self-Rating is required for every Narrative Review. Complete the checklist matching your article type and upload the filled-in document at Step 2 of the submission portal — it is a hard gate on Submit for all four article types.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white border border-border rounded-xl p-6">
               <p className="text-xs font-semibold text-brown uppercase tracking-widest mb-2">For Case Reports</p>

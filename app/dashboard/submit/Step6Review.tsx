@@ -24,6 +24,7 @@ const FILE_TYPE_LABELS: Record<string, string> = {
   ethics_approval: 'Ethics Approval',
   care_checklist: 'CARE Checklist',
   sanra_self_rating: 'SANRA Self-Rating',
+  prisma_checklist: 'PRISMA 2020 Checklist',
   jbi_case_series_checklist: 'JBI Case Series Checklist',
   tracked_changes: 'Tracked Changes',
   response_to_reviewers: 'Response to Reviewers',

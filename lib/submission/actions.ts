@@ -714,6 +714,9 @@ export async function submitManuscript(manuscriptId: string) {
   if (m.manuscript_type === 'narrative_review' && !fileTypes.some(f => f.file_type === 'sanra_self_rating')) {
     return { error: 'SANRA Self-Rating is required for Narrative Review submissions. Upload it in Step 2 before submitting.' }
   }
+  if (m.manuscript_type === 'review_article' && !fileTypes.some(f => f.file_type === 'prisma_checklist')) {
+    return { error: 'A completed PRISMA 2020 checklist is required for Systematic Review & Meta-Analysis submissions. Upload it in Step 2 before submitting.' }
+  }
 
   // Check authors
   const { data: authorData } = await supabase

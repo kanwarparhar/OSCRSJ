@@ -17,6 +17,6 @@ ALTER TYPE file_type ADD VALUE IF NOT EXISTS 'care_checklist';
 ALTER TYPE file_type ADD VALUE IF NOT EXISTS 'jbi_case_series_checklist';
 
 COMMENT ON TYPE file_type IS
-  'Manuscript file categories. v1.1 (2026-04-25) added title_page + tables. Session 43 (2026-05-04) added care_checklist (mandatory for case_report submissions) + jbi_case_series_checklist (mandatory for case_series submissions). The Step 2 upload wizard renders these as conditional required slots keyed off manuscript_type; they do NOT appear for surgical_technique / images_in_orthopedics / letter_to_editor / review_article submissions.';
+  'Manuscript file categories. v1.1 (2026-04-25) added title_page + tables. Session 43 (2026-05-04) added care_checklist (mandatory for case_report submissions) + jbi_case_series_checklist (mandatory for case_series submissions). The Step 2 upload wizard renders these as conditional required slots keyed off manuscript_type; they do NOT appear for surgical_technique / images_in_orthopedics / letter_to_editor submissions. [Comment updated Session 78 (2026-06-10): review_article now has its own mandatory prisma_checklist slot and narrative_review has sanra_self_rating — see migration 025, whose COMMENT ON TYPE supersedes this one in the live schema.]';
 
 NOTIFY pgrst, 'reload schema';
