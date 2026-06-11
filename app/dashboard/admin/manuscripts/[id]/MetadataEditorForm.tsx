@@ -873,6 +873,46 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
         ? `Acknowledge all ${warnings.length} warnings first.`
         : null
 
+  // Phase 1.5 auto-expand-on-jump (Session 80). CollapsibleSection unmounts
+  // children when collapsed, so a collapsed section's fields aren't in the
+  // DOM and ValidationSummary's local querySelector jump silently no-ops.
+  // A parent-walk (the original §11 sketch) can't work on an unmounted node;
+  // and a field→section map would drift as validators evolve. So: if the
+  // target isn't mounted, expand ALL sections (predictable, cheap — the
+  // scroll still centers the exact field) and retry after React re-renders.
+  function jumpToField(targetField: string) {
+    const locate = () =>
+      document.querySelector(`[data-target="${targetField}"]`) as HTMLElement | null
+    const scrollAndFlash = (el: HTMLElement) => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      el.classList.add('ring-2', 'ring-amber-400', 'ring-offset-2')
+      setTimeout(() => {
+        el.classList.remove('ring-2', 'ring-amber-400', 'ring-offset-2')
+      }, 1500)
+      if (typeof (el as HTMLInputElement).focus === 'function') {
+        try {
+          ;(el as HTMLInputElement).focus({ preventScroll: true })
+        } catch {
+          // no-op
+        }
+      }
+    }
+    const el = locate()
+    if (el) {
+      scrollAndFlash(el)
+      return
+    }
+    setCollapsedSections(new Set())
+    // Double rAF: first frame commits the expanded sections, second frame
+    // guarantees layout is settled before we measure for the scroll.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const retry = locate()
+        if (retry) scrollAndFlash(retry)
+      })
+    })
+  }
+
   function onOpenPreview() {
     // Phase 1.C — wires to <PreviewRenderCluster /> rendered below
     // §5. Scroll into view + flash; the cluster owns its own state.
@@ -1762,6 +1802,7 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
               return next
             })
           }}
+          onJumpToFix={jumpToField}
           onOpenPreview={onOpenPreview}
           onRenderPublish={onRenderPublish}
           previewDisabled={previewDisabled}

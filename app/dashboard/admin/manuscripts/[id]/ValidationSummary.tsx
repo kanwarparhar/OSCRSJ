@@ -22,6 +22,11 @@ interface Props {
   previewDisabledReason: string | null
   renderDisabled: boolean
   renderDisabledReason: string | null
+  // Phase 1.5 auto-expand-on-jump (Session 80). Collapsed sections unmount
+  // their children, so this component's local querySelector jump silently
+  // no-ops when the target's section is collapsed. When provided, the parent
+  // (which owns collapse state) handles expand + scroll + flash itself.
+  onJumpToFix?: (targetField: string) => void
 }
 
 // §5 Pre-Render Validation Summary — Franklin §5 wireframe.
@@ -41,6 +46,7 @@ export default function ValidationSummary({
   previewDisabledReason,
   renderDisabled,
   renderDisabledReason,
+  onJumpToFix,
 }: Props) {
   const allClear = errors.length === 0 && warnings.length === 0
 
@@ -80,6 +86,7 @@ export default function ValidationSummary({
                 tier="error"
                 acknowledged={null}
                 onAcknowledge={() => {}}
+                onJumpToFix={onJumpToFix}
               />
             ))}
           </div>
@@ -100,6 +107,7 @@ export default function ValidationSummary({
                 tier="warning"
                 acknowledged={acknowledged.has(r.rule)}
                 onAcknowledge={(checked) => onAcknowledge(r.rule, checked)}
+                onJumpToFix={onJumpToFix}
               />
             ))}
           </div>
@@ -161,17 +169,25 @@ function ValidationRowDisplay({
   tier,
   acknowledged,
   onAcknowledge,
+  onJumpToFix,
 }: {
   row: ValidationRow
   tier: 'error' | 'warning'
   acknowledged: boolean | null
   onAcknowledge: (checked: boolean) => void
+  onJumpToFix?: (targetField: string) => void
 }) {
   const className =
     tier === 'error' ? 'validation-row-error' : 'validation-row-warning'
 
   function jumpToFix() {
     if (!row.targetField) return
+    if (onJumpToFix) {
+      // Parent-owned jump: handles auto-expanding a collapsed section
+      // before scrolling (Phase 1.5, Session 80).
+      onJumpToFix(row.targetField)
+      return
+    }
     const el = document.querySelector(`[data-target="${row.targetField}"]`) as HTMLElement | null
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })

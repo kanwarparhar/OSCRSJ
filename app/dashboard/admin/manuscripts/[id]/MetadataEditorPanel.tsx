@@ -64,6 +64,15 @@ export default async function MetadataEditorPanel({ manuscriptId }: Props) {
       fetchExtractedMetadata(manuscriptId),
     ])
 
+  // Session 80 — figure count for the §5 body-structural checks
+  // (kept out of the Promise.all above to avoid re-numbering its
+  // destructure; one extra head-count round-trip is negligible here).
+  const figCountRes = await admin
+    .from('manuscript_files')
+    .select('id', { count: 'exact', head: true })
+    .eq('manuscript_id', manuscriptId)
+    .eq('file_type', 'figure')
+
   const authors = (authorsRes.data as ManuscriptAuthorRow[] | null) ?? []
   const metadata = (metadataRes.data as ManuscriptMetadataRow | null) ?? null
   const affCount = affCountRes.count ?? 0
@@ -112,6 +121,10 @@ export default async function MetadataEditorPanel({ manuscriptId }: Props) {
     patient_consent_irb_protocol: metadata?.patient_consent_irb_protocol || '',
     equal_contribution_statement: metadata?.equal_contribution_statement || '',
     has_affiliations_table_data: affCount > 0,
+    // Session 80 — body-structural inputs for mount-time §5 parity with
+    // previewMetadataValidation.
+    body_html: manuscript.manuscript_body_cleaned_html ?? null,
+    figure_count: figCountRes.count ?? 0,
   })
 
   const handlingEditor = synthResult.payload?.handling_editor || null

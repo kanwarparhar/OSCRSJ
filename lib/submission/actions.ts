@@ -717,6 +717,15 @@ export async function submitManuscript(manuscriptId: string) {
   if (m.manuscript_type === 'review_article' && !fileTypes.some(f => f.file_type === 'prisma_checklist')) {
     return { error: 'A completed PRISMA 2020 checklist is required for Systematic Review & Meta-Analysis submissions. Upload it in Step 2 before submitting.' }
   }
+  // CARE + JBI server gates (Session 80, 2026-06-10) — closes the Session 43
+  // client-only gap: these two were enforced in the wizard since migration 019
+  // but never server-side, so a crafted request could bypass them.
+  if (m.manuscript_type === 'case_report' && !fileTypes.some(f => f.file_type === 'care_checklist')) {
+    return { error: 'A completed CARE checklist is required for Case Report submissions. Upload it in Step 2 before submitting.' }
+  }
+  if (m.manuscript_type === 'case_series' && !fileTypes.some(f => f.file_type === 'jbi_case_series_checklist')) {
+    return { error: 'A completed JBI Case Series checklist is required for Case Series submissions. Upload it in Step 2 before submitting.' }
+  }
 
   // Check authors
   const { data: authorData } = await supabase

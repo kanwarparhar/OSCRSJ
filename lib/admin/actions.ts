@@ -1818,11 +1818,11 @@ export async function previewMetadataValidation(
   const admin = createAdminClient()
 
   // Fetch the read-side data we need to merge with the draft.
-  const [mRes, aRes, metaRes, affCountRes] = await Promise.all([
+  const [mRes, aRes, metaRes, affCountRes, figCountRes] = await Promise.all([
     admin
       .from('manuscripts')
       .select(
-        'id, title, running_title, doi, manuscript_type, keywords, abstract, submission_date'
+        'id, title, running_title, doi, manuscript_type, keywords, abstract, submission_date, manuscript_body_cleaned_html'
       )
       .eq('id', manuscriptId)
       .maybeSingle(),
@@ -1840,6 +1840,12 @@ export async function previewMetadataValidation(
       .from('manuscript_affiliations')
       .select('id', { count: 'exact', head: true })
       .eq('manuscript_id', manuscriptId),
+    // Session 80 — figure count for the §5 body-structural checks.
+    admin
+      .from('manuscript_files')
+      .select('id', { count: 'exact', head: true })
+      .eq('manuscript_id', manuscriptId)
+      .eq('file_type', 'figure'),
   ])
 
   if (!mRes.data) return { notFound: true, serverError: 'Manuscript not found.' }
@@ -1853,11 +1859,13 @@ export async function previewMetadataValidation(
     keywords: string[] | null
     abstract: string | null
     submission_date: string | null
+    manuscript_body_cleaned_html: string | null
   }
   const m = mRes.data as unknown as ManuscriptHead
   const dbAuthors = (aRes.data as ManuscriptAuthorRow[] | null) ?? []
   const meta = (metaRes.data as ManuscriptMetadataRow | null) ?? null
   const affCount = affCountRes.count ?? 0
+  const figCount = figCountRes.count ?? 0
 
   // Overlay draft onto DB rows
   const title = draft.title ?? m.title ?? ''
@@ -1928,6 +1936,10 @@ export async function previewMetadataValidation(
     equal_contribution_statement:
       (draft.equal_contribution_statement ?? meta?.equal_contribution_statement) || '',
     has_affiliations_table_data: affCount > 0,
+    // Session 80 — body-structural inputs. Body HTML is not editable in
+    // this form (BodyEditor owns it), so no draft overlay applies.
+    body_html: m.manuscript_body_cleaned_html,
+    figure_count: figCount,
   }
 
   const result = await validateMetadataForRender(merged)

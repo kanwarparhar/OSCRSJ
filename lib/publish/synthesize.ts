@@ -207,6 +207,38 @@ const NO_ABSTRACT_TYPES = new Set<ManuscriptType>([
   'images_in_orthopedics',
 ])
 
+// Body-structural limits per article type (Session 80, 2026-06-10).
+// Source of truth: /guide-for-authors Article Types Comparison table
+// (`comparisonRows` in app/guide-for-authors/page.tsx). If the guide
+// changes, these must change in lockstep — grep 'comparisonRows'.
+const BODY_WORD_LIMITS: Record<ManuscriptType, number> = {
+  case_report: 2000,
+  case_series: 3000,
+  review_article: 3500,
+  narrative_review: 4000,
+  surgical_technique: 1500,
+  images_in_orthopedics: 500,
+  letter_to_editor: 600,
+}
+const FIGURE_LIMITS: Record<ManuscriptType, number> = {
+  case_report: 8,
+  case_series: 10,
+  review_article: 6,
+  narrative_review: 4,
+  surgical_technique: 10,
+  images_in_orthopedics: 4,
+  letter_to_editor: 1,
+}
+const TABLE_LIMITS: Record<ManuscriptType, number> = {
+  case_report: 3,
+  case_series: 5,
+  review_article: 4,
+  narrative_review: 3,
+  surgical_technique: 2,
+  images_in_orthopedics: 0,
+  letter_to_editor: 1,
+}
+
 const MONTH_SHORT = [
   'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
   'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
@@ -306,6 +338,15 @@ export async function validateMetadataForRender(merged: {
   patient_consent_irb_protocol: string
   equal_contribution_statement: string
   has_affiliations_table_data: boolean
+  // ---- Body-structural inputs (Session 80, 2026-06-10) — both optional
+  // so existing callers compile unchanged. body_html is the admin-curated
+  // manuscripts.manuscript_body_cleaned_html (migration 024); when the
+  // editor hasn't saved one, the body lives only in the .docx and the
+  // word/table checks are skipped (Pandoc extract is renderer-side).
+  // figure_count is the count of manuscript_files rows with
+  // file_type='figure' (the real upload channel per Session 62 tier-3).
+  body_html?: string | null
+  figure_count?: number | null
 }): Promise<{ errors: ValidationRow[]; warnings: ValidationRow[] }> {
   const errors: ValidationRow[] = []
   const warnings: ValidationRow[] = []
@@ -556,6 +597,56 @@ export async function validateMetadataForRender(merged: {
       message: `${equalAuthors} authors flagged equal-contribution but the statement is empty. Add the verbatim default or write a custom statement.`,
       targetField: 'equal_contribution_statement',
     })
+  }
+
+  // ---- Body-structural checks (Session 80, 2026-06-10 — §11 follow-up) ----
+  // Until migration 021 lands there is no manuscript_references table, so
+  // the payload always ships references: [] and JATS has no <ref-list>.
+  // Standing amber so every render acknowledges the PMC-indexing gap.
+  warnings.push({
+    severity: 'warning',
+    rule: 'references-table-empty',
+    message:
+      'References table is empty — structured references are not collected yet (migration 021 pending), so the JATS XML ships without <ref-list>. PDF body citations are unaffected. Acknowledge to proceed.',
+  })
+
+  if (merged.manuscript_type) {
+    const typeLabel = TYPE_DISPLAY[merged.manuscript_type]
+    if (typeof merged.body_html === 'string' && merged.body_html.trim().length > 0) {
+      const tableCount = (merged.body_html.match(/<table\b/gi) || []).length
+      // Word limits exclude tables/figure legends per /guide-for-authors;
+      // strip <table> blocks before counting, then strip remaining tags
+      // and entities. Approximate by design — flagged only when over.
+      const sansTables = merged.body_html.replace(/<table\b[\s\S]*?<\/table>/gi, ' ')
+      const bodyText = sansTables.replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ')
+      const wordCount = bodyText.split(/\s+/).filter(Boolean).length
+      const wordLimit = BODY_WORD_LIMITS[merged.manuscript_type]
+      if (wordCount > wordLimit) {
+        warnings.push({
+          severity: 'warning',
+          rule: 'body-word-limit',
+          message: `Body word count ≈ ${wordCount.toLocaleString()} exceeds the ${typeLabel} limit of ${wordLimit.toLocaleString()} (approximate count from the saved body HTML, tables excluded).`,
+        })
+      }
+      const tableLimit = TABLE_LIMITS[merged.manuscript_type]
+      if (tableCount > tableLimit) {
+        warnings.push({
+          severity: 'warning',
+          rule: 'body-table-limit',
+          message: `Body contains ${tableCount} tables; the ${typeLabel} limit is ${tableLimit}.`,
+        })
+      }
+    }
+    if (typeof merged.figure_count === 'number') {
+      const figureLimit = FIGURE_LIMITS[merged.manuscript_type]
+      if (merged.figure_count > figureLimit) {
+        warnings.push({
+          severity: 'warning',
+          rule: 'figure-count-limit',
+          message: `${merged.figure_count} figure files are uploaded; the ${typeLabel} limit is ${figureLimit}.`,
+        })
+      }
+    }
   }
 
   return { errors, warnings }
