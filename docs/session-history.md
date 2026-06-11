@@ -73,6 +73,8 @@
 - [[#^backfill-2290bae]]
 
 ### Submission portal (author-facing wizard, file uploads, validation, templates)
+- [[#^session-79-migration-025-phase8e]]
+- [[#^session-78-cleanup-hardening]]
 - [[#^session-52-templates-revision-resources-rewrite]]
 - [[#^session-36-revision-submission-requirements]]
 - [[#^session-36b-first-revision-wizard-gate-fix]]
@@ -103,6 +105,8 @@
 - [[#^entry-2026-05-01-headshot-extraction]]
 
 ### Schema / migrations
+- [[#^session-79-migration-025-phase8e]]
+- [[#^session-78-cleanup-hardening]]
 - [[#^session-34-orphan-migration-012]]
 - [[#^session-32-35-cluster-reviewer-form-refactor]]
 - [[#^session-29-reviewer-suggestions-persisted]]
@@ -279,6 +283,18 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 79 — 2026-06-10 — Manvir Cowork — Session 78 bookends: open-issue audit + hardening brief authored, then migration 025 run in Supabase Studio + Phase 8(e) wizard-gate smoke verified on production — 2 OSCRSJ docs commits `8d28a74` + `4343083`  ^session-79-migration-025-phase8e
+
+Manvir Cowork session that bookended Session 78 (the Claude Code hardening session ran from this session's brief, between its two halves).
+
+**Half 1 — audit + brief.** Kanwar asked for the current open-issue state on the submission portal and PDF publishing. Cross-checked CLAUDE.md §11 against `docs/session-history.md` heads and `git log` per the "§9/§11 is authoritative" convention. Audit surfaced one issue absent from every list: `public/downloads/oscrsj-sanra-self-rating.pdf` existed on disk but was never committed — live 404 verified by curl. Also caught two orphan June commits without M1-M4 wrap-ups (`c77ec51`, `cdec5d3`) and the Tarong manuscript working files sitting untracked in the repo root. All findings folded into a phased Claude Code session prompt at `.cowork-push/2026-06-10-cleanup-session-prompt.md` (9 phases: SANRA commit, verapdf confirm, launchd fix, bearer auth, C2 dedupe, Narrative Review backend, PRISMA hard-gate, interactive smokes, wrap-up incl. orphan-narrative backfill). Kanwar ran it as Session 78.
+
+**Half 2 — post-Session-78 unblocking.** (1) **Migration 025 run in Supabase Studio** via Chrome MCP: per the migration's own transaction-block note, executed as 4 separate queries — 3× `ALTER TYPE ... ADD VALUE` individually, then both `COMMENT ON TYPE` statements + `NOTIFY pgrst, 'reload schema'` together. All returned "Success. No rows returned." Verified via `pg_enum` join: `narrative_review` live as manuscript_type's 7th value; `sanra_self_rating` + `prisma_checklist` appended to file_type; 21 enum values total across both types. Query saved in Studio as "Extend Manuscript Type Enumeration". (2) **Phase 8(e) smoke on production** (`/dashboard/submit`, Chrome MCP): Step 1 renders Narrative Review at position 4 with the locked copy (4,000 words / SANRA ≥8/12 / senior-author-or-Section-Editor); selecting it and advancing SAVED the type to the DB — the first real write proving the enum value live; Step 2 rendered the SANRA Self-Rating required slot (red asterisk, correct instructions, working PDF link) and Next stayed blocked with required files missing; switching back to SR/MA swapped in the PRISMA 2020 Checklist required slot — conditional slots key off manuscript_type correctly in both directions; both checklist PDFs curl 200. Test vehicle was the pre-existing draft OSCRSJ-2026-0035, restored to its original SR/MA no-files state — zero test data created.
+
+**Commits:** `8d28a74` (§11 check-off: migration 025 done, pg_enum-verified) + `4343083` (§11 annotation: Phase 8(e) verified). Both docs-only, explicit-path staged, pushed.
+
+**Wrap-time state:** Narrative Review + PRISMA/SANRA live behavior fully unblocked end to end. Remaining from Phase 8: (a) Step 6 Review flow, (b) per-revision file grouping, (c) desk-reject flow, (d) cleanup-pane Publish button with bearer header — all Kanwar-paced interactive smokes; plus the e0001 re-publish decision (C2 stored-JATS refresh). **Handoffs pushed: None.**
 
 ### Session 78 — 2026-06-10 — Sushant Cowork — Cleanup-and-hardening sweep: SANRA live-404 fix + verapdf PASS confirmed + launchd auto-start fixed (3 root causes) + bearer auth on /api/publish/[id] + C2 JATS consent dedupe + Narrative Review backend + PRISMA hard-gate — 3 OSCRSJ commits `a7abef0` + `f925127` + `9e9afd2`, 4 renderer commits `569a1ba` + `295ade2` + `e304e3a` + `3accc3b`  ^session-78-cleanup-hardening
 

@@ -130,6 +130,12 @@ Operational rules every session must follow. New entries land here only when a n
 
 The 3 most recent sessions, full narrative. Older sessions surface as 1-line pointers in the next section; full narrative for any session lives in [docs/session-history.md](docs/session-history.md).
 
+### Session 79 — 2026-06-10 — Manvir Cowork — Session 78 bookends: open-issue audit + hardening brief, then migration 025 run in Studio + Phase 8(e) wizard gates verified on production — 2 OSCRSJ docs commits `8d28a74` + `4343083`
+
+Bookended Session 78. Half 1: audited every open submission-portal/PDF-publishing issue (§11 cross-check vs session-history + git log), caught the untracked SANRA PDF live-404 and the two orphan June commits, authored the 9-phase hardening brief at `.cowork-push/2026-06-10-cleanup-session-prompt.md` that Kanwar ran as Session 78. Half 2: ran migration 025 in Supabase Studio via Chrome MCP (4 separate queries per the transaction-block note; `pg_enum`-verified: `narrative_review` 7th manuscript_type value, `sanra_self_rating` + `prisma_checklist` on file_type, 21 values total; PostgREST cache reloaded), then smoke-verified Phase 8(e) on production — Narrative Review at Step 1 position 4, type save to DB succeeded, SANRA required slot renders with working PDF link, Next blocked sans files, SR/MA swap-back renders the PRISMA required slot, both checklist PDFs 200. Test vehicle: pre-existing draft OSCRSJ-2026-0035, restored to original state; zero test data created. Remaining Phase 8 smokes (Step 6 flow, per-revision grouping, desk-reject, Publish button) + e0001 re-publish decision stay open.
+
+Full narrative at [docs/session-history.md#session-79-migration-025-phase8e](docs/session-history.md). **Handoffs pushed: None.**
+
 ### Session 78 — 2026-06-10 — Sushant Cowork — Cleanup-and-hardening sweep: SANRA live-404 fix + verapdf PASS + launchd auto-start fixed (3 root causes) + bearer auth on /api/publish/[id] + C2 JATS consent dedupe + Narrative Review backend + PRISMA hard-gate — 3 OSCRSJ commits `a7abef0` + `f925127` + `9e9afd2`, 4 renderer commits `569a1ba` + `295ade2` + `e304e3a` + `3accc3b`
 
 Mac-direct session (no Cowork sandbox). Phases 0-7 of the hardening brief complete; Phase 8 interactive smokes + migration 025 Studio run open at wrap.
@@ -144,18 +150,13 @@ Backfilled during Session 78's wrap (commit landed without an M1-M4 pass). Globa
 
 Full narrative at [docs/session-history.md#session-77-apc-window-july1](docs/session-history.md). **Handoffs pushed: None.**
 
-### Session 76 — 2026-06-07 — Sushant Cowork (retroactive) — Co-author dispute false-objection fix: GET renders landing page, POST mutates — 1 OSCRSJ commit `c77ec51`
-
-Backfilled during Session 78's wrap (commit landed without an M1-M4 pass). The co-author notification email's objection-only CTA mutated state on bare GET — confirming co-authors accidentally objected, and mail-scanner prefetch bots (SafeLinks/Mimecast/Gmail) filed phantom objections with no human action. `c77ec51` (+387/-121): GET now renders a read-only Confirm/Object landing page; POST performs the mutation; error-page contact moved off dead-letter editorial@oscrsj.com; noindex,nofollow on landing/result pages. Backward compatible for in-flight tokens.
-
-Full narrative at [docs/session-history.md#session-76-coauthor-false-objections](docs/session-history.md). **Handoffs pushed: None.**
-
 ---
 
 ## Recent Sessions (pointers)
 
 Sessions from the last 14 days as 1-line pointers (newest first). Older sessions reachable via grep on the archive.
 
+- **Session 79 — 2026-06-10 — Manvir Cowork — Session 78 brief authored + migration 025 run in Studio + Phase 8(e) wizard gates verified on production — 2 docs commits `8d28a74` + `4343083`** — see [docs/session-history.md#session-79-migration-025-phase8e](docs/session-history.md)
 - **Session 78 — 2026-06-10 — Sushant Cowork — Cleanup-and-hardening: SANRA 404 fix + verapdf PASS + launchd fixed + bearer auth on publish + C2 JATS dedupe + Narrative Review backend + PRISMA hard-gate — 3 OSCRSJ + 4 renderer commits** — see [docs/session-history.md#session-78-cleanup-hardening](docs/session-history.md)
 - **Session 77 — 2026-06-10 — Manvir Cowork (retroactive) — APC free window Aug 1 → July 1, 2026 across 12 surfaces — 1 OSCRSJ commit `cdec5d3`** — see [docs/session-history.md#session-77-apc-window-july1](docs/session-history.md)
 - **Session 76 — 2026-06-07 — Sushant Cowork (retroactive) — co-author dispute false-objection fix (GET landing page / POST mutation split) — 1 OSCRSJ commit `c77ec51`** — see [docs/session-history.md#session-76-coauthor-false-objections](docs/session-history.md)
