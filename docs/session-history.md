@@ -128,7 +128,7 @@
 ## Sequential Index (chronological — newest first)
 
 - Session 78 — 2026-06-10 — Sushant — Cleanup-and-hardening: SANRA 404 fix + verapdf pass confirmed + launchd auto-start fixed + bearer auth on publish + C2 JATS dedupe + Narrative Review backend + PRISMA hard-gate — `^session-78-cleanup-hardening`
-- Session 77 — 2026-06-10 — Franklin (retroactive) — APC free window Aug 1 → July 1, 2026 across 12 surfaces + Business Context — `^session-77-apc-window-july1`
+- Session 77 — 2026-06-10 — Manvir (retroactive) — APC free window Aug 1 → July 1, 2026 across 12 surfaces + Business Context — `^session-77-apc-window-july1`
 - Session 76 — 2026-06-07 — Sushant (retroactive) — co-author dispute false-objection fix: GET renders landing page, POST mutates — `^session-76-coauthor-false-objections`
 - Session 75 — 2026-05-27 — Brad — LLC official docs filed + EIN obtained + WA B&O license filed — `^session-75-brad-ein-bo-registration`
 - Session 74 — 2026-05-24 — Brad — OSCRSJ LLC filed (WA SOS, $200) + receipt filed + expense logged + B&O paused pending UBI — `^session-74-brad-llc-formation`
@@ -304,7 +304,7 @@ Kanwar brief: resolve every open submission-portal and PDF-publishing issue in o
 
 **Wrap-time state:** all 7 commits on their origins. tsc exit 0 both repos. Production: SANRA 200, publish-sans-bearer 401, renderer dev-markers 0. OPEN: Kanwar runs migration 025 in Studio; Phase 8 interactive smokes (Step 6 flow, per-revision grouping, desk-reject, publish button with new bearer, NR/PRISMA wizard gates); e0001 re-publish decision. Sessions 76+77 narratives backfilled this wrap (orphan commits `c77ec51` + `cdec5d3`). **Handoffs pushed: None** (follow-ups filed in §11; no new agent-file handoffs).
 
-### Session 77 — 2026-06-10 — Franklin Cowork (retroactive entry, backfilled Session 78) — Free-APC window moved Aug 1 → July 1, 2026 across 12 public surfaces + CLAUDE.md Business Context — 1 OSCRSJ commit `cdec5d3`  ^session-77-apc-window-july1
+### Session 77 — 2026-06-10 — Manvir Cowork (retroactive entry, backfilled Session 78) — Free-APC window moved Aug 1 → July 1, 2026 across 12 public surfaces + CLAUDE.md Business Context — 1 OSCRSJ commit `cdec5d3`  ^session-77-apc-window-july1
 
 Retroactive narrative written during Session 78's wrap (the session landed its commit without an M1-M4 pass). Global APC-policy change per Kanwar: manuscripts publish free if submitted before **July 1, 2026** (previously Aug 1); $499 standard rate after. Commit `cdec5d3` (13 files, +21/-21) swept every public surface naming the deadline: `/apc`, `/submit`, `/faq`, `/guide-for-authors`, `/open-access`, `/aims-scope`, `/articles/current-issue`, homepage milestone, the 4 AI-in-Orthopedics pages, plus the CLAUDE.md Business Context line. No email templates contained the date. The solicited-author APC-waiver override (`^handoff-apc-waiver-solicited-authors-2026-05-06`) is date-independent and unaffected. Closes `^handoff-franklin-apc-window-july1-sitecopy-2026-06-09`.
 

@@ -138,7 +138,7 @@ Mac-direct session (no Cowork sandbox). Phases 0-7 of the hardening brief comple
 
 Full narrative at [docs/session-history.md#session-78-cleanup-hardening](docs/session-history.md). **Handoffs pushed: None.**
 
-### Session 77 — 2026-06-10 — Franklin Cowork (retroactive) — Free-APC window Aug 1 → July 1, 2026 across 12 surfaces + Business Context — 1 OSCRSJ commit `cdec5d3`
+### Session 77 — 2026-06-10 — Manvir Cowork (retroactive) — Free-APC window Aug 1 → July 1, 2026 across 12 surfaces + Business Context — 1 OSCRSJ commit `cdec5d3`
 
 Backfilled during Session 78's wrap (commit landed without an M1-M4 pass). Global APC change: free publication for submissions before **July 1, 2026**, then $499. 13 files swept (/apc, /submit, /faq, /guide-for-authors, /open-access, /aims-scope, /articles/current-issue, homepage, 4 AI-in-ortho pages, CLAUDE.md Business Context). No email templates carried the date. Solicited-author waiver override unaffected. Closes `^handoff-franklin-apc-window-july1-sitecopy-2026-06-09`.
 
@@ -157,7 +157,7 @@ Full narrative at [docs/session-history.md#session-76-coauthor-false-objections]
 Sessions from the last 14 days as 1-line pointers (newest first). Older sessions reachable via grep on the archive.
 
 - **Session 78 — 2026-06-10 — Sushant Cowork — Cleanup-and-hardening: SANRA 404 fix + verapdf PASS + launchd fixed + bearer auth on publish + C2 JATS dedupe + Narrative Review backend + PRISMA hard-gate — 3 OSCRSJ + 4 renderer commits** — see [docs/session-history.md#session-78-cleanup-hardening](docs/session-history.md)
-- **Session 77 — 2026-06-10 — Franklin Cowork (retroactive) — APC free window Aug 1 → July 1, 2026 across 12 surfaces — 1 OSCRSJ commit `cdec5d3`** — see [docs/session-history.md#session-77-apc-window-july1](docs/session-history.md)
+- **Session 77 — 2026-06-10 — Manvir Cowork (retroactive) — APC free window Aug 1 → July 1, 2026 across 12 surfaces — 1 OSCRSJ commit `cdec5d3`** — see [docs/session-history.md#session-77-apc-window-july1](docs/session-history.md)
 - **Session 76 — 2026-06-07 — Sushant Cowork (retroactive) — co-author dispute false-objection fix (GET landing page / POST mutation split) — 1 OSCRSJ commit `c77ec51`** — see [docs/session-history.md#session-76-coauthor-false-objections](docs/session-history.md)
 - **Session 75 — 2026-05-27 — Brad Cowork — LLC official docs filed (Legal/ folder) + EIN 42-2798301 obtained + WA B&O filed (Confirmation #0-052-600-818, $50) + Financial Tracker row 10 + Vault State updated — 0 OSCRSJ commits** — see [docs/session-history.md#session-75-brad-ein-bo-registration](docs/session-history.md)
 
