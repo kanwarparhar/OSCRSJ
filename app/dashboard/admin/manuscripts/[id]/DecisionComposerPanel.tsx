@@ -128,7 +128,7 @@ The OSCRSJ Editorial Office`,
 
 Thank you for submitting "{{title}}" (submission {{submission_id}}) to OSCRSJ. Your manuscript has been reviewed, and I am pleased to offer conditional acceptance pending minor revisions.
 
-Please address each reviewer comment point-by-point in a response-to-reviewers letter, upload a revised manuscript along with a tracked-changes file, and return the revision by {{deadline}}.
+Your revision must include two documents alongside your clean revised manuscript. First, a Response to Reviewers document — a single Word file that addresses every reviewer comment one by one, in the order the reviewers raised them, grouped by reviewer (Reviewer 1, Reviewer 2, and so on). Under each comment, quote the reviewer's comment verbatim, give your response, and describe the specific change you made — citing the line numbers in the revised manuscript where the change appears. If you decline a change, write "No change" and explain why in your response. Second, a tracked-changes manuscript in which every changed or added word is set in red font with a yellow highlight, saved as a separate file from your clean copy. Full instructions and a worked example are at https://www.oscrsj.com/templates#revision-resources. Please return the revision by {{deadline}}.
 
 The reviewer comments are constructive and should be straightforward to incorporate. A second round of external review is not anticipated — the editorial office will verify that the comments have been addressed and then move the manuscript toward acceptance.
 
@@ -138,7 +138,7 @@ The OSCRSJ Editorial Office`,
 
 Thank you for submitting "{{title}}" (submission {{submission_id}}) to OSCRSJ. The reviewers and editors have identified substantive issues that need to be resolved before a publication decision can be reached. I am returning the manuscript for major revisions.
 
-Please address each reviewer comment point-by-point in a response-to-reviewers letter, upload a revised manuscript along with a tracked-changes file, and return the revision by {{deadline}}. The revised manuscript will likely be sent back to the original reviewers for a second round of review.
+Your revision must include two documents alongside your clean revised manuscript. First, a Response to Reviewers document — a single Word file that addresses every reviewer comment one by one, in the order the reviewers raised them, grouped by reviewer (Reviewer 1, Reviewer 2, and so on). Under each comment, quote the reviewer's comment verbatim, give your response, and describe the specific change you made — citing the line numbers in the revised manuscript where the change appears. If you decline a change, write "No change" and explain why in your response. Second, a tracked-changes manuscript in which every changed or added word is set in red font with a yellow highlight, saved as a separate file from your clean copy. Full instructions and a worked example are at https://www.oscrsj.com/templates#revision-resources. Please return the revision by {{deadline}}. The revised manuscript will likely be sent back to the original reviewers for a second round of review.
 
 Substantive changes to the manuscript — including to the data, analysis, or conclusions — are appropriate and welcome. If you feel any reviewer comment is unwarranted, please explain your reasoning in the response letter rather than leaving it unaddressed.
 
