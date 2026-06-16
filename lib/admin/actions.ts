@@ -829,8 +829,40 @@ export async function submitEditorialDecision(
   const decisionId = (inserted as { id: string }).id
 
   // 2. Flip manuscript status + stamp decision_date.
+  const manuscriptStatusUpdate: Record<string, unknown> = {
+    status: targetStatus,
+    decision_date: nowIso,
+  }
+
+  // On acceptance, assign the next sequential elocation_id (e0002, e0003…)
+  // if one hasn't been assigned yet. The renderer otherwise defaults every
+  // manuscript to 'e0001' (synthesize.ts §article), and the placeholder DOI is
+  // derived from that elocation — so without this, every accepted article would
+  // publish with a duplicate identity. idx_manuscripts_elocation_id_unique
+  // (migration 026) is the backstop if two accepts ever race to the same number.
+  if (targetStatus === 'accepted' && !manuscript.elocation_id) {
+    try {
+      const { data: maxRow } = await admin
+        .from('manuscripts')
+        .select('elocation_id')
+        .not('elocation_id', 'is', null)
+        .order('elocation_id', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      const lastId =
+        (maxRow as { elocation_id: string | null } | null)?.elocation_id ?? null
+      const lastNum = lastId ? parseInt(lastId.replace(/^e/i, ''), 10) : 0
+      const nextNum = Number.isFinite(lastNum) && lastNum > 0 ? lastNum + 1 : 1
+      manuscriptStatusUpdate.elocation_id = `e${String(nextNum).padStart(4, '0')}`
+    } catch (err) {
+      // Non-fatal: if assignment fails, the editor can still set it before
+      // publish. Don't block the acceptance decision on an elocation lookup.
+      console.error('elocation_id auto-assign failed', err)
+    }
+  }
+
   const { error: updErr } = await (admin.from('manuscripts') as any)
-    .update({ status: targetStatus, decision_date: nowIso })
+    .update(manuscriptStatusUpdate)
     .eq('id', args.manuscriptId)
 
   if (updErr) {
@@ -2018,7 +2050,13 @@ export async function updateManuscriptMetadata(
     fieldsChanged.push('running_title')
   }
   if (patch.doi !== undefined) {
-    manuscriptUpdate.doi = patch.doi
+    // The DOI field in the editor is display-only/auto-generated. A blank DB
+    // value surfaces as '' in the form and would be re-written as '' here.
+    // Because idx_manuscripts_doi_unique is a partial index over non-NULL doi,
+    // two empty strings collide (empty string is NOT NULL). Normalize blank/
+    // whitespace to NULL so placeholder DOIs never collide across manuscripts.
+    const trimmedDoi = (patch.doi ?? '').trim()
+    manuscriptUpdate.doi = trimmedDoi === '' ? null : trimmedDoi
     fieldsChanged.push('doi')
   }
   if (patch.keywords !== undefined) {
