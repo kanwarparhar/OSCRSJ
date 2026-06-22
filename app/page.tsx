@@ -338,6 +338,42 @@ export default async function HomePage() {
         </div>
       </div>
 
+      {/* About the Journal — self-contained descriptive prose; primary
+          search/AI-citation source so home/about (not /media) is what gets
+          quoted when describing OSCRSJ. */}
+      <section className="bg-white scroll-fade-in" style={{ padding: '64px 24px' }}>
+        <div className="max-w-content mx-auto">
+          <span className="section-label">About the Journal</span>
+          <h2 className="section-heading mb-4">What Is OSCRSJ?</h2>
+          <div className="max-w-3xl space-y-4 text-ink leading-relaxed">
+            <p>
+              The <strong>Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ)</strong> is an independent, peer-reviewed, open-access medical journal founded in 2026. OSCRSJ publishes case reports, case series, systematic reviews and meta-analyses, narrative reviews, surgical techniques, images in orthopedics, and letters to the editor across every musculoskeletal subspecialty — including trauma, sports medicine, spine, adult reconstruction, pediatric orthopedics, hand and wrist, foot and ankle, shoulder, and orthopedic oncology.
+            </p>
+            <p>
+              Every manuscript undergoes double-blind peer review by reviewers outside of our network, with a target first decision within ten days. Accepted articles receive a Crossref DOI and are published open access — free to read, download, and reuse with attribution — with an active pathway toward PubMed indexing. OSCRSJ serves the global orthopedic surgery community: practicing surgeons, fellows, residents, students, and researchers.
+            </p>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+            <Link href="/aims-scope" className="text-brown hover:text-brown-dark transition-colors font-medium underline-offset-2 hover:underline">
+              Aims &amp; Scope →
+            </Link>
+            <Link href="/editorial-board" className="text-brown hover:text-brown-dark transition-colors font-medium underline-offset-2 hover:underline">
+              Editorial Board →
+            </Link>
+            <Link href="/peer-review" className="text-brown hover:text-brown-dark transition-colors font-medium underline-offset-2 hover:underline">
+              Peer Review Process →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Section divider — light brown line between content sections */}
+      <div className="bg-white px-6">
+        <div className="max-w-content mx-auto">
+          <hr style={{ border: 'none', borderTop: '1px solid rgba(153,126,103,0.3)', margin: 0 }} />
+        </div>
+      </div>
+
       {/* 3. Editor-in-Chief — leadership credibility section */}
       <section className="bg-white scroll-fade-in" style={{ padding: '72px 24px' }}>
         <div className="max-w-content mx-auto">
