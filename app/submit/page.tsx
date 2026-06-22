@@ -44,7 +44,7 @@ const resourceLinks = [
   },
   {
     title: 'Open Access Policy',
-    desc: 'Licensing terms (CC BY-NC-ND 4.0), copyright retention, and reuse rights for authors and readers.',
+    desc: 'Licensing terms (CC BY 4.0), copyright retention, and reuse rights for authors and readers.',
     href: '/open-access',
   },
   {
