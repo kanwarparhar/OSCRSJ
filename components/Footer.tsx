@@ -40,7 +40,7 @@ export default function Footer() {
                 { label: 'Editorial Board', href: '/editorial-board' },
                 { label: 'Aims & Scope', href: '/aims-scope' },
                 { label: 'Contact', href: '/contact' },
-                { label: 'Press Kit', href: '/media' },
+                { label: 'Follow Us', href: '/media' },
               ].map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-sm text-peach/50 hover:text-peach transition-colors">
