@@ -89,7 +89,7 @@ export default function AimsScopePage() {
             <span className="section-label">Access</span>
             <h2 className="section-heading mb-3">Open Access Policy</h2>
             <p className="text-ink">
-              All articles published in OSCRSJ are freely available to read, download, share, and adapt under a Creative Commons Attribution 4.0 International (CC BY 4.0) license, with attribution to the original authors. We do not charge readers or institutions for access. The journal is sustained through article processing charges (APCs), which are waived for all manuscripts submitted before July 1, 2026. We believe that publicly relevant medical literature should be publicly accessible.
+              All articles published in OSCRSJ are freely available to read, download, share, and adapt under a Creative Commons Attribution 4.0 International (CC BY 4.0) license, with attribution to the original authors. We do not charge readers or institutions for access. The journal is sustained through article processing charges (APCs), which are waived for all manuscripts submitted before August 1, 2026. We believe that publicly relevant medical literature should be publicly accessible.
             </p>
           </section>
 

@@ -6,12 +6,12 @@ import DiscountInquiryForm from './DiscountInquiryForm'
 export const metadata: Metadata = {
   title: 'APC & Fees',
   description:
-    'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver for manuscripts submitted before July 1, 2026; $499 standard APC after.',
+    'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver for manuscripts submitted before August 1, 2026; $499 standard APC after.',
   alternates: { canonical: 'https://www.oscrsj.com/apc' },
   openGraph: {
     title: 'APC & Fees | OSCRSJ',
     description:
-      'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver before July 1, 2026.',
+      'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver before August 1, 2026.',
     url: 'https://www.oscrsj.com/apc',
     type: 'website',
   },
@@ -27,7 +27,7 @@ export default function ApcPage() {
         name: 'How much does it cost to publish in OSCRSJ?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ is currently waiving the full APC for all manuscripts submitted before July 1, 2026. After this launch window, the article processing charge is $499 per accepted manuscript.',
+          text: 'OSCRSJ is currently waiving the full APC for all manuscripts submitted before August 1, 2026. After this launch window, the article processing charge is $499 per accepted manuscript.',
         },
       },
       {
@@ -67,9 +67,9 @@ export default function ApcPage() {
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 bg-peach/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
             <div>
-              <p className="font-semibold text-lg text-cream">Full APC Fee Waiver — Submit Before July 1, 2026</p>
+              <p className="font-semibold text-lg text-cream">Full APC Fee Waiver — Submit Before August 1, 2026</p>
               <p className="text-cream/80 text-sm mt-1">
-                The full article processing charge is waived for every manuscript submitted before July 1, 2026. Submit during our launch window and the full APC is on us.
+                The full article processing charge is waived for every manuscript submitted before August 1, 2026. Submit during our launch window and the full APC is on us.
               </p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function ApcPage() {
               <div>
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest">Per Accepted Manuscript</p>
                 <p className="text-sm text-ink mt-2 max-w-xl leading-relaxed">
-                  After July 1, 2026, OSCRSJ charges a flat article processing charge per accepted manuscript. The fee covers editorial coordination, peer review management, DOI registration, indexing submissions, hosting, and long-term preservation.
+                  After August 1, 2026, OSCRSJ charges a flat article processing charge per accepted manuscript. The fee covers editorial coordination, peer review management, DOI registration, indexing submissions, hosting, and long-term preservation.
                 </p>
               </div>
               <div className="text-left sm:text-right">
@@ -128,7 +128,7 @@ export default function ApcPage() {
         </section>
 
         <div className="text-center">
-          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Full APC Waived Before July 1, 2026</Link>
+          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Full APC Waived Before August 1, 2026</Link>
         </div>
       </div>
     </div>
