@@ -18,6 +18,8 @@
 // page should render as a clickable Link (instead of a static card).
 // Bio detail content lives in BOARD_MEMBER_BIOS keyed by slug.
 
+import { THIN_BIO_SLUGS } from './thinBioSlugs'
+
 export interface BoardMember {
   name: string
   givenName: string
@@ -785,9 +787,15 @@ export const BOARD_MEMBER_BIOS: Record<string, BoardMemberBio> = {
 }
 
 export function buildEditorialBoardSchema(members: BoardMember[]) {
+  // Thin-bio members are stripped from the aggregate @graph: with their
+  // per-bio route returning 404 (no destination page), an entity-graph
+  // Person node would point crawlers at a hollow entity. They still render
+  // visually on the page. Auto-reverses when the slug leaves THIN_BIO_SLUGS.
   return {
     '@context': 'https://schema.org',
-    '@graph': members.map((m) => ({
+    '@graph': members
+      .filter((m) => !(m.slug && THIN_BIO_SLUGS.has(m.slug)))
+      .map((m) => ({
       '@type': 'Person',
       '@id': `https://www.oscrsj.com/editorial-board#${(m.familyName || m.givenName).toLowerCase()}`,
       name: m.name,

@@ -94,7 +94,13 @@ export default function BoardMemberBioPage({ params }: PageProps) {
   const member = BOARD_MEMBERS.find((m) => m.slug === params.slug)
   const bio = BOARD_MEMBER_BIOS[params.slug]
 
-  if (!member || !bio) {
+  // Thin-bio slugs 404 until real bio content lands (Kanwar directive
+  // 2026-05-14: no destination page for members without a real bio).
+  // Removing the slug from THIN_BIO_SLUGS re-activates this route, the
+  // sitemap entry, the indexable metadata, and the aggregate Person node
+  // in one commit. The isThinBio noindex branch in generateMetadata stays
+  // as defensive cover for the reverse direction.
+  if (!member || !bio || THIN_BIO_SLUGS.has(params.slug)) {
     notFound()
   }
 

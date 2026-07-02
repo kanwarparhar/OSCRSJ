@@ -8,6 +8,7 @@ import {
   getBoardMemberInitials,
   type BoardMember,
 } from '@/lib/schema/editorialBoard'
+import { THIN_BIO_SLUGS } from '@/lib/schema/thinBioSlugs'
 
 export const metadata: Metadata = {
   title: 'Editorial Board',
@@ -113,7 +114,13 @@ function MemberCard({
   member: BoardMember
   roleLine: string
 }) {
-  const hasBio = !!member.slug && !!BOARD_MEMBER_BIOS[member.slug]
+  // Thin-bio members (THIN_BIO_SLUGS) render a static card — no link, no
+  // "View bio →" hint — because their per-bio route returns 404 until real
+  // bio content lands. Removing the slug from the Set flips everything back.
+  const hasBio =
+    !!member.slug &&
+    !!BOARD_MEMBER_BIOS[member.slug] &&
+    !THIN_BIO_SLUGS.has(member.slug)
   if (hasBio) {
     return (
       <Link
@@ -172,7 +179,10 @@ function LeadershipCard({
   roleLine: string
   blurb: string
 }) {
-  const hasBio = !!member.slug && !!BOARD_MEMBER_BIOS[member.slug]
+  const hasBio =
+    !!member.slug &&
+    !!BOARD_MEMBER_BIOS[member.slug] &&
+    !THIN_BIO_SLUGS.has(member.slug)
   if (hasBio) {
     return (
       <Link
