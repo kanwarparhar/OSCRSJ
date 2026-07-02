@@ -3,14 +3,14 @@ import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
-  title: 'Author FAQ',
+  title: 'FAQ — Fees, Peer Review & Publication Timelines',
   description:
-    'Frequently asked questions about submitting to OSCRSJ, peer review timelines, APCs, discounts, formatting, and publication.',
+    'Is OSCRSJ peer reviewed? What does publishing cost? Quick answers on APCs — free before August 1, 2026 — double-blind review, timelines, and open access.',
   alternates: { canonical: 'https://www.oscrsj.com/faq' },
   openGraph: {
-    title: 'Author FAQ | OSCRSJ',
+    title: 'FAQ — Fees, Peer Review & Publication Timelines | OSCRSJ',
     description:
-      'Frequently asked questions about submitting to OSCRSJ, peer review timelines, APCs, discounts, formatting, and publication.',
+      'Is OSCRSJ peer reviewed? What does publishing cost? Quick answers on APCs — free before August 1, 2026 — double-blind review, timelines, and open access.',
     url: 'https://www.oscrsj.com/faq',
     type: 'website',
   },

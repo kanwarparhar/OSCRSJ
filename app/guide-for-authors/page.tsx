@@ -3,14 +3,14 @@ import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
-  title: 'Guide for Authors',
+  title: 'Guide for Authors — Requirements, Templates & Checklists',
   description:
-    'Complete author guidelines for submitting case reports, case series, systematic reviews and meta-analyses, narrative reviews, surgical techniques, images in orthopedics, and letters to the editor to the Orthopedic Surgery Case Reports & Series Journal.',
+    'Author guidelines for all seven OSCRSJ article types — word limits, required sections, reporting checklists, and free templates. No APC before August 1, 2026.',
   alternates: { canonical: 'https://www.oscrsj.com/guide-for-authors' },
   openGraph: {
-    title: 'Guide for Authors | OSCRSJ',
+    title: 'Guide for Authors — Requirements, Templates & Checklists | OSCRSJ',
     description:
-      'Complete author guidelines for the seven article types accepted by OSCRSJ — case reports, case series, systematic reviews and meta-analyses, narrative reviews, surgical techniques, images in orthopedics, and letters to the editor.',
+      'Author guidelines for all seven OSCRSJ article types — word limits, required sections, reporting checklists, and free templates. No APC before August 1, 2026.',
     url: 'https://www.oscrsj.com/guide-for-authors',
     type: 'website',
   },

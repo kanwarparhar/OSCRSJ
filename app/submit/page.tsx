@@ -3,14 +3,14 @@ import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
-  title: 'Submit a Manuscript',
+  title: 'Submit a Manuscript — Publish Free Before August 1, 2026',
   description:
-    'Submit a manuscript to OSCRSJ — peer-reviewed open-access orthopedic case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor. Full APC fee waiver for manuscripts submitted before August 1, 2026.',
+    'Submit your orthopedic case report, case series, or review to OSCRSJ. Double-blind peer review, CC BY 4.0 open access, and no APC before August 1, 2026.',
   alternates: { canonical: 'https://www.oscrsj.com/submit' },
   openGraph: {
-    title: 'Submit a Manuscript | OSCRSJ',
+    title: 'Submit a Manuscript — Publish Free Before August 1, 2026 | OSCRSJ',
     description:
-      'Submit a manuscript to OSCRSJ — peer-reviewed open-access orthopedic case reports, case series, systematic reviews and meta-analyses, surgical techniques, images, and letters to the editor.',
+      'Submit your orthopedic case report, case series, or review to OSCRSJ. Double-blind peer review, CC BY 4.0 open access, and no APC before August 1, 2026.',
     url: 'https://www.oscrsj.com/submit',
     type: 'website',
   },
