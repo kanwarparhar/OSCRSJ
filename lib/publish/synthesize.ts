@@ -201,6 +201,16 @@ const STRUCTURED_ABSTRACT_COUNT: Partial<Record<ManuscriptType, number>> = {
   // Session 78 — Narrative Review: Background / Scope / Findings / Conclusion
   narrative_review: 4,
 }
+
+// Per-type example label hint surfaced in the abstract-structure validation
+// message so editors see the labels that actually parse for THIS article type
+// (the recognized-anchor set includes Scope/Findings for narrative reviews).
+const ABSTRACT_LABEL_HINT: Partial<Record<ManuscriptType, string>> = {
+  case_report: 'Introduction:/Case Presentation:/Discussion:/Conclusion:',
+  case_series: 'Introduction:/Methods:/Results:/Discussion:/Conclusion:',
+  review_article: 'Introduction:/Methods:/Results:/Conclusion:',
+  narrative_review: 'Background:/Scope:/Findings:/Conclusion:',
+}
 const UNSTRUCTURED_TYPES = new Set<ManuscriptType>(['surgical_technique'])
 const NO_ABSTRACT_TYPES = new Set<ManuscriptType>([
   'letter_to_editor',
@@ -468,7 +478,7 @@ export async function validateMetadataForRender(merged: {
     const expected = STRUCTURED_ABSTRACT_COUNT[merged.manuscript_type]
     if (expected) {
       const txt = merged.abstract || ''
-      const ANCHORS = ['Introduction', 'Background', 'Case Presentation', 'Methods', 'Results', 'Discussion', 'Conclusion', 'Conclusions']
+      const ANCHORS = ['Introduction', 'Background', 'Case Presentation', 'Methods', 'Results', 'Scope', 'Findings', 'Discussion', 'Conclusion', 'Conclusions']
       const anchorRe = new RegExp(
         `(^|\\n|\\.\\s+|\\;\\s+|\\s)\\s*(${ANCHORS.join('|')})\\s*[:\\.]\\s*`,
         'gi'
@@ -480,7 +490,7 @@ export async function validateMetadataForRender(merged: {
         errors.push({
           severity: 'error',
           rule: 'abstract-structure',
-          message: `Abstract for ${TYPE_DISPLAY[merged.manuscript_type]} expects ${expected} labeled sections; found ${matches.length}. Add labels (Introduction:/Case Presentation:/Discussion:/Conclusion: etc.) or use the Paste-and-Parse assist.`,
+          message: `Abstract for ${TYPE_DISPLAY[merged.manuscript_type]} expects ${expected} labeled sections; found ${matches.length}. Add labels (${ABSTRACT_LABEL_HINT[merged.manuscript_type] ?? 'Introduction:/Methods:/Results:/Conclusion:'}) or use the Paste-and-Parse assist.`,
           targetField: 'abstract',
         })
       }
@@ -1211,7 +1221,7 @@ function parseAbstract(
   // We capture the label and split the text into segments after each match.
   const ANCHORS = [
     'Introduction', 'Background', 'Case Presentation', 'Methods', 'Results',
-    'Discussion', 'Conclusion', 'Conclusions',
+    'Scope', 'Findings', 'Discussion', 'Conclusion', 'Conclusions',
   ]
   const anchorRe = new RegExp(
     `(^|\\n|\\.\\s+|\\;\\s+|\\s)\\s*(${ANCHORS.join('|')})\\s*[:\\.]\\s*`,
@@ -1229,7 +1239,7 @@ function parseAbstract(
 
   if (matches.length < expectedCount) {
     warnings.push(
-      `Abstract for ${TYPE_DISPLAY[type]} expects ${expectedCount} labeled sections; found ${matches.length} anchor(s) ("${matches.map((x) => x.label).join('", "')}"). Editor must add labels (Introduction:/Case Presentation:/Discussion:/Conclusion: etc.) to the abstract text before render OR the sanity test will fail. Falling back to unstructured.`
+      `Abstract for ${TYPE_DISPLAY[type]} expects ${expectedCount} labeled sections; found ${matches.length} anchor(s) ("${matches.map((x) => x.label).join('", "')}"). Editor must add labels (${ABSTRACT_LABEL_HINT[type] ?? 'Introduction:/Methods:/Results:/Conclusion:'}) to the abstract text before render OR the sanity test will fail. Falling back to unstructured.`
     )
     return { format: 'unstructured', text }
   }
