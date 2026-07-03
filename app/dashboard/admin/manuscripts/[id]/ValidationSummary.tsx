@@ -16,10 +16,7 @@ interface Props {
   onForceRefresh: () => void
   acknowledged: Set<string>
   onAcknowledge: (rule: string, checked: boolean) => void
-  onOpenPreview: () => void
   onRenderPublish: () => void
-  previewDisabled: boolean
-  previewDisabledReason: string | null
   renderDisabled: boolean
   renderDisabledReason: string | null
   // Phase 1.5 auto-expand-on-jump (Session 80). Collapsed sections unmount
@@ -30,8 +27,11 @@ interface Props {
 }
 
 // §5 Pre-Render Validation Summary — Franklin §5 wireframe.
-// Three-tier red/amber/green + acknowledged checkboxes + two CTAs
-// (Open preview · Render published PDF) at the bottom of the card.
+// Three-tier red/amber/green + acknowledged checkboxes + the single
+// gated "Render published PDF" CTA at the bottom of the card. The
+// preview generator (PreviewRenderCluster) mounts directly below this
+// card in MetadataEditorForm — Session 85 removed the duplicate
+// "Open preview" scroll-button that used to live here.
 // Sticky desktop-only chip lives separately in MetadataEditorForm.
 export default function ValidationSummary({
   errors,
@@ -40,10 +40,7 @@ export default function ValidationSummary({
   onForceRefresh,
   acknowledged,
   onAcknowledge,
-  onOpenPreview,
   onRenderPublish,
-  previewDisabled,
-  previewDisabledReason,
   renderDisabled,
   renderDisabledReason,
   onJumpToFix,
@@ -121,7 +118,7 @@ export default function ValidationSummary({
             All validators clear
           </p>
           <p className="text-xs mt-1">
-            The manuscript passes every synthesizer rule. Open preview or render the published PDF when ready.
+            The manuscript passes every synthesizer rule. Generate a preview below, or render the published PDF when ready.
           </p>
         </div>
       )}
@@ -138,15 +135,6 @@ export default function ValidationSummary({
       <div className="pt-3 border-t border-border flex flex-wrap gap-3 items-center">
         <button
           type="button"
-          onClick={onOpenPreview}
-          disabled={previewDisabled}
-          title={previewDisabledReason || ''}
-          className={`btn-primary-light ${previewDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}
-        >
-          Open preview ↗
-        </button>
-        <button
-          type="button"
           onClick={onRenderPublish}
           disabled={renderDisabled}
           title={renderDisabledReason || ''}
@@ -154,10 +142,8 @@ export default function ValidationSummary({
         >
           Render published PDF →
         </button>
-        {(previewDisabledReason || renderDisabledReason) && (
-          <p className="text-xs text-brown italic">
-            {previewDisabledReason || renderDisabledReason}
-          </p>
+        {renderDisabledReason && (
+          <p className="text-xs text-brown italic">{renderDisabledReason}</p>
         )}
       </div>
     </div>

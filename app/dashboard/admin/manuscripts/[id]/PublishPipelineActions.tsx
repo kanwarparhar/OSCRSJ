@@ -11,20 +11,19 @@ interface Props {
   manuscriptId: string
   status: ManuscriptStatus
   hasArtifacts: boolean
-  rendererUrl: string
   submissionId: string
 }
 
-// Client-side action surface for PublishPipelinePanel. Three buttons,
-// gated by manuscript status + artifact presence. The "Render" path
-// opens the local renderer in a new tab — the cleanup-then-publish
-// flow lives in that app, not here.
+// Client-side action surface for PublishPipelinePanel. Go-live +
+// emergency-unpublish, gated by manuscript status + artifact presence.
+// The render/re-render entry point lives in the metadata editor's §5
+// Validation Summary (Session 85 consolidation) — this panel only
+// handles the go-live gate once artifacts exist.
 
 export default function PublishPipelineActions({
   manuscriptId,
   status,
   hasArtifacts,
-  rendererUrl,
   submissionId,
 }: Props) {
   const [error, setError] = useState<string | null>(null)
@@ -34,18 +33,6 @@ export default function PublishPipelineActions({
   const [unpublishReason, setUnpublishReason] = useState('')
   const [unpublishFilenameConfirm, setUnpublishFilenameConfirm] = useState('')
   const [isPending, startTransition] = useTransition()
-
-  function openRenderer() {
-    setError(null)
-    if (!rendererUrl) {
-      setError('NEXT_PUBLIC_RENDERER_URL is not configured.')
-      return
-    }
-    window.open(rendererUrl, '_blank', 'noopener,noreferrer')
-    setInfo(
-      'Renderer opened in a new tab. After you click Publish in the renderer, return here and refresh — the Published PDF panel will populate and a Publish (go live) button will appear.'
-    )
-  }
 
   function handleGoLive() {
     setError(null)
@@ -89,17 +76,6 @@ export default function PublishPipelineActions({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-3 items-center">
-        {isAccepted && (
-          <button
-            type="button"
-            onClick={openRenderer}
-            disabled={isPending}
-            className="btn-primary text-xs"
-          >
-            {hasArtifacts ? 'Re-render in renderer' : 'Render published PDF →'}
-          </button>
-        )}
-
         {isAccepted && hasArtifacts && !confirmGoLive && (
           <button
             type="button"

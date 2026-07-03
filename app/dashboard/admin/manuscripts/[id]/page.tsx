@@ -22,7 +22,6 @@ import DecisionComposerPanel, {
   type RescindableDecision,
 } from './DecisionComposerPanel'
 import DecisionHistoryPanel from './DecisionHistoryPanel'
-import RevisionsPanel from './RevisionsPanel'
 import PublishedPdfPanel from './PublishedPdfPanel'
 import PublishedJatsPanel from './PublishedJatsPanel'
 import PublishPipelinePanel from './PublishPipelinePanel'
@@ -65,6 +64,24 @@ const STATUS_STYLES: Record<string, string> = {
   rejected: 'bg-red-100 text-red-800 border-red-200',
   withdrawn: 'bg-neutral-200 text-neutral-700 border-neutral-300',
   draft: 'bg-gray-100 text-gray-700 border-gray-200',
+}
+
+// Phase-aware layout (Session 85). The page previously stacked all 15
+// panels regardless of status — reviewer pool, invite forms, and the
+// decision composer rendered full-size (with "disabled" banners) on
+// accepted/published manuscripts, and the metadata editor duplicated
+// the read-only Authors/Declarations/Abstract cards. We now compute a
+// workflow phase from `manuscripts.status` and render only the panels
+// relevant to that phase; out-of-phase review tooling collapses to a
+// native <details> summary line.
+type WorkflowPhase = 'review' | 'production' | 'terminal'
+
+const TERMINAL_STATUSES = new Set(['rejected', 'desk_rejected', 'withdrawn'])
+
+function phaseForStatus(status: string): WorkflowPhase {
+  if (status === 'accepted' || status === 'published') return 'production'
+  if (TERMINAL_STATUSES.has(status)) return 'terminal'
+  return 'review'
 }
 
 function formatBytes(bytes: number): string {
@@ -254,6 +271,45 @@ export default async function AdminManuscriptDetailPage({
     reviewByInvitation.set(r.review_invitation_id, r.id)
   }
 
+  const phase = phaseForStatus(manuscript.status)
+  const reviewPhaseSummary = [
+    `${reviewByInvitation.size} review${reviewByInvitation.size === 1 ? '' : 's'} submitted`,
+    latestDecision
+      ? `latest decision: ${DECISION_LABEL_FOR_RESCIND[latestDecision.decision] || latestDecision.decision}`
+      : null,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+
+  const reviewPanels = (
+    <>
+      <InviteReviewerPanel
+        manuscriptId={manuscript.id}
+        manuscriptSubspecialty={manuscript.subspecialty}
+        manuscriptStatus={manuscript.status}
+        invitations={invitations}
+        reviewerPool={reviewerPool}
+        reviewByInvitation={Object.fromEntries(reviewByInvitation)}
+      />
+
+      <InviteByEmailPanel
+        manuscriptId={manuscript.id}
+        manuscriptStatus={manuscript.status}
+      />
+
+      <DeclinedSuggestionsPanel invitations={invitations} />
+
+      <DecisionComposerPanel
+        manuscriptId={manuscript.id}
+        manuscriptStatus={manuscript.status}
+        submissionId={manuscript.submission_id}
+        title={manuscript.title || '(untitled manuscript)'}
+        reviewCount={reviewByInvitation.size}
+        rescindable={rescindable}
+      />
+    </>
+  )
+
   return (
     <div className="space-y-6">
       <div>
@@ -329,7 +385,10 @@ export default async function AdminManuscriptDetailPage({
           </div>
         )}
 
-        {manuscript.abstract && (
+        {/* On production-phase manuscripts the abstract is editable in the
+            metadata editor (§2) below — showing it read-only here too means
+            every field appears twice. */}
+        {manuscript.abstract && phase !== 'production' && (
           <div>
             <p className="text-[11px] uppercase tracking-widest text-brown mb-1">
               Abstract
@@ -341,6 +400,7 @@ export default async function AdminManuscriptDetailPage({
         )}
       </div>
 
+      {phase !== 'production' && (
       <div className="bg-white border border-border rounded-xl p-6 space-y-3">
         <h2 className="font-serif text-lg text-brown-dark">
           Authors ({authors.length})
@@ -376,6 +436,7 @@ export default async function AdminManuscriptDetailPage({
           </ul>
         )}
       </div>
+      )}
 
       <div className="bg-white border border-border rounded-xl p-6 space-y-5">
         <h2 className="font-serif text-lg text-brown-dark">
@@ -414,7 +475,7 @@ export default async function AdminManuscriptDetailPage({
         )}
       </div>
 
-      {metadata && (
+      {metadata && phase !== 'production' && (
         <div className="bg-white border border-border rounded-xl p-6 space-y-3">
           <h2 className="font-serif text-lg text-brown-dark">Declarations</h2>
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -458,42 +519,74 @@ export default async function AdminManuscriptDetailPage({
         </div>
       )}
 
-      <InviteReviewerPanel
-        manuscriptId={manuscript.id}
-        manuscriptSubspecialty={manuscript.subspecialty}
-        manuscriptStatus={manuscript.status}
-        invitations={invitations}
-        reviewerPool={reviewerPool}
-        reviewByInvitation={Object.fromEntries(reviewByInvitation)}
-      />
-
-      <InviteByEmailPanel
-        manuscriptId={manuscript.id}
-        manuscriptStatus={manuscript.status}
-      />
-
-      <DeclinedSuggestionsPanel invitations={invitations} />
-
-      <DecisionComposerPanel
-        manuscriptId={manuscript.id}
-        manuscriptStatus={manuscript.status}
-        submissionId={manuscript.submission_id}
-        title={manuscript.title || '(untitled manuscript)'}
-        reviewCount={reviewByInvitation.size}
-        rescindable={rescindable}
-      />
-
-      <RevisionsPanel manuscriptId={manuscript.id} />
+      {/* Review-phase tooling. Fully expanded while the manuscript is in
+          the review lifecycle; collapsed to a one-line summary once it
+          reaches production or a terminal state (the panels inside are
+          already status-disabled at that point — no reason to spend four
+          screens of scroll on them). */}
+      {phase === 'review' ? (
+        reviewPanels
+      ) : (
+        <details className="bg-white border border-border rounded-xl group">
+          <summary className="cursor-pointer list-none p-6 flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <h2 className="font-serif text-lg text-brown-dark">
+                Peer review phase{' '}
+                <span className="text-sm text-brown font-sans">
+                  — {reviewPhaseSummary || 'no activity recorded'}
+                </span>
+              </h2>
+              <p className="text-xs text-brown mt-1">
+                {phase === 'production'
+                  ? 'Review is complete. Expand to see the reviewer pool, invitations, and decision composer (read-only at this status).'
+                  : 'This manuscript reached a terminal state. Expand to see the review tooling.'}
+              </p>
+            </div>
+            <span className="text-xs text-brown underline underline-offset-2 group-open:hidden">
+              Expand
+            </span>
+            <span className="text-xs text-brown underline underline-offset-2 hidden group-open:inline">
+              Collapse
+            </span>
+          </summary>
+          <div className="px-6 pb-6 space-y-6">{reviewPanels}</div>
+        </details>
+      )}
 
       <MetadataEditorPanel manuscriptId={manuscript.id} />
 
-      <BodyEditorPanel manuscriptId={manuscript.id} />
-
       <PublishPipelinePanel manuscriptId={manuscript.id} />
 
-      <PublishedPdfPanel manuscriptId={manuscript.id} />
+      {phase === 'production' && (
+        <div className="grid gap-6 lg:grid-cols-2 items-start">
+          <PublishedPdfPanel manuscriptId={manuscript.id} />
+          <PublishedJatsPanel manuscriptId={manuscript.id} />
+        </div>
+      )}
 
-      <PublishedJatsPanel manuscriptId={manuscript.id} />
+      {phase === 'production' && (
+        <details className="bg-white border border-border rounded-xl group">
+          <summary className="cursor-pointer list-none p-6">
+            <h2 className="font-serif text-lg text-brown-dark">
+              Advanced — body HTML override
+            </h2>
+            <p className="text-xs text-brown mt-1 max-w-2xl">
+              Only needed if the automatic .docx-to-PDF body conversion mangles
+              the article body. Every publish so far has used the automatic
+              path — you can safely ignore this.{' '}
+              <span className="underline underline-offset-2 group-open:hidden">
+                Expand
+              </span>
+              <span className="underline underline-offset-2 hidden group-open:inline">
+                Collapse
+              </span>
+            </p>
+          </summary>
+          <div className="px-6 pb-6">
+            <BodyEditorPanel manuscriptId={manuscript.id} />
+          </div>
+        </details>
+      )}
 
       <DecisionHistoryPanel manuscriptId={manuscript.id} />
     </div>

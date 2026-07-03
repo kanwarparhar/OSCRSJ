@@ -1,29 +1,24 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import type { ManuscriptRow } from '@/lib/types/database'
-import { getRendererLaunchUrl } from '@/lib/admin/actions'
 import PublishPipelineActions from './PublishPipelineActions'
 
-// Phase 4 — Publish pipeline action panel (Session 53, 2026-05-15).
-// Tracks Manvir handoff ^handoff-renderer-payload-synthesizer-2026-05-15.
+// Phase 4 — Publish pipeline action panel (Session 53, 2026-05-15;
+// slimmed Session 85). Tracks Manvir handoff
+// ^handoff-renderer-payload-synthesizer-2026-05-15.
 //
-// Three lifecycle states, each surfacing a different action:
+// Two lifecycle states, each surfacing a different action:
 //
-//   accepted, no artifacts            → "Render published PDF"  → opens
-//                                       the local renderer's /render/[id]
-//                                       page in a new tab. Editor cleans
-//                                       HTML there and clicks Publish; the
-//                                       renderer writes storage paths
-//                                       back to this manuscript but does
-//                                       NOT flip status.
-//
-//   accepted, artifacts present       → "Re-render" (rebuild artifacts)
-//                                       + "Publish (go live)" (flip
+//   accepted, artifacts present       → "Publish (go live)" (flip
 //                                       status to 'published').
 //
 //   published                         → "Unpublish (emergency)" with
 //                                       extra-friction confirm.
 //
-// The panel only renders when status is in the publish-pipeline range.
+// accepted-without-artifacts renders NOTHING (Session 85): the render
+// entry point lives solely in the metadata editor's §5 Validation
+// Summary, which gates rendering on saved state + zero errors +
+// acknowledged warnings. This panel appears once the renderer has
+// written artifacts back.
 
 interface Props {
   manuscriptId: string
@@ -62,8 +57,12 @@ export default async function PublishPipelinePanel({ manuscriptId }: Props) {
 
   const hasArtifacts = Boolean(manuscript.published_pdf_storage_path)
 
-  const launch = await getRendererLaunchUrl(manuscriptId)
-  const rendererUrl = launch.url || ''
+  // Session 85 — the render entry point now lives solely in the metadata
+  // editor's §5 Validation Summary (which gates rendering on saved state +
+  // zero errors + acknowledged warnings). Before artifacts exist this panel
+  // had nothing but a duplicate "Render published PDF" button, so it stays
+  // hidden until the renderer has written artifacts back.
+  if (manuscript.status === 'accepted' && !hasArtifacts) return null
 
   const cardClass =
     'bg-white border border-border rounded-xl p-6 space-y-4'
@@ -77,19 +76,6 @@ export default async function PublishPipelinePanel({ manuscriptId }: Props) {
         </span>
       </div>
 
-      {manuscript.status === 'accepted' && !hasArtifacts && (
-        <p className="text-sm text-ink leading-relaxed">
-          The manuscript is accepted but no published artifacts have been
-          rendered yet. Click <strong>Render published PDF</strong> below to
-          open the local OSCRSJ Renderer in a new tab. Clean up the
-          Pandoc-converted HTML in the renderer&apos;s cleanup pane, then click
-          <em> Publish manuscript… </em> inside the renderer to write the
-          PDF + render-report.json + JATS XML into Supabase Storage. Status
-          will stay at <code className="text-xs bg-cream-alt px-1 py-0.5 rounded">accepted</code>
-          until you return here and click <strong>Publish (go live)</strong>.
-        </p>
-      )}
-
       {manuscript.status === 'accepted' && hasArtifacts && (
         <p className="text-sm text-ink leading-relaxed">
           Rendered artifacts are present on this manuscript but the article
@@ -97,8 +83,9 @@ export default async function PublishPipelinePanel({ manuscriptId }: Props) {
           author proof is signed off, click <strong>Publish (go live)</strong>
           to flip the article visible on{' '}
           <code className="text-xs bg-cream-alt px-1 py-0.5 rounded">/articles</code>.
-          You can re-render to overwrite the artifacts if a typo fix is
-          needed before go-live.
+          Need a typo fix first? Re-render from the metadata editor&apos;s
+          Validation &amp; Preview section above — the new artifacts overwrite
+          these before go-live.
         </p>
       )}
 
@@ -116,7 +103,6 @@ export default async function PublishPipelinePanel({ manuscriptId }: Props) {
         manuscriptId={manuscriptId}
         status={manuscript.status}
         hasArtifacts={hasArtifacts}
-        rendererUrl={rendererUrl}
         submissionId={manuscript.submission_id}
       />
     </section>

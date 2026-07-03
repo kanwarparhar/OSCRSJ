@@ -137,6 +137,23 @@ const ABSTRACT_LABEL_SETS: Record<string, string[]> = {
   narrative_review: ['Background', 'Scope', 'Findings', 'Conclusion'],
 }
 
+// Session 85 — type-aware affordances. The mandatory reporting
+// checklist per article type (mirrors /guide-for-authors + the Step 2
+// wizard required slots) surfaces as a §1 hint so the editor knows
+// which checklist should exist in the Files panel.
+const CHECKLIST_BY_TYPE: Record<string, string> = {
+  case_report: 'CARE checklist',
+  case_series: 'JBI Case Series checklist',
+  review_article: 'PRISMA 2020 checklist',
+  narrative_review: 'SANRA self-rating',
+}
+
+// Article types with no identifiable patients: the §4 patient-consent
+// block collapses to a one-line summary for these (expandable — the
+// rare narrative review that reproduces identifiable images can still
+// set a real variant).
+const NO_PATIENT_TYPES = new Set(['review_article', 'narrative_review', 'letter_to_editor'])
+
 const RUNNING_TITLE_MAX = 45
 
 // Round-trip parser: split a single TEXT abstract into labeled
@@ -437,6 +454,15 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
   // Abstract — article-type-aware labeled sections + paste-and-parse assist
   const abstractLabels = initial.manuscript_type
     ? ABSTRACT_LABEL_SETS[initial.manuscript_type] || null
+    : null
+
+  // Session 85 — §4 consent collapse for no-patient article types.
+  const consentTypicallyNA = initial.manuscript_type
+    ? NO_PATIENT_TYPES.has(initial.manuscript_type)
+    : false
+  const [consentSectionOpen, setConsentSectionOpen] = useState(!consentTypicallyNA)
+  const requiredChecklist = initial.manuscript_type
+    ? CHECKLIST_BY_TYPE[initial.manuscript_type] || null
     : null
   const [abstractSections, setAbstractSections] = useState<Record<string, string>>(
     () => {
@@ -913,19 +939,6 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
     })
   }
 
-  function onOpenPreview() {
-    // Phase 1.C — wires to <PreviewRenderCluster /> rendered below
-    // §5. Scroll into view + flash; the cluster owns its own state.
-    const target = document.querySelector('[data-target="preview-cluster"]') as HTMLElement | null
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      target.classList.add('ring-2', 'ring-amber-400', 'ring-offset-2')
-      setTimeout(() => {
-        target.classList.remove('ring-2', 'ring-amber-400', 'ring-offset-2')
-      }, 1500)
-    }
-  }
-
   function onRenderPublish() {
     if (!rendererUrl) {
       setSaveError('NEXT_PUBLIC_RENDERER_URL is not configured.')
@@ -1188,6 +1201,8 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             />
             <p className="editor-field-hint">
               Locked post-acceptance. Contact Sushant to change.
+              {requiredChecklist &&
+                ` Required reporting checklist for this type: ${requiredChecklist} (should appear in the Files panel).`}
             </p>
           </div>
         </div>
@@ -1644,7 +1659,29 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
           )}
         </div>
 
-        {/* Patient consent */}
+        {/* Patient consent. For no-patient article types (SR/MA,
+            narrative review, letter) the block collapses to a summary
+            line — Session 85 type-aware affordance. */}
+        {!consentSectionOpen ? (
+          <div className="pt-3 border-t border-border">
+            <button
+              type="button"
+              onClick={() => setConsentSectionOpen(true)}
+              data-target="patient_consent_variant"
+              className="text-left w-full group"
+            >
+              <span className="editor-field-label">Patient consent</span>
+              <p className="text-sm text-brown mt-1">
+                {consentVariant
+                  ? `${CONSENT_OPTIONS.find((o) => o.value === consentVariant)?.label || consentVariant} — typically the right answer for this article type.`
+                  : 'Not set — typically "Not applicable" for this article type.'}{' '}
+                <span className="text-xs underline underline-offset-2 group-hover:text-brown-dark">
+                  Expand to review or change
+                </span>
+              </p>
+            </button>
+          </div>
+        ) : (
         <div className="pt-3 border-t border-border">
           <label className="editor-field-label">
             Patient consent variant (Janine §3, 7 locked options)
@@ -1758,6 +1795,7 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             </div>
           )}
         </div>
+        )}
 
         {/* Acknowledgments */}
         <div className="pt-3 border-t border-border">
@@ -1786,8 +1824,12 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
         </div>
       </CollapsibleSection>
 
-      {/* §5 Validation Summary */}
-      <div data-target="validation-summary">
+      {/* §5 Validation & Preview — Session 85 merged the old §6 Preview
+          Render section into this card so the page carries exactly ONE
+          preview surface and ONE render button (previously: a scroll-to
+          "Open preview" in §5, a second "Open preview" in §6, and a third
+          ungated "Render published PDF" in the Publish pipeline panel). */}
+      <div data-target="validation-summary" className="space-y-4">
         <ValidationSummary
           errors={errors}
           warnings={warnings}
@@ -1803,30 +1845,24 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
             })
           }}
           onJumpToFix={jumpToField}
-          onOpenPreview={onOpenPreview}
           onRenderPublish={onRenderPublish}
-          previewDisabled={previewDisabled}
-          previewDisabledReason={previewDisabledReason}
           renderDisabled={renderDisabled}
           renderDisabledReason={renderDisabledReason}
         />
+        <div className="editor-section" data-target="preview-cluster">
+          <p className="editor-section-label">Preview render</p>
+          <p className="text-xs text-brown italic mt-1 mb-3">
+            Generates a non-publishing PDF so you can inspect rendering
+            before committing to publish. Disabled while errors are present
+            or unsaved changes exist.
+          </p>
+          <PreviewRenderCluster
+            manuscriptId={initial.manuscript_id}
+            disabled={previewDisabled}
+            disabledReason={previewDisabledReason}
+          />
+        </div>
       </div>
-
-      {/* §6 Preview Render Cluster (Franklin §6 four-state inline-card) */}
-      <CollapsibleSection
-        id="preview"
-        label="§6 — Preview Render"
-        subtitle="Generates a non-publishing PDF artifact so the editor can inspect rendering before committing to publish. Disabled while errors are present or unsaved changes exist."
-        collapsed={collapsedSections.has('preview')}
-        onToggle={() => toggleSection('preview')}
-        dataTarget="preview-cluster"
-      >
-        <PreviewRenderCluster
-          manuscriptId={initial.manuscript_id}
-          disabled={previewDisabled}
-          disabledReason={previewDisabledReason}
-        />
-      </CollapsibleSection>
 
       {/* Sticky save bar */}
       <div className="editor-save-bar">
