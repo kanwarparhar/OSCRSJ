@@ -17,6 +17,13 @@ import { createAdminClient } from '@/lib/supabase/server'
 import type { ManuscriptRow } from '@/lib/types/database'
 
 export const dynamic = 'force-dynamic'
+// force-no-store on the Supabase reads too. Without it, Next's Data Cache
+// can pin a stale `published_pdf_storage_path` after a re-publish/re-path,
+// so the proxy downloads the OLD object even on a Vercel cache MISS — the
+// 2026-07-03 "incomplete published PDF" incident, where the row lookup was
+// served from cache and pointed at a regionally-stale Storage object. The
+// path lookup must always be live.
+export const fetchCache = 'force-no-store'
 
 export async function GET(
   _req: Request,
@@ -78,8 +85,11 @@ export async function GET(
       'Content-Type': 'application/pdf',
       'Content-Disposition': `inline; filename="${fileName}"`,
       'Content-Length': String(arrayBuffer.byteLength),
-      // Cache for 1 hour on CDN edges — published PDFs don't change.
-      'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+      // Short edge cache so a re-publish/re-path surfaces within minutes
+      // instead of up to an hour. Published PDFs rarely change, but when
+      // they do (correction re-render) a 1-hour edge cache stranded the
+      // old copy — 2026-07-03 incident. 5 min is a safe compromise.
+      'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
     },
   })
 }

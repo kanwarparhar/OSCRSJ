@@ -221,6 +221,10 @@ async function loadPublishedArticles(): Promise<BrowserArticle[]> {
       abstract: m.abstract || '',
       publishedDate: m.published_date,
       pdfStoragePath: m.published_pdf_storage_path ?? null,
+      // Cache-buster token so the PDF link changes whenever the stored
+      // artifact changes (re-render / re-path) — dodges Vercel's edge cache
+      // on /api/articles/[id]/pdf (2026-07-03 stale-PDF incident).
+      pdfVersion: m.updated_at ? new Date(m.updated_at).getTime() : '1',
     }
   })
 }

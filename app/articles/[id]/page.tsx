@@ -348,7 +348,7 @@ export default async function ArticlePage({
           {/* PDF download button */}
           {hasPdf ? (
             <a
-              href={`/api/articles/${manuscript.id}/pdf`}
+              href={`/api/articles/${manuscript.id}/pdf?v=${manuscript.updated_at ? new Date(manuscript.updated_at).getTime() : '1'}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-peach text-brown-dark font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-peach-dark transition-colors"
@@ -491,7 +491,7 @@ export default async function ArticlePage({
             {/* PDF download (sidebar repeat) */}
             {hasPdf && (
               <a
-                href={`/api/articles/${manuscript.id}/pdf`}
+                href={`/api/articles/${manuscript.id}/pdf?v=${manuscript.updated_at ? new Date(manuscript.updated_at).getTime() : '1'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full bg-brown-dark text-peach font-semibold text-sm px-4 py-3 rounded-xl hover:bg-ink transition-colors"

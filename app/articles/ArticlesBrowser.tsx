@@ -22,6 +22,7 @@ export type BrowserArticle = {
   abstract: string
   publishedDate: string | null
   pdfStoragePath: string | null
+  pdfVersion: string | number
 }
 
 // Descriptive URL slugs. Kept alphabetical-by-label for the sidebar.
@@ -264,7 +265,7 @@ function ArticlesBrowserInner({ articles }: { articles: BrowserArticle[] }) {
                     )}
                     {article.pdfStoragePath ? (
                       <a
-                        href={`/api/articles/${article.id}/pdf`}
+                        href={`/api/articles/${article.id}/pdf?v=${article.pdfVersion}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-brown-dark font-medium hover:underline underline-offset-2 flex items-center gap-1"
