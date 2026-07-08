@@ -131,6 +131,7 @@
 
 ## Sequential Index (chronological — newest first)
 
+- Session 86 — 2026-07-07 — Claude Code (Opus) — System v2.0 simplification: 7 Conventions ratified + §11 Codify-backlog cleared (docs-only; companion to vault handoff bankruptcy + Org Plan v2.0) — `^session-86-system-v2-simplification-conventions`
 - Session 78 — 2026-06-10 — Sushant — Cleanup-and-hardening: SANRA 404 fix + verapdf pass confirmed + launchd auto-start fixed + bearer auth on publish + C2 JATS dedupe + Narrative Review backend + PRISMA hard-gate — `^session-78-cleanup-hardening`
 - Session 77 — 2026-06-10 — Manvir (retroactive) — APC free window Aug 1 → July 1, 2026 across 12 surfaces + Business Context — `^session-77-apc-window-july1`
 - Session 76 — 2026-06-07 — Sushant (retroactive) — co-author dispute false-objection fix: GET renders landing page, POST mutates — `^session-76-coauthor-false-objections`
@@ -283,6 +284,18 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 86 — 2026-07-07 — Claude Code (Opus), vault system session — System v2.0 simplification: 7 Conventions ratified + ~37 stale "Codify" proposals cleared from §11 (docs-only repo change; companion to the vault-side handoff bankruptcy + Org Plan v2.0) ^session-86-system-v2-simplification-conventions
+
+Executed the 2026-07-07 strategic-review brief end-to-end — a vault-wide system simplification. Full narrative + all vault-side detail live at vault `_Meta/Archive/Vault Meta Archive.md#^2026-07-07-system-simplification` (the vault is not under git, so this repo carries only the code-side change).
+
+**Repo-side scope (this commit):** `CLAUDE.md ## Conventions` gained **7 ratified conventions** — (1) **stale-handoff / verification grep-first** (any item >30d, or any "verify/confirm" ask → grep §9/§11 + `docs/session-history.md` + target files for the acceptance phrase BEFORE reading files); (2) **FUSE survival kit** (replaced the narrower FUSE stale-lock bullet — `mkdir -p .git/.stale-junk && mv .git/*.lock .git/refs/heads/*.lock .git/.stale-junk/`; never `rm` on FUSE; never `mv /tmp/x <repo-file>` cross-device — `cat tmp > file`; prefer a single-shot Write over Edit sequences); (3) **session-number collision pre-check** (`grep '^### Session' docs/session-history.md | head -3` before an M1 narrative or a session-numbered commit — same-day parallel Cowork/Claude-Code sessions break the chronological assumption); (4) **removed-artifact downstream sweep** (`grep -r '<artifact-name>'` before removing any user-facing artifact; never leave a transactional email pointing at a deleted asset); (5) **built-but-hidden grep before scoping** (grep for the capability + near-synonyms before "build X"); (6) **type-union check before constant-table edits** (grep the union before adding a `Record<UnionType,…>`/enum-map key; defer to the migration lane if extending the union belongs there); (7) **dev-marker curl for dead UI buttons behind a proxy** (`curl -s <url> | grep -oE '"b":"(production|development)"|hmr-client|next-devtools'` — dev-mode behind a WSS-incapable Tailscale Funnel silently breaks event-handler attachment). Plus a **~20-convention cap line** on the Conventions intro.
+
+**§11 Open Follow-ups:** deleted **37** stale "Codify … convention §3" proposals (the 7 now ratified + 30 retired: Monaco setValue, Apps Script custom-header/302-drops-POST, OAuth-popup-escapes-tab-group, npm ENOSPC/cache-redirect, pure-JS smoke port, Vercel→localhost, Tailscale tier-1, forward-compatible cross-repo API, architectural cross-checks, test-fixture rot, Janine-verify-indexing-facts, two-app shared-secret, cross-verify-HEAD, working-tree/untracked orphan refinements, Mac-terminal comment blocks, empty-string-vs-NULL, design-token variants, handoff-over-spec, partial-spec commit messages, status-spec-vs-reality, RSC client-island, and the ratified ones) + added a rationale line. Kept + rephrased the 2 genuine non-convention items off the "Codify" verb (Brad pre-spend playbook check + Request-Indexing-on-publish-day checklist). `grep -c 'Codify' CLAUDE.md` → 0. CLAUDE.md 432 → 403 lines.
+
+**Vault-side (not in this repo — see the archive entry):** closed **149** stale inbound handoffs across the 7 agent files (14 live remain), rewrote the Organization Plan to **v2.0** (six-phase wrap-up → two-phase; handoff state single-source-of-truth in agent files; 1,029 → 796 lines), retired the Vault State `Active Cross-Agent Handoffs` section, registered the **QA Agent** (roster 9 → 10), synced the Vault Maintenance Master Plan. **Deviation:** the vault is not a git repo (the brief assumed it was) — vault edits were made directly with a full pre-edit backup.
+
+No code, no migration, no deploy — docs-only. **Kanwar-manual:** update the Cowork project instructions (drop Neha/Operations) + the `oscrsj-vault-maintenance` scheduled-task prompt. **Handoffs pushed: None.**
 
 ### Session 85 — 2026-07-03 — Franklin Cowork — Phase-aware admin manuscript detail page: review tooling collapses post-accept + preview/render consolidation (4 buttons → 2) + RevisionsPanel deleted + artifacts panels gated & gridded + Body-HTML-editor behind Advanced + type-aware §4 consent collapse — 1 OSCRSJ commit `788d5f3`  ^session-85-phase-aware-admin-manuscript-page
 
