@@ -12,6 +12,9 @@
 
 > Curated by topic, not chronology. Every session is listed under each workstream it touched (a single session may appear in 2-3 topics — that's correct). Newest anchors first within each topic. Update at every wrap-up: rule M1 step 2 in [[CLAUDE.md Refactor#§9 Add/move rules]].
 
+### Manuscript Formatting Service (AI Journal Formatter) / AI Layer
+- [[#^session-87-formatting-service-phase0-scaffold]]
+
 ### Reviewer pipeline (recruitment, invitation, review form, decisions)
 - [[#^session-51-reviewer-feedback-attachment]]
 - [[#^session-46-guide-for-reviewers-rebrand]]
@@ -131,6 +134,7 @@
 
 ## Sequential Index (chronological — newest first)
 
+- Session 87 — 2026-07-09 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 0 + scaffold: zod rules schema + 14 journal rule files + lib/formatting scaffold (`3cecb32`) — `^session-87-formatting-service-phase0-scaffold`
 - Session 86 — 2026-07-07 — Claude Code (Opus) — System v2.0 simplification: 7 Conventions ratified + §11 Codify-backlog cleared (docs-only; companion to vault handoff bankruptcy + Org Plan v2.0) — `^session-86-system-v2-simplification-conventions`
 - Session 78 — 2026-06-10 — Sushant — Cleanup-and-hardening: SANRA 404 fix + verapdf pass confirmed + launchd auto-start fixed + bearer auth on publish + C2 JATS dedupe + Narrative Review backend + PRISMA hard-gate — `^session-78-cleanup-hardening`
 - Session 77 — 2026-06-10 — Manvir (retroactive) — APC free window Aug 1 → July 1, 2026 across 12 surfaces + Business Context — `^session-77-apc-window-july1`
@@ -284,6 +288,20 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 87 — 2026-07-09 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 0 + scaffold: zod rules schema + 14 ortho journal rule files (live/archived guides) + lib/formatting engine scaffold — 1 OSCRSJ commit `3cecb32` ^session-87-formatting-service-phase0-scaffold
+
+Executed Session A of the 2026-07-08 Manuscript Formatting Service build brief (`docs/2026-07-08-formatting-service-build-brief.md`; plan-of-record vault `02 - OSCRSJ/Projects/Manuscript Formatting Service.md`). Precondition clean (tree 309 → 341, no divergence; the four untracked orphans — `.claude/worktrees/`, `.cowork-push/`, `OSCRSJ_Revision_Request_BPOP_Lesion.docx`, and the build brief itself — left untouched, flagged in §11).
+
+**Shipped (`3cecb32`, 34 files, tsc 0, built-but-hidden — no app/route/nav wiring):**
+
+- **Rules schema** `lib/formatting/rulesSchema.ts` — zod single-source-of-truth (`journalRulesSchema`, `SCHEMA_VERSION` 1.0.0), `.strict()` + a coherence super-refine (every `sections`/`word_limits` article-type key must be in top-level `article_types`). Covers the brief's full shape + the AUTO/FLAG formatting-element catalog. During encoding, `layout.font.family/size_pt`, `layout.line_spacing`, `layout.alignment`, and `tables.caption_position` were made nullable: a guide-silent field must be `null` (engine preserves the author's value) rather than a guessed default that would silently re-format the manuscript — the unknown-⇒-null doctrine.
+- **14 journal rule files** `lib/formatting/journals/*.json`, each with `identity.guidelines_url` + `verified_date` (2026-07-09) + a **unique reproducible** `source_hash`, plus `journals/README.md` documenting the fetch→normalize→SHA-256 recipe. Encoded via 5 parallel `general-purpose` research sub-agents (each read the schema + `oscrsj.json` as the contract/example). **Clean live fetch (reproducible content hash):** oscrsj (own site), spine (Ovid edmgr), jocr (WordPress), jot (Ovid edmgr), corr (Ovid edmgr), bjj (boneandjoint.org.uk), jbjs (jbjs.org JS-app, stable shell hash). **Behind Cloudflare/CAPTCHA** (SAGE journals.sagepub.com; Elsevier/ScienceDirect; LWW journals.lww.com are gated pointer stubs) → rules encoded from dated Internet Archive snapshots / official SAGE PDF, then `source_hash` re-derived from the raw Wayback snapshot (`web.archive.org/web/<ts>id_/<url>`) for a reproducible content hash (initial agent runs recorded the Cloudflare-shell hash — four journals had collided on one shell hash `e048dde4…`; the consolidation pass fixed all to unique content hashes): fai, ajsm, jses, journal-of-arthroplasty, jhs, arthroscopy, injury. Each carries a `source_note` stating the block + archived source + that Session C's freshness cron must use a headless fetch to re-verify live.
+- **Dropped 2:** **KSSTA** (left Springer — `link.springer.com/journal/167` now "archived, no longer receiving submissions"; the Wiley/ESSKA successor guides are Cloudflare-blocked) and **IJSCR** (transferred Elsevier→Wolters Kluwer as of 2026 — the ScienceDirect guide 404s and the LWW/Ovid successor has no author-instructions page yet). Sub-agents correctly refused to fabricate from training memory. Final set = 14 of a targeted ~15 (±2). Notable per-journal findings: JBJS blinds in-house (`scrub_body_identifiers=false`), JHS stopped accepting case reports in 2021, CORR + Journal of Arthroplasty discontinued case reports (moved to Arthroplasty Today), Arthroscopy's only archive traces to a 2020-updated page (flagged stale for re-verification).
+- **Engine scaffold** `lib/formatting/` — typed stubs: `ooxml/{ingest,layout,titlePage,blinding,emit}`, `references/{parse,verify,render,renumber}`, `pipeline/stages.ts` (the real deliverable: `JobStatus` state machine `uploaded→parsed→extracted→verified→rendered→complete|failed`, `STAGE_TRANSITIONS`, `NEXT_STATUS`, `FormattingJob` mirroring the Session C migration 027 `formatting_jobs` columns, `StageRunner` contract), `pipeline/immutability.ts` (content-immutability gate contract), `report.ts` (Analysis & Suggestions Report model + HTML/docx render stubs), `prompts.ts` (DeepSeek prompt-spec stubs — understanding-only, temp 0, JSON mode), `types.ts`, `index.ts` (`parseJournalRules` validator helper). No LLM client imported in the emit path (`references/render.ts`, `ooxml/*` — grep-provable acceptance criterion); no not-yet-installed deps (jszip/@xmldom/xmldom/sharp/DeepSeek land Session B/C).
+- **Validator** `scripts/validate-journal-rules.ts` + `npm run validate:rules` — the Phase 0 gate (loads every `journals/*.json`, validates against the schema, checks slug↔filename, exits non-zero on failure). Added deps: `zod` (runtime), `tsx` (dev; runs the TS validator — repo had no test runner).
+
+**Material finding:** most large-publisher ortho journal guides (SAGE, Elsevier/ScienceDirect, LWW) are not cleanly live-fetchable — they sit behind Cloudflare/CAPTCHA. The "live pages only" doctrine was honored in spirit (dated archived guideline text, never training memory) but Session C must add a headless fetcher for the freshness cron, and the 7 archive-sourced journals are the priority set for re-verification. **Pre-launch gate handed to Janine:** spot-audit OSCRSJ + JBJS + AJSM vs their live guides (two are archive-sourced by design) — beta stays private until sign-off. **Next:** Session B (engine + reference pipeline + golden-file tests). **Handoffs pushed: Janine (formatting-service pre-launch journal spot-audit).**
 
 ### Session 86 — 2026-07-07 — Claude Code (Opus), vault system session — System v2.0 simplification: 7 Conventions ratified + ~37 stale "Codify" proposals cleared from §11 (docs-only repo change; companion to the vault-side handoff bankruptcy + Org Plan v2.0) ^session-86-system-v2-simplification-conventions
 
