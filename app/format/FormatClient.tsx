@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useMemo, useRef, useState } from 'react'
-import Turnstile from '@/components/Turnstile'
 import { JOURNAL_SUMMARIES, ARTICLE_TYPE_LABELS } from '@/lib/formatting/journalList'
 import {
   MAX_MANUSCRIPT_BYTES,
@@ -299,8 +298,6 @@ export default function FormatClient() {
   const [journalId, setJournalId] = useState('')
   const [articleType, setArticleType] = useState('')
   const [email, setEmail] = useState('')
-  const [turnstileToken, setTurnstileToken] = useState('')
-  const [turnstileKey, setTurnstileKey] = useState(0)
 
   // Run state
   const [phase, setPhase] = useState<Phase>('form')
@@ -321,7 +318,7 @@ export default function FormatClient() {
 
   const emailValid = EMAIL_RE.test(email)
   const canSubmit =
-    !!manuscript && !!journalId && !!articleType && emailValid && !!turnstileToken && !submitting
+    !!manuscript && !!journalId && !!articleType && emailValid && !submitting
 
   /* ---- File handling ---- */
 
@@ -401,7 +398,6 @@ export default function FormatClient() {
         email,
         journalId,
         articleType,
-        turnstileToken,
         figureCount: figures.length,
       }
       const createRes = await fetch('/api/format/jobs', {
@@ -476,8 +472,6 @@ export default function FormatClient() {
   function backToForm() {
     setPhase('form')
     setRunError(null)
-    setTurnstileToken('')
-    setTurnstileKey((k) => k + 1)
   }
 
   function startOver() {
@@ -488,8 +482,6 @@ export default function FormatClient() {
     setJournalId('')
     setArticleType('')
     setEmail('')
-    setTurnstileToken('')
-    setTurnstileKey((k) => k + 1)
     setReport(null)
     setDownloads({})
     setProgress(0)
@@ -809,15 +801,6 @@ export default function FormatClient() {
           )}
         </div>
 
-        <div className="mt-5">
-          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
-            <Turnstile key={turnstileKey} onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
-          ) : (
-            <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              Human verification is not configured for this environment, so submissions are temporarily unavailable.
-            </p>
-          )}
-        </div>
       </div>
 
       {/* Submit */}

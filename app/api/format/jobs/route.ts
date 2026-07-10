@@ -1,5 +1,5 @@
 // POST /api/format/jobs — create a formatting job (Sushant, Session C).
-// Unauthenticated: email + Turnstile only. Rate-limited per email + IP. Returns
+// Unauthenticated: email only. Rate-limited per email + IP. Returns
 // signed upload URLs; the client PUTs the manuscript (+ figures) then calls
 // /advance. Runs on Node (the pipeline uses pizzip/@xmldom).
 
@@ -11,22 +11,6 @@ import { storagePaths, MAX_FIGURES } from '@/lib/formatting/pipeline/api'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-
-async function verifyTurnstile(token: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY
-  if (!secret) return true // dev / unconfigured — skip (same posture as lib/auth/actions.ts)
-  try {
-    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ secret, response: token }),
-    })
-    const data = await res.json()
-    return data.success === true
-  } catch {
-    return false
-  }
-}
 
 function clientIp(req: NextRequest): string | null {
   const xff = req.headers.get('x-forwarded-for')
@@ -40,7 +24,7 @@ export async function POST(req: NextRequest) {
   if (!body || typeof body !== 'object') {
     return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
   }
-  const { email, journalId, articleType, turnstileToken, figureCount } = body as Record<string, unknown>
+  const { email, journalId, articleType, figureCount } = body as Record<string, unknown>
 
   if (typeof email !== 'string' || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'A valid email is required.' }, { status: 400 })
@@ -52,10 +36,6 @@ export async function POST(req: NextRequest) {
   if (typeof articleType !== 'string' || !(articleType in ARTICLE_TYPE_LABELS)) {
     return NextResponse.json({ error: 'Select a valid article type.' }, { status: 400 })
   }
-  if (typeof turnstileToken !== 'string' || !(await verifyTurnstile(turnstileToken))) {
-    return NextResponse.json({ error: 'Human verification failed. Please retry.' }, { status: 400 })
-  }
-
   const ip = clientIp(req)
   const rl = await checkRateLimit(email, ip)
   if (!rl.ok) {

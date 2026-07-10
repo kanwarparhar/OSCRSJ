@@ -40,7 +40,7 @@ export interface CreateJobRequest {
   email: string
   journalId: string
   articleType: string
-  turnstileToken: string
+  turnstileToken?: string
   figureCount?: number
 }
 
