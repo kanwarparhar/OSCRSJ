@@ -15,6 +15,7 @@
 ### Manuscript Formatting Service (AI Journal Formatter) / AI Layer
 - [[#^session-87-formatting-service-phase0-scaffold]]
 - [[#^session-88-formatting-service-engine]]
+- [[#^session-89-formatting-service-product]]
 
 ### Reviewer pipeline (recruitment, invitation, review form, decisions)
 - [[#^session-51-reviewer-feedback-attachment]]
@@ -135,6 +136,7 @@
 
 ## Sequential Index (chronological — newest first)
 
+- Session 89 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service /format product (Phase 3): job pipeline + API + indexable UI + freshness cron; next build ✓, 62 tests (`8a9e994`) — `^session-89-formatting-service-product`
 - Session 88 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service engine (Phases 1-2): OOXML transforms + reference pipeline + immutability gate; 58 tests (`fe725c9`) — `^session-88-formatting-service-engine`
 - Session 87 — 2026-07-09 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 0 + scaffold: zod rules schema + 14 journal rule files + lib/formatting scaffold (`3cecb32`) — `^session-87-formatting-service-phase0-scaffold`
 - Session 86 — 2026-07-07 — Claude Code (Opus) — System v2.0 simplification: 7 Conventions ratified + §11 Codify-backlog cleared (docs-only; companion to vault handoff bankruptcy + Org Plan v2.0) — `^session-86-system-v2-simplification-conventions`
@@ -290,6 +292,18 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 89 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 3: /format product (job pipeline + API + UI + report + freshness cron) — 1 OSCRSJ commit `8a9e994` ^session-89-formatting-service-product
+
+Executed Session C (Phase 3, the product + launch) of the 2026-07-08 formatting-service build brief, completing Phases 0–3. Plan-approval decisions taken from Kanwar via AskUserQuestion: tool name **"Journal Formatter — by OSCRSJ"**, a **new top-level "Tools" nav item**, and **wire it live + indexable now** (Kanwar overrode the recommended noindex-until-Janine gate). **Shipped (`8a9e994`, 19 files, `next build` compiles, tsc 0, `npm test` 62 tests / 61 pass + 1 live-gated skip, built-but-inert until the manual prerequisites):**
+
+- **Migration 027** `supabase/migrations/027_formatting_jobs.sql` — `formatting_jobs` (id/email/journal_id/article_type/status[CHECK uploaded..failed]/input_path/figure_paths/output_paths/report/error/stage_cursor/rules_version/ip/timestamps), RLS enabled with NO policies (deny-by-default; the service-role API is the only path), (email,created_at)+(ip,created_at) rate-limit indexes, a private `formatting` storage bucket (25 MB ceiling) created via `insert into storage.buckets`, and `notify pgrst, 'reload schema'`.
+- **Pipeline `lib/formatting/pipeline/`** — `api.ts` (wire contract + storage paths + limits + progress map), `jobs.ts` (formatting_jobs CRUD + rate-limit + signed upload/download URLs via the admin client, `as any` table access like the repo's audit_logs), `extract.ts` (DeepSeek title-page metadata, graceful on blinded docs), `analyze.ts` (deterministic word-limit / missing-section / reference-count checks → report suggestions + checklist), `run.ts` (the stage runner: one stage per advance() call, LLM/network state persisted as `formatting/<jobId>/state.json`, the manuscript re-ingested per stage; reference-verify resumable via stage_cursor; the render stage runs layout+blinding+renumber, the immutability gate, builds the report, emits manuscript + title-page + report .docx, zips, uploads; the complete stage sends the Resend email). `report.ts` upgraded from stub to `buildReport` + `renderReportHtml` + `renderReportDocx`.
+- **API routes** — `POST /api/format/jobs` (Turnstile siteverify + `checkRateLimit` 3/email/day + 10/IP/day + `createSignedUploadUrl`), `GET /api/format/jobs/[id]?email=` (status + signed downloads; 404 on email mismatch so job existence never leaks), `POST /api/format/jobs/[id]/advance` (`{email}` → `runNextStage`; `maxDuration = 60`; idempotent; terminal short-circuit).
+- **UI** — `app/format/page.tsx` (server, indexable: metadata with www-canonical, ~709 words of marketing copy across what-it-does / what-it-never-does / supported-journals grid / disclaimer) + `app/format/FormatClient.tsx` (upload → journal+type picker → email + Turnstile → PUT to signed URLs → advance/poll loop → results with download buttons + inline report render). New top-level **"Tools"** nav item in `components/Header.tsx` → `/format`; reuses the existing `components/Turnstile.tsx`.
+- **Freshness cron** — `app/api/cron/check-guidelines/route.ts` + `normalize.ts` (monthly `0 12 1 * *`, CRON_SECRET-gated; re-fetch each journal's guide, normalize+SHA-256 with a recipe verified byte-identical to the Session-87 Python recipe, diff `source_hash`; classify unchanged/changed/needs-headless-recheck/unreachable; digest to oscrsjournal@gmail.com; skip-clean like daily-digest). `vercel.json` cron entry added.
+
+**Engineering notes:** reused pizzip + the existing Turnstile component + Resend `sendEmail` + `createAdminClient`; DeepSeek confined to parse.ts + extract.ts (no LLM in the emit path, grep-provable); the reference render/verify + /format UI + cron built by parallel sub-agents; `package-lock.json` platform-SWC churn from `next build` was reverted (not committed). **Deferred (noted):** figure remediation via sharp (not in the task list); in-manuscript reference-list rewrite (the report's reference audit shows corrected refs + DOIs instead for v1); a headless fetcher for the freshness cron's 7 bot-blocked journals; a DB-level CAS stage lock (v1 relies on the sequential client + idempotent stages). **Launch gate (Kanwar-manual, in order):** migration 027 in Studio → confirm `formatting` bucket → `DEEPSEEK_API_KEY` on Vercel → Janine spot-audit → push the 6 Session 87–89 commits to deploy. **Phases 0–3 complete; beta is code-complete, launch pending the manual steps. Handoffs pushed: None.**
 
 ### Session 88 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 1-2: OOXML engine + reference pipeline + immutability gate — 1 OSCRSJ commit `fe725c9` ^session-88-formatting-service-engine
 
