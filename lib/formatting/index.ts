@@ -45,3 +45,25 @@ import type { JournalRules } from './rulesSchema'
 export function parseJournalRules(data: unknown): JournalRules {
   return journalRulesSchema.parse(data)
 }
+
+// ---------------------------------------------------------------------------
+// Engine (Session B) — OOXML transforms + reference pipeline + immutability gate
+// ---------------------------------------------------------------------------
+
+export { Docx, PART, createDocx, extractBodyText, paraXml, runXml } from './ooxml/docx'
+export { ingestDocx, IngestError } from './ooxml/ingest'
+export type { IngestResult } from './ooxml/ingest'
+export { applyLayout } from './ooxml/layout'
+export type { LayoutResult } from './ooxml/layout'
+export { buildTitlePage } from './ooxml/titlePage'
+export type { TitlePageResult } from './ooxml/titlePage'
+export { blindManuscript } from './ooxml/blinding'
+export type { BlindingResult } from './ooxml/blinding'
+export { emitDocx, emitDocxBuffer } from './ooxml/emit'
+export { parseReferences } from './references/parse'
+export type { ParseResult, ParseUsage } from './references/parse'
+export { verifyReferences } from './references/verify'
+export { renderReference, renderReferenceList } from './references/render'
+export { renumberCitations, collapseRanges, formatMarkerText } from './references/renumber'
+export { assertBodyImmutable } from './pipeline/immutability'
+export type { MarkerEdit, ImmutabilityResult } from './pipeline/immutability'

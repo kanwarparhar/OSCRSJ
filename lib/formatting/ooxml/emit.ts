@@ -1,24 +1,16 @@
-// OOXML emit (Sushant, Session 87 scaffold → Session B).
-// Re-zip the modified parts into a Word-compatible .docx (no repair prompt on
-// open — an acceptance criterion). Optionally scrub core-properties metadata.
-//
-// HARD INVARIANT: emit NEVER touches body <w:t> runs except to apply the
-// citation-marker mapping. There is NO LLM client imported anywhere in this
-// file or its call graph (grep-provable acceptance criterion). It takes
-// structured inputs only.
+// OOXML emit (Sushant, Session B). All transforms have already edited the parts
+// held inside the Docx; emit just re-zips into Word-compatible bytes. There is
+// NO body-run rewriting here and NO LLM client imported anywhere in this file or
+// its call graph (grep-provable acceptance criterion).
 
-import type { ContentModel } from '../types'
+import type { Docx } from './docx'
 
-export interface EmitOptions {
-  /** Strip author-name core-properties for blinded submissions. */
-  scrubMetadata: boolean
+/** Serialise the (already-transformed) document to .docx bytes. */
+export function emitDocx(docx: Docx): Uint8Array {
+  return docx.toUint8Array()
 }
 
-/** @returns the output .docx bytes. */
-export function emitDocx(model: ContentModel, opts: EmitOptions): Uint8Array {
-  // TODO(Session B): serialise edited document.xml/styles.xml/headers back into
-  // the zip; apply core-properties scrub when opts.scrubMetadata.
-  void model
-  void opts
-  throw new Error('emitDocx not implemented — Session B')
+/** Node Buffer variant (email attachments, Storage uploads). */
+export function emitDocxBuffer(docx: Docx): Buffer {
+  return docx.toBuffer()
 }
