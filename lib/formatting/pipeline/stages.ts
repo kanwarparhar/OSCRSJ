@@ -83,13 +83,16 @@ export interface FormattingJob {
   id: string
   email: string
   journal_id: string
+  article_type: string | null
   status: JobStatus
   input_path: string | null
+  figure_paths: string[] | null
   output_paths: JobOutputPaths | null
   report: ReportModel | null
   error: JobError | null
   stage_cursor: StageCursor | null
   rules_version: string | null
+  ip: string | null
   created_at: string
   updated_at: string
 }

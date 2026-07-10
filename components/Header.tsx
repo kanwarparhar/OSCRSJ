@@ -28,6 +28,11 @@ const navItems = [
     ],
   },
   {
+    label: 'Tools',
+    href: '/format',
+    dropdown: [{ label: 'Journal Formatter', href: '/format' }],
+  },
+  {
     label: 'News',
     href: '/news',
     dropdown: [

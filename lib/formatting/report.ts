@@ -1,29 +1,146 @@
-// Analysis & Suggestions Report — model + renderers (Sushant, Session 87
-// scaffold). The report is the trust product: it is generated as a structured
-// `ReportModel` (see ../types) and rendered to BOTH an HTML view (results page)
-// and a `.docx` (via the OOXML emit tooling — do NOT add a PDF engine for this).
-// Severity vocabulary throughout: fixed / action-required / suggestion / info.
-//
-// Implemented in Session C.
+// Analysis & Suggestions Report — model builder + renderers (Sushant, Session C).
+// The report is the trust product. It is assembled as a structured ReportModel
+// and rendered to BOTH an HTML view (results page / email) and a .docx (reusing
+// the OOXML builder — no PDF engine). Severity vocab: fixed / action-required /
+// suggestion / info. No LLM client imported here.
 
-import type { ReportModel } from './types'
+import type {
+  ReportModel,
+  ReportChange,
+  ReportSuggestion,
+  ReferenceAuditRow,
+  ChecklistRow,
+} from './types'
+import { createDocx, paraXml } from './ooxml/docx'
 
-/** Render the report to standalone HTML for the `/format` results page. */
-export function renderReportHtml(report: ReportModel): string {
-  // TODO(Session C): deterministic HTML render of all six sections
-  // (summary verdict, changes applied, suggested changes, reference audit,
-  // submission checklist, disclaimer). Never render `report.cost`.
-  void report
-  throw new Error('renderReportHtml not implemented — Session C')
+const DISCLAIMER =
+  'This is an automated formatting aid, not a guarantee of acceptance. Always verify the ' +
+  'output against the journal’s current Guide for Authors before submitting — journal rules ' +
+  'change, and OSCRSJ formats from a snapshot taken on the date shown above. The tool never ' +
+  'edits your scientific content; every substantive item is flagged for you to resolve.'
+
+export function buildReport(input: {
+  journalName: string
+  verifiedDate: string
+  guidelinesUrl: string
+  rulesVersion: string
+  changes: ReportChange[]
+  suggestions: ReportSuggestion[]
+  referenceAudit: ReferenceAuditRow[]
+  checklist: ChecklistRow[]
+  cost?: { deepseekTokens: number; usd: number }
+}): ReportModel {
+  const itemsNeedingAttention = input.suggestions.filter(
+    (s) => s.severity === 'action-required',
+  ).length
+  return {
+    summaryVerdict: {
+      journal: input.journalName,
+      changesApplied: input.changes.length,
+      itemsNeedingAttention,
+      verifiedDate: input.verifiedDate,
+      guidelinesUrl: input.guidelinesUrl,
+    },
+    changesApplied: input.changes,
+    suggestedChanges: input.suggestions,
+    referenceAudit: input.referenceAudit,
+    submissionChecklist: input.checklist,
+    rulesVersion: input.rulesVersion,
+    disclaimer: DISCLAIMER,
+    ...(input.cost ? { cost: input.cost } : {}),
+  }
 }
 
-/**
- * Render the report to a .docx by reusing the OOXML emit tooling.
- * @returns the .docx bytes
- */
+// ---------------------------------------------------------------------------
+// HTML render (results page + email) — self-contained, inline styles
+// ---------------------------------------------------------------------------
+
+const esc = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+const STATUS_ICON: Record<ReferenceAuditRow['status'], string> = {
+  verified: '✅',
+  corrected: '🔧',
+  unverified: '⚠️',
+  'possibly-retracted': '🚩',
+}
+
+export function renderReportHtml(report: ReportModel): string {
+  const v = report.summaryVerdict
+  const changeRows = report.changesApplied
+    .map(
+      (c) =>
+        `<tr><td>${esc(c.element)}</td><td>${esc(c.before)} → ${esc(c.after)}</td></tr>`,
+    )
+    .join('')
+  const suggestions = report.suggestedChanges
+    .map(
+      (s) =>
+        `<li><strong>${esc(s.title)}</strong>${s.location ? ` <em>${esc(s.location)}</em>` : ''}<br>${esc(s.detail)}${s.suggestedWording ? `<br><em>Suggested wording:</em> ${esc(s.suggestedWording)}` : ''}</li>`,
+    )
+    .join('')
+  const refRows = report.referenceAudit
+    .map(
+      (r) =>
+        `<tr><td>${r.index}</td><td>${STATUS_ICON[r.status]} ${r.status}</td><td>${esc(r.changed)}</td><td>${r.doi ? esc(r.doi) : r.pmid ? 'PMID ' + esc(r.pmid) : '—'}</td></tr>`,
+    )
+    .join('')
+  const checklist = report.submissionChecklist
+    .map((c) => `<tr><td>${esc(c.requirement)}</td><td>${c.status}</td></tr>`)
+    .join('')
+
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Analysis &amp; Suggestions — ${esc(v.journal)}</title>
+<style>body{font-family:Georgia,serif;color:#120D08;max-width:820px;margin:2rem auto;padding:0 1rem;line-height:1.5}
+h1,h2{color:#3d2a18}h2{border-bottom:1px solid rgba(153,126,103,.25);padding-bottom:.25rem;margin-top:2rem}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}td,th{border:1px solid rgba(153,126,103,.25);padding:.4rem .6rem;text-align:left;vertical-align:top}
+.verdict{background:#F8F4ED;border-radius:8px;padding:1rem 1.25rem}.disc{font-size:.85rem;color:#664930;margin-top:2rem}</style></head><body>
+<h1>Analysis &amp; Suggestions Report</h1>
+<div class="verdict"><strong>Formatted for ${esc(v.journal)}.</strong> ${v.changesApplied} change(s) applied automatically. ${v.itemsNeedingAttention} item(s) need your attention before submission.<br>
+<small>Rules verified ${esc(v.verifiedDate)} · <a href="${esc(v.guidelinesUrl)}">Guide for Authors</a> · rules v${esc(report.rulesVersion)}</small></div>
+<h2>Changes applied</h2>${changeRows ? `<table><tr><th>Element</th><th>Before → After</th></tr>${changeRows}</table>` : '<p>No automatic changes were needed.</p>'}
+<h2>Suggested changes (author action required)</h2>${suggestions ? `<ul>${suggestions}</ul>` : '<p>Nothing flagged.</p>'}
+<h2>Reference audit</h2>${refRows ? `<table><tr><th>#</th><th>Status</th><th>What changed</th><th>DOI / PMID</th></tr>${refRows}</table>` : '<p>No references detected.</p>'}
+<h2>Submission checklist</h2>${checklist ? `<table><tr><th>Requirement</th><th>Status</th></tr>${checklist}</table>` : ''}
+<p class="disc">${esc(report.disclaimer)}</p></body></html>`
+}
+
+// ---------------------------------------------------------------------------
+// .docx render — reuse the OOXML builder
+// ---------------------------------------------------------------------------
+
 export function renderReportDocx(report: ReportModel): Uint8Array {
-  // TODO(Session C): build a simple OOXML document from the ReportModel using
-  // the same emit primitives as the manuscript output.
-  void report
-  throw new Error('renderReportDocx not implemented — Session C')
+  const v = report.summaryVerdict
+  const p: string[] = []
+  p.push(paraXml('Analysis & Suggestions Report', { bold: true, sizePt: 16 }))
+  p.push(
+    paraXml(
+      `Formatted for ${v.journal}. ${v.changesApplied} change(s) applied automatically. ${v.itemsNeedingAttention} item(s) need your attention before submission.`,
+    ),
+  )
+  p.push(paraXml(`Rules verified ${v.verifiedDate} · ${v.guidelinesUrl} · rules v${report.rulesVersion}`, { italic: true }))
+
+  p.push(paraXml('Changes applied', { bold: true, sizePt: 13 }))
+  if (report.changesApplied.length === 0) p.push(paraXml('No automatic changes were needed.'))
+  for (const c of report.changesApplied) p.push(paraXml(`• ${c.element}: ${c.before} → ${c.after}`))
+
+  p.push(paraXml('Suggested changes (author action required)', { bold: true, sizePt: 13 }))
+  if (report.suggestedChanges.length === 0) p.push(paraXml('Nothing flagged.'))
+  for (const s of report.suggestedChanges) {
+    p.push(paraXml(`• [${s.severity}] ${s.title}${s.location ? ` — ${s.location}` : ''}`, { bold: true }))
+    p.push(paraXml(`   ${s.detail}`))
+    if (s.suggestedWording) p.push(paraXml(`   Suggested wording: ${s.suggestedWording}`, { italic: true }))
+  }
+
+  p.push(paraXml('Reference audit', { bold: true, sizePt: 13 }))
+  if (report.referenceAudit.length === 0) p.push(paraXml('No references detected.'))
+  for (const r of report.referenceAudit) {
+    const id = r.doi ? r.doi : r.pmid ? `PMID ${r.pmid}` : '—'
+    p.push(paraXml(`${r.index}. ${STATUS_ICON[r.status]} ${r.status} — ${r.changed} — ${id}`))
+  }
+
+  p.push(paraXml('Submission checklist', { bold: true, sizePt: 13 }))
+  for (const c of report.submissionChecklist) p.push(paraXml(`• ${c.requirement}: ${c.status}`))
+
+  p.push(paraXml(report.disclaimer, { italic: true }))
+  return createDocx(p).toUint8Array()
 }
