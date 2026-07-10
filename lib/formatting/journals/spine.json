@@ -1,0 +1,197 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Spine",
+    "slug": "spine",
+    "issn": "0362-2436",
+    "publisher": "Wolters Kluwer / Lippincott Williams & Wilkins",
+    "guidelines_url": "https://edmgr.ovid.com/spine/accounts/ifauth.htm",
+    "verified_date": "2026-07-09",
+    "source_hash": "999986ca8d71fbcd6ebacaaba243bf3c1fe6b9cda79eeb193bf7d1ee205eda11",
+    "source_note": "Encoded from the official Spine Instructions for Authors served via the Ovid Editorial Manager portal (edmgr.ovid.com/spine/accounts/ifauth.htm). The journals.lww.com/spinejournal Instructions page returns HTTP 403 to automated fetch (bot protection); the Ovid Editorial Manager IFA is the same authoritative instructions and returned a clean ~41k-char SSR HTML page to curl.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "case_report",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": "letter",
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": true,
+      "position": "top-right"
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "disclosures",
+      "funding"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Study Design",
+      "Objective",
+      "Summary of Background Data",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": 10,
+      "max": 15,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Structured Abstract",
+      "Key Points",
+      "Mini-Abstract",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "References",
+      "Tables",
+      "Figure Legends"
+    ],
+    "case_report": [
+      "Structured Abstract",
+      "References",
+      "Figure Legends"
+    ],
+    "letter": []
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 2700,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": 5
+    },
+    "case_report": {
+      "manuscript_max_words": 750,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": 5
+    },
+    "letter": {
+      "manuscript_max_words": 200,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 3,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "tiff",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "ethics_approval",
+      "patient_consent"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "ethics_approval",
+      "patient_consent"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Source is the Ovid Editorial Manager Instructions for Authors (edmgr.ovid.com/spine/accounts/ifauth.htm); the journals.lww.com/spinejournal Instructions page and the Ovid landing pages both 403 to curl/WebFetch, so the Editorial Manager IFA page was used as the authoritative live guide.",
+    "layout.font is NOT specified by the guide (it fixes only paper size, 1-inch margins, and double spacing). Times New Roman 12 is recorded as a conventional manuscript default because the schema makes layout.font non-nullable; treat as engine-flag, not a journal rule.",
+    "layout.headings = null: the guide names the four main headings (Introduction, Materials and Methods, Results, Discussion) but does not specify their case/bold/italic formatting.",
+    "line_numbers set to 'continuous' from 'manuscript text with line and page numbers'; the guide requires line numbers but does not state continuous vs per-page.",
+    "references.style = 'ama' because the guide states 'pattern manuscript style after the American Medical Association Manual of Style (10th edition)'. in_text = 'superscript' is derived from that named AMA style (the guide gives a numbered reference-list example and says cite in order of appearance, but shows no in-text marker example); in_text_punctuation left null (not stated).",
+    "references.include_doi = false: the guide's sample references carry no DOI and DOI is mentioned only in the preprint-update context, not as a required reference element.",
+    "references.et_al_threshold = 3: 'if there are more than three authors, name only the first three authors and then use et al.' journal_abbrev = 'nlm' (Index Medicus abbreviations).",
+    "Word limits: original/regular submissions 2700 words (excluding abstract and references); case reports 750 words and must carry a structured abstract (published online only); letters to the editor 200 words with <=3 references. Research letters are limited to <=5 reference citations (not separately encodable in the ARTICLE_TYPES enum).",
+    "Structured abstract subheads are journal-specific (Study Design, Objective, Summary of Background Data, Methods, Results, Conclusions), max 300 words; keywords count is 10-15 ('list ten to fifteen key words'). Spine also requires 3-5 'key points' (encoded as misc.highlights_required = true) and a 50-word mini-abstract (encoded as a section, no dedicated schema field).",
+    "tables.placement = 'grouped_end' from 'do not embed tables within the body of the manuscript; key each on a separate sheet'; max five tables. tables.numbering = 'arabic' from 'number tables consecutively' (arabic not stated verbatim; AMA convention).",
+    "figures.formats limited to schema-representable types (tif/tiff/eps/pdf); the guide also accepts MS Office ppt/doc artwork, which the enum cannot represent. figures.min_dpi = 300 is the halftone/photograph minimum; line art must be vector or >=1200 dpi (not separately encodable). callout_style left null (the guide uses 'Fig' in its own examples but does not mandate a callout style).",
+    "blinding: separate_title_page = true (Title page is a distinct required submission component carrying authors/affiliations/COI/funding). double_blind = false and scrub_body_identifiers = false: the guide requires PATIENT/institution de-identification of figures ('blinded for peer review') and patient anonymity/informed consent, but does not mandate author-masked (double-blind) review or scrubbing author identifiers from the body.",
+    "misc.cover_letter_required = false: the guide references 'the cover letter of the submission' only for preprint disclosure and does not state a universal cover-letter requirement. orcid_required = false: ORCID is not mentioned in the guide.",
+    "article_types limited to those the fetched IFA specifies structure/limits for (original_research, case_report, letter). Spine also publishes reviews and special-section content, but this IFA page does not enumerate their structure or word limits, so they are not encoded.",
+    "identity.issn (0362-2436) is the Spine print ISSN from the official LWW catalog, not from the guide text itself.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

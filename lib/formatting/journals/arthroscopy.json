@@ -1,0 +1,211 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Arthroscopy: The Journal of Arthroscopic and Related Surgery",
+    "slug": "arthroscopy",
+    "issn": "0749-8063",
+    "publisher": "Elsevier (for the Arthroscopy Association of North America)",
+    "guidelines_url": "https://www.arthroscopyjournal.org/content/authorinfo",
+    "verified_date": "2026-07-09",
+    "source_hash": "935ab8d2e81f7989f00ebd47834d6e33efa227c3cd8da5a2b32155c156411641",
+    "source_note": "Live guide is blocked to automated fetch (Cloudflare). source_hash is the SHA-256 of the normalized RAW Internet Archive snapshot of the official guide (web.archive.org/web/20230322id_/https://www.arthroscopyjournal.org/content/authorinfo, captured ~2023-03-22 (page footer 'Updated June 2020' — STALE, prioritize re-verification)) and is reproducible. Rules were encoded from this Internet Archive snapshot. Session C's freshness cron must use a headless fetch to re-verify the live page.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "case_report",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "ethics_statement",
+      "acknowledgments"
+    ],
+    "running_title_max_chars": 45,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Purpose",
+      "Methods",
+      "Results",
+      "Conclusions",
+      "Level of Evidence"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "References",
+      "Figure Legends"
+    ],
+    "systematic_review": [
+      "Abstract",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "References",
+      "Figure Legends"
+    ],
+    "case_report": [
+      "Abstract",
+      "Introduction",
+      "Case Report",
+      "Discussion",
+      "References",
+      "Figure Legends"
+    ],
+    "letter": [],
+    "editorial": []
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 7,
+      "tables_max": 4
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 7,
+      "tables_max": 4
+    },
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 2,
+      "tables_max": 0
+    },
+    "editorial": {
+      "manuscript_max_words": 1600,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 0,
+      "tables_max": 0
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "ethics_approval",
+      "trial_registration",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Rules encoded from the official Arthroscopy 'Instructions for Authors' (arthroscopyjournal.org/content/authorinfo) via the Wayback Machine snapshot 2023-03-22 (page 'Updated June 2020'); the live page and the ScienceDirect Guide-for-Authors are bot-blocked to curl/WebFetch. source_hash is of the live page's Cloudflare challenge shell — see identity.source_note.",
+    "Peer review is explicitly double-blind: separate unblinded title page + blinded manuscript (blinded first page lists only the title; no author initials or institution names in text). scrub_metadata set true as an inference required for effective double-blind review (not stated verbatim).",
+    "article_types mapping: 'Original Article' -> original_research; 'Systematic Review' and 'Meta-analysis' -> systematic_review; 'Case Report (rarely accepted)' -> case_report; 'Letter to Editor & Reply' -> letter; 'Level V Evidence' (invited expert-opinion articles) -> editorial.",
+    "word_limits from the journal's 'Recommended Maximums' table. systematic_review encodes the Systematic Review row (4500 words); Meta-analysis (4000 words, same enum) noted here. Case Report shows '—' for all limits (rarely accepted, no stated caps) -> nulls. Word counts exclude title page, blinded title page, references, and figure legends.",
+    "'Technical Note' is NOT accepted in Arthroscopy itself (now published only in the companion journal Arthroscopy Techniques, video required) -> omitted from article_types.",
+    "abstract.sections reflect the Original Article structured abstract (Purpose/Methods/Results/Conclusions + Level of Evidence or Clinical Relevance). Case Reports and Level V Evidence use unstructured summary abstracts (noted via type, not abstract.sections which encodes the primary type).",
+    "No keywords requirement is stated in the guide -> keywords.required false; the journal does not mention ORCID, cover letter, or Highlights -> orcid/cover_letter false, highlights_required null.",
+    "references: journal follows the AMA Manual of Style / ICMJE Uniform Requirements; numbered in citation order; list all authors up to 6, then first 3 + 'et al' (et_al_threshold 6); journal names abbreviated per PubMed (mapped to 'nlm'). in_text 'superscript' inferred from AMA style (not stated verbatim). include_doi false: the standard periodical reference example omits a DOI (DOIs shown only for in-press and dataset references).",
+    "figures.formats left empty and min_dpi null: the fetched IFA does not list figure file formats or DPI (it defers to Elsevier artwork guidelines). Figures are submitted as separate files; legends supplied separately ('figure and video legends' section). Tables placed after references/legends in the submission order (grouped_end), title/caption above, numbered consecutively (arabic).",
+    "layout: guide specifies double spacing + continuous line numbering only. Font (Times New Roman 12) is a placeholder default — NOT specified by the guide; page size, margins, alignment, page numbers, and running head are also unspecified and defaulted to none/false/null for the engine to flag.",
+    "declarations: ICMJE disclosure forms are mandatory for every author (conflict_of_interest + funding required). IRB/ethics approval required for human studies (except retrospective/cadaver) and prospective clinical-trial registration required (on the title page) — both conditional, listed in order but not in 'required'.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

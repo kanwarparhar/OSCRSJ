@@ -1,0 +1,215 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "The Journal of Hand Surgery (American Volume)",
+    "slug": "jhs",
+    "issn": "0363-5023",
+    "publisher": "Elsevier (on behalf of the American Society for Surgery of the Hand)",
+    "guidelines_url": "https://www.elsevier.com/journals/journal-of-hand-surgery-american-volume/0363-5023/guide-for-authors",
+    "verified_date": "2026-07-09",
+    "source_hash": "881d6250334f34e9b487a21b847e72906112af7cafad74eb45ef7abaffa4f56b",
+    "source_note": "curl of guidelines_url 301-redirects (elsevier.com -> sciencedirect.com) to a Cloudflare/PerimeterX captcha interstitial; the recorded source_hash is of that 594-char shell, which embeds a per-request reference number and is therefore NOT stable across runs. Rules were encoded from the headless-rendered guide (HTTP 200) at https://www.sciencedirect.com/journal/the-journal-of-hand-surgery/publish/guide-for-authors. Session C should upgrade this journal to a headless fetch for meaningful change detection.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "technical_note",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25,
+      "bottom_mm": 25,
+      "left_mm": 25,
+      "right_mm": 25
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": true,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "running_title",
+      "keywords",
+      "disclosures",
+      "acknowledgments"
+    ],
+    "running_title_max_chars": 45,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Purpose",
+      "Methods",
+      "Results",
+      "Conclusions",
+      "Level of Evidence"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "References",
+      "Figure Legends",
+      "Tables"
+    ],
+    "review": [
+      "Abstract",
+      "Introduction",
+      "Summary",
+      "References"
+    ],
+    "technical_note": [
+      "Abstract",
+      "Indications and Contraindications",
+      "Surgical Anatomy",
+      "Surgical Technique",
+      "Postoperative Management",
+      "Pearls and Pitfalls",
+      "Complications",
+      "References"
+    ],
+    "letter": []
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 20,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 300,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 5,
+      "figures_max": 1,
+      "tables_max": 1
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": "after",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration",
+      "conflict_of_interest",
+      "funding",
+      "data_availability",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Encoded from the live Guide for Authors, headless-rendered 2026-07-09 at https://www.sciencedirect.com/journal/the-journal-of-hand-surgery/publish/guide-for-authors (HTTP 200). Confirmed AMERICAN Volume (ASSH), ISSN 0363-5023, EIC Gregory A. Merrell.",
+    "source_hash is of the curl-fetched Cloudflare captcha shell (594 normalized chars) because sciencedirect.com blocks non-browser fetches with a per-request captcha; the hash is unstable across runs (embeds a reference number) — see identity.source_note.",
+    "case_report is intentionally EXCLUDED: as of 1 Jan 2021 JHS no longer accepts Case Reports; the live guide lists no case-report type. This overrides the generic task hint that 'JHS accepts case_report'.",
+    "abstract.sections reflect the primary type (peer-reviewed clinical study): Purpose/Methods/Results/Conclusions/Level of Evidence. Basic-science studies substitute 'Clinical Relevance' for 'Level of Evidence'; review/technical-note/Hand-Surgery-Landscape use a single unstructured one-paragraph abstract.",
+    "JHS scientific articles explicitly OMIT a Conclusion section (guide: 'it is JHS style not to include a Conclusion section'); reflected in original_research section list.",
+    "Article-type mapping: original_research = full-length peer-reviewed scientific/basic-science study (<3000 words; Intro <500, Results <500, Discussion <1000); review = Current Concepts (<=3000 words, <=4 authors, ~20 refs, one-paragraph abstract); technical_note = Surgical Techniques (<=2500 words, online-only); letter = Letters to the Editor (<=300 words, <=3 authors, <=5 refs, <=1 table/figure).",
+    "'The Hand Surgery Landscape' (<=2000-word commentary, one-paragraph abstract, no prescribed format) and 'Review of books and media' (<=800 words) are accepted formats left unencoded — no clean ARTICLE_TYPES slot and/or no structured format specified.",
+    "references: AMA Manual of Style (latest edition) with consecutive superscript arabic numerals in citation order; numeral placed OUTSIDE (after) periods and commas but INSIDE (before) colons and semicolons (encoded in_text_punctuation='after' capturing the period/comma rule; colon/semicolon exception not representable). et_al_threshold left null — governed by AMA style but the specific author cutoff is not stated on the page.",
+    "tables placement='grouped_end': manuscript arranged as title page, abstract, body, references, figure legends, tables, figures — tables sit on separate pages grouped at the end of the manuscript file (lengthy tables go to supplementary).",
+    "figures: EPS/PDF for vector, TIFF/JPEG for photos & line art; min_dpi=300 is the halftone (photo) floor — line drawings require 1000 dpi and line/halftone combinations 500 dpi (single-value schema field holds the floor).",
+    "margins 25 mm all around (guide: 2.5-cm margins); double-spaced throughout; continuous line numbering — all stated verbatim in the guide.",
+    "Schema-forced fields the guide does NOT specify (defaults, flagged for author): layout.font family+size (guide gives no manuscript body font; Times New Roman 12 pt is a service default), layout.page_numbers.show=false (page numbering not mentioned; only line numbering is required), layout.alignment=null, misc.orcid_required=false, blinding.scrub_metadata=true (inferred from the double-anonymized-review requirement). layout.headings=null — heading case/emphasis not specified.",
+    "declarations.required: COI is required from every author on every submission (COI form); funding-role and human/animal ethics-approval statements are required for essentially all JHS content. patient_consent and trial_registration are conditional (patient details/images; registered clinical trials) so are listed in order but not marked required.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

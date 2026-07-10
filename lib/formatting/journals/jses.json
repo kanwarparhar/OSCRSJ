@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Shoulder and Elbow Surgery",
+    "slug": "jses",
+    "issn": "1058-2746",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/journal-of-shoulder-and-elbow-surgery/publish/guide-for-authors",
+    "verified_date": "2026-07-09",
+    "source_hash": "bf4d98f138c5902aca8800ce39a1986f57edafaeccf523c3418489a81a5d210d",
+    "source_note": "Live guide is blocked to automated fetch (ScienceDirect CAPTCHA). source_hash is the SHA-256 of the normalized RAW Internet Archive snapshot of the official guide (web.archive.org/web/20240225180329id_/https://www.sciencedirect.com/journal/journal-of-shoulder-and-elbow-surgery/publish/guide-for-authors, captured 2024-02-25 (~2.4y old — prioritize re-verification)) and is reproducible. Rules were encoded from this Internet Archive snapshot. Session C's freshness cron must use a headless fetch to re-verify the live page.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "technical_note",
+    "case_report",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": true,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "funding",
+      "disclosures",
+      "ethics_statement",
+      "acknowledgments"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Hypothesis and/or Background",
+      "Methods",
+      "Results",
+      "Discussion and/or Conclusion"
+    ],
+    "max_words": 400,
+    "keywords": {
+      "required": true,
+      "min": 6,
+      "max": 8,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "References",
+      "Figure and Table Legends"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4750,
+      "abstract_max_words": 400,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 4750,
+      "abstract_max_words": 400,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4750,
+      "abstract_max_words": 400,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 2250,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "roman"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "jpg"
+    ],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "ethics_approval",
+      "patient_consent",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live ScienceDirect Guide-for-Authors is bot-protected (curl/WebFetch/headless render all 403 or CAPTCHA). Rules encoded from the Internet Archive snapshot dated 2024-02-25 of the same URL. source_hash is of the live CAPTCHA shell, which embeds a per-request reference number and is therefore not stably reproducible.",
+    "JSES redirects many case reports and reviews to sister journals (JSES International, JSES Reviews Reports & Techniques, Seminars in Arthroplasty: JSES); article_types reflect the types JSES itself lists as accepted for publication.",
+    "Word cap of 4,750 covers abstract + introduction + materials/methods + results + discussion + conclusion for review and original articles; case reports must not exceed 2,250 words and do not require an abstract; letters to the editor are limited to ~2 printed pages (no word count) -> letter/technical_note/editorial omitted from word_limits.",
+    "References are Vancouver style but modified: alphabetical order by first author, numbered sequentially, cited in text as superscript Arabic numerals WITHOUT brackets (order 'alphabetical', in_text 'superscript'). List all authors when <=6, else first 6 then 'et al.' (et_al_threshold 6). A DOI is required at the end of each reference dated 2002 or later (include_doi true).",
+    "Tables are uploaded as separate files and numbered in ROMAN numerals; figure and table legends go on a dedicated legends page after the reference list, so caption_position is null (not above/below the object).",
+    "Figures uploaded as separate files in .tif or .jpg; specific min DPI is deferred to elsevier.com/artworkinstructions -> min_dpi null.",
+    "Margins 'at least 25 mm (1 inch)' -> 25.4 mm all sides. Times New Roman 12, double spacing, and continuous line numbering are explicitly required. The guide does not mention page numbers -> page_numbers.show false; page_size/alignment/first_line_indent/per-level heading rules not specified -> null.",
+    "The running title is a six-word short-form placed in the header space; encoded via running_head.show and the title_page running_title element (no character cap given -> running_title_max_chars null).",
+    "A 'Declaration of Generative AI and AI-assisted technologies in the writing process' is required as a manuscript section immediately before the References; it has no DECLARATION_ELEMENTS key and is tracked out-of-schema.",
+    "Two cover letters are required (submission/originality statement + a signed combined conflict-of-interest statement); cover_letter_required true. Conflict-of-interest and IRB/ethics approval are also stated on the title page (required declarations). ORCID is not mentioned in the guide -> orcid_required false.",
+    "scrub_metadata is inferred from the mandated text blinding (blind institution location, author initials, and self-citations), not stated verbatim.",
+    "For full research articles, a Level of Evidence and 6-8 keywords are appended to the abstract.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

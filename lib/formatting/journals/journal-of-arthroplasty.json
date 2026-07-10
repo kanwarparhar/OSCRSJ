@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "The Journal of Arthroplasty",
+    "slug": "journal-of-arthroplasty",
+    "issn": "0883-5403",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.arthroplastyjournal.org/content/authorinfo",
+    "verified_date": "2026-07-09",
+    "source_hash": "aedbb6b191180900b69e192fa112554ed02e3af75496a13d497769755029603f",
+    "source_note": "Live guide is blocked to automated fetch (Cloudflare). source_hash is the SHA-256 of the normalized RAW Internet Archive snapshot of the official guide (web.archive.org/web/20250310170322id_/https://www.arthroplastyjournal.org/content/authorinfo, captured 2025-03-10) and is reproducible. Rules were encoded from this Internet Archive snapshot. Session C's freshness cron must use a headless fetch to re-verify the live page.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "review",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": "bottom-right"
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "word_count_abstract",
+      "word_count_manuscript"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Material and Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 10,
+      "tables_max": 10
+    },
+    "systematic_review": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 10,
+      "tables_max": 10
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tif",
+      "jpg"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "trial_registration",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "author_contributions"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live pages are bot-protected: the ScienceDirect Guide-for-Authors is CAPTCHA-blocked with no archive snapshot, and the journal-home page is Cloudflare-protected. Rules encoded from the Internet Archive snapshot dated 2025-03-10 of https://www.arthroplastyjournal.org/content/authorinfo (the journal's official 'Guide for Authors' page). source_hash is of the live Cloudflare challenge shell, whose text is identical to other Cloudflare-gated publisher pages (hence the shared hash with AJSM).",
+    "Case Reports are explicitly NOT published by The Journal of Arthroplasty (redirected to sister journal Arthroplasty Today) -> case_report omitted from article_types.",
+    "Systematic reviews and meta-analyses must be submitted as article type 'Original Research Article' and follow the same formatting; encoded as systematic_review with original-research limits. Prospective PROSPERO registration is required and the number goes on the title page (TITLE_PAGE_ELEMENTS has no trial_registration slot -> tracked as a declaration / out-of-schema).",
+    "'Abbreviated Clinical Follow-up Reports', invited guidelines, and proceedings papers have no matching ARTICLE_TYPES enum value -> omitted. Review Articles are by invitation only.",
+    "Manuscript body limited to 3000 words (includes the 300-word abstract, excludes references). The guide allows 'No more than 10 figures OR tables' as a COMBINED total; the schema cannot express a combined cap, so figures_max=10 and tables_max=10 are both set but the true constraint is figures + tables <= 10.",
+    "line_spacing: the guide accepts '1.5 or double'; encoded 'double' (which satisfies either) -- 1.5 is also acceptable. alignment 'left' from the instruction not to justify text. Page numbers required in the lower-right corner (bottom-right). Continuous line numbering required.",
+    "Manuscript font/size is NOT specified by the guide (Times New Roman 12 is a placeholder default flagged for the author; the guide only specifies artwork fonts: Arial/Courier/Times New Roman/Symbol). page_size, margins, first_line_indent, per-level heading rules, and a running head are not specified -> null/false.",
+    "Reference style is Vancouver-style numbered: in-text numbers in SQUARE BRACKETS, reference list numbered in citation order (in_text 'bracket', order 'cited'). Journal names per the LTWA List of Title Word Abbreviations (encoded journal_abbrev 'nlm'). >6 authors -> list first 6 then 'et al.' (et_al_threshold 6). DOI use is highly encouraged (include_doi true). Note: JoA imposes no strict reference format at submission; the journal style is applied at proof stage.",
+    "Tables are placed at the END of the manuscript text (grouped_end) or uploaded as separate 'Table' files, and numbered with Arabic numerals; do not place tables or figures mid-text. Table caption position is not specified -> null.",
+    "Figures submitted as separate files: EPS/PDF (vector) or TIFF/JPEG (raster), plus MS Office native files. Resolution is tiered (halftone photos >=300 dpi, line/halftone combinations >=500 dpi, pure line drawings >=1000 dpi); min_dpi=300 encodes the lowest requirement. Captions supplied separately, not attached to the figure (figure_legends_section). Callout style 'Fig.' per the guide's appendix examples.",
+    "A 'Highlights' section and an 'Abbreviations' section are explicitly disallowed (highlights_required false). ORCID is not mentioned in the guide (orcid_required false). A cover letter is not strictly mandated; IRB approval must be noted in the cover letter OR on a separate document (cover_letter_required false).",
+    "CRediT author contributions and a competing-interests statement (provided even if none) are required. patient_consent, ethics_approval, and trial_registration are conditional (human subjects / clinical trials). scrub_metadata inferred from the 'fully blinded' manuscript requirement, not stated verbatim.",
+    "A 'Declaration of Generative AI and AI-assisted technologies in the writing process' is required as a manuscript section immediately before the References (no DECLARATION_ELEMENTS key -> out-of-schema). Acknowledgements are uploaded as a separate 'Acknowledgement Page' file, NOT on the title page or in the blinded manuscript.",
+    "Post-acceptance/workflow items noted in the guide (mandatory $100 developmental-editing fee, Elsevier Article Transfer Service, max 6 authors / writing committee) are not manuscript formatting rules and are not encoded.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

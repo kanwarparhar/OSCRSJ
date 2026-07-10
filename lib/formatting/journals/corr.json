@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Clinical Orthopaedics and Related Research (CORR)",
+    "slug": "corr",
+    "issn": null,
+    "publisher": "Wolters Kluwer / Lippincott (for the Association of Bone and Joint Surgeons)",
+    "guidelines_url": "https://edmgr.ovid.com/corr/accounts/ifauth.htm",
+    "verified_date": "2026-07-09",
+    "source_hash": "35e5c226cbcc29b3188019942267403adb580a78a26c15b72bd1ac5526cc6e26",
+    "source_note": "Authoritative CORR Instructions for Authors, fetched cleanly (89,448 normalized chars) from the Editorial Manager / Ovid submission site — this is the page the Editorial Manager 'Instructions for Authors' link points to. The publisher's journals.lww.com/clinorthop 'Information for Authors' page is a Cloudflare-gated pointer stub with no formatting rules, so it was not used as the source.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": { "family": "Times New Roman", "size_pt": 12 },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": { "show": false, "position": null },
+    "running_head": { "show": false, "position": null },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "disclosures",
+      "ethics_statement",
+      "acknowledgments"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Questions/Purposes",
+      "Patients/Methods",
+      "Results",
+      "Conclusion",
+      "Level of Evidence"
+    ],
+    "max_words": null,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Patients/Methods",
+      "Results",
+      "Discussion",
+      "References",
+      "Figure Legends"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "bracket",
+    "in_text_punctuation": "before",
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": ["jpeg", "tiff", "png"],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration",
+      "acknowledgments"
+    ],
+    "required": ["conflict_of_interest", "ethics_approval"]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "guidelines_url points to the live Editorial Manager / Ovid Instructions for Authors (the real, rule-bearing guide). The journals.lww.com/clinorthop 'Information for Authors' page is only a Cloudflare-gated pointer stub and was deliberately not used.",
+    "CORR no longer publishes case reports ('CORR no longer publishes case reports' / 'Case closed—discontinuing case reports'), so case_report/case_series are intentionally absent. article_types maps: Clinical Research and Basic Research and Survey submissions -> original_research (they share the structured Background/Questions/Purposes/Patients-Methods/Results/Discussion format); Systematic Review, Meta-analysis, and CORR Synthesis -> systematic_review.",
+    "sections and word_limits are encoded only for original_research, whose structure and abstract format the guide specifies in full. systematic_review is accepted but the page does not give a distinct section list or numeric limits for it, so it is listed in article_types only.",
+    "No manuscript word limit is stated on the page (word_limits numeric fields null). The abstract is structured (Background / Questions-Purposes / Patients-Methods / Results / Conclusion / Level of Evidence) with a per-section cap of '~250 words or less per section' and no stated total, so abstract max_words is null.",
+    "Blinding: 'CORR utilizes a double-blind peer review system; please remove all author-identifying information from the manuscript.' The title page is uploaded as a separate document from the blinded manuscript. scrub_metadata true is an operational inference consistent with author-side double-blind compliance (docx author metadata is identifying); the page states body-identifier removal but not metadata scrubbing explicitly.",
+    "Title page elements are guide-stated: title, author names + final degree(s) + affiliation + email for all authors, corresponding author with full mailing address, conflict-of-interest statement (disclosures), ethical review committee statement (ethics_statement), a statement of where the work was performed (no enum slot), and acknowledgments. authors_degrees 'include' (final degrees).",
+    "references style is a 'modified AMA' with journal-specific rules: list ordered ALPHABETICALLY by first author's surname but numbered; in-text markers are numbers in square brackets, explicitly 'not in superscript', placed before sentence punctuation (e.g. '...disciplines [3].') -> in_text bracket, in_text_punctuation before; up to 6 authors listed, else first 3 + 'et al.' -> et_al_threshold 6; official PubMed journal abbreviations, italicized -> journal_abbrev nlm. include_doi false: DOIs are not stated as a general requirement (a DOI appears only in a retraction-citation example).",
+    "Figures uploaded separately in JPEG/TIFF/PNG; numbered in arabic numerals; legends removed from figures and placed in a section following the References list -> figure_legends_section; multi-part figures cited as e.g. 'Fig. 2a-b' -> callout_style 'Fig.'. min_dpi not stated for static figures (null). Tables provided as separate editable Word .doc/x files with a heading (no legend) -> placement separate_file; heading above/below not explicitly stated (caption_position null); arabic numbering.",
+    "Layout font and spacing are guide-stated ('all text must be double-spaced and 12-point Times New Roman font'). line_numbers 'none', page_numbers.show false, and running_head.show false because the guide specifies none of these; page_size, margins, alignment, first_line_indent, and heading styles are not stated (null).",
+    "declarations: ICMJE conflict-of-interest disclosure form required at original submission and an ethical review committee statement (with a copy of the ethics-committee letter) is required -> both required. patient_consent required for identifiable patient photographs, and trial_registration required for RCTs (a registration number is needed before review) — included in order but treated as conditional, not in the always-required set.",
+    "misc.orcid_required false: 'it is not required that authors register an ORCID before submitting to CORR.' cover_letter_required false: no cover letter is required by the page. issn, highlights, and title_case not stated (null). Only a single corresponding author is permitted (not representable in schema)."
+  ]
+}

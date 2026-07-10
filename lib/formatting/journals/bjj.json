@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "The Bone & Joint Journal",
+    "slug": "bjj",
+    "issn": null,
+    "publisher": "The British Editorial Society of Bone & Joint Surgery",
+    "guidelines_url": "https://boneandjoint.org.uk/journal/BJJ/instructions-for-authors",
+    "verified_date": "2026-07-09",
+    "source_hash": "ad8ec155bf70f9cb8786081ced9d7faf4971c43a659c53ebb13250b7bf58312e",
+    "source_note": "Clean server-rendered HTML fetched via the README curl recipe (19,444 normalized chars). The guide states content/blinding/limits but defers detailed manuscript preparation (reference formatting, fonts) to the 'Ortho Publish' tool at orthopublish.org.uk, so several formatting fields are not specified on the page — see encoding_notes.",
+    "submission_system": "ScholarOne Manuscripts"
+  },
+  "article_types": [
+    "original_research"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Aims",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Main Text",
+      "References",
+      "Acknowledgments"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 10,
+      "tables_max": 8
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "jpeg",
+      "tiff"
+    ],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "conflict_of_interest",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "patient_consent",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "BJJ explicitly no longer publishes case reports ('The Bone & Joint Journal is no longer publishing Case Reports and they will be rejected without review'), so only original_research is encoded. Infographics (approx 300 words, <=10 references) are accepted but have no clean ARTICLE_TYPES slot and are omitted.",
+    "Guide-stated hard limits: whole manuscript <=4000 words INCLUDING abstract, body, and references; abstract <=300 words; <=8 authors; <=10 figures (counting a/b/c parts separately); <=8 tables (table text does not count toward the word limit).",
+    "Abstract is structured with subheadings 'Aims', 'Methods', 'Results', 'Conclusion' (max 300 words).",
+    "sections encodes the guide's stated single-document element list ('complete manuscript including abstract, introduction, main text, references, tables and acknowledgments'); the whole manuscript is uploaded as ONE Word .doc file, so tables.placement is in_text (tables live inside the manuscript document). 'Main Text' is the guide's own generic heading; it does not prescribe explicit IMRAD body headings for the main text.",
+    "Blinding: 'your main document should be completely blinded and all identifying information should be on a separate title page.' double_blind is inferred from the completely-blinded main document; separate_title_page and scrub_body_identifiers are guide-stated; scrub_metadata true is an operational inference for blinding compliance.",
+    "REFERENCES BLOCK IS LARGELY UNVERIFIED: the BJJ instructions page states no reference style, in-text marker, ordering, journal-abbreviation, or DOI rule — it defers manuscript preparation to the Ortho Publish tool (orthopublish.org.uk). The schema requires non-null values for style/in_text/order/journal_abbrev/include_doi, so these are placeholder defaults (style 'custom', in_text 'bracket', order 'cited', journal_abbrev 'nlm', include_doi false) and MUST be treated as unverified pending the Ortho Publish spec; et_al_threshold and max_count left null.",
+    "LAYOUT FONT/SPACING NOT STATED: the page specifies no font, size, line spacing, margins, line numbers, page numbers, or running head. The schema requires a non-null font and line_spacing, so font 'Times New Roman' 12 and line_spacing 'double' are standard-manuscript-submission placeholders (unverified); line_numbers 'none', page_numbers.show false, and running_head.show false reflect 'not requested by the guide'; page_size, margins, alignment, first_line_indent, headings are null.",
+    "Figures are uploaded individually to ScholarOne; composite figures must be split into separate images (1a, 1b, 1c); each figure needs a full descriptive legend. formats jpeg/tiff are taken from the guide's illustration/infographic guidance (no distinct format stated for standard figures); legends_location figure_legends_section is a best-fit default (the guide requires a per-figure legend but does not state its location); min_dpi, callout_style, and naming_pattern not stated (null).",
+    "Declarations: ethical approval by an IRB/ethics board must be stated in the manuscript; patient consent must be obtained for all human studies and stated in the manuscript; ICMJE conflict-of-interest disclosure documents are required and a COI statement is published — all three required. RCTs must be prospectively registered (trial registration), captured here as a note rather than a declaration-block item.",
+    "misc.orcid_required false: authors are asked/encouraged to add an ORCID iD 'if available', not required. cover_letter_required false: no cover letter requirement stated. issn, title_case, highlights, running-title and title length limits, and author-degree handling are not stated (null). Preprints are not permitted and are out of formatting scope.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Orthopaedic Trauma",
+    "slug": "jot",
+    "issn": "0890-5339",
+    "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins)",
+    "guidelines_url": "http://edmgr.ovid.com/jot/accounts/ifauth.htm",
+    "verified_date": "2026-07-09",
+    "source_hash": "3ec4c61e0c912eae0517d960b0e843cfc33b08545e338c32fe78e892eec524cf",
+    "source_note": "The Wolters Kluwer/LWW 'Information for Authors' page (journals.lww.com/jorthotrauma) is a pointer that only links to the detailed instructions on the Editorial Manager site; it also redirects automated fetches to the journal home page. guidelines_url is that authoritative detailed instructions page (edmgr.ovid.com/jot/accounts/ifauth.htm), which curl fetches cleanly as full server-rendered HTML, so source_hash is of the real normalized guide text (83,551 chars, reproducible).",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "technical_note",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": "letter",
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "disclosures",
+      "funding",
+      "acknowledgments"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Objectives",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Keywords",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "References",
+      "Figure Legends"
+    ],
+    "systematic_review": [
+      "Abstract",
+      "Keywords",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "References",
+      "Figure Legends"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 300,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "jpg",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "ethics_approval",
+      "patient_consent",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "patient_consent"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Rules encoded from the authoritative JOT 'Instructions for Authors' hosted on Editorial Manager (edmgr.ovid.com/jot/accounts/ifauth.htm), which the LWW/Wolters Kluwer Information-for-Authors page points to. curl fetched full server-rendered HTML, so source_hash is of the real guide text (reproducible).",
+    "Peer review is double-blind: a separate unblinded title page + de-identified manuscript body (no author initials, institution or hospital-unit names in text, tables, or figures; 'we'/'our' discouraged). scrub_metadata set true as an inference required for effective double-blind review (not stated verbatim).",
+    "article_types mapping onto the enum: 'Clinical Investigation' (350-word structured abstract, 3500-word body) -> original_research (primary); 'Basic Science' (300-word structured abstract, 3500-word body) and 'Survey' (300-word structured abstract, 2500-word body) also fold into original_research; 'Systematic Reviews/Meta-analysis' (300/3500) -> systematic_review; 'Technical Tricks and Potential Pitfalls' (unstructured 300-word abstract, 2500-word body) -> technical_note; 'Letters to the Editor' (300 words) -> letter. No standalone Case Report type is offered.",
+    "word_limits.original_research uses the Clinical Investigation caps (body 3500, abstract 350). Basic Science and Survey have a 300-word abstract and Survey a 2500-word body — noted here since they share the original_research enum key. Reference/figure/table caps are not numerically specified in the guide -> null.",
+    "abstract.sections reflect the structured clinical-investigation abstract (Objectives/Methods/Results/Conclusions). A Level of Evidence assignment is separately required for clinical studies (tracked out-of-schema). technical_note uses an unstructured abstract. Keywords: three to five required.",
+    "sections encoded only for original_research and systematic_review (Introduction/Methods/Results/Discussion/Conclusions), which the guide defines; technical_note and letter body structures are not encoded to avoid guessing.",
+    "layout: guide explicitly requires 8.5x11 (letter) page, >=1-inch (25.4 mm) margins on all sides, double spacing, and continuous line numbers. Font (Times New Roman 12) is a placeholder default — NOT specified by the guide; alignment, first-line indent, page numbers, and running head are unspecified and defaulted to null/false for the engine to flag.",
+    "references: journal follows the AMA Manual of Style; numbered consecutively in citation order; name the first three authors then 'et al' when >3 (et_al_threshold 3); journal names abbreviated per PubMed/Index Medicus (mapped to 'nlm'). in_text 'superscript' inferred from AMA style (not stated verbatim). include_doi false: DOIs required only for online-only/web references, not standard journal citations.",
+    "figures: acceptable file types tif/jpg/eps/pdf; separate file per figure; photographs/scanned images >=300 dpi and line art >=1200 dpi (min_dpi encodes the 300 halftone minimum). Figure legends placed at the end of the manuscript body after references (figure_legends_section); callouts use 'Figure'. Tables numbered consecutively in arabic (roman numerals prohibited), descriptive title above; placement 'grouped_end' inferred (guide does not state placement explicitly).",
+    "declarations: authors must disclose conflicts of interest and funding (in three locations incl. the title page); informed consent and patient anonymity are required (patient_consent). IRB/ethics approval is required for human studies except retrospective/cadaver (ethics_approval listed in order, conditional). misc: ORCID and a submission cover letter are not required by the guide -> false; title case not specified -> null.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

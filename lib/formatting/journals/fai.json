@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Foot & Ankle International",
+    "slug": "fai",
+    "issn": null,
+    "publisher": "SAGE Publications",
+    "guidelines_url": "https://journals.sagepub.com/author-instructions/fai",
+    "verified_date": "2026-07-09",
+    "source_hash": "8602975d730a8eb5de282fae3434fe1889f0b58af0f34c91453fd629cd590c72",
+    "source_note": "Live guide is blocked to automated fetch (SAGE Cloudflare). source_hash is the SHA-256 of the normalized RAW Internet Archive snapshot of the official guide (web.archive.org/web/20250718144957id_/https://journals.sagepub.com/author-instructions/fai, captured 2025-07-18) and is reproducible. Rules were encoded from the official SAGE-hosted FAI Submission Guidelines PDF (content consistent with this snapshot). Session C's freshness cron must use a headless fetch to re-verify the live page.",
+    "submission_system": "SAGE Track (ScholarOne)"
+  },
+  "article_types": [
+    "original_research",
+    "case_report",
+    "technical_note"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 12.7,
+      "bottom_mm": 12.7,
+      "left_mm": 31.75,
+      "right_mm": 31.75
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "upper",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 2,
+        "case": "as_is",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [
+      "article_title"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": null,
+      "case": "title",
+      "separator": "semicolon"
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Level of Evidence",
+      "Keywords",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "References",
+      "Figure Legends"
+    ],
+    "case_report": [
+      "Introduction",
+      "Case Report",
+      "Discussion",
+      "Summary/Conclusion",
+      "References",
+      "Figure Legends"
+    ],
+    "technical_note": [
+      "Introduction/Discussion",
+      "Technique",
+      "References",
+      "Figure Legends"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "superscript",
+    "in_text_punctuation": "after",
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 5,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "tiff",
+      "jpg",
+      "jpeg",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "patient_consent",
+      "ethics_approval"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "patient_consent",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Rules extracted from the official SAGE-hosted 'FAI Submission Guidelines' PDF (us.sagepub.com/.../49175_FAI_Submission_Guidelines.pdf); the canonical journals.sagepub.com/author-instructions/fai page is Cloudflare-protected and unreadable to curl/WebFetch (see identity.source_note). source_hash is therefore of the page shell, not the rule text.",
+    "layout: TEXT rule = '12-point font double-spaced in a clean and legible font (Times New Roman, Arial, etc)'. Times New Roman 12 recorded (first-listed acceptable font; other clean fonts are also permitted). Margins 1.25\" sides (31.75 mm) and 0.5\" top/bottom (12.7 mm). page_size = null (inch margins imply US Letter but the guide does not state it).",
+    "layout.headings: 'Main headings are bold upper-case' -> level 1 (upper, bold). 'Subheadings are simply bold' -> level 2 (bold, case as_is, since case is unspecified). The guide also says manuscript titles are bold+underlined, but the schema heading model has no underline attribute.",
+    "line_numbers = 'continuous' ('All lines of manuscript must be consecutively numbered using your software's Line Number feature'). page_numbers.show and running_head.show = false: the guide states the title need not be in a header and gives no page-number/running-head requirement.",
+    "title_page.elements = ['article_title'] only: FAI uses no separate manuscript title page (the title 'does not need to be on its own page'); author names, affiliations, degrees and the corresponding author are supplied via the required cover letter and the ScholarOne submission screens, not the manuscript body. authors_degrees = 'include' ('Authors may list up to 2 academic degrees after their names').",
+    "abstract: structured with Background/Methods/Results/Conclusion; a fifth section 'Clinical Relevance' is added for basic-science articles (not encoded as a fixed section). ~250-300 words (max_words = 300); the SAGE Track abstract field itself caps at 250 words but the full abstract up to ~300 words goes in the manuscript body. Abstracts are NOT required for case reports or clinical tips (hence null abstract_max_words for those types).",
+    "keywords: required; 'first letter of each word capitalized' -> case = 'title'; 'listed using semicolons' -> separator = 'semicolon'. Min/max keyword count not stated (null).",
+    "references.style = 'custom': FAI numbers references but lists them ALPHABETICALLY (not in citation order), uses a distinctive author format ('Ostrum, RF; Meo, PD; Subramanian, R:' -- semicolon-separated, colon before title) and NLM journal abbreviations, with DOI appended when available. This alphabetical-numbered + superscript hybrid matches neither standard AMA nor Vancouver, so 'custom' is used with order = 'alphabetical'.",
+    "references.in_text = 'superscript' and in_text_punctuation = 'after' ('Citations must be superscript and come directly AFTER punctuation'). NOTE: in-text FIGURE callouts are the opposite -- spelled out and placed BEFORE punctuation, e.g. '(Figure 1)' -- captured via figures.callout_style = 'Figure'.",
+    "references.et_al_threshold = 5 captures 'list all authors when <=5'; the guide's actual rule is that with MORE than five authors you list only the first three then 'et al.' (i.e. >5 -> first 3 + et al), which the single-threshold field cannot express exactly. include_doi = true ('If an article has a DOI link associated with it, include it after the reference'). max_count and per-type reference min/max are not stated (null).",
+    "No manuscript word limits, reference-count limits, or figure/table-count limits are stated anywhere in the guide -> all such fields null. The guide gives extensive numeric/percentage/units house-style rules that are copy-editing (not structural formatting) and are not schema fields.",
+    "figures: 'upload each figure or table individually' -> separate_files = true. Accepted formats TIFF/JPG/Postscript -> tif,tiff,jpg,jpeg,eps. Resolution 'must be at least 300 dpi or higher'. Figure/table legends go in a Legends section -> legends_location = 'figure_legends_section'. callout_style = 'Figure' (spelled out).",
+    "tables.placement = 'separate_file' (tables uploaded individually alongside figures). caption_position and numbering left null: table legends live in the Legends section with no stated above/below position, and no table numbering scheme (arabic/roman) is specified (figures are labeled 'Fig. 1', 'Fig. 2A').",
+    "declarations: Conflict of Interest disclosure is mandatory (author selects one of four COI statements) and a funding statement is mandatory (one of two financial-support statements); both are printed on the article's first page. Informed consent AND institutional review board (IRB) approval statements are required for human-subjects studies (patient_consent + ethics_approval) -- encoded as required with this human-subjects caveat.",
+    "blinding: FAI states manuscripts go to 'blind peer review' (single-blind implied); it does NOT require a separate anonymized title page, author-identifier scrubbing in the body, or docx metadata scrubbing -- author identity is handled via the cover letter/ScholarOne, so all blinding flags except none are false.",
+    "misc.cover_letter_required = true ('All submissions to FAI must include a cover letter'). highlights_required and title_case left null (not addressed). orcid_required = false (ORCID not mentioned).",
+    "article_types encoded: original_research (full IMRaD structure), case_report ('Introduction, Case Report, Discussion, and Summary/Conclusion'; abstract not required; assigned Level V; very few accepted), and technical_note mapped from FAI 'Clinical Tips' (Introduction/Discussion section + Technique section; assigned Level V). Review types are not detailed in this guide and are not encoded.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate:rules": "tsx scripts/validate-journal-rules.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -29,7 +30,8 @@
     "resend": "^6.11.0",
     "sanitize-html": "^2.17.4",
     "svix": "^1.90.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -41,6 +43,7 @@
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
+    "tsx": "^4.23.0",
     "typescript": "^5"
   }
 }

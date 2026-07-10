@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Orthopaedic Case Reports",
+    "slug": "jocr",
+    "issn": "2250-0685 (print); 2321-3817 (online)",
+    "publisher": "Indian Orthopaedic Research Group (IORG)",
+    "guidelines_url": "https://jocr.co.in/wp/authors-guidelines/",
+    "verified_date": "2026-07-09",
+    "source_hash": "7e89229916ff72a257a99dc0699f325a101c69ba9f11c6c6143302da7cab78aa",
+    "source_note": null,
+    "submission_system": "JOCR online submission portal"
+  },
+  "article_types": [
+    "case_report",
+    "case_series",
+    "original_research",
+    "review",
+    "technical_note"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Introduction",
+      "Case Presentation",
+      "Conclusion"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "case_report": [
+      "Learning Point",
+      "Abstract",
+      "Keywords",
+      "Introduction",
+      "Case Presentation",
+      "Discussion",
+      "Conclusion",
+      "Clinical Message",
+      "Consent",
+      "Competing Interests",
+      "Authors' Contributions",
+      "Acknowledgements and Funding",
+      "References",
+      "Figure Legends"
+    ],
+    "case_series": [
+      "Learning Point",
+      "Abstract",
+      "Keywords",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "Clinical Message",
+      "Institutional Ethics Committee Approval",
+      "Consent",
+      "Competing Interests",
+      "Authors' Contributions",
+      "Acknowledgements and Funding",
+      "References",
+      "Figure Legends"
+    ],
+    "original_research": [
+      "Learning Point",
+      "Abstract",
+      "Keywords",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "Clinical Message",
+      "Institutional Ethics Committee Approval",
+      "Competing Interests",
+      "Authors' Contributions",
+      "Acknowledgements and Funding",
+      "References",
+      "Figure Legends"
+    ],
+    "review": [
+      "Learning Point",
+      "Abstract",
+      "Keywords",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "Clinical Message",
+      "References",
+      "Figure Legends"
+    ]
+  },
+  "word_limits": {
+    "case_report": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": 350,
+      "references_min": 10,
+      "references_max": 30,
+      "figures_max": 10,
+      "tables_max": null
+    },
+    "case_series": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 400,
+      "references_min": 10,
+      "references_max": 50,
+      "figures_max": 10,
+      "tables_max": null
+    },
+    "original_research": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 400,
+      "references_min": 10,
+      "references_max": 50,
+      "figures_max": 10,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 400,
+      "references_min": 10,
+      "references_max": 50,
+      "figures_max": 10,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "png",
+      "tiff",
+      "jpeg"
+    ],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "patient_consent",
+      "ethics_approval",
+      "conflict_of_interest",
+      "author_contributions",
+      "funding",
+      "acknowledgments"
+    ],
+    "required": [
+      "patient_consent",
+      "conflict_of_interest",
+      "author_contributions"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": "sentence"
+  },
+  "encoding_notes": [
+    "Encoded from the live Instructions to Authors at https://jocr.co.in/wp/authors-guidelines/ fetched 2026-07-09 via clean curl (server-side-rendered HTML, 31258 normalized chars); source_hash reproducible.",
+    "Published by Indian Orthopaedic Research Group; open access under CC BY-NC 4.0. pISSN 2250-0685 / eISSN 2321-3817 (schema issn holds both).",
+    "Article-type mapping: case_report is the primary type (<=2000 words, abstract <=350 words, 10-30 refs). JOCR treats a case_series (5-10 cases) as a 'research article', so case_series and original_research both take original-article limits (<=3000 words, abstract <=400 words, up to 50 refs). review = review article / Blue Ribbon Reviews (<=3500 words, up to 50 refs). technical_note (surgical technique / technical note on a single case) is accepted but the guide gives no type-specific word limits or section list, so it is declared in article_types only.",
+    "abstract.sections reflect the primary case_report structure (Introduction / Case Presentation / Conclusion, <=350 words, min 3 keywords). Research/original/review articles instead use a 4-part abstract (Aim & Background / Materials & Methods / Result / Conclusion, <=400 words) — captured in the per-type section lists (Introduction/Methods/Results) but not in the single abstract.sections field.",
+    "'Learning Point of the Article' (one-line) and 'Clinical Message' are JOCR-specific mandatory manuscript elements; encoded as required sections. Consent is a compulsory section; Competing Interests and Authors' Contributions are required declarations placed inline in the manuscript per the guide.",
+    "figure/table counts: the guide is internally inconsistent — it states 'maximum 10 figures and tables' and 'JOCR can only publish ten figures' (top) but 'no more than 6 figures (and tables) per case report' (figure-legends subsection). Encoded figures_max=10 (the repeated primary limit); tables_max left null because the guide lumps 'figures and tables' into one combined cap rather than a separate table count.",
+    "references: Vancouver-style, numbered consecutively in SQUARE BRACKETS in citation order, NLM journal abbreviations (e.g., 'J Bone Joint Surg Am'); guide shows no DOI in reference examples, so include_doi=false. in_text_punctuation and et_al_threshold not stated -> null.",
+    "layout: alignment 'left' (guide: type text unjustified); line numbering required (encoded continuous); all pages numbered; double-line spacing per the JOCR 'Typography' section. NOTE the boilerplate submission checklist contradictorily says 'text is single-spaced; 12-point font' — the JOCR-authored Typography section (double-line spacing) was preferred; the 12-pt size was taken from the checklist. Font FAMILY is not specified by the guide (Times New Roman is a service default for the schema-required field).",
+    "title_case 'sentence' is explicit (guide: 'capitalize only the first word, and proper nouns, in the title'). Title should also embed the study design (e.g., '... : a case report').",
+    "Schema-forced/unstated fields flagged for author: page_size, margins_mm, first_line_indent, title length caps, running-title cap, min_dpi, keyword max, references max_count, layout.headings all null; orcid_required=false and running_head.show=false (not mentioned); blinding.scrub_metadata=true inferred from the required blinded-manuscript / 'ensuring a blind review' step.",
+    "CARE checklist / copyright form / author photos are submission-portal supplementary items, not manuscript formatting, and are tracked out-of-schema.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

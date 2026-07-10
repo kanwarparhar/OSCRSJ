@@ -1,0 +1,187 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "The Journal of Bone & Joint Surgery (American Volume)",
+    "slug": "jbjs",
+    "issn": null,
+    "publisher": "The Journal of Bone & Joint Surgery, Inc. (Wolters Kluwer / Lippincott)",
+    "guidelines_url": "https://www.jbjs.org/jbjs-ifa.php",
+    "verified_date": "2026-07-09",
+    "source_hash": "3c22396feb422342a7ef67cc8a835cab1ec696595c736064afdc1bce23916002",
+    "source_note": "Authoritative JBJS Instructions for Authors. The journals.lww.com/jbjsjournal 'Information for Authors' page is only a Cloudflare-gated pointer stub that redirects to the submission service; the real guide lives here on jbjs.org. This page is a JS app whose instruction text is embedded in an in-page JavaScript blob, so the README curl+strip-tags recipe normalizes to a 32-char shell ('jbjs instructions for authors'); the recorded hash is of that shell. Rules were extracted from the in-page JS content plus the JBJS New Submission Checklist PDF (sites.jbjs.org/jbjs/jbjs_author_new_submission_checklist.pdf), the Reference Formatting Guidelines (jbjs.org/reference-guidelines.php), and the Figure Guidelines (jbjs.org/guidelines-figures.php).",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "narrative_review",
+    "technical_note",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": { "family": "Times New Roman", "size_pt": 12 },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": { "show": false, "position": null },
+    "running_head": { "show": false, "position": null },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": ["Background", "Methods", "Results", "Conclusions", "Level of Evidence"],
+    "max_words": 325,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "References",
+      "Figure Legends"
+    ],
+    "systematic_review": [
+      "Abstract",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "References",
+      "Figure Legends"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 325,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "systematic_review": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 325,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "narrative_review": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "technical_note": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 3,
+      "tables_max": 3
+    },
+    "editorial": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 3,
+      "tables_max": 3
+    },
+    "letter": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": ["tiff", "tif", "eps"],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "Figure{n}"
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "conflict_of_interest",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": ["ethics_approval", "conflict_of_interest", "author_contributions"]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "guidelines_url is the authoritative JBJS Instructions for Authors on jbjs.org. The publisher's journals.lww.com/jbjsjournal 'Information for Authors' page is a Cloudflare-gated pointer stub with no formatting rules (it only says submissions go through a submission service); the real rules live on jbjs.org and in Editorial Manager.",
+    "source_hash is of the page shell only: jbjs.org/jbjs-ifa.php serves its instruction text inside an in-page JavaScript blob, so the README strip-tags recipe yields a 32-char shell. Rules were read from that JS blob plus the JBJS New Submission Checklist PDF, Reference Formatting Guidelines, and Figure Guidelines. Session C's headless fetch will produce a richer hash.",
+    "JBJS article types were mapped onto the shared ARTICLE_TYPES enum: RCT / Observational Study / Basic-Science Study / Survey Study -> original_research (all share a 2500-word limit, structured abstract, and combined <=5 tables-and-figures cap); Evidence-Based Systematic Review -> systematic_review; Expert Review (invited) -> narrative_review; Innovation -> technical_note; Viewpoint -> editorial; Correspondence (eLetters) -> letter.",
+    "JBJS article types with no clean enum slot were omitted: Health Care Recommendation (guideline/consensus), Patient Voices, Arts and Humanities, Ethics essay, and World Report (invited regional report).",
+    "figures_max / tables_max encode the journal's stated cap as an upper bound per field, but JBJS actually specifies a COMBINED limit: <=5 tables-and-figures TOTAL for 2500-word scientific/review types and <=3 total for 1500-word Innovation/Viewpoint/Ethics types. The schema has no combined field; the engine should treat these as a shared budget, not independent maxima.",
+    "Blinding: double-blind review is done in-house. The New Submission Checklist states 'Manuscript is free of blinding. All blinding will be done in-house by the Editorial Department' and authors upload an UNBLINDED separate title page plus an unblinded manuscript as individual Word files. Hence scrub_body_identifiers and scrub_metadata are false (author does not blind), while separate_title_page is true and double_blind is true.",
+    "Abstract: structured, 5 paragraphs, <=325 words (Background / Methods / Results / Conclusions / Level of Evidence or Clinical Relevance); the cap rises to 350 words for clinical studies that report summary race/ethnicity demographics. Some article types instead require a bulleted abstract (3-5 takeaways) or no abstract (e.g. Ethics uses a brief clinical scenario) — captured as abstract_max_words null for those types.",
+    "Layout font/spacing/line-numbering are guide-stated (New Submission Checklist: '12 pt. Times New Roman or Calibri, double-spaced, with continuous line numbering'); Calibri 12 is an allowed alternative to Times New Roman not representable in the single-font schema. page_numbers.show and running_head.show set false because the guide specifies line numbering but not page numbers or a running head; page_size, margins, alignment, first_line_indent, and heading styles are not stated (null).",
+    "references.style nlm and journal_abbrev nlm are guide-stated (PubMed/Index Medicus format; all authors listed with no 'et al.' so et_al_threshold is null; numbered by order of citation so order is 'cited'). include_doi is false — the Reference Formatting Guidelines explicitly state 'JBJS does not require DOIs or epub dates.' in_text 'superscript' reflects JBJS published house style; the guide states citation numbering/order but not the in-text marker glyph, so treat in_text as unverified.",
+    "Figures: TIFF or EPS only ('No JPG, no figures inserted into Word'); files named by figure number (e.g. Figure1.tif, Figure2.eps) -> naming_pattern 'Figure{n}'; legends placed at end of the manuscript after References -> figure_legends_section. min_dpi 300 is the base (color/halftone at 300 ppi); line art requires up to 1200 ppi, not representable here.",
+    "Tables are uploaded as individual Word/Excel files (not embedded), numbered arabic with a descriptive title -> placement separate_file; title above/below not explicitly stated (caption_position null).",
+    "misc.orcid_required true: every author must register with ORCID and include the identifier; submission is impossible without an ORCID per author. cover_letter_required false: a cover letter is only conditionally requested (e.g. to note previously reported methodology). Manuscript word count 'includes the abstract but excludes references and figure legends' (New Submission Checklist).",
+    "keywords not required: the JBJS Instructions for Authors do not specify manuscript keywords (they may be entered as Editorial Manager metadata). issn and title_case not stated (null)."
+  ]
+}

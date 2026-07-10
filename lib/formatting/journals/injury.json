@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Injury: International Journal of the Care of the Injured",
+    "slug": "injury",
+    "issn": "0020-1383",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/injury/publish/guide-for-authors",
+    "verified_date": "2026-07-09",
+    "source_hash": "3491805c16c295cdb1051402de782600310ffc22e311d7fcd4733ea7be8264fa",
+    "source_note": "Live guide is blocked to automated fetch (ScienceDirect CAPTCHA). source_hash is the SHA-256 of the normalized RAW Internet Archive snapshot of the official guide (web.archive.org/web/20250101id_/https://www.injuryjournal.com/content/authorinfo, captured ~2025-01) and is reproducible. Rules were encoded from this Internet Archive snapshot of the journal-home guide (matches the current headless-rendered ScienceDirect guide the rules were read from). Session C's freshness cron must use a headless fetch to re-verify the live page.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "acknowledgments",
+      "disclosures"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 1,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Keywords",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": "before",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tif",
+      "tiff",
+      "jpg",
+      "jpeg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "author_contributions",
+      "funding",
+      "conflict_of_interest",
+      "data_availability",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "author_contributions"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Rules encoded from the live Elsevier ScienceDirect Guide-for-Authors for Injury (read via headless browser). source_hash is of the curl bot-challenge shell (rotating token, non-reproducible) — see identity.source_note.",
+    "Peer review is double-anonymized: separate title page (with author details, acknowledgements, competing-interest declaration, corresponding-author address) + anonymized manuscript with no identifying information. scrub_metadata set true as an inference required for effective double-anonymized review (not stated verbatim).",
+    "article_types: 'Full length articles' -> original_research; 'Review Articles' -> review; 'Letters to the Editor' -> letter. Case Reports are explicitly redirected to the companion open-access journal Trauma Case Reports and are NOT accepted in Injury -> omitted.",
+    "The guide states NO manuscript word limits, reference counts, or figure/table caps for full-length or review articles -> those word_limits are null; only the abstract cap (350 words) is given. sections encoded only for original_research (Introduction, Materials/Patients and Methods, Results, Discussion and Conclusions); review/letter body structure is not defined by the guide.",
+    "Abstract: 'concise and factual', max 350 words, not structured (no section labels prescribed). Keywords: 1 to 10 required, English. Highlights required: 3 to 5 bullet points, each max 85 characters (submitted as a separate file).",
+    "references: Elsevier numbered style mapped to 'custom' (not standard NLM/AMA/Vancouver): bracketed numbers in citation order, author initials before surname, year in parentheses, journal names abbreviated per LTWA (mapped to 'nlm'), DOIs encouraged. in_text_punctuation 'before' from the example 'as demonstrated [3,6].' (marker precedes the period). et_al_threshold not specified (examples list all authors).",
+    "tables: guide allows placement either next to the relevant text OR on separate page(s) at the end -> encoded 'in_text' (first-listed option); table caption position not stated -> null; numbered consecutively (arabic).",
+    "figures: separate files; formats span vector (EPS/PDF) and raster (TIFF/JPG/PNG); min_dpi 300 is the halftone minimum (line drawings 1000 dpi, combination 500 dpi). Figure callouts use 'Fig.' (per the 'Fig. A.1' appendix example). legends_location 'figure_legends_section' inferred from Elsevier convention (a captions list in the manuscript) — not stated verbatim.",
+    "declarations: Declaration of competing interests and funding disclosure are mandatory; CRediT author contributions are required for corresponding authors. Data statement is encouraged (not required). Clinical-trial registration (ICMJE) is required for trials, conditionally (noted, not in 'required').",
+    "layout: the guide only mandates an editable single-column Word/LaTeX file. Font (Times New Roman 12) and line_spacing (double) are placeholder defaults — NOT specified by the guide (Elsevier 'Your Paper Your Way' leaves initial-submission formatting flexible); page size, margins, alignment, line numbering, page numbers, and running head are unspecified and defaulted to none/false/null for the engine to flag.",
+    "misc: guide does not mention ORCID or a cover letter as required -> both false; title case not specified -> null.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "The American Journal of Sports Medicine",
+    "slug": "ajsm",
+    "issn": "0363-5465",
+    "publisher": "SAGE Publications",
+    "guidelines_url": "https://journals.sagepub.com/author-instructions/ajs",
+    "verified_date": "2026-07-09",
+    "source_hash": "179df96218f176d8cc4b7ec2496cec69addd9f7200b1ce50e91ee46cbb120ad4",
+    "source_note": "Live guide is blocked to automated fetch (SAGE Cloudflare). source_hash is the SHA-256 of the normalized RAW Internet Archive snapshot of the official guide (web.archive.org/web/20250603200859id_/https://journals.sagepub.com/author-instructions/AJS, captured 2025-06-03) and is reproducible. Rules were encoded from this Internet Archive snapshot. Session C's freshness cron must use a headless fetch to re-verify the live page.",
+    "submission_system": "AJSM Manuscript Processing System (submit.ajsm.org)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "case_report",
+    "case_series",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Hypothesis/Purpose",
+      "Study Design",
+      "Methods",
+      "Results",
+      "Conclusion",
+      "Clinical Relevance"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 4,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 60,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 60,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_series": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 60,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "conflict_of_interest",
+      "trial_registration",
+      "patient_consent",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live SAGE guidelines page is Cloudflare-protected (curl + WebFetch + headless render all 403). Rules encoded from the Internet Archive snapshot dated 2025-06-03 of https://journals.sagepub.com/author-instructions/AJS; source_hash is of the live Cloudflare challenge shell per the README recipe.",
+    "ISSN 0363-5465 is print; online ISSN is 1552-3365.",
+    "AJSM does not specify a manuscript font: font Times New Roman 12 is a placeholder default for a double-spaced manuscript, flagged for the author rather than taken from the guide.",
+    "page_size, margins, alignment, first_line_indent, per-level heading rules, and page-number position are not specified by the guide -> null.",
+    "The 6000-word cap 'includes abstract and references' and applies to manuscripts generally; case reports do not require an abstract (abstract_max_words null for case_report).",
+    "Reference cap of 60 applies to all types EXCEPT review articles (systematic_review/review left references_max null); encoded per-type in word_limits, so references.max_count is left null.",
+    "Figures + tables must not exceed '3 journal pages' (1 large = 2 medium = 4 small per page); this cannot be mapped to integer figures_max/tables_max -> null, tracked out-of-schema.",
+    "Figure resolution is tiered (line art 1200 dpi, color photos 600 dpi, b&w photos 300 dpi); min_dpi=300 encodes the lowest requirement. The guide does not enumerate specific raster formats -> formats [].",
+    "references.style 'ama' per 'AMA Manual of Style (11th ed)'; references are listed in ALPHABETICAL order and numbered accordingly, with superscript in-text numbers (order 'alphabetical', in_text 'superscript'). DOI is not required (PMID requested for Epub-ahead-of-print items) -> include_doi false.",
+    "ORCID is strongly encouraged but not required (orcid_required false). A cover letter is optional and required only when a paper has more than 5 authors (cover_letter_required false).",
+    "Blinding: an anonymized manuscript is required (remove author names, initials, institutions; state/country allowed but not cities/regions) with identifying info kept separate; double_blind and scrub_metadata are inferred from the mandated author-anonymized submission, not stated verbatim.",
+    "article_types mapped from AJSM 'study designs': meta-analysis + systematic review -> systematic_review; Current Concepts review articles -> review; case report, case series, and letters to the editor included. Technical notes and editorials are not offered as author-submittable types here -> omitted.",
+    "sections encoded only for original_research (guide prescribes IMRAD); case report/series and review section order is not prescribed -> omitted.",
+    "declarations: AJSM collects disclosures via the AJSM Author Disclosure Statement form and IRB approval as an in-text statement plus uploaded letter (not a manuscript declarations block). trial_registration (RCTs) and patient_consent (case reports / identifiable photos) are conditional.",
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+  ]
+}
