@@ -14,6 +14,7 @@
 
 ### Manuscript Formatting Service (AI Journal Formatter) / AI Layer
 - [[#^session-87-formatting-service-phase0-scaffold]]
+- [[#^session-88-formatting-service-engine]]
 
 ### Reviewer pipeline (recruitment, invitation, review form, decisions)
 - [[#^session-51-reviewer-feedback-attachment]]
@@ -134,6 +135,7 @@
 
 ## Sequential Index (chronological — newest first)
 
+- Session 88 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service engine (Phases 1-2): OOXML transforms + reference pipeline + immutability gate; 58 tests (`fe725c9`) — `^session-88-formatting-service-engine`
 - Session 87 — 2026-07-09 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 0 + scaffold: zod rules schema + 14 journal rule files + lib/formatting scaffold (`3cecb32`) — `^session-87-formatting-service-phase0-scaffold`
 - Session 86 — 2026-07-07 — Claude Code (Opus) — System v2.0 simplification: 7 Conventions ratified + §11 Codify-backlog cleared (docs-only; companion to vault handoff bankruptcy + Org Plan v2.0) — `^session-86-system-v2-simplification-conventions`
 - Session 78 — 2026-06-10 — Sushant — Cleanup-and-hardening: SANRA 404 fix + verapdf pass confirmed + launchd auto-start fixed + bearer auth on publish + C2 JATS dedupe + Narrative Review backend + PRISMA hard-gate — `^session-78-cleanup-hardening`
@@ -288,6 +290,17 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 88 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 1-2: OOXML engine + reference pipeline + immutability gate — 1 OSCRSJ commit `fe725c9` ^session-88-formatting-service-engine
+
+Executed Session B (Phases 1-2, the engine) of the 2026-07-08 formatting-service build brief, on top of the Session 87 scaffold. Precondition clean (no divergence; the four untracked orphans untouched). **Shipped (`fe725c9`, 21 files, tsc 0, `npm test` 58 tests / 57 pass + 1 live-gated skip, built-but-hidden):**
+
+- **OOXML engine `lib/formatting/ooxml/`** — `docx.ts` (a pizzip wrapper + XML string-surgery helpers + a from-scratch minimal-docx builder; reused **pizzip** not jszip, matching `lib/reviewer-package/build.ts` and the minimal-deps principle), `ingest.ts` (parse `word/document.xml` with **@xmldom/xmldom** → ContentModel: sections detected from bold-run OR pStyle headings — the real fixture uses bold paragraphs, no styles — plus raw reference extraction and graceful-rejection hazards: tracked changes/comments/equations/no-sections), `layout.ts` (sectPr pgMar/pgSz/lnNumType + a page-number footer built with correct rels + content-types + footerReference wiring; styles docDefaults font/size/spacing/alignment; running-head alignment), `titlePage.ts` (rebuild a standalone title page in `rules.title_page.elements` order, degree include/strip), `blinding.ts` (docProps core-props scrub AUTO + conservative body self-identification detection FLAGGED, never rewritten), `emit.ts` (re-zip). Design invariant: every edit is a targeted string replacement on part XML, so body `<w:t>` runs stay byte-for-byte identical → the immutability gate passes and Word opens the output without a repair prompt (validated: all emitted parts well-formed, footer rId↔rels↔content-types consistent).
+- **Reference pipeline `lib/formatting/references/`** — `parse.ts` (DeepSeek free-text refs → CSL-JSON, batched ≤20, JSON mode, temperature 0, zod-validated, retry-once-then-deterministic-degrade; mirrors the renderer `aiExtractBody.ts` client — plain HTTPS, no SDK), `verify.ts` (Crossref `query.bibliographic` → PubMed E-utilities fallback, normalized-Levenshtein title-similarity ≥0.85 to accept enrichment, best-effort Crossref retraction flag, resumable within a ~40s budget), `render.ts` (deterministic hand-rolled NLM/Vancouver + AMA renderers over CSL-JSON with an NLM Index-Medicus abbreviation map), `renumber.ts` (in-text bracket-marker restyle/renumber with range collapsing + a MarkerEdit list). `render.ts` + `verify.ts` were built by 2 parallel `general-purpose` sub-agents against the Session-A `CslReference`/`VerifiedReference` contracts.
+- **Content-immutability gate `pipeline/immutability.ts`** — normalizes whitespace and, when citation markers were renumbered, segments both texts around the ordered marker edits and requires every inter-marker prose segment to match exactly; with no marker edits the two bodies must be identical. The **deliberate-mutation test** (a 300 mg→500 mg dosage tamper) proves the gate fires, including a tamper hidden among legitimate renumbers.
+- **Tests** — `tests/*.test.ts` via `tsx --test` (`npm test`): round-trip fidelity, ingest structure, golden layout across OSCRSJ/JBJS/AJSM, immutability (+ deliberate mutation), title-page element order + degree strip, renumber helpers + restyle, blinding scrub+flag, reference-render goldens (14), reference-verify (26 offline + 1 live-gated), and an end-to-end ingest→layout→blind→renumber→gate→emit→reopen. `@xmldom/xmldom` added; `npm test` script added (node:test — the repo had no runner). sharp/figure remediation deferred (not in the task-5-8 list).
+
+**Acceptance vs brief:** tsc 0 at commit ✓; golden layout on 3 pilot journals ✓; immutability deliberate-mutation case ✓; no LLM in the emit path (grep-provable) ✓; DeepSeek confined to parse.ts ✓. **Live cost + reference results (OSCRSJ example case report, 7 references):** parse 7/7 at prompt 757 + completion 1114 tokens = **~$0.0014/manuscript**; verify **5 corrected + 2 unverified** (never dropped), **6/7 enriched with a DOI** (the 2 unverified fell below the precision-biased 0.85 gate). **Next:** Session C product build. **Handoffs pushed: None.**
 
 ### Session 87 — 2026-07-09 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 0 + scaffold: zod rules schema + 14 ortho journal rule files (live/archived guides) + lib/formatting engine scaffold — 1 OSCRSJ commit `3cecb32` ^session-87-formatting-service-phase0-scaffold
 
