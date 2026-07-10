@@ -44,3 +44,6 @@ OSCRSJ_Publish_Section_Report.docx
 # locally to draft OSCRSJ sample articles. NEVER shipped to GitHub or Vercel.
 _sample-articles-reference/
 CLAUDE.md.pre-refactor-backup
+
+# repo-local parked files awaiting manual deletion (FUSE unlink workaround)
+.stale-junk/
