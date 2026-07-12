@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "EFORT Open Reviews",
+    "slug": "efort-open-reviews",
+    "issn": "2058-5241",
+    "publisher": "Bioscientifica Ltd (on behalf of the European Federation of National Associations of Orthopaedics and Traumatology, EFORT)",
+    "guidelines_url": "https://journals.bioscientifica.com/eor/pages/author-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "Live guide is Cloudflare-protected and a JS SPA that returns a 'Loading...' shell to non-browser fetchers; encoded from a headless real-browser render of the current page. Canonical guide is https://journals.bioscientifica.com/eor/pages/author-guidelines (the older eor.bioscientifica.com/page/author/author-guidelines path now redirects to the Bioscientifica portal). Journal remains published by Bioscientifica (DOI prefix 10.1530); ScienceDirect only mirrors content.",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "review",
+    "narrative_review",
+    "systematic_review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "acknowledgments",
+      "funding"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 8,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {
+    "review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "jpeg",
+      "tiff",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "author_contributions",
+      "funding",
+      "conflict_of_interest"
+    ],
+    "required": [
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live page is Cloudflare-protected + JS SPA ('Loading...' shell to non-browser fetchers); encoded from a headless real-browser render of the current guide.",
+    "Canonical guide moved to journals.bioscientifica.com/eor/pages/author-guidelines; the older eor.bioscientifica.com/page/author/author-guidelines redirects to the Bioscientifica portal. Journal still published by Bioscientifica (2026 articles carry DOI prefix 10.1530); ScienceDirect/Elsevier only mirrors the content.",
+    "Review journal: two named author types. 'Review Articles' (explicitly 'narrative, instructional Review Articles') -> review + narrative_review; 'Systematic Reviews' (incl. meta-analyses, PRISMA-governed) -> systematic_review. No original research / case reports / letters accepted.",
+    "Two abstract formats: Review Articles = 3-6 bullet points, max 250 words (unstructured); Systematic Reviews = structured Purpose/Methods/Results/Conclusions, max 250 words. The abstract object encodes the primary (Review Article) format.",
+    "4000-word recommendation is stated for 'Review articles'; Systematic Reviews are described as 'more extensive' with no stated word cap -> systematic_review manuscript_max_words left null.",
+    "Tiered figure DPI: images (JPEG/TIFF) >=300 dpi; line art (EPS) >=800 dpi. min_dpi set to 300 (images); 800 dpi line-art tier does not fit the single-DPI schema field.",
+    "Maximum 6 authors per article.",
+    "Default license CC-BY-NC 4.0; CC-BY or CC-BY-NC-ND accommodated on funder request.",
+    "In-text citation marker format (superscript vs bracket) not stated in the guide; only 'Vancouver system, numbered by order of citation' is stated. in_text left null rather than inferred from house style.",
+    "Reference journal names are abbreviated (NLM-style, e.g. 'Bone Joint J'); no DOIs shown in the Vancouver reference examples -> include_doi false.",
+    "scrub_metadata set true inferred from the double-anonymous requirement that 'the rest of the article should not contain any identifying information'; file-property scrubbing is not called out verbatim.",
+    "Table caption_position 'above' and numbering 'arabic' inferred from 'each table should have a short, descriptive heading' + 'numbered consecutively'; numeral type/position not stated verbatim.",
+    "PRISMA checklist required for Systematic Reviews; PROSPERO registration encouraged (number kept out of the anonymized manuscript). ICMJE conflict-of-interest form required from every author.",
+    "Cover letter required (must state prior-publication/CoI; PROSPERO number for systematic reviews).",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver').",
+    "[schema-required default] title_page.elements: dropped non-title-page value(s) ['author_contributions'] (not in the schema enum)."
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Exercise and Sport Sciences Reviews",
+    "slug": "essr",
+    "issn": "0091-6331",
+    "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins) for the American College of Sports Medicine (ACSM)",
+    "guidelines_url": "https://edmgr.ovid.com/essr/accounts/ifauth.htm",
+    "verified_date": "2026-07-12",
+    "source_hash": "c99945b19a467804d906e7990a6553947e44552e0e1b9ef22226b464c0387f2c",
+    "source_note": "Live Editorial Manager Instructions for Authors page. WebFetch returned HTTP 402; page rendered headless via Apify rag-web-browser on 2026-07-12. Journal homepage presentation now on ovid.com (www.ovid.com/jnls/acsm-essr); publisher still Wolters Kluwer/LWW — no publisher migration.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "review",
+    "narrative_review",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "upper",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 2,
+        "case": "title",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "funding",
+      "disclosures"
+    ],
+    "running_title_max_chars": 40,
+    "title_max_chars": 89,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 60,
+    "keywords": {
+      "required": true,
+      "min": 5,
+      "max": 7,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "narrative_review": [
+      "Introduction",
+      "Conclusion"
+    ],
+    "review": [
+      "Introduction",
+      "Future Perspectives"
+    ]
+  },
+  "word_limits": {
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 60,
+      "references_min": null,
+      "references_max": 150,
+      "figures_max": 7,
+      "tables_max": 7
+    },
+    "narrative_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 60,
+      "references_min": null,
+      "references_max": 50,
+      "figures_max": 7,
+      "tables_max": 7
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 8,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 700,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": "below",
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "eps"
+    ],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "acknowledgments"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Article-type mapping: Brief Review (flagship, novel-hypothesis narrative review) -> narrative_review; Perspectives for Progress (senior-investigator state-of-field/future-directions review, 150 refs, ends in Future Perspectives) -> review; Letters to the Editor-in-Chief -> letter; Invited Commentary -> editorial. Original Research/systematic reviews are NOT accepted (review-only journal). Both review types are proposal/invitation-based.",
+    "Main manuscript length is a CHARACTER count, not a word count: ~40,000-46,000 characters including spaces, counting abstract+text+references+tables+figures+legends (~6-8 printed pages). Tightens to 40,000 chars if >4 figures+tables; up to 46,000 if <4. manuscript_max_words left null (no word cap stated) for review/narrative_review.",
+    "Figures and tables share a COMBINED cap of 7 total (not 7 each). figures_max/tables_max encoded as 7 as loose upper bounds implied by the combined cap; the real constraint is figures+tables <= 7.",
+    "Abstract is 40-60 words (max encoded as 60). Abstract page also requires: a Summary of 15-20 words for the Table of Contents; Key Points of no more than 150 words in 3-5 bullet points; and 5-7 Key Words. Summary and Key Points have no schema slot (highlights_required left null; Key Points is not labeled 'Highlights').",
+    "Single-blind peer review: guide states 'Reviewers will know the identity of the author.' No blinding/masking/title-page separation required.",
+    "In-text citations use a full-size number on the line in parentheses, e.g. (5, 10) -> in_text 'paren'. References in NLM (Citing Medicine) style, numbered in order of citation. DOI optional/conditional ('may be included' for ahead-of-print/online-only) -> include_doi false. No explicit et al. threshold stated (samples list all authors).",
+    "references.max_count left null because the cap is type-dependent (Brief Review ~50 at initial submission; Perspectives up to 150; Letters <=8) — captured per type in word_limits.",
+    "Brief Reviews must cite 2-3 of the authors' own peer-reviewed papers (a minimum of the authors' OWN references, not a total minimum) -> references_min left null.",
+    "Main figure artwork formats: save as .tiff and .eps; PowerPoint .ppt is also acceptable (not representable in the format enum). Do not compress .tiff. Figure legends listed in the manuscript text file AFTER the references. Minimum DPI/resolution not stated.",
+    "Title <=89 characters (no abbreviations); short/running title <=40 characters. Subsection headings: main headings BOLD CAPS <=84 chars; sub-headings Bold Mixed Case <=90 chars.",
+    "Additional required non-formatting items with no schema slot: AI-tool-use disclosure; 8-10 continuing-education-credit (CEC) multiple-choice questions; at least one Digital Content Feature (Journal Club / Video Abstract / Visual Abstract); ICMJE-based Copyright Transfer Agreement per author.",
+    "line_numbers, font family/size, margins, page size, alignment, first-line indent, page numbers, running-head display, title case, ORCID, and cover letter are all unstated in the guide -> null / conservative false.",
+    "Print ISSN 0091-6331 encoded in issn; online ISSN is 1538-3008. Open-access option default license CC BY-NC-ND (not a formatting rule)."
+  ]
+}

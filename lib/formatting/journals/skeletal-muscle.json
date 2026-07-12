@@ -1,0 +1,166 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Skeletal Muscle",
+    "slug": "skeletal-muscle",
+    "issn": "2044-5040",
+    "publisher": "BioMed Central (Springer Nature)",
+    "guidelines_url": "https://link.springer.com/journal/13395/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "257584b2616dd9a23153890e876677f6ff76c1588e5449c874a50a27c7e6497c",
+    "source_note": "Live Springer Nature Link page (link.springer.com/journal/13395/submission-guidelines) is bot-blocked: a headless render returned only an Imperva 'Client Challenge' shell. The journal's own skeletalmusclejournal.biomedcentral.com author pages now 301-redirect to that blocked Springer page. Encoded from Wayback archive snapshots of the pre-migration BMC pages: research article-type page http://web.archive.org/web/20250626232204/https://skeletalmusclejournal.biomedcentral.com/submission-guidelines/preparing-your-manuscript/research and general formatting page http://web.archive.org/web/20250530210034/https://skeletalmusclejournal.biomedcentral.com/submission-guidelines/preparing-your-manuscript . These snapshots are ~12.5 months old (marginally beyond the 12-month window); all encoded values are stable BMC cross-journal house-style values, and every journal-specific numeric cap is left null.",
+    "submission_system": "Springer Nature (submission.nature.com)"
+  },
+  "article_types": [
+    "case_report",
+    "original_research",
+    "review",
+    "technical_note"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Background",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher migration: the journal's authoring pages moved from BioMed Central (skeletalmusclejournal.biomedcentral.com) onto Springer Nature Link (link.springer.com/journal/13395); the BMC URLs now 301-redirect to Springer, whose page is served behind an Imperva 'Client Challenge' bot wall (blocked even via headless render). Content encoded from ~12.5-month-old Wayback snapshots of the BMC pages, which carry BMC's stable cross-journal house-style template.",
+    "Article-type mapping: Research->original_research; Review->review; Case report->case_report; Methodology->technical_note (BMC Methodology = new-methods/resource paper, closest slot). Journal also lists Commentary and Software article types, which have no clean enum slot and were omitted.",
+    "line_numbers set to 'continuous' from the quick-point 'Include line and page numbering'; the guide requires line numbering but does not explicitly state continuous vs per-page (continuous is BMC standard).",
+    "line_spacing/page_numbers/figure DPI(300)/figure formats/table numbering & caption position are from the general formatting page ('Preparing your manuscript', snapshot 20250530210034).",
+    "Abstract is structured with Background/Methods/Results/Conclusions, plus a conditional 'Trial registration' subsection required only for reports of health-care interventions on human participants.",
+    "references.in_text left null: the guide names the Vancouver style and numbers references in cited order (journal abbreviations per Index Medicus/MEDLINE => nlm; DOIs included; 6 authors then 'et al.' in the example) but does NOT explicitly state the in-text marker format (BMC house style is square brackets, not confirmed on-page).",
+    "No manuscript word limit, reference count limit, figure count, or table count is stated for Research (BMC does not cap these) => all such caps null.",
+    "Tables: small tables placed in-text at the appropriate location; tables larger than one A4/Letter page go at the end of the text file (placement encoded as in_text). Figure titles max 15 words, legends max 300 words, provided in the main manuscript (not the graphic).",
+    "sections/word_limits provided only for original_research (the only type whose full structure was verified); review/technical_note/case_report per-type pages were not read in detail, so their orders and caps are omitted rather than guessed.",
+    "cover_letter_required set false conservatively: BMC's supporting-information page describes cover-letter contents but on the pages read it is not stated as a hard requirement; orcid_required false (not mandated on pages read).",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver')."
+  ]
+}

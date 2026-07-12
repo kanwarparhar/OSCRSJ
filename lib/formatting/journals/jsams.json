@@ -1,0 +1,209 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Science and Medicine in Sport",
+    "slug": "jsams",
+    "issn": "1440-2440",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/journal-of-science-and-medicine-in-sport/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "1004374dd4ca8c2b5ef3216b458a51305be133a1b13da8504f7ec5d451935c0d",
+    "source_note": "Encoded from the live ScienceDirect guide via Apify rag-web-browser headless render (HTTP 200); WebFetch on the same URL returned 403. Published by Elsevier on behalf of Sports Medicine Australia. URL: https://www.sciencedirect.com/journal/journal-of-science-and-medicine-in-sport/publish/guide-for-authors",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "case_report",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Arial or Times New Roman",
+      "size_pt": 11
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "word_count_manuscript",
+      "word_count_abstract",
+      "table_count",
+      "figure_count",
+      "disclosures"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Objectives",
+      "Design",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 4,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "Acknowledgments",
+      "References"
+    ],
+    "systematic_review": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "Acknowledgments",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 75,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": 100,
+      "references_min": null,
+      "references_max": 20,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 5,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "data_availability"
+    ],
+    "required": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": false,
+    "title_case": "sentence"
+  },
+  "encoding_notes": [
+    "Live current ScienceDirect page rendered headless (Apify rag-web-browser), HTTP 200; WebFetch 403'd. Source is TIER_A live content obtained via headless render.",
+    "Article-type mapping: Original Research->original_research; Review Articles (systematic/scoping reviews and meta-analyses ONLY)->systematic_review; 'Brief reports/Research Letters/Case Reports' is one category (1500w, 100w unstructured abstract, refs max 20, combined tables+figures max 2)->encoded as case_report; Letters-to-the-Editor->letter.",
+    "Omitted with no clean enum slot: Viewpoint (1500w, no abstract, refs max 10, combined tables+figures max 2), Consensus Statements & Clinical Practice Guidelines (~6000w, max 3 tables + 3 figures), Registered Reports (follows Original Research structure).",
+    "By-invitation-only types excluded from article_types (authors cannot freely submit): Narrative reviews (Cornerstone Reviews), Counterpoint/Rebuttal, Editorials.",
+    "SCHEMA GAP — combined table+figure caps not representable per-type: Original Research combined tables+figures max 6; Review combined max 6; Brief report/Case report combined max 2; Letter max one table OR figure (combined 1). Encoded figures_max/tables_max as null to avoid overstating individual caps.",
+    "SCHEMA GAP — tiered figure DPI: min 300 dpi for color/grayscale photographs (halftones), 1000 dpi for bitmapped line drawings, 500 dpi for combination line/halftone. Encoded min_dpi=300 (photograph floor); higher tiers apply to line art.",
+    "abstract.structured/sections/max_words reflect the primary type (Original Research): structured 250-word abstract with Objectives, Design, Methods, Results, Conclusions. Review adds a Discussion heading (Objectives, Design, Method, Results, Discussion, Conclusions), also <=250w. Case/Brief report abstract is <=100 words and UNSTRUCTURED. Viewpoint and Letters have NO abstract.",
+    "Keywords: 'up to 6 keywords, with at least 4 selected via MeSH'; encoded min 4 / max 6. Keywords must not reproduce title words. Keyword case/separator not specified -> null.",
+    "line_numbers: guide requires page AND line numbers 'for the convenience of the peer reviewers' but does not specify continuous vs per-page; encoded 'continuous' (standard default) as the enum has no null option — treat as low-confidence.",
+    "references.style: guide states 'no strict requirements on reference formatting at submission' (journal applies its style at proof); the worked example (Hanna CM, Fulcher ML, Elley CR et al. ... J Sci Med Sport 2010; 13(3):299-303) is numbered Vancouver with NLM journal-title abbreviations, so encoded style=vancouver, journal_abbrev=nlm, order=cited.",
+    "references.in_text: guide says cite references in numeric order by order of mention but does NOT specify superscript vs bracket vs parenthetical -> null (unstated).",
+    "et_al_threshold=3: 'All authors should be listed where there are three or fewer. Where there are more than three, the reference should be to the first three authors followed by et al.'",
+    "include_doi=true: 'Use of DOI is highly encouraged' (encouraged, not strictly mandatory).",
+    "tables.placement: JSAMS manuscript structure says tables 'may be submitted at the end of the text file, on separate pages, one to each page' -> grouped_end; note the generic Elsevier Tables subsection says 'Tables must be placed next to the relevant text' (in_text) — conflict, chose the JSAMS-specific instruction. Caption position not explicitly stated (notes go below the table body); table numbering consecutive arabic.",
+    "figures.legends_location=figure_legends_section: 'Figure Legends must be submitted as part of the text file and not as illustrations'; figures themselves are separate files. figure formats listed: EPS/PDF (vector), TIFF/JPEG (photographs/line art); PNG not listed. callout_style and naming_pattern not prescribed for main text -> null (appendix uses 'Fig. A.1').",
+    "declarations: Acknowledgments section is compulsory (contains funding + conflict-of-interest declarations) and sits before References; a 'Declaration of Generative AI and AI-assisted technologies' section is required before the reference list (no enum slot). Declaration of interest / competing-interests statement required even if none. Funding statement required (mandated 'no external financial support' sentence if none). Ethics approval statement required for human studies (in Methods). Conditional/not encoded as always-required: patient_consent (if patient details/images), trial_registration (clinical trials, number preferably at end of abstract), author_contributions (required when >7 authors). Data statement encouraged, not mandatory.",
+    "layout margins stated as '1 inch or 2.5 cm all around'; encoded 25.4 mm (1 inch canonical). page_size not stated -> null. alignment=left inferred from explicit 'do not use the word processor's options to justify text'. Manuscript double-spaced throughout including title page, abstract, text, references, tables, legends.",
+    "orcid_required=false: ORCID not mentioned as required in this guide. cover_letter_required=true: every submission must include a cover letter stating article category and sub-discipline. highlights_required=false: Elsevier Highlights not required; optional 'Practical Implications' (3-5 bullet points) is a JSAMS-specific non-mandatory feature.",
+    "Decision on initial submission expected within ~8 weeks. Submission via Editorial Manager (editorialmanager.com/JSAMS). 'Your Paper Your Way' allows a single free-format Word/PDF at initial submission; full JSAMS formatting required only at revision.",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver')."
+  ]
+}

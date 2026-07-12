@@ -1,0 +1,154 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Science and Medicine in Football",
+    "slug": "science-medicine-football",
+    "issn": "2473-3938 (print), 2473-4446 (online)",
+    "publisher": "Taylor & Francis (Routledge)",
+    "guidelines_url": "https://www.tandfonline.com/action/authorSubmission?show=instructions&journalCode=rsmf20",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "blocked: the live Instructions for Authors (tandfonline.com, journal code rsmf20) returned HTTP 403 bot-block on WebFetch AND on the Apify rag-web-browser headless render; the only Wayback capture of the instructions page is 2022-06-28 (a cookie-redirect shell, >12 months old, not usable). Journal-specific values (word limits, abstract structure, section orders, reference style, keyword count, declarations order, table placement) are therefore NULL. Non-null layout/figure/heading values were encoded from Taylor & Francis cross-publisher HOUSE-STYLE pages fetched via Apify headless render (authorservices.taylorandfrancis.com manuscript-layout-guide + submit-electronic-artwork), NOT from this journal's own guide. Identity (ISSN, publisher, ScholarOne platform) and blinding (double-anonymized) are WebSearch/verification-corroborated.",
+    "submission_system": "ScholarOne Manuscripts"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "case_report",
+    "technical_note"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "sentence",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 2,
+        "case": "sentence",
+        "bold": true,
+        "italic": true,
+        "numbered": false
+      },
+      {
+        "level": 3,
+        "case": "sentence",
+        "bold": false,
+        "italic": true,
+        "numbered": false
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {},
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "Figure {n}"
+  },
+  "declarations": {
+    "order": [],
+    "required": null
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": "sentence"
+  },
+  "encoding_notes": [
+    "LIVE GUIDE BOT-BLOCKED: tandfonline.com Instructions for Authors (rsmf20) returned 403 on WebFetch and on Apify headless render; no Wayback snapshot within 12 months (newest instructions capture is 2022-06-28, a cookie-redirect shell). All journal-specific numeric/structural values left null per accuracy-over-completeness.",
+    "layout.font (Times New Roman 12), line_spacing (double), margins_mm (25.4 all = 1 inch), headings scheme, misc.title_case (sentence), running_head (not required at submission) = Taylor & Francis HOUSE-STYLE (authorservices manuscript-layout-guide), NOT this journal's own guide; may be overridden by the live RSMF instructions. T&F also offers optional format-free submission for many journals.",
+    "figures block (separate_files, formats tiff/jpeg/eps, min_dpi, legends in manuscript text, Figure {n} naming) = T&F house-style (authorservices submit-electronic-artwork): 'You must save figures separately to text, do not embed them in the manuscript file'; peer-review preferred formats JPEG/TIFF (+ Word); EPS recommended for line art.",
+    "SCHEMA GAP - tiered figure DPI: T&F house-style specifies color 300dpi, grayscale/combination 600dpi, line-art 1200dpi; schema holds one min_dpi so set to the 300 floor (color photos).",
+    "blinding = double-anonymized: set from the standardized T&F peer-review statement ('anonymized (double-anonymized) refereeing by at least two referees') surfaced via WebSearch since the live guide was blocked; separate_title_page + scrub flags are the standard corollaries. VERIFY against the live Instructions for Authors.",
+    "references.style = 'custom' because the journal-specific reference/citation style could not be verified (live guide blocked; no clean OA SMF article reachable to observe output); in_text/order/journal_abbrev left null. T&F sport-science journals vary between numbered and author-date - do NOT assume. Re-encode when the live guide is reachable.",
+    "article_types derived from the aims & scope (WebSearch-corroborated: 'in addition to original research, review articles, clinical case studies, short communications/technical reports are considered'): original_research, review, case_report (clinical case studies), technical_note (short communications/technical reports). Full article-type list + per-type word caps are in the blocked guide.",
+    "submission_system = ScholarOne Manuscripts: verified - https://mc.manuscriptcentral.com/rsmf loads (HTTP 200).",
+    "ISSN 2473-3938 print / 2473-4446 online and publisher Taylor & Francis (Routledge) WebSearch-corroborated.",
+    "data availability statement: T&F house-style places it within the manuscript text, before the References section, under the heading 'Data availability statement' (declarations.order left [] as the full journal-specific ordering is unverified).",
+    "sections {} and word_limits {} intentionally empty - no per-type section order or word cap could be verified from the blocked live guide.",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'custom').",
+    "[schema-required default] references.journal_abbrev defaulted to 'nlm' (guide silent; NLM/Index Medicus abbreviations assumed).",
+    "[schema-required default] references.order defaulted to 'cited' (guide silent).",
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+  ]
+}

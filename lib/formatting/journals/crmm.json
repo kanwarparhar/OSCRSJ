@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Current Reviews in Musculoskeletal Medicine",
+    "slug": "crmm",
+    "issn": "1935-973X (print), 1935-9748 (online)",
+    "publisher": "Springer",
+    "guidelines_url": "https://link.springer.com/journal/12178/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "2fb85b2f6611c9ad0d7a9d9c6ae042c0d0f5dbdda716719c63b5c4c164387062",
+    "source_note": "Live page is Cloudflare-protected: WebFetch returned a 303 redirect to idp.springer.com auth, and the Apify rag-web-browser headless render returned only a 'Client Challenge' interstitial. Encoded from the CURRENT live page rendered in a real headless browser session (Chrome) which passed the Cloudflare challenge. Content is Springer Nature's standard journal submission-guidelines template with the journal-specific 'Types of papers: Reviews and Invited Commentaries'.",
+    "submission_system": null
+  },
+  "article_types": [
+    "review",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 10
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "orcid",
+      "abstract",
+      "keywords",
+      "acknowledgments",
+      "funding",
+      "disclosures"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 4,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": false,
+    "formats": [
+      "eps",
+      "tiff"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": "Fig.",
+    "naming_pattern": "Fig{n}"
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "author_contributions"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Types of papers listed only as 'Reviews and Invited Commentaries'. 'Reviews' -> review; 'Invited Commentaries' -> editorial (no exact 'commentary' enum slot).",
+    "Guide is Springer Nature's standard journal submission-guidelines template; page_size, margins, line_spacing, alignment, first_line_indent are unspecified for this journal -> null.",
+    "Font '10-point Times Roman' is stated as an example ('Use a normal, plain font (e.g., 10-point Times Roman)'), encoded as the recommended font/size.",
+    "Abstract is unstructured, 150-250 words; encoded max_words=250 (upper bound). Applied to the review type.",
+    "Keywords: 'Please provide 4 to 6 keywords' -> required min 4 / max 6; case and separator unstated -> null.",
+    "References: numbered citations in square brackets, numbered in citation order, DOIs included as full links, journal names abbreviated per ISSN LTWA -> style vancouver / in_text bracket / order cited / journal_abbrev nlm / include_doi true.",
+    "et_al_threshold not shown in the live reference examples -> null. (A third-party CSL for this journal implies list 6 then et al for the Springer Basic style, but the live guide does not state a threshold, so left null.)",
+    "Figure DPI is tiered: line art 1200 dpi, halftone/photograph 300 dpi, combination 600 dpi. Single min_dpi set to 300 (photograph floor) - see schema_gaps.",
+    "Figure formats: EPS preferred for vector, TIFF for halftones (MSOffice files also accepted, no enum slot). Figures submitted within the body of the text; separate files only if the manuscript is too large -> separate_files false.",
+    "Tables placement not explicitly stated; defaulted to in_text (tables built with the Word table function and cited in text). Table caption above/below not stated -> caption_position null.",
+    "Declarations placed in a 'Declarations' section before the reference list: Funding, Competing interests, Ethics approval, Consent, Data availability, Author contributions. Competing interests / declarations are mandatory ('submissions that do not include relevant declarations will be returned as incomplete') -> required funding + conflict_of_interest. Acknowledgments go on the (separate) title page.",
+    "Max 3 levels of displayed headings (count limit only; no case/bold/italic rule) -> headings null.",
+    "Double-blind not stated for this journal (guide references single OR double blind generically) -> double_blind false; separate_title_page true because the guide references a 'separate title page' carrying author info, acknowledgments and contribution statements.",
+    "ORCID recommended, not required -> orcid_required false. Cover letter referenced only for re-use disclosures / reviewer suggestions, not mandated -> false.",
+    "Submission system not named in the guide text -> null (Springer journals typically use Editorial Manager, not stated here)."
+  ]
+}

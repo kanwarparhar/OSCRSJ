@@ -1,0 +1,180 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Arthroplasty",
+    "slug": "arthroplasty",
+    "issn": "2524-7948",
+    "publisher": "BMC (part of Springer Nature), affiliated with the Arthroplasty Society in Asia (ASIA)",
+    "guidelines_url": "https://link.springer.com/journal/42836/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "43498ed1b449ab1de6447ec6e041fd368d74a22ed4c468e22b16af47b5adb6ef",
+    "source_note": "Journal migrated from BMC (arthroplasty.biomedcentral.com) to Springer Nature Link (journal 42836); the BMC guide URL 301-redirects to link.springer.com/journal/42836/submission-guidelines. The live Springer page is bot-blocked (Akamai 'Client Challenge') and returned no content even via headless render. Encoded from Wayback archive snapshots of the prior BMC guidelines (content is journal-specific and unchanged by the platform migration): landing https://web.archive.org/web/20251114175758/https://arthroplasty.biomedcentral.com/submission-guidelines (Nov 2025); general formatting https://web.archive.org/web/20250530203500/https://arthroplasty.biomedcentral.com/submission-guidelines/preparing-your-manuscript ; Research https://web.archive.org/web/20250622002716/https://arthroplasty.biomedcentral.com/submission-guidelines/preparing-your-manuscript/research ; Review https://web.archive.org/web/20250622002725/https://arthroplasty.biomedcentral.com/submission-guidelines/preparing-your-manuscript/review . Article-type snapshots are ~12.5 months old (June 2025).",
+    "submission_system": "Snapp (Springer Nature submission portal, submission.springernature.com)"
+  },
+  "article_types": [
+    "original_research",
+    "review"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusions",
+      "Trial registration"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Background",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions"
+    ],
+    "review": [
+      "Background",
+      "Main text",
+      "Conclusions"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "PUBLISHER MIGRATION: journal moved from BMC (arthroplasty.biomedcentral.com) to Springer Nature Link (journal id 42836). This is the BMC-published 'Arthroplasty', official journal of the Arthroplasty Society in Asia — DISTINCT from Elsevier's 'The Journal of Arthroplasty'.",
+    "Live Springer submission-guidelines page is bot-blocked (Akamai 'Client Challenge') and unscrapable even headless; encoded from Wayback archive snapshots of the BMC guide (landing Nov 2025; article-type pages June 2025). BMC/Springer submission content is journal-specific and unchanged by the platform migration.",
+    "Journal also accepts a 'Perspective' (opinion/viewpoint) article type — no clean enum slot, so omitted from article_types.",
+    "et_al_threshold=6 derived from the guide's own Vancouver reference examples (two examples list exactly 6 authors followed by 'et al.'), not from explicit prose. Consistent with the standard Springer Nature Vancouver 'first 6 authors then et al' style.",
+    "in_text citation mark style not explicitly stated in reachable guide — the guide names 'Vancouver' style and gives reference-LIST examples but never specifies superscript vs bracket vs paren for in-text marks; left null. order=cited is inherent to the named Vancouver numbered style.",
+    "line_numbers: guide states 'Include line and page numbering' but does not specify continuous vs per-page; encoded 'continuous' as the standard interpretation. page_numbers.show=true from the same sentence. line_spacing='double' from 'Use double line spacing'. Guide also says 'Do not use page breaks in your manuscript'.",
+    "page_size null: guide references both 'A4 or Letter' for table sizing; no single page size prescribed.",
+    "journal_abbrev=nlm from 'Journal abbreviations follow Index Medicus/MEDLINE'. include_doi=true from reference examples showing DOI form.",
+    "Abstract structure differs by type: Research = Background/Methods/Results/Conclusions (+Trial registration, conditional for RCTs); Review = Background/main body/short Conclusion (unstructured within body). abstract.sections reflects the primary type (Research). Both types cap abstract at 350 words.",
+    "No manuscript word-count limit, reference count limit, figure count or table count limit is stated for any article type (BMC does not restrict length) — all left null.",
+    "Blinding all-false: peer-review-policy page not separately fetched, but the title page (full author names + institutional addresses + corresponding author) is the first section of the single submitted manuscript with no anonymized version required — indicates single-blind review and no separate title-page file.",
+    "figures.separate_files=true: 'Figures ... uploaded in this order', individual figure files <=10 MB. legends_location='in_text': figure titles (<=15 words) and legends (<=300 words) 'should be provided in the main manuscript, not in the graphic file' — exact placement (inline vs dedicated section) unspecified. min_dpi=300 from 'image resolution of approximately 300 dpi ... at the final size'. Figure formats also include BMP, MS Word, PowerPoint, CDX (no enum slot); listed enum subset only.",
+    "tables.placement='in_text': small tables (< one A4/Letter page) placed within the manuscript, larger tables at the end of the text file. caption_position='above' from 'Table titles ... included above the table' (legends underneath). numbering='arabic' from 'Arabic numerals (Table 1, Table 2)'.",
+    "Declarations: all listed subheadings are mandatory ('All manuscripts must contain the following sections ... include the heading and write Not applicable' if not relevant). 'Consent for publication' mapped to patient_consent; 'Competing interests' to conflict_of_interest; 'Availability of data and materials' to data_availability. 'Authors' information' is optional (no enum slot; omitted).",
+    "guidelines_url set to the live Springer canonical URL (where authors are directed now) for freshness re-checks; actual encoding source is the BMC Wayback snapshots named in source_note.",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver')."
+  ]
+}

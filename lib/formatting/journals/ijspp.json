@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "International Journal of Sports Physiology and Performance",
+    "slug": "ijspp",
+    "issn": "1555-0265 (print), 1555-0273 (online)",
+    "publisher": "Human Kinetics, Inc.",
+    "guidelines_url": "https://journals.humankinetics.com/view/journals/ijspp/ijspp-overview.xml?tab_body=author-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "32d4d374c000667064383ebdbdea7480ce77e864415afd5ffec78db4435e4062",
+    "source_note": "Live Human Kinetics page is bot-blocked ('Human Verification' HTTP 405) even via headless render; encoded from Wayback archive snapshot https://web.archive.org/web/20260709070154/https://journals.humankinetics.com/view/journals/ijspp/ijspp-overview.xml?tab_body=author-guidelines (captured 2026-07-09, one day before verified_date).",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "case_report",
+    "case_series",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
+    "line_spacing": "single",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "article_type",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "running_title",
+      "word_count_abstract",
+      "word_count_manuscript",
+      "figure_count",
+      "table_count"
+    ],
+    "running_title_max_chars": 40,
+    "title_max_chars": null,
+    "title_max_words": 25,
+    "authors_degrees": "strip"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Purpose",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 5,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Practical Applications",
+      "Conclusions",
+      "Acknowledgments",
+      "References"
+    ],
+    "case_report": [
+      "Abstract",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Practical Applications",
+      "Conclusions",
+      "Acknowledgments",
+      "References"
+    ],
+    "case_series": [
+      "Abstract",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Practical Applications",
+      "Conclusions",
+      "Acknowledgments",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 30,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 12,
+      "figures_max": 3,
+      "tables_max": 3
+    },
+    "case_series": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 12,
+      "figures_max": 3,
+      "tables_max": 3
+    },
+    "letter": {
+      "manuscript_max_words": 400,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 6,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "jpg",
+      "tif"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [],
+    "required": [
+      "conflict_of_interest",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Encoded from Wayback snapshot (capture 20260709070154, dated 2026-07-09) of the live Author Guidelines tab; live journals.humankinetics.com page is bot-walled ('Human Verification' 405) and did not clear via headless render.",
+    "'Brief Report' is IJSPP's umbrella short-article type explicitly covering case studies (single case or small case series) and detailed technical/analytical reports; mapped to both case_report and case_series with the shared 1500-word / 12-reference limit.",
+    "Brief Report media cap is a COMBINED '3 tables or figures' (total <=3). Schema stores figures_max=3 and tables_max=3 separately; the real constraint is 3 figures+tables combined, not 3 of each.",
+    "Original Investigation reference cap is approximate: guide says '~30 references' / 'usually fewer than 30'; encoded references_max=30.",
+    "Invitation-only types omitted from article_types (not author-submittable): Brief Review (4500 words, 50-100 refs; abstract headings Purpose/Conclusions), Invited Commentary (2000 words), Consensus Statement (5000 words, 100 refs).",
+    "Single-anonymous peer review (reviewer identity concealed from authors; reviewers see author names/affiliations) -> no author blinding required.",
+    "Tables: manuscript page-order places tables last (grouped_end); ScholarOne submission additionally asks tables be uploaded as separate Word files.",
+    "Figure resolution is tiered: 300 dpi for photographs, 600 dpi for line art/graphs/charts/diagrams; min_dpi encoded as 300.",
+    "General/reference style follows AMA Manual of Style (latest edition); example journal citations use NLM-abbreviated journal names.",
+    "Keywords: exactly 5 keywords/phrases not repeating title wording; case and separator unspecified. Title limited to 25 words (no character limit stated); running head <=40 characters incl. spaces; academic degrees must NOT be listed for authors.",
+    "Margins stated only as 'wide' (non-numeric) -> null; page_size not stated -> null; heading case/format not specified -> null.",
+    "Conflict-of-interest disclosure required for all submissions (stated in Methods + cover letter); funding disclosed within Acknowledgments; IRB/ethics-approval statement required in Methods. No single ordered 'declarations' block prescribed, so declarations.order left empty."
+  ]
+}

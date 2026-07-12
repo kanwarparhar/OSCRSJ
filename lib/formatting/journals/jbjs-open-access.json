@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "JBJS Open Access",
+    "slug": "jbjs-open-access",
+    "issn": null,
+    "publisher": "The Journal of Bone & Joint Surgery, Inc. (Wolters Kluwer / Lippincott)",
+    "guidelines_url": "https://www.jbjs.org/oa-ifa.php",
+    "verified_date": "2026-07-12",
+    "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_note": "The live guide at jbjs.org/oa-ifa.php is a JavaScript app shell: a headless render (Apify rag-web-browser) returned an empty <body>. The full JBJS Open Access Instructions for Authors text is served inside an in-page JavaScript content blob (m_content_1 / d_content_0) in the raw HTML, which was fetched directly and extracted. Reference and figure specifics were read from the linked shared JBJS pages jbjs.org/reference-guidelines.php and jbjs.org/guidelines-figures.php.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "narrative_review",
+    "review",
+    "systematic_review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusions",
+      "Level of Evidence"
+    ],
+    "max_words": 325,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "References",
+      "Figure Legends"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 325,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "narrative_review": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "review": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "systematic_review": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 325,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 5,
+      "tables_max": 5
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "tif",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "Figure{n}"
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "conflict_of_interest",
+      "author_contributions",
+      "acknowledgments",
+      "trial_registration"
+    ],
+    "required": [
+      "ethics_approval",
+      "conflict_of_interest",
+      "author_contributions"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Separate OPEN ACCESS title (JBJS OA), NOT the main JBJS American Volume. Guide is the JBJS Open Access Instructions for Authors at jbjs.org/oa-ifa.php (Editorial Manager submission). Shares much JBJS house style but was encoded from ITS own OA guide.",
+    "Article-type mapping onto the shared enum: Randomized Controlled Trial + Observational Study + Basic-Science Study + Survey Study -> original_research (all share a 2500-word limit, <=5 tables/figures total, and a structured abstract). 'Methods, Pilots, and Protocols' also folds into original_research (same 2500 / <=5 caps) but uses a Summary abstract (<=325 words) instead of a structured one. 'AOA Critical Issues in Education' (education/survey research, optional summary abstract) also folds into original_research; noted as a special editorial category. JBJS Review -> narrative_review; Critical Analysis Review -> review; Systematic Review (PRISMA meta-analyses/systematic reviews) -> systematic_review.",
+    "Omitted types with no clean enum slot: none required beyond the notes above. The OA guide table lists NO author-submittable case report, case series, letter/correspondence, technical/surgical-technique, or editorial type (case reports go to the sibling JBJS Case Connector), so case_report/case_series/technical_note/letter/editorial are absent.",
+    "figures_max=5 and tables_max=5 encode the journal's stated cap as an upper bound per field, but the guide actually specifies a COMBINED limit of '<=5 tables and/or figures total' for every article type. The schema has no combined field; the engine should treat these as a shared budget of 5, not independent maxima of 5 each.",
+    "Word-count rule (guide): 'Manuscripts should adhere to the following word count limits ... including the abstract but excluding the references and figure legends.'",
+    "Abstract: scientific studies use a Structured Abstract of 5 paragraphs, no more than 325 words, headings Background / Methods / Results / Conclusions / Level of Evidence (the guide states 'Level of Evidence or Clinical Relevance' for the last heading). The 325-word cap rises to 350 words for clinical studies that must include summary race/ethnicity demographic data. Systematic Reviews use the same structured abstract. Methods/Pilots/Protocols use a Summary Abstract (<=325 words). JBJS Review and Critical Analysis Review instead use a bulleted abstract of 3-5 Take-Home Points (no separate word cap stated) -> abstract_max_words null for those types.",
+    "sections encoded ONLY for original_research (the guide's clearly prescribed IMRaD order for RCT/Observational/Basic-Science/Survey studies: Structured Abstract, Body[Introduction, Materials and Methods, Results, Discussion], References, Figure legends). Review/systematic-review bodies are free-form ('use appropriate subheadings as needed') with the top-level order Take-Home-Points-or-Structured-Abstract -> Body -> References -> Figure legends; not encoded as prescribed headings.",
+    "Blinding: 'All articles submitted to JBJS OA undergo a double-blinded peer review process' -> double_blind true. The Title Page (article title, author names + academic degrees, institutions, affiliations, corresponding author name + email) is listed as a distinct required item separate from the Manuscript Text -> separate_title_page true. The guide gives no explicit instruction for authors to strip identifiers from the body or metadata -> scrub_body_identifiers and scrub_metadata false (traditional JBJS practice blinds in-house).",
+    "Layout: the OA Instructions for Authors do NOT state font family, font size, line spacing, margins, page size, page numbers, running head, or line numbering (unlike the main JBJS New Submission Checklist, which is a different journal's document and was NOT used here). All left null; line_numbers set to 'none' because the enum has no null option and the OA guide specifies no line numbering.",
+    "References: 'in PubMed/Index Medicus format' with Index-Medicus-abbreviated journal names -> style nlm, journal_abbrev nlm. 'Number the references according to the order of citation in the text (not alphabetically)' -> order cited. 'journal citations must include all authors (not \"et al.\")' -> et_al_threshold null (all authors always listed; no et al.). 'JBJS does not require DOIs or epub dates' -> include_doi false. in_text set to 'superscript' to match JBJS published house style (the enum has no null); the guide states citation numbering/order but NOT the in-text marker glyph, so treat in_text as unverified/inferred. Papers on preprint servers may not be used as references.",
+    "Figures (jbjs.org/guidelines-figures.php): 'TIFF or EPS only. No JPG, no figures inserted into Word.' -> separate_files true, formats [tiff, tif, eps]. Resolution 300 ppi for halftone/color, 1200 ppi for line art -> min_dpi 300 (base; the 1200 line-art tier is not representable). Files named by figure number (e.g., Figure1.tif, Figure2.eps) -> naming_pattern Figure{n}. Figure legends go at the end of the manuscript text file, after the References section -> legends_location figure_legends_section. Figures cited in text as 'Figure 1' -> callout_style 'Figure'.",
+    "Tables: 'submitted in Word or Excel format with a descriptive title'; file names contain the table number (e.g., Table 1.docx) -> placement separate_file, numbering arabic. Caption above/below not stated -> caption_position null.",
+    "Declarations: required set = ethics_approval (IRB approval letter for clinical studies / animal committee approval for animal studies), conflict_of_interest (ICMJE Conflict of Interest form), author_contributions (each author must indicate CRediT contributor roles in Editorial Manager). trial_registration is required for RCTs only (public trials registry prior to enrollment) and acknowledgments is used for non-author/one-section contributors -> both in order but not in required. Most declarations are collected via Editorial Manager forms/screens rather than a prescribed in-manuscript declaration-section order.",
+    "misc: 'it will not be possible to submit an article without such an identifier for each author' -> orcid_required true. No cover letter is mentioned -> cover_letter_required false (unstated). Bulleted Take-Home Points are required for JBJS Review / Critical Analysis Review abstracts but that is an abstract format, not a separate highlights block -> highlights_required null. title_case not stated -> null.",
+    "ISSN not stated on the guide page -> null. APC (not schema-encoded): $2,400 USD on acceptance; Research4Life waivers for LMIC authors; CC BY-NC-ND 4.0 or CC BY 4.0 license, authors retain copyright."
+  ]
+}

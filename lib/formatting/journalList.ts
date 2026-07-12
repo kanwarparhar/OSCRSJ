@@ -27,8 +27,20 @@ import kssta from './journals/kssta.json'
 import biologyOfSport from './journals/biology-of-sport.json'
 import journalOfOrthopaedicTranslation from './journals/journal-of-orthopaedic-translation.json'
 import journalOfArthroplasty from './journals/journal-of-arthroplasty.json'
+import scienceMedicineFootball from './journals/science-medicine-football.json'
+import ijspp from './journals/ijspp.json'
+import theSpineJournal from './journals/the-spine-journal.json'
+import ksrr from './journals/ksrr.json'
 import jses from './journals/jses.json'
+import jbjsOpenAccess from './journals/jbjs-open-access.json'
 import bjj from './journals/bjj.json'
+import efortOpenReviews from './journals/efort-open-reviews.json'
+import crmm from './journals/crmm.json'
+import skeletalMuscle from './journals/skeletal-muscle.json'
+import arthroplasty from './journals/arthroplasty.json'
+import sjmss from './journals/sjmss.json'
+import jsams from './journals/jsams.json'
+import essr from './journals/essr.json'
 import jbjs from './journals/jbjs.json'
 import spine from './journals/spine.json'
 import fai from './journals/fai.json'
@@ -41,7 +53,9 @@ import jocr from './journals/jocr.json'
 const RAW: unknown[] = [
   oscrsj, bjsm, sportsMedicine, jshs, jcsm, osteoarthritisCartilage, jbmr, ajsm,
   arthroscopy, sportsMedicineOpen, kssta, biologyOfSport, journalOfOrthopaedicTranslation,
-  journalOfArthroplasty, jses, bjj, jbjs, spine, fai, corr, jhs, jot, injury, jocr,
+  journalOfArthroplasty, scienceMedicineFootball, ijspp, theSpineJournal, ksrr, jses,
+  jbjsOpenAccess, bjj, efortOpenReviews, crmm, skeletalMuscle, arthroplasty, sjmss, jsams,
+  essr, jbjs, spine, fai, corr, jhs, jot, injury, jocr,
 ]
 
 /** All journal rules, validated against the schema, OSCRSJ first then by SJR rank. */

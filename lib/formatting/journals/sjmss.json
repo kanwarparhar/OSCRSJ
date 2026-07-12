@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Scandinavian Journal of Medicine & Science in Sports",
+    "slug": "sjmss",
+    "issn": "1600-0838",
+    "publisher": "Wiley",
+    "guidelines_url": "https://onlinelibrary.wiley.com/page/journal/16000838/homepage/forauthors.html",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "Live Wiley page is Cloudflare-blocked (WebFetch 403 + Apify headless render 403). Encoded from Wayback archive snapshot http://web.archive.org/web/20250719131957/https://onlinelibrary.wiley.com/page/journal/16000838/homepage/ForAuthors.html (captured 2025-07-19, within 12 months; guide footer 'Updated 15 February 2021'). ISSN derived from canonical URL slug 16000838.",
+    "submission_system": "Research Exchange (Wiley Authors Submission / atyponrex)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "orcid",
+      "keywords",
+      "acknowledgments",
+      "funding",
+      "disclosures",
+      "ethics_statement",
+      "data_availability"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 8,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "Perspective"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 120,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 600,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": false,
+    "formats": [],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "data_availability",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "data_availability"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Encoded from Wayback snapshot 2025-07-19; live Wiley page Cloudflare-blocked to WebFetch and Apify headless render. Guide footer: 'Author Guidelines Updated 15 February 2021'.",
+    "Free Format submission: journal prescribes no font, size, line spacing, margins, page size, or line numbers -> all layout values null/none.",
+    "Consensus Statement category omitted (no clean article_types enum slot).",
+    "Original Article length is PAGE-based, not word-based: page charges apply to articles exceeding 8 pages; any article exceeding 6 final published pages charged GBP 125/page (a page ~5,400 characters incl. spaces, excl. tables/figures). Cannot be expressed as manuscript_max_words.",
+    "Combined figure/table caps not representable in separate figures_max/tables_max: Original Article = 8 figures AND/OR tables total (combined); Review = 'keep to a minimum' (no number); Letter = either 1 Figure OR 1 Table (mutually exclusive). All set null; combined caps documented here.",
+    "Mandatory 'Perspective' paragraph (<=200 words) at end of Discussion for Original Article and Review — no schema field.",
+    "References: AMA style, superscript Arabic numerals, numbered in order of appearance; journal names abbreviated NLM-style (sample: 'J Comp Neurol'); sample refs omit DOI so include_doi=false; et al. threshold not stated.",
+    "Peer review is single-blind -> double_blind false; no anonymization/blinded file required.",
+    "Figure formats and DPI live in a linked 'electronic artwork guidelines' PDF (media.wiley.com) not fetched; for peer review 'a wide variety of formats, sizes, and resolutions are accepted' -> formats [] and min_dpi null.",
+    "Figure legends required BOTH beneath each image at upload AND as a complete list in the text -> legends_location=figure_legends_section.",
+    "tables placement: main-document order lists tables after references (grouped_end); free format allows single-file embedding at initial submission, but figures/tables MUST be separate files at revision stage.",
+    "figures separate_files=false: 'Parts of the Manuscript' lists figures as a separate part, but Free Format explicitly allows a single document at initial submission; separate files required only at revision.",
+    "declarations required=conflict_of_interest (must state even if none) + data_availability (required for all accepted manuscripts); funding/ethics_approval/patient_consent/trial_registration are conditional. Keywords max also stated as 'maximum of 8'.",
+    "ISSN 1600-0838 (online) derived from canonical URL slug 16000838; not stated in guide prose."
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "The Spine Journal",
+    "slug": "the-spine-journal",
+    "issn": "1529-9430",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/the-spine-journal/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "e720e611693d7a5b8ca76369b2581e254d27837e8a3a6f833a0b958733b00fd0",
+    "source_note": "Live current guide retrieved via Apify rag-web-browser headless render (WebFetch returned HTTP 403 from ScienceDirect bot-block); full clean current guide text obtained (HTTP 200). Official journal of the North American Spine Society (NASS); distinct from 'Spine' (LWW). URL: https://www.sciencedirect.com/journal/the-spine-journal/publish/guide-for-authors",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "narrative_review",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "per_page",
+    "page_numbers": {
+      "show": true,
+      "position": "bottom-right"
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "acknowledgments",
+      "disclosures"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background context",
+      "Purpose",
+      "Design",
+      "Patient sample",
+      "Outcome measures",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 6,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": 50,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": 5
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": "before",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": "Figure_{n}"
+  },
+  "declarations": {
+    "order": [],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "author_contributions",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "case_report and case_series OMITTED: article-types section states 'TSJ is not currently seeking case reports, technical reports, or small case series, with rare exceptions.' (Uncontrolled Case Series is listed only as reporting-guideline category #7 under Clinical Studies.)",
+    "technical_note OMITTED (conservative): Aims-and-scope lists 'technical notes' but article-types section says 'not currently seeking... technical reports' — contradictory/ambiguous.",
+    "Research Letters (abbreviated original research; <=700 words, <=10 references, 1-2 figures/tables, max 6 authors, no abstract) folded into original_research; not separately keyed.",
+    "editorial slot conflates Editorials (Board-reserved), Commentaries (~1500 words excl. tables/figures/refs, references limited to 30), and Perspectives; no single word cap, so editorial omitted from word_limits/sections.",
+    "line_spacing: guide states '1.5 or double line spacing' — encoded 'double'; 1.5 is also acceptable.",
+    "Clinical Studies word range is 1500-4500 words (~6-12 double-spaced pages); schema holds only the max (4500). systematic_review is a sub-category of Clinical Studies so inherits the same range.",
+    "Figure DPI is tiered: 300 dpi photographs/halftones, 500 dpi line/halftone combinations, 1000 dpi bitmapped line drawings; schema holds one value so min_dpi=300 (baseline).",
+    "journal_abbrev: guide requires LTWA (List of Title Word Abbreviations) journal-name abbreviation; encoded as 'nlm' (abbreviated form) as closest enum.",
+    "Reference formatting not strictly required at submission ('any consistent style'); journal Vancouver/ICMJE numbered square-bracket style applied at proof stage. Encoded the journal's stated proof style.",
+    "Tables placement: 'next to the relevant text or on a separate page(s) at the end' — both allowed within the manuscript file; encoded in_text. Tables are included IN the anonymized manuscript.",
+    "Basic Science Papers require a different structured abstract (background context, purpose, study design, methods, results, conclusions, clinical significance) than Clinical Studies' 8 subheadings; abstract.sections encodes the Clinical Studies (primary type) set.",
+    "declarations.order left empty: guide does not prescribe a formatting order. Generative-AI-use disclosure, if any, goes in a new section immediately before the reference list.",
+    "declarations.required: funding + conflict_of_interest + author_contributions (CRediT) are unconditional; ethics_approval, patient_consent, trial_registration are required conditionally (human-participant studies / registered clinical trials).",
+    "scrub_metadata set false (conservative): guide requires the anonymized manuscript and supplementary files to contain no identifying info, but is silent on scrubbing document/file metadata specifically.",
+    "Submission fee applies: $50 for NASS members, $125 for non-members (paid at submission for unsolicited manuscripts).",
+    "Highlights encouraged (not required): 3-5 bullet points, max 85 characters each incl. spaces, submitted as a separate file.",
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored)."
+  ]
+}
