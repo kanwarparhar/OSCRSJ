@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Medicine & Science in Sports & Exercise",
+    "slug": "msse",
+    "issn": "0195-9131",
+    "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins), for the American College of Sports Medicine (ACSM)",
+    "guidelines_url": "https://edmgr.ovid.com/msse/accounts/ifauth.htm",
+    "verified_date": "2026-07-12",
+    "source_hash": "bdf8d3876535f9f77c1be67c9eee9a439a75cd58a9573cf327cfc8c7c2a54b35",
+    "source_note": "Live presentation page journals.lww.com/acsm-msse/pages/informationforauthors.aspx returned HTTP 402; encoded from the canonical Editorial Manager Instructions for Authors page https://edmgr.ovid.com/msse/accounts/ifauth.htm via headless render (Apify rag-web-browser), which returned the full current guide (HTTP 200).",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "case_report",
+    "review",
+    "systematic_review",
+    "technical_note",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times Roman",
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "running_title",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": 45,
+    "title_max_chars": 150,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Purpose",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 275,
+    "keywords": {
+      "required": true,
+      "min": 4,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Acknowledgments",
+      "Conflict of Interest",
+      "References"
+    ],
+    "case_report": [
+      "Introduction",
+      "Case Report",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 275,
+      "references_min": null,
+      "references_max": 70,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 8,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "Figure {n}"
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest",
+      "data_availability"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher is Wolters Kluwer/LWW on behalf of ACSM; no migration found. Canonical guide is the Editorial Manager ifauth.htm page (journals.lww.com presentation page 402-blocked, edmgr.ovid.com rendered clean via headless).",
+    "Article-type mapping: Original Investigations->original_research; Clinical Investigations (subtype of original research, no separate slot); Case Studies->case_report; Brief Reviews->review (narrative expert reviews); Systematic and Meta-analytic Reviews->systematic_review; Methodological Advances->technical_note; Letters to the Editor-in-Chief->letter. Omitted (no clean slot): Symposium Proceedings (invited, <=20 pages), Contrasting Perspectives (invited Pro/Con 1500 words each).",
+    "SCHEMA GAP - combined figure+table cap: 'No Sweat Submissions' limits figures and tables to EIGHT (8) TOTAL combined at initial submission (e.g., 6 figures + 2 tables), not 8 of each; the per-type figures_max/tables_max fields cannot express a combined cap, so both left null.",
+    "SCHEMA GAP - figure DPI is tiered and internally inconsistent: Order-of-Manuscript figures bullet says 'at least 1200 dpi'; Technical figures section says black-and-white line art 900-1200 dpi, combination/grayscale 600-900 dpi, photographs/CT/radiographs at least 300 dpi. min_dpi set to 300 (lowest stated floor, for photographs); higher tiers apply to line art and combination art.",
+    "SCHEMA GAP - reviews use a PAGE limit not a word limit: Brief Reviews max 30 double-spaced pages excluding references; Symposium papers <=20 pages. manuscript_max_words left null for review.",
+    "SCHEMA GAP - et al truncation: guide says list ALL authors if fewer than 7; when 7 or more authors, list only the FIRST THREE then et al. et_al_threshold set to 6 (truncation triggers at 7+ authors), but truncated lists show first 3 authors, not first 6.",
+    "references_max is per-type: 70 for original investigations, 100 for review articles (applied to review and systematic_review), 8 for letters; references.max_count left null because there is no single journal-wide cap.",
+    "include_doi set false: the canonical print journal-article reference example carries no DOI; DOIs appear only in the e-journal and preprint reference examples (NLM/Citing Medicine style, Index Medicus abbreviations).",
+    "In-text citations are baseline (parenthetical) numeric, e.g. (14,15), explicitly NOT superscript; references numbered in order of citation.",
+    "page_size left null: guide specifies 1-inch margins all sides and Times Roman 12pt but never states page size (US-based journal; not inferred per accuracy rules).",
+    "Font/spacing/margins/line-numbers are drawn from the 'Revised Manuscripts' formatting requirement (Times Roman 12pt, 1\" margins all sides, double-spaced, continuous line numbers); initial 'No Sweat Submissions' are format-flexible but must include line numbers and title page + abstract + IMRAD.",
+    "Declarations: 'Conflicts of Interest and Source of Funding' section placed after Acknowledgments and must contain two ACSM disclaimers (results presented honestly / no ACSM endorsement); Data Availability Statement required and verified as a condition of publication; ethics-committee approval and informed-consent statements are mandatory but placed in the Methods section (marked required though not in the end-of-paper declarations block; conditional on human/animal studies).",
+    "Abstract: 275-word limit, no reference citations permitted, structured (Purpose/Methods/Results/Conclusions). Keywords: 4-6, alphabetical order, must not repeat title terms; letter case and separator unspecified.",
+    "Title max 150 characters including spaces; running (short) title max 45 characters including spaces.",
+    "Tables uploaded as separate Word files (Insert Table feature, legend inside file); figures uploaded as separate .tif or .eps files (jpeg/gif/PDF/Word-embedded not accepted); figure legends listed together on a page following the references section."
+  ]
+}

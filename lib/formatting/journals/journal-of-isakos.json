@@ -1,0 +1,251 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of ISAKOS",
+    "slug": "journal-of-isakos",
+    "issn": "2059-7754",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/journal-of-isakos/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "36e2e1b06139ce3e5b46e05ab10775fa0374e73dd0ef24303685a00e55fbd19c",
+    "source_note": "Live current guide obtained via Apify rag-web-browser headless render. WebFetch on the ScienceDirect URL returned HTTP 403 and a first headless attempt on the ScienceDirect URL was also bot-blocked (403); the headless render of https://www.elsevier.com/journals/journal-of-isakos/2059-7754/guide-for-authors succeeded (HTTP 200) and redirected to the canonical ScienceDirect guide, yielding the full clean current guide text. Official open-access journal of ISAKOS (International Society of Arthroscopy, Knee Surgery and Orthopaedic Sports Medicine); Medline-indexed; continuous online / Article-Based Publishing since 2024. Rendered URL: https://www.elsevier.com/journals/journal-of-isakos/2059-7754/guide-for-authors",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "review",
+    "case_report",
+    "technical_note",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "upper",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "acknowledgments",
+      "funding"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "strip"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Introduction/Objectives",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 6,
+      "case": "lower",
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "INTRODUCTION",
+      "METHODS",
+      "RESULTS",
+      "DISCUSSION",
+      "CONCLUSION"
+    ],
+    "systematic_review": [
+      "INTRODUCTION",
+      "METHODS",
+      "RESULTS",
+      "DISCUSSION",
+      "CONCLUSION"
+    ],
+    "case_report": [
+      "INTRODUCTION",
+      "THE CASE",
+      "DISCUSSION"
+    ],
+    "technical_note": [
+      "INTRODUCTION",
+      "THE TECHNIQUE",
+      "CONCLUSION AND FUTURE PERSPECTIVES"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 50,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 450,
+      "references_min": 75,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 30,
+      "figures_max": null,
+      "tables_max": 3
+    },
+    "technical_note": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": 200,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 15,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 1200,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "bracket",
+    "in_text_punctuation": "before",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "Figure {n}"
+  },
+  "declarations": {
+    "order": [
+      "author_contributions",
+      "acknowledgments",
+      "funding"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": "sentence"
+  },
+  "encoding_notes": [
+    "Peer review is SINGLE-blind ('This journal operates using a single-blind review process'), so double_blind=false. Despite single-blind, the guide requires a separate title page AND requires the ethics-board approval statement in Methods to have 'the institution name and application number blinded' — scrub_body_identifiers=true is encoded specifically for that ethics-institution blinding (the manuscript file otherwise carries no author names, which live on the separately uploaded title page).",
+    "scrub_metadata=false: guide is silent on scrubbing document/file metadata.",
+    "Reference style: LIST format follows AMA Manual of Style 11th Edition (mandated), BUT in-text citation is numbered SQUARE BRACKETS placed BEFORE the period ('Indicate references by number(s) in square brackets in line with the text, placed before the period'; checklist: 'square bracket at the end of each sentence (but before the period) (i.e., [1-3].)'). Encoded style=ama, in_text=bracket, in_text_punctuation=before.",
+    "et_al_threshold=6 evidenced by the guide's own reference examples: one journal example lists 6 authors in full (Moore Y, Shotton E, Brown R, Gremmel J, Lindsey S, Pankey J) while another uses 'et al' after 3 authors — consistent with AMA 11th (list all if <=6 authors; first 3 + et al if >6).",
+    "journal_abbrev=nlm: guide requires journal names abbreviated per the List of Title Word Abbreviations (LTWA) / NLM uniform requirements.",
+    "include_doi=true: 'Use of the DOI or PMID is required' for journal references.",
+    "Font/family/size not specified for the manuscript text (page_size and margins also unspecified). The 'Arial/Courier/Times New Roman/Symbol' guidance in the guide applies only to ELECTRONIC ARTWORK/illustrations, not manuscript body text — left null to avoid fabrication.",
+    "alignment=left: checklist says 'do not use the word processor's options to justify text or to hyphenate words.'",
+    "line_numbers=continuous: 'sequential line numbering' required.",
+    "first_line_indent=null: paragraphs may be denoted 'either using an extra space or indent' (optional, not mandated).",
+    "layout.headings encodes the main body section headings only (all UPPER CASE, bold — 'INTRODUCTION, METHODS, RESULTS, DISCUSSION, CONCLUSION ... all upper case, bold font'). Abstract subheadings are formatted differently (Title Case, italic, followed by a colon) and are captured in abstract.sections.",
+    "Abstract structure/limits vary by article type: original_research structured 350w (Introduction/Objectives, Methods, Results, Conclusion — encoded as the primary type); systematic_review structured 450w (Importance, Aim or Objective, Evidence Review, Findings, Conclusion and Relevance); case_report unstructured 350w; technical_note unstructured 200w; SOTA/Current-Concepts/consensus/classic unstructured 350w; letter/editorial no abstract. abstract.* holds the original_research (primary type) values.",
+    "'review' collapses two distinct narrative-review sub-types with DIFFERENT caps: State-of-the-Art (SOTA) Review = ~6,000 words / up to 100 references; Current Concepts Review = ~2,500 words / up to 50 references / tables+figures limited to 8 (combined). Because they conflict, review.word_limits leaves manuscript_max_words and references_max NULL and encodes only the shared abstract cap (350w). Both sub-types are unstructured 350-word abstracts.",
+    "COMBINED figure+table caps (schema holds figures_max/tables_max separately, so left NULL and documented here): original_research 'maximum number of tables and/or figures is 6' (combined); Current Concepts (under 'review') 'number of tables and figures is limited to eight' (combined); consensus statement 'maximum number of tables and/or figures is six' (combined, but consensus is omitted from article_types).",
+    "case_report caps are separate (not combined): 'maximum number of tables is three'; figures 'limited to the number that is logically required' (no numeric cap) -> tables_max=3, figures_max=null.",
+    "editorial: 300-1,200 words (schema holds the max only, 1200); invited-only ('MUST BE INVITED'); no abstract; references 'as many as possible from that particular issue' (no numeric max). Included because a clean enum slot exists; note it is not an open-submission type.",
+    "Article types OMITTED for lack of a clean enum slot: CONSENSUS STATEMENT (~6,000 words / up to 100 refs / structured 350w abstract / combined fig+table <=6) and THE CLASSIC (invited-only historical review, ~4,500-5,000 words / up to 100 refs).",
+    "SOTA and Current Concepts both mapped to 'review' per the given article-type mapping (state-of-the-art/current-concepts -> review); their section structures are descriptive rather than a fixed heading order, so no sections entry is encoded for 'review'.",
+    "declarations: Declaration of competing interest is MANDATORY even when none ('A competing interest statement is provided in the Declaration form, even if the authors have no competing interests to declare') and is uploaded as a separate Elsevier declarations DOCX form (declarations.elsevier.com), not placed on the title page. Funding and Authorship contributions are mandatory and appear on the title page; Acknowledgements on the title page. Ethics approval, patient consent, and trial registration are required CONDITIONALLY (human/animal studies; case reports/identifiable patients; registered clinical trials). declarations.order reflects the title-page order (Authorship contributions -> Acknowledgements -> Funding).",
+    "Declaration of Generative AI in the writing process must be a bold-headed section at the END of the manuscript file, before the References list — no schema slot for it (not in the declarations enum); noted here.",
+    "keywords: 'maximum of six keywords', lowercase except proper nouns ('Do not capitalize any keyword unless it is a proper noun') -> case=lower; USA spelling; heading 'Keywords:' (Title Case, italic); separator not specified (null); no minimum stated (min=null). Keywords live in the MANUSCRIPT (after abstract), not on the title page.",
+    "figures.formats limited to those the guide lists (EPS or PDF for vector; TIFF or JPEG for photographs/line/combination). PNG is NOT listed as accepted and the guide explicitly bans GIF/BMP/PICT/WPG. min_dpi is TIERED: 300 dpi color/grayscale photographs (halftones), 500 dpi bitmapped line/half-tone combinations, 1000 dpi bitmapped pure line drawings — min_dpi=300 encodes the baseline (halftone) tier.",
+    "tables.placement=grouped_end: 'Tables must be provided in order they are referenced ... at the end of the manuscript, following the References. Each table must start on a separate page.' Tables are included in the manuscript file (as editable text, no images). caption_position=above inferred from the title ('Table X.') vs abbreviations defined 'as a footnote at the bottom (and outside) of the table.'",
+    "callout_style=Figure and title_case=sentence are explicit: 'Figure and Table are used (Title Case, bold font) and not figure/Fig/Fig.'; title 'Only capitalize the first word of the title and any proper nouns.'",
+    "orcid_required, cover_letter_required, highlights_required all false: none are mentioned/required in the guide. Note: article-type-specific mandatory TEXT BOXES (e.g., 'What are the new findings?') exist but are distinct from Elsevier 'Highlights' and are not encoded as highlights.",
+    "Clinical trials MUST be registered at or before onset of patient enrollment (ICMJE); the trial registration number goes at the end of the abstract. Level of Evidence must follow the abstract for most types.",
+    "Case reports/case series: max 4 authors; CARE checklist required. Systematic reviews: PRISMA guidelines + PRISMA checklist required."
+  ]
+}

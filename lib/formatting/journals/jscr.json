@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Strength and Conditioning Research",
+    "slug": "jscr",
+    "issn": null,
+    "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins), for the National Strength and Conditioning Association (NSCA)",
+    "guidelines_url": "https://edmgr.ovid.com/jscr/accounts/ifauth.htm",
+    "verified_date": "2026-07-12",
+    "source_hash": "139942207808e094c454d3b8c8046f97c83286fd99d1570b365e05fb0fd69e94",
+    "source_note": "Encoded from the live canonical Instructions for Authors on the Ovid/Editorial Manager site via Apify rag-web-browser headless render (HTTP 200); WebFetch on the same URL returned 402. JSCR is the official research journal of the NSCA, published by Wolters Kluwer/LWW; journals.lww.com/nsca-jscr is a presentation page and the canonical IFA lives at https://edmgr.ovid.com/jscr/accounts/ifauth.htm",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "narrative_review",
+    "technical_note",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": true,
+      "position": "top-right"
+    },
+    "running_head": {
+      "show": true,
+      "position": "top-right"
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "upper",
+        "bold": false,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 2,
+        "case": "title",
+        "bold": false,
+        "italic": false,
+        "numbered": false
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "funding"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Practical Applications",
+      "Acknowledgments",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 60,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 400,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "author_contributions"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "TIER_A live-clean: canonical IFA at edmgr.ovid.com/jscr/accounts/ifauth.htm rendered headless via Apify rag-web-browser, HTTP 200; WebFetch on the same URL 402'd. Publisher is Wolters Kluwer/LWW (official research journal of the NSCA); no publisher migration.",
+    "Article-type mapping: 'original investigations'->original_research; 'systematic reviews' and 'meta-analyses'->systematic_review; 'narrative (and meta-narrative) reviews'->narrative_review; 'technical and methodological reports'->technical_note; 'Manuscript Clarifications' (400-word post-publication correspondence posing questions to authors)->letter.",
+    "Research notes ('a brief research study ~1500-2000 words ... formatted identical to an original study': Abstract, Introduction, Methods, Results, Discussion, Practical Applications, References, with limited tables/figures/references) share the original_research structure and are NOT encoded as a separate type (no enum slot).",
+    "Omitted with no clean enum slot: Symposia (a group of articles by different authors addressing an issue from various perspectives).",
+    "Word limits: guide explicitly states 'There are no word limitations to original studies and reviews' and 'There is no word limit to the reviews'; manuscript_max_words=null for original_research/systematic_review/narrative_review. Only stated numeric length cap is the 400-word Manuscript Clarification (encoded as letter).",
+    "SCHEMA GAP — Practical Applications sub-section is capped at 350 words ('This section should be limited to 350 words or less'); no field for a per-section cap, noted here.",
+    "references.style='custom': NSCA house style — references are ALPHABETIZED by first-author surname AND numbered (order='alphabetical'), cited in text as parenthetical numbers e.g. (4,9). Format 'Author AB, Author CD. Title. Journal vol: pages, year.' with NLM-abbreviated, italicized journal titles (e.g. 'J Strength Cond Res'). Does not match standard Vancouver (cited-order) or AMA; encoded custom.",
+    "references.et_al_threshold SCHEMA GAP: guide rule is 'For journal entries with 6 or more co-authors, please list the first 3 names followed by et al.' i.e. list ALL authors when 5 or fewer, truncate to first 3 + et al. when 6+. The single-int field cannot hold both the 6-author trigger and the keep-3 count; encoded 3 (the kept count / JSCR-distinctive 'first 3 et al.').",
+    "references_max=60 for original_research reflects 'please limit the number of references to fewer than 60 or explain why more are necessary' (i.e. <60); reviews have no stated reference cap (null). references.max_count left null as the cap is type-specific.",
+    "layout: 'minimum of 1-inch margins' -> 25.4 mm all sides (stated as a minimum). Manuscripts 'double-spaced with an additional space between paragraphs' -> double. 'page numbers in the upper right corner next to the running head' -> running_head + page_numbers both top-right.",
+    "layout gaps: font family and size NOT specified in the guide -> null/null. page_size not specified -> null (US journal but not stated). alignment not specified -> null. first_line_indent not specified -> null. Guide does NOT mention manuscript line numbers -> line_numbers='none' (no null option in enum; guide silent).",
+    "headings: level-1 text sections are ALL CAPS and in exact order — 'titles in ALL CAPS (i.e. INTRODUCTION, METHODS, RESULTS, DISCUSSION, PRACTICAL APPLICATIONS, ACKNOWLEDGMENTS, and REFERENCES) in this exact order'. Level-2 METHODS subheadings are prescribed in order: 'Experimental Approach to the Problem', 'Subjects', 'Procedures', 'Statistical Analyses' (encoded case='title' from the quoted phrasing). bold/italic for headings NOT specified -> encoded false (unstated).",
+    "abstract: unstructured — 'an abstract with a limit of 250 words ... The abstract should have sentences (no headings)' covering purpose, brief methods, results, conclusions, practical applications, plus a stated significance level (e.g. p<=0.05). structured=false, sections=null, max_words=250.",
+    "keywords: '3 - 6 key words not used in the title' -> required min 3, max 6; case/separator unspecified -> null.",
+    "blinding: double-blind peer review (occasionally single-blind if a Senior Associate Editor must review). A full Title Page (identifying) plus a separate 'Blind Title Page' with only the manuscript title; 'Do not place identifying information in the Acknowledgment portion of the paper or anywhere else in the manuscript' -> separate_title_page + scrub_body_identifiers true. Document/file metadata scrubbing not explicitly mentioned -> scrub_metadata=false (unstated).",
+    "title_page.elements from the 'Title Page' item: manuscript title, brief running head, laboratory(s), authors' full names with middle initials, department(s)/institution(s), corresponding author full mailing address incl. phone/fax/email, and disclosure of funding (NIH/Wellcome/HHMI/other). No abstract/keywords/word-counts/article-type/ORCID on the title page. authors_degrees not addressed ('full names spelled out with middle initials') -> null.",
+    "tables: 'Tables must be double-spaced on separate sheets and include a brief title'; 'Table files must be MADE in Word NOT copied into Word'; cited in text with 'Table 1 about here' callouts -> placement=grouped_end, numbering=arabic. Caption/title position (above vs below) not explicitly stated -> null.",
+    "figures: submitted as separate files, one figure per separate page ('One set of figures should accompany each manuscript'). Accepted print formats TIFF or EPS (also native .psd/.ai/.ppt/.qxd which have no enum slot). DPI tiered: images min 300 ppi, line art 1200 ppi -> min_dpi=300 (photograph floor). Figure legends on a separate page -> figure_legends_section. Callouts 'Figure 1 about here' -> callout_style='Figure'.",
+    "declarations: Acknowledgments section (section 6, before References) bundles: (1) disclose professional relationships/conflict of interest, (2) cite specific grant support/funding, plus an NSCA non-endorsement statement, and optionally individual author contributions ('may be listed here'). Ethics/IRB approval + informed consent required in the Methods/'Subjects' subsection ('the manuscript will not be considered for publication' otherwise) -> required includes ethics_approval. Trial registration 'recommended' and data sharing 'recommended' (not mandatory) -> not encoded as required. Patient consent / photo release conditional on identifiable subjects -> not always-required.",
+    "misc: cover letter required (must include the originality statement + corresponding-author contact). ORCID not mentioned -> orcid_required=false. No Highlights -> highlights_required=false. Article title case not specified -> title_case=null.",
+    "identity.issn: not stated anywhere in the guide -> null (not inferred from memory)."
+  ]
+}

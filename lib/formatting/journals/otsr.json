@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Orthopaedics & Traumatology: Surgery & Research",
+    "slug": "otsr",
+    "issn": "1877-0568",
+    "publisher": "Elsevier Masson",
+    "guidelines_url": "https://www.em-consulte.com/getInfoProduit/OTSR/instructionsAuteurs/OTSR.pdf",
+    "verified_date": "2026-07-12",
+    "source_hash": "63965aee6fe57e7f1b195228886304c1aeaf802dfdbca8bc2ceb820be6a15db1",
+    "source_note": "ScienceDirect guide-for-authors page is a thin JS shell that only links out to the authoritative Author Guidelines PDF hosted on em-consulte.com (Elsevier Masson). Encoded from that PDF: https://www.em-consulte.com/getInfoProduit/OTSR/instructionsAuteurs/OTSR.pdf (guide 'Last update: November 2022'). Official journal of SoFCOT; bilingual with Revue de Chirurgie Orthopedique et Traumatologique.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "technical_note",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Hypothesis",
+      "Patients and Methods",
+      "Results",
+      "Discussion",
+      "Level of Evidence"
+    ],
+    "max_words": 500,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Patients and Methods",
+      "Results",
+      "Discussion",
+      "Conclusion"
+    ],
+    "review": [
+      "Introduction",
+      "Search Strategy and Criteria",
+      "Results",
+      "Discussion"
+    ],
+    "systematic_review": [
+      "Introduction",
+      "Search Strategy and Criteria",
+      "Results",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 500,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 500,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 500,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": 150,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "ethics_approval",
+      "patient_consent"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "OTSR EXPLICITLY does NOT publish case reports (or case series) - both excluded from article_types per guide.",
+    "Omitted article type: 'Concise format for reporting longer follow-up of a former OTSR study' (<=2500 words all-in, abstract <=500 words) - no clean schema slot.",
+    "Word limits are ALL-INCLUSIVE: title, affiliations, abstract, text, references, and legends all count toward the cap.",
+    "Figure DPI is TIERED: 300 dpi min for color/grayscale photos (halftones), 1000 dpi for pure B/W line drawings, 500 dpi for line/halftone combinations. min_dpi=300 encoded (photo/halftone floor); schema holds only one value.",
+    "line_numbers=none because Editorial Manager auto-generates a single line-numbered PDF; authors are told NOT to submit a line-numbered manuscript.",
+    "Manuscript-body font/size/line-spacing/margins/page-size are NOT specified in the guide - all null (Elsevier flexible-format submission).",
+    "Ethics placement is contradictory in the guide: Section 3 says ethical material 'should be placed within the title page (blinded part of the manuscript)', while 3.3 says the Disclosure of Interests goes at the end of the manuscript, after Acknowledgments and before References. declarations.order follows the end-of-manuscript sequence.",
+    "Article-type mapping: Original article->original_research; Review article->review; Systematic Review + Meta-Analysis->systematic_review; Technical note->technical_note; Letter to the Editor->letter.",
+    "AI-use disclosure ('Declaration of Generative AI and AI-assisted technologies') required at end of manuscript before References when applicable - no dedicated schema field.",
+    "Two OA license options offered: CC BY and CC BY-NC-ND. Journal is electronic-only, indexed internationally; follows ICMJE Uniform Requirements, COPE, STROBE/CONSORT/PRISMA/QUORUM checklists (each submitted as separate files).",
+    "scrub_metadata=true is inferred from the mandatory blinded second manuscript file for genuine double-blind review; guide is explicit about visible identifiers, not document-properties metadata specifically."
+  ]
+}

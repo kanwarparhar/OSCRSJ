@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Acta Orthopaedica",
+    "slug": "acta-orthopaedica",
+    "issn": null,
+    "publisher": "MJS Publishing – Medical Journals Sweden AB (for the Nordic Orthopaedic Federation)",
+    "guidelines_url": "https://actaorthop.org/actao/instructionsforauthors",
+    "verified_date": "2026-07-12",
+    "source_hash": "57d7b3eff9045af31cb67ab90df7cca9608e98f5277830ebfbe1bb618b417417",
+    "source_note": "Publisher migrated from Taylor & Francis to MJS Publishing – Medical Journals Sweden (immediate open access). Encoded from clean live actaorthop.org pages (instructionsforauthors + articletypes); no bot-block/archive used.",
+    "submission_system": "Manuscript Manager (manuscriptmanager.net/ao)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "case_report",
+    "technical_note",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "word_count_manuscript",
+      "word_count_abstract"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "strip"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background and purpose",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Statistics",
+      "Ethics, registration, data sharing plan, funding, and conflicts of interest",
+      "Results",
+      "Discussion",
+      "Author contributions",
+      "Acknowledgments",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3300,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 25,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "review": {
+      "manuscript_max_words": 3300,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "systematic_review": {
+      "manuscript_max_words": 3300,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": 5,
+      "tables_max": 5
+    },
+    "case_report": {
+      "manuscript_max_words": 1200,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": 3,
+      "tables_max": 3
+    },
+    "technical_note": {
+      "manuscript_max_words": 1200,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": 3,
+      "tables_max": 3
+    },
+    "editorial": {
+      "manuscript_max_words": 1200,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": 0,
+      "tables_max": 0
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": 0,
+      "tables_max": 0
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": 25
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": false,
+    "formats": [
+      "tif",
+      "tiff",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "trial_registration",
+      "data_availability",
+      "funding",
+      "conflict_of_interest",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "author_contributions"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher migration: Acta Orthopaedica left Taylor & Francis and is now an immediate open-access journal published by MJS Publishing – Medical Journals Sweden for the Nordic Orthopaedic Federation. tandfonline NOT used.",
+    "Article-type mapping: 'Original (clinical or experimental)' -> original_research; 'Reviews' (incl. scoping/rapid) -> review; 'Systematic Review' (incl. meta-analysis / network meta-analysis) -> systematic_review; 'Case/Technical Reports' (combined) -> case_report + technical_note; 'Editorials' -> editorial; 'Letter to the editor' -> letter.",
+    "Omitted types with no clean schema slot: 'Educationals' (teaching content; 3300 words, no abstract, up to 40 refs, max 10 combined figures/tables/text boxes), 'Perspectives' (1200 words, up to 10 refs, no figures/tables), and 'Guidelines' (only 'may also be considered').",
+    "Introduction has its own cap: 'should not exceed 300 words' — a per-section limit the word_limits schema cannot hold.",
+    "Title page must also carry the Introduction word count (total, Abstract, Introduction) — no schema element for introduction word count. Keywords and 'level of evidence' must NOT appear on the title page.",
+    "authors_degrees=strip: 'Do not provide academic titles for the authors'; corresponding author gives email only (no postal address/phone).",
+    "Open (non-blind) review: 'authors' and reviewers' names are mutually disclosed, unless a reviewer actively chooses to be anonymous' -> double_blind=false. separate_title_page=true because a distinct title page carries author info + word counts and is excluded from the manuscript word count.",
+    "Reference style: 'Number the references consecutively and give their number within parenthesis in the text'; DOI added when available; general cap 'Try to limit the numbers of references to 25' (per-type caps: case/editorial/perspective/letter 10, original 25, review/educational up to 40). Guide cites 'NLM Uniform Requirements' — encoded as vancouver/nlm; no et al. author threshold stated.",
+    "Figures: 'include tables and figures at the end of the manuscript' -> separate_files=false, tables placement=grouped_end, legends_location inferred as end-of-manuscript legends section. Tiered DPI: photos ~300 DPI (~85 mm/1000 px wide, CMYK for color); black-and-white line drawings 800 DPI 1-bit TIFF (TIFF preferred). Vector graphs exportable as EMF/EPS/SVG/PDF — EMF and SVG accepted by the guide but not in the schema figure-format enum, so only tif/tiff/eps/pdf encoded. Figure fonts must be sans serif (Arial/Helvetica). Figure/text callout style ('Figure' vs 'Fig.') not stated.",
+    "line_numbers set to 'continuous' from 'line numbered' (guide does not specify continuous vs per-page). page_size, body font/size, margins, alignment, page numbers, running head, heading styles all UNSTATED -> null/false.",
+    "Case/Technical report abstract is required at submission but NOT included in the published version.",
+    "Declarations grouped in a single required manuscript section 'Ethics, registration, data sharing plan, funding, and conflicts of interest' placed after the Statistics subheading; author contributions and acknowledgments follow before References. Ethics approval/trial registration/data-sharing are conditionally required (e.g., data-sharing plan for trials enrolling from 1 Jan 2019); funding/conflict-of-interest/author-contributions treated as always-required.",
+    "American English spelling required; reporting-guideline checklist (CONSORT/STROBE/PRISMA etc.) uploaded as supplementary file."
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Asian Spine Journal",
+    "slug": "asian-spine-journal",
+    "issn": "1976-1902 (Print), 1976-7846 (Online)",
+    "publisher": "Korean Society of Spine Surgery",
+    "guidelines_url": "https://www.asianspinejournal.org/authors/authors.php",
+    "verified_date": "2026-07-12",
+    "source_hash": "5ade21ff3b1323ffa523319328763b6c8d5ad0de1f56fdf890a1b85d5e1f3fef",
+    "source_note": null,
+    "submission_system": "ScholarOne Manuscripts"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "narrative_review",
+    "technical_note",
+    "letter",
+    "case_report",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": 10
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": true,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "orcid",
+      "corresponding_author",
+      "disclosures",
+      "funding"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Study Design",
+      "Purpose",
+      "Overview of Literature",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "Conclusions"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 30,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": null,
+      "references_min": 30,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": null,
+      "references_min": 30,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 30,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "jpg",
+      "tiff",
+      "eps"
+    ],
+    "min_dpi": 600,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "data_availability",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher per journal's own guide = Korean Society of Spine Surgery (KSSS); some indexers list 'Korean Spine Society'.",
+    "ISSN from ISSN portal/DOAJ (not the guide): pISSN 1976-1902, eISSN 1976-7846.",
+    "page_size null because the guide accepts BOTH letter (21.6x27.9 cm) and A4 (21.0x29.7 cm).",
+    "font.family null because the guide allows three fonts (Arial, Times New Roman, or Courier), all 10 pt.",
+    "Right margin unstated; guide gives 3.0 cm top/bottom/left only.",
+    "line_numbers='none' is conservative (guide does not request line numbering; unstated).",
+    "Original articles cap = 8 FIGURES OR TABLES combined (schema has no combined figure+table cap) so figures_max/tables_max left null.",
+    "Reviews: guide groups 'narrative and systematic' together (4,000 words, 30-100 refs); encoded to both narrative_review and systematic_review with identical limits.",
+    "et_al_threshold=6 captures 'list all when six or fewer'; guide also says 'when seven or more, list only the first three names, followed by et al.' (two-number rule not fully representable).",
+    "Figure DPI tiered: 600 dpi color/grayscale (radiography/halftone), 1,200 dpi line-art; min_dpi encodes the 600 floor.",
+    "Figure submission formats JPG/GIF/PPT, final acceptance TIFF/EPS; only jpg/tiff/eps map to the allowed format enum (GIF and PPT dropped).",
+    "Declarations order not prescribed by the guide (order=[]); required set = conflict of interest, funding, author contributions (CRediT), data availability (ICMJE), ethics approval (clinical/animal).",
+    "abstract_max_words 300 stated for the structured abstract (original articles); left null for review/technical/letter where not separately stated.",
+    "Case reports and editorials are accepted but the guide states no type-specific word/reference/figure limits or abstract structure -> nulls.",
+    "[schema-required default] layout.margins_mm nulled — guide stated only {'top_mm': 30, 'bottom_mm': 30, 'left_mm': 30} but the schema requires all four edges; a partial margin can't be applied."
+  ]
+}

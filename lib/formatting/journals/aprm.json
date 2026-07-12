@@ -1,0 +1,215 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Annals of Physical and Rehabilitation Medicine",
+    "slug": "aprm",
+    "issn": "1877-0657",
+    "publisher": "Elsevier (published in association with ISPRM; official journal of the PRM section of UEMS and official organ of SOFMER)",
+    "guidelines_url": "https://www.sciencedirect.com/journal/annals-of-physical-and-rehabilitation-medicine/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "2f42aeacba21b95a88e7c3e2142f32e295b1cc9b52668ca61e87bd3694230e6d",
+    "source_note": "Live ScienceDirect (Elsevier) page is bot-blocked to plain WebFetch; encoded from a headless-browser render of the LIVE canonical URL via Apify rag-web-browser, which returned HTTP 200 and the full guide text (not a shell/CAPTCHA). Note contains 'headless' and 'blocked' to route the freshness cron to a headless re-fetch. Content is live/clean (treat as TIER_A).",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "case_report",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Arial",
+      "size_pt": 11
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25,
+      "bottom_mm": 25,
+      "left_mm": 25,
+      "right_mm": 25
+    },
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "disclosures",
+      "word_count_abstract",
+      "word_count_manuscript",
+      "figure_count",
+      "table_count"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": 120,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Objectives",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Material and methods",
+      "Results",
+      "Discussion",
+      "Conclusions"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 50,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 80,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 80,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 1800,
+      "abstract_max_words": 0,
+      "references_min": null,
+      "references_max": 20,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 1800,
+      "abstract_max_words": 0,
+      "references_min": null,
+      "references_max": 20,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": 0,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "trial_registration"
+    ],
+    "required": [
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher verified: Elsevier on ScienceDirect (ISSN 1877-0657), published in association with ISPRM, official journal of the PRM section of UEMS and organ of SOFMER; indexed in MEDLINE. No publisher migration. Submission via Editorial Manager (editorialmanager.com/rehab). Publication is free of charge.",
+    "Source: live ScienceDirect page rendered headless (Apify rag-web-browser), HTTP 200, full guide text (not a shell). ScienceDirect blocks plain WebFetch, hence headless. Treated as TIER_A live-clean.",
+    "Article-type mapping: 'Original articles' -> original_research; 'Reviews - Meta-analyses - Update papers - Position papers' (one shared category, same limits) -> review AND systematic_review (meta-analyses); 'Letters to editor including outstanding single Case studies, short original research, Scientific Notes' -> letter, and case_report added with IDENTICAL letter limits because single case studies are accepted ONLY within the Letters category (no distinct case-report track); 'Editorials' -> editorial.",
+    "OMITTED type 'Correspondance: Comment on having a scientific scope' (summary table only): 1000 words, references <=5, no figure/no table. No clean enum slot distinct from letter (letter slot used for the broader 'Letters to editor' category), so not encoded as its own key; limits recorded here.",
+    "SCHEMA GAP - combined figure+table caps: all types state 'Figures and/or Tables <= N' (combined, not separate). original_research combined cap = 6; review/systematic_review combined cap = 8; letter/case_report combined cap = 3; editorial combined cap = 3; correspondence = 0/0. figures_max and tables_max left null per-type to avoid implying separate caps.",
+    "CONFLICT - editorial references: the summary 'Specifications for Manuscript Categories' table says Editorials References <= 12, but the detailed 'Editorial' prose section says 'No more than 20 References.' Left references_max null for editorial and flagged; word cap (1500) and combined fig/table cap (3) are consistent across both.",
+    "word_limits: word counts EXCLUDE abstract, tables, figure captions, references, and additional material (stated for every type). abstract_max_words=0 encodes 'No abstract' for letter/case_report/editorial (title serves as abstract for letters).",
+    "layout is EXPLICIT under 'Manuscript formatting': Word format, 2.5 cm margin (=25 mm all sides), Arial 11, Double-spaced, Page numbering. 'The text should be in single-column format' and 'do not use the word processor's options to justify text' -> alignment=left. page_size not stated -> null. line_numbers NOT mentioned in the guide -> 'none' (enum has no null; conservative, unstated). first_line_indent, running_head, heading case/bold/italic all unstated -> null. Sections are UNNUMBERED ('Subdivision_unnumbered sections'), using H1/H2/H3 levels, but case/bold/italic not specified so headings left null.",
+    "title_page: 'Essential title page information' = Title, Author names+affiliations WITH degrees, Corresponding author. Declaration-of-interest summary statement lives IN the title page file (-> disclosures). Guide also requires the manuscript length on the title page: word count for abstract and main text, plus number of tables, figures, references, additional materials (-> word_count_abstract, word_count_manuscript, figure_count, table_count; no schema slot for reference/additional-material counts). No running/short title requested -> running_title_max_chars null. Title ideally < 120 characters incl. spaces -> title_max_chars=120. authors_degrees='include' (given/family names and degrees).",
+    "abstract.structured=true with sections Background, Objectives, Methods, Results, Conclusion[s] REQUIRED for Original articles (max 300 words); reviews may use a structured abstract optionally (also <=300). Keywords: required, maximum 6, British or American spelling, avoid general/plural terms and 'and'/'of'; min, case, and separator unstated -> null.",
+    "Trial/database registration: mandatory for interventional studies and systematic reviews, encouraged for observational; WHO-labelled registry; the registration reference must be given AT THE END OF THE ABSTRACT (not a standalone declarations section) - trial_registration kept in declarations.order for completeness but note its unusual placement.",
+    "references.style='vancouver': numbered, square-bracket in-text ('Indicate references by number(s) in square brackets in line with the text'), listed in citation order; the guide points to the ICMJE 'Uniform Requirements for Manuscripts submitted to Biomedical Journals' and the NLM samples; example format = surname+initials, LTWA-abbreviated journal, year;volume:pages, DOI. et_al_threshold=6 ('for more than 6 authors the first 6 should be listed followed by et al.'). include_doi=true ('Use of the DOI is highly encouraged'). journal_abbrev='nlm' is an approximation - the guide specifies the ISSN List of Title Word Abbreviations (LTWA), titles ARE abbreviated (not full), and the schema only offers nlm|full. in_text_punctuation (before/after) not specified -> null. max_count null (caps are per article type).",
+    "tables: submitted individually as a separate table file, not part of the manuscript (-> placement='separate_file'); Arabic consecutive numbering; table notes below the body; caption/title position not explicitly stated -> caption_position null.",
+    "figures: each illustration submitted as a separate file; captions supplied separately and listed by order of appearance (-> legends_location='figure_legends_section'). Formats: EPS(or PDF) for vector, TIFF(or JPEG) for photos/line drawings; MS Office native also accepted (-> ['tiff','jpeg','eps','pdf']). SCHEMA GAP tiered DPI: halftones/photos >=300 dpi, combination line/halftone >=500 dpi, bitmapped line drawings >=1000 dpi - encoded min_dpi=300 (the absolute floor for photos) with tiers noted here. Callout style for main figures not explicitly prescribed (appendix example uses 'Fig. A.1') -> callout_style null; naming_pattern 'logical naming convention' only -> null.",
+    "blinding: journal 'operates a single anonymized review process' (single-blind, reviewers know authors) -> double_blind=false. Separate title page file exists (declaration of interest + title info live there; highlights, tables, figure captions are also separate files) -> separate_title_page=true. No instruction to scrub author identifiers from the body or metadata -> scrub_body_identifiers=false, scrub_metadata=false.",
+    "misc: cover_letter_required=true ('All submissions should also contain a covering letter describing the type of article and specifying the length of the main text and abstract along with the number of tables and figures'; must also declare not published/submitted elsewhere). highlights_required=true ('Highlights are mandatory for this journal'; 3-5 bullets, max 85 chars incl. spaces each, no abbreviations, separate file). orcid_required=false (ORCID not listed among essential title page info or required elsewhere - unstated). title_case (title vs sentence case) not specified -> null.",
+    "declarations.required limited to conflict_of_interest (competing-interests statement mandatory 'even if the authors have no competing interests to declare'; 'Declarations of interest: none'). Funding is requested with a recommended 'no funding' fallback sentence but not stated as strictly mandatory -> kept in order, not in required. ethics_approval, patient_consent, and trial_registration are conditional (human/animal subjects; interventional/systematic-review registration) -> in order, not universally required. Generative-AI-use declaration required when AI tools used, placed in a new section before the references list (no schema slot)."
+  ]
+}

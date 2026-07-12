@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Sports Health: A Multidisciplinary Approach",
+    "slug": "sports-health",
+    "issn": null,
+    "publisher": "SAGE Publications (on behalf of the American Orthopaedic Society for Sports Medicine)",
+    "guidelines_url": "https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-sports-health_-sage-journals.pdf",
+    "verified_date": "2026-07-12",
+    "source_hash": "618a6a9d078a38184d9e51595ade6cf9e4294d6af88ef9d9d33dc9586c481a7e",
+    "source_note": "The canonical live HTML guide (https://journals.sagepub.com/author-instructions/sph) was Cloudflare/bot-blocked — WebFetch returned HTTP 403 and the Apify rag-web-browser headless render also returned 'Request blocked - received 403 status code.' Encoded instead from SAGE's own current PDF mirror of the same Submission Guidelines page at https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-sports-health_-sage-journals.pdf (HTTP 200; sfvrsn version token 4755d1df_4), text extracted with pypdf. Content confirmed current: Impact Factor 2.6 / 5-Year 3.9, 'Now in MEDLINE!', June 15 2021 IRB-letter policy, generative-AI/ChatGPT authorship policy, SAGE Accessibility Guidelines.",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "review",
+    "case_report",
+    "technical_note",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": false,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Hypothesis",
+      "Study Design",
+      "Level of Evidence",
+      "Methods",
+      "Results",
+      "Conclusions",
+      "Clinical Relevance"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 1200,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": 0
+    },
+    "technical_note": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 8,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [],
+    "required": null
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "SOURCE: live HTML guide (journals.sagepub.com/author-instructions/sph) Cloudflare-blocked (403 on WebFetch AND Apify headless render); encoded from SAGE's current official PDF mirror at www.sagepub.com/docs/.../submission-guidelines_-sports-health_-sage-journals.pdf (HTTP 200), extracted via pypdf. Full clean current content — treat as TIER_A content obtained via the sagepub.com PDF mirror rather than a shell/archive.",
+    "Article-type mapping: Clinical Research (and Translational/Basic Science Research, which shares the Clinical Research abstract format) -> original_research; Systematic Reviews or Meta-analysis -> systematic_review; Clinical Reviews -> review; Case Report -> case_report; Video Tutorial (visual synopses of physical tests/rehab maneuvers/surgical techniques) -> technical_note; Letters to the Editor and Author's Response -> letter.",
+    "Omitted types (no clean enum slot): Guest Editorials -> would map to 'editorial' but excluded from article_types because they are by invitation (the guide states 'Sports Health does not accept opinion papers' with the sole exception of Guest Editorials); Infographics (standalone or supplemented pictorial articles with abstract+references) -> no slot, omitted.",
+    "Blinding: 'Sports Health utilizes a double-blind peer review process for new submissions' and 'In order to perform double-anonymized peer-review, all identifying features within photographs must be removed' -> double_blind=true, scrub_body_identifiers=true. 'It is important that NO identifying material is in the submitted manuscript' -> scrub_metadata=true. separate_title_page=false: the guide mandates a fully de-identified manuscript file but does NOT explicitly prescribe a separate title-page document; author/title metadata is entered in the ScholarOne submission site (mc.manuscriptcentral.com/sph). Photo de-id: 'Participant faces should be occluded and logo should be blurred.'",
+    "Abstract: 'An abstract that summarizes the content of the article in <350 words is required' -> max_words=350 (primary/Clinical Research type). Keywords: 'include at least 3-5 keywords at the end of all abstracts' -> min 3, max 5, required. Abstract structure varies by type (structured for research/reviews, unstructured for case reports/infographics/video tutorials). abstract.sections encodes the Clinical Research headings: 'background, hypothesis, study design, level of evidence, methods, results, conclusions, and clinical relevance'.",
+    "Other-type abstract structures (not encodable in the single abstract.sections field): Systematic Reviews/Meta-analyses headings = context, objective, data sources, study selection, study design, level of evidence, data extraction, results, conclusions. Clinical Reviews headings = context, evidence acquisition, study design, level of evidence, results, conclusions, Strength-of-Recommendation Taxonomy (SORT). Case Reports / Infographics / Video Tutorials = unstructured. Video Tutorial abstract is capped at 250 words (vs the 350-word general cap).",
+    "Word limits: 'Generally, manuscripts should be 4,500 words or less' / 'Maximum recommended text length is usually 8 pages, or 4,500 words' -> 4500 applies to original_research, systematic_review, review. Case Reports: 'no more than 1,200 words, inclusive of the abstract, text, any relevant figure legends, and references' -> manuscript_max_words=1200 (INCLUSIVE of abstract+refs+legends; abstract_max_words null because the abstract is counted within the 1200 and unstructured); 'Case reports should not include tables' -> tables_max=0. Video Tutorial (technical_note): 'Text is limited to 1,500 words, with an unstructured abstract (250 words...) and maximum of 8 references' + 'unlimited use of figures' -> 1500 / abstract 250 / refs 8 / figures no cap / tables 'used sparingly' (no numeric cap). Letters: no word limit stated -> all null.",
+    "sections={} : the guide prescribes ABSTRACT heading structures but does NOT give an ordered list of BODY section headings for any type. One partial body requirement: Clinical Research papers must end with 'Clinical Recommendations' rated with the Strength-of-Recommendation Taxonomy (SORT) — a mandated end-section but not a full order, so not encoded as a body sections array.",
+    "References: 'Sports Health follows the American Medical Association (AMA) Manual of Style' and 'use the AMA Manual of Style for format' -> style=ama. UNUSUAL ordering: 'References should be typed double-spaced in alphabetical order and numbered according to the alphabetical listing' -> order=alphabetical (NOT by order of citation). 'use the Index Medicus form for abbreviating journal titles' -> journal_abbrev=nlm. in_text=null: the guide never states the in-text marker format (superscript vs bracket); AMA convention is superscript but the guide gives no explicit instruction or example, so left null per accuracy-first. include_doi=false and et_al_threshold=null: both unstated in the guide.",
+    "Layout: 'Manuscript pages should be typed double-spaced with the pages and lines numbered' -> line_spacing=double, page_numbers.show=true, lines numbered. line_numbers=continuous is the standard default chosen because the enum has no null and the guide does not specify continuous vs per-page (LOW confidence). font family/size, margins, page_size, alignment, first_line_indent, running_head, headings all UNSTATED -> null/false.",
+    "Figures: separate_files=true ('Figures should be submitted in the original form created. Images embedded in Word or PowerPoint files are not acceptable'). SCHEMA GAP tiered DPI: 'Files for line drawings should be created at 1200 dpi, for color photographs at 600 dpi, and for black and white photographs at 300 dpi' -> min_dpi=300 encoded as the floor; 600 (color photo) and 1200 (line art) tiers not representable. formats=[]: the guide does NOT enumerate accepted figure file formats (only requires original high-res form; 'many image formats are not acceptable'). legends_location=figure_legends_section chosen because figures are separate files and the manuscript is a single reviewer PDF (legends must live in the text); the guide requires legends ('all figures include a legend') but does not explicitly name a dedicated section vs inline placement (enum has no null). Multi-part figures use a lowercase letter in the bottom-right corner at 10 pt; chart axes use title capitalization.",
+    "Tables: 'Tables should be included at the end of the manuscript text file' -> placement=grouped_end. 'Tables should be numbered consecutively and have a title' -> numbering=arabic; caption_position=null (a title is required but above/below not stated). Word and PDF are the preferred table file formats.",
+    "Declarations: order=[] and required=null because the guide does not prescribe an ordered declarations/disclosures block. Guide-mandated compliance items (each conditional): IRB/ethics approval letters are MANDATORY before review as of June 15 2021 with the Ethics Committee reference number and reviewing-body name; a Declaration-of-Helsinki conformance statement for experimental human studies; patient consent statement when any image/text makes the patient identifiable (case reports must state permission was granted); clinical-trial registration number + register name for trials starting after Jan 1 2019; an 'Acknowledgments' section for non-author contributors; a signed exclusive-license (copyright) form and (for systematic reviews/meta-analyses) the Sports Health Systematic Review Checklist. AI chatbots may not be listed as authors.",
+    "Misc: no submission/publication fees ('There are no fees to publish in Sports Health') but optional open access is $4,400 USD (Sage Choice). orcid_required=false (ORCID not mentioned in the guide; the earlier lossy WebFetch parse claimed 'ORCID required' but the clean pypdf text has no ORCID mention). cover_letter_required=false: a cover letter is referenced only conditionally ('If >7 authors are listed, the contribution of each author... should be explained in the cover letter'); not stated as universally required. highlights_required=null (unmentioned). title_case=null (no article-title capitalization rule; the 'title capitalization' instruction applies only to chart axis labels). Surgery reports require a minimum 2-year follow-up. P values reported to 3 digits.",
+    "ISSN=null: the guide text does not state the journal ISSN (not encoded from memory).",
+    "[schema-required default] references.in_text defaulted to 'superscript' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'ama')."
+  ]
+}

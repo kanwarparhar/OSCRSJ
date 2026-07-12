@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Bone & Joint Open",
+    "slug": "bone-joint-open",
+    "issn": "2633-1462",
+    "publisher": "The British Editorial Society of Bone & Joint Surgery",
+    "guidelines_url": "https://boneandjoint.org.uk/journal/BJO/instructions-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "523dfeeb1f92ca6a1365ca8ce168eae696a980253fb5a2463d97321a3bd822f4",
+    "source_note": "Main Instructions for Authors page fetched live and clean (not blocked). Reference style, section order, title/abstract structure, and figure DPI came from the journal's own linked 'The structure of a paper' guide PDF (https://s3.eu-west-2.amazonaws.com/baj-live-cms-uploads/The_structure_of_a_paper_2022_2_e0a4a15cd2.pdf), which the live BJO IFA page directly links as its structure guide; its abstract rules match the BJO IFA page exactly.",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Aims",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 10,
+      "tables_max": 8
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "trial_registration"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "BJO IFA page only explicitly invites 'original articles' (mapped to original_research). Study protocols, infographics, and consensus statements are also welcomed but have no clean enum slot.",
+    "The linked 'structure of a paper' PDF lists Editorial/Instructional review/Annotation/Specialty update/Clinical/Research article types, but those are explicitly for the sister journal The Bone & Joint Journal (BJJ), NOT BJO, so they were not imported.",
+    "manuscript_max_words 4000 is a COMBINED cap: guide states 'maximum of 4000 words including the Abstract, body of the text and References' — so body-only budget is 4000 minus abstract+references. Schema gap (no combined-cap field).",
+    "scrub_metadata set true inferred from 'Your main document should be completely blinded' + double-blind review; the guide does not name file metadata explicitly.",
+    "Abstract additionally requires 'one or two bullet points which sum up the clinical relevance of the paper' (clinical-relevance highlights within the abstract) — set highlights_required null since it is not a separate Highlights section.",
+    "tables.placement null: tables are created with Word's table tool (in-document, not separate files) but the guide does not state inline vs grouped-at-end placement; figure captions/legends are explicitly placed at the end of the paper.",
+    "tables.caption_position 'above' inferred from 'each table should have a short, descriptive heading' (a heading denotes top placement); numbering not explicitly stated.",
+    "layout font/spacing/margins/page-size/line-numbers/alignment not stated in either source (the only font mention, Arial 8pt, applies to graph labels, not manuscript body); line_numbers set 'none' as the safe not-required default.",
+    "references.et_al_threshold and max_count not stated; journal reference example ('Allen GM, Wilson DJ. ... Bone Joint J 2012;95-B:1-50.') uses NLM journal abbreviation and no DOI.",
+    "declarations.order is not prescribed by the guide; the listed items are the declarations the guide mentions, arranged conventionally.",
+    "RCTs must be prospectively registered (trial_registration) — required only for RCTs, hence in order but not in the universally-required list.",
+    "title_page.elements derived from 'all identifying information should be on a separate title page' — the guide does not enumerate an explicit element list.",
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+  ]
+}

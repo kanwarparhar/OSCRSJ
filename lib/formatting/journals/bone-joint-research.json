@@ -1,0 +1,180 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Bone & Joint Research",
+    "slug": "bone-joint-research",
+    "issn": "2046-3758",
+    "publisher": "The British Editorial Society of Bone & Joint Surgery (Bone & Joint)",
+    "guidelines_url": "https://boneandjoint.org.uk/journal/BJR/instructions-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "e8a9efb1d590609fbd862f9572874a07f2e81047d1e1a6697205620abbdaff41",
+    "source_note": "Encoded from the live BJR Instructions for Authors page via clean WebFetch (not bot-blocked, not an archive). Gold open access journal; publisher unchanged (Bone & Joint / BESBJS). Submission via ScholarOne Manuscripts (mc04.manuscriptcentral.com/bjr).",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "funding",
+      "disclosures",
+      "acknowledgments"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Aims",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 10,
+      "tables_max": 8
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "jpeg",
+      "tiff",
+      "jpg",
+      "tif"
+    ],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "acknowledgments",
+      "author_contributions",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "author_contributions",
+      "data_availability"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Clean live WebFetch of boneandjoint.org.uk/journal/BJR/instructions-for-authors (Tier A); not bot-blocked, no archive used.",
+    "Article types: guide names 'Original Research Articles' -> original_research and 'Editorials and Infographics' -> editorial; Infographics has no clean schema slot (omitted; ~300 words each). Systematic reviews / meta-analyses accepted (PRISMA and MOOSE reporting guidelines cited as applicable) -> systematic_review added, treated as a form of original research. BJR explicitly does NOT publish case reports, case series of non-consecutive patients, clinical papers, genetics/GWAS/Mendelian-randomization papers, or theses -> no case_report/case_series slots.",
+    "Blinding: guide states 'All articles published in BJR will have undergone rigorous, double-blinded peer review' -> double_blind true. Title Page and Main Document must be uploaded separately and 'should not be merged into one file' -> separate_title_page true. The guide does not spell out 'remove author names from the main document', but scrub_body_identifiers and scrub_metadata are set true as the required consequence of confirmed double-blind review + the title-page/main-document split that carries all author, affiliation, acknowledgement and contribution info on the title page.",
+    "line_spacing: guide says '1.5- or double-line spacing throughout' (either permitted); encoded as 'double' since it satisfies the rule; 1.5 is also acceptable per the guide.",
+    "line_numbers set 'none' (schema enum has no null) because line numbering is not mentioned in the guide; not a stated requirement.",
+    "font family/size, page size, margins, alignment, first-line indent, page numbers, running head all unstated in the guide -> null / false.",
+    "Abstract: structured 'Aims / Methods / Results / Conclusion', 'No more than 300 words'. Keywords 'No more than five ... given beneath the Abstract' -> max 5, required true.",
+    "Original Research body order: 'Abstract ... Introduction ... Methods ... Results ... Discussion ... References' (sections field encodes the IMRAD body). A required 'Article Summary' (subsections: Article focus / Key messages / Strengths and limitations of this study) is also mandatory -> mapped to misc.highlights_required true (closest schema slot; it is NOT an Elsevier-style bullet 'highlights' block).",
+    "Word limits: Original Research 'Reports should not exceed 4000 words including references' (note: cap INCLUDES references). Editorials '1200 to 1500 words ... excluding references' -> editorial manuscript_max_words 1500. Infographics ~300 words (no slot). Systematic-review word cap not separately stated -> null; the 4000-word / 10-figure / 8-table general caps likely apply but are not type-specific in the guide.",
+    "Figure/table caps are journal-wide: '10 figures or fewer in the main document' (with 'no more than 6 parts each') and 'maximum of 8 tables'; encoded under original_research. 'Text included in tables will not count towards overall word count' (no schema field).",
+    "References: 'Vancouver system by superscript numbers in the order of their appearance. Not in alphabetical order.' Example 'Allen GM, Wilson DJ. Ultrasound and the diagnosis of orthopaedic disorders. Bone Joint J 2013;95-B:944-51.' -> superscript, cited order, NLM-abbreviated journal names, no DOI shown. et_al_threshold not stated (example has 2 authors). No hard max_count ('usually below 50', soft guidance) -> max_count null.",
+    "tables.placement not explicitly stated (single Word document upload; figures uploaded separately). Encoded 'grouped_end' as the conservative in-document convention; guide silent on exact table location. tables.caption_position 'above' from 'Each table should have a short, descriptive heading'. tables.numbering left null (Table numbering scheme not stated).",
+    "figures.legends_location not explicitly stated ('Each figure will need a full descriptive legend'); encoded 'figure_legends_section' (legends compiled in the main document) as the conventional read; guide does not pin the location. figures.formats 'jpeg or tiff'; min_dpi / callout style / naming pattern unstated -> null. Figures uploaded as individual files, not embedded in the Word doc.",
+    "Declarations: title page must carry Funding, Conflicts of Interest (ICMJE form required), Acknowledgements + affiliations, and Author's contributions; a data-availability statement is required in published manuscripts; ethics-committee approval and informed consent required for studies on patients/volunteers (conditional -> not in 'required').",
+    "ORCID 'We ask that authors add an ORCID ID ... if available' -> encouraged, not required. Cover letter / highlights (classic) / title case not specified -> null/false."
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Orthopaedics and Traumatology",
+    "slug": "journal-of-orthopaedics-and-traumatology",
+    "issn": "1590-9999 (electronic); 1590-9921 (print)",
+    "publisher": "SpringerOpen (Springer Nature) — official journal of SIOT (Italian Society of Orthopaedics and Traumatology)",
+    "guidelines_url": "https://link.springer.com/journal/10195/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "5d80977de08946a7805bd711052a300e38df2c4d3aa1706cd03ca23a13d8dc19",
+    "source_note": "The current live canonical guide (link.springer.com/journal/10195/submission-guidelines) is behind an Akamai 'Client Challenge' bot wall — both WebFetch (303 to idp.springer.com auth) and the Apify headless render returned only the 'Client Challenge' page. The journal's own SpringerOpen author-guide domain (jorthoptraumatol.springeropen.com) now 301-redirects to that blocked link.springer.com page. Encoded from ARCHIVE (Wayback Machine) snapshots of the SpringerOpen author-guide sub-pages, all captured within 12 months: preparing-your-manuscript https://web.archive.org/web/20251011053313/https://jorthoptraumatol.springeropen.com/submission-guidelines/preparing-your-manuscript ; case-report https://web.archive.org/web/20251011045330/https://jorthoptraumatol.springeropen.com/submission-guidelines/preparing-your-manuscript/case-report ; original-article https://web.archive.org/web/20251011050514/https://jorthoptraumatol.springeropen.com/submission-guidelines/preparing-your-manuscript/original-article ; systematic-review https://web.archive.org/web/20251011053258/https://jorthoptraumatol.springeropen.com/submission-guidelines/preparing-your-manuscript/systematic-review . Freshness cron needs headless fetch (blocked live domain) and should note the springeropen->link.springer.com redirect.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "case_report",
+    "original_research",
+    "systematic_review",
+    "narrative_review",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Materials and Methods",
+      "Results",
+      "Conclusions",
+      "Level of Evidence"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "case_report": [
+      "Background",
+      "Case presentation",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations",
+      "References"
+    ],
+    "original_research": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "List of abbreviations",
+      "Declarations",
+      "References"
+    ],
+    "systematic_review": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "List of abbreviations",
+      "Declarations",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 70,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 70,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "SOURCE = archive (Wayback). Live link.springer.com guide is Akamai 'Client Challenge' bot-blocked; SpringerOpen journal domain 301-redirects to it. Encoded from Oct-2025 Wayback snapshots of the springeropen.com author-guide sub-pages (all <12 months old). Boilerplate (title page, declarations, references, figures, tables, general formatting) is byte-identical across the case-report, original-article, and systematic-review pages.",
+    "double_blind = true: 'Journal of Orthopaedics and Traumatology operates double-blind peer review. The following information should not be included in the main manuscript file, but should instead be uploaded as part of the covering letter: Title page, Competing interests, Authors' contributions, Acknowledgements, Authors' information.' Stated explicitly on the Original-article and Systematic-review pages (journal-wide policy). separate_title_page/scrub_body_identifiers set true accordingly. NOTE: the Case-report page is an un-updated template that omits this banner and lists author names on the title page within the manuscript — the journal-wide double-blind policy governs.",
+    "scrub_metadata = false: double-blind requires removing identifying content from the main file, but the guide does not mention stripping document/file metadata.",
+    "line_spacing = double: 'Use double line spacing' (General formatting information).",
+    "line_numbers = continuous: guide says 'Include line and page numbering' — line numbering is required but the guide does NOT specify continuous vs per-page; schema has no required-but-unspecified value, so 'continuous' (the submission norm) was chosen. page_numbers.show = true from the same sentence.",
+    "font family/size, margins, alignment, first_line_indent, page_size all null — NOT specified anywhere in the guide. Guide also says 'Do not use page breaks in your manuscript.' Page size null: tables reference 'A4 or Letter' interchangeably, neither is mandated.",
+    "abstract.max_words = 350: 'The abstract should not exceed 350 words' — identical across case report, original article, and systematic review. keywords 3-10: 'Three to ten keywords representing the main content of the article.'",
+    "abstract.sections encodes the PRIMARY type = original_research (Original article): Background / Materials and Methods / Results / Conclusions / Level of Evidence (OCEBM Oxford 2011). 'Trial registration' is an additional CONDITIONAL abstract subsection (only if reporting a health-care intervention) — omitted from the array. Per-type abstract structures DIFFER: case_report = Background / Case presentation / Conclusions; systematic_review = Background / Methods / Results / Conclusions / Level of evidence / Registration / Trial registration.",
+    "word_limits: only 'Review articles' carry an explicit stated cap — 'Text length must not exceed 4000 words. The number of references must not exceed 70.' (Systematic Review criteria section, which frames both narrative and systematic reviews as 'Review articles'). Applied to systematic_review (high confidence, directly stated) AND narrative_review (the sentence sits under the 'Review articles' framing; medium confidence — the dedicated narrative-review page was NOT archived/reachable). case_report and original_research have NO stated manuscript word cap, reference count, figure or table limit — all null. abstract_max_words 350 is journal-wide.",
+    "narrative_review: dedicated guide sub-page had no reachable Wayback snapshot; its 4000-word / 70-ref limits are inferred from the 'Review articles' criteria on the systematic-review page and its 350 abstract cap from the journal-wide abstract rule. No narrative-specific section order encoded.",
+    "references.style = custom: 'Basic Springer' reference style — entry format 'Author AA, Author BB (Year) Title. Journal-abbrev vol:pages. doi:...' (name+year inside a numbered entry). Matches none of vancouver/nlm/ama cleanly.",
+    "references.in_text = null: references are numbered (guide: web links 'should be given a reference number and included in the reference list'), but the guide does NOT state the in-text marker format (superscript vs square-bracket vs parenthetical). order = 'cited' inferred from numbered-by-reference-number convention. journal_abbrev = 'nlm': 'Journal abbreviations follow Index Medicus/MEDLINE.' include_doi = true: DOIs appear in the reference examples ('doi:10.1007/...') and a dedicated 'Article by DOI' style block. et_al_threshold null (examples list all authors, no threshold given); max_count null (per-type review ref cap of 70 lives in word_limits).",
+    "figures.separate_files = true: figures are uploaded as individual files (EPS/TIFF/etc., max 10 MB each), while titles+legends go in the main manuscript. formats = the schema-allowed subset of the guide's list (guide also allows Microsoft Word, PowerPoint, BMP, CDX — no schema slots). min_dpi = 300: 'image resolution of approximately 300 dpi ... at the final size.' callout_style/naming_pattern null (not stated).",
+    "figures.legends_location = figure_legends_section: 'Figure titles (max 15 words) and legends (max 300 words) should be provided in the main manuscript, not in the graphic file.' Guide says legends live in the manuscript (figures separate) but does not explicitly name a dedicated 'Figure legends' section vs inline placement — mapped to figure_legends_section as the operationally-correct SpringerOpen handling.",
+    "tables: placement in_text ('Tables less than one A4 or Letter page ... can be placed in the appropriate location within the manuscript'; larger tables go at the end of the text file). caption_position = above ('Table titles ... should be included above the table, and legends ... underneath the table'). numbering arabic ('Table 1, Table 2'). Guide also forbids colour/shading and commas as thousands separators (no schema slots).",
+    "declarations order + required (all mandatory; write 'Not applicable' if not relevant): 'Ethics approval and consent to participate' -> ethics_approval; 'Consent for publication' -> patient_consent; 'Availability of data and material' -> data_availability; 'Competing interests' -> conflict_of_interest; 'Funding' -> funding; 'Authors' contributions' -> author_contributions; 'Acknowledgements' -> acknowledgments. 'Authors' information (optional)' has no clean enum slot (omitted). trial_registration is handled as an abstract subsection for research/reviews, not a standalone declaration.",
+    "cover_letter_required = true: derived from the double-blind instruction that the Title page + Competing interests + Authors' contributions + Acknowledgements + Authors' information 'should instead be uploaded as part of the covering letter' — implies a covering letter is part of every submission. orcid_required = false and highlights_required = false: neither ORCID nor a Highlights element is mentioned in the reachable guide pages (conservative defaults). title_case null (article-title casing not specified).",
+    "article_types mapping: Case report -> case_report; Original article -> original_research; Systematic Review -> systematic_review; Narrative Review -> narrative_review; Letter to the Editor -> letter. 'Brief communication' is also accepted but has NO clean enum slot (omitted). 'Editorial' is not offered as an author-submittable type. Reporting guidelines required by the journal: PRISMA (SR/MA), CONSORT (RCT), STROBE (observational), STARD (diagnostic accuracy), ARRIVE (animal).",
+    "SCHEMA GAPS: (1) figure titles max 15 words / figure legends max 300 words / table titles max 15 words / table legends max 300 words — no schema fields. (2) individual figure file max 10 MB, additional-file max 20 MB — no schema fields. (3) Original article & Systematic review require a 'Level of Evidence' (OCEBM Oxford 2011) statement at the end of the abstract — captured only in abstract.sections/notes. (4) 'Brief communication' article type has no enum slot.",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'custom')."
+  ]
+}
