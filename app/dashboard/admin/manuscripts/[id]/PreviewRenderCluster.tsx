@@ -6,7 +6,29 @@ import {
   ArrowPathIcon,
   CheckCircleIcon,
   XCircleIcon,
+  ClipboardIcon,
+  ClipboardDocumentCheckIcon,
 } from '@heroicons/react/24/outline'
+
+// The command Kanwar pastes into the VS Code integrated terminal to
+// bring the local renderer back up. `npm run dev` matches the error
+// text ("Is the local renderer dev server running") and needs no
+// build step, so it's the fastest path to a working preview.
+const RENDERER_START_COMMAND = 'cd ~/Documents/oscrsj-renderer && npm run dev'
+
+// Recognize the "renderer is not running on the Mac" failure so the
+// card can show start-it-yourself instructions instead of a bare
+// error string. Matches the API route's 502 message
+// ("Could not reach renderer at …: fetch failed. Is the local
+// renderer dev server running on Kanwar's Mac?").
+function isRendererUnreachable(message: string): boolean {
+  const m = message.toLowerCase()
+  return (
+    m.includes('could not reach renderer') ||
+    m.includes('renderer dev server running') ||
+    (m.includes('502') && m.includes('fetch failed'))
+  )
+}
 
 // Franklin §6 four-state inline-card pattern (Sushant Session 57,
 // Phase 1.C). Replaces the static "preview pane" placeholder in
@@ -97,7 +119,18 @@ export default function PreviewRenderCluster({
   disabledReason,
 }: Props) {
   const [state, setState] = useState<FormState>({ kind: 'idle' })
+  const [copied, setCopied] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
+
+  async function copyStartCommand() {
+    try {
+      await navigator.clipboard.writeText(RENDERER_START_COMMAND)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // clipboard blocked — user selects the text manually
+    }
+  }
 
   async function runPreview() {
     if (disabled) return
@@ -349,6 +382,7 @@ export default function PreviewRenderCluster({
   }
 
   // state.kind === 'failure'
+  const rendererDown = isRendererUnreachable(state.firstError)
   return (
     <div className="preview-result-failure">
       <p className="text-sm font-medium text-red-900 flex items-center gap-2">
@@ -356,6 +390,53 @@ export default function PreviewRenderCluster({
         Preview failed
       </p>
       <p className="text-xs text-red-900">{state.firstError}</p>
+
+      {rendererDown && (
+        <div className="mt-2 rounded-md border border-amber-300 bg-amber-50 p-3 space-y-2">
+          <p className="text-xs font-medium text-amber-900">
+            The renderer isn&apos;t running on your Mac. Start it, then click{' '}
+            <span className="font-semibold">Try again</span>.
+          </p>
+          <p className="text-xs text-amber-900">
+            In VS Code, open a terminal (Terminal → New Terminal, or{' '}
+            <span className="font-mono">Ctrl+`</span>) and paste this:
+          </p>
+          <div className="flex items-stretch gap-2">
+            <code className="flex-1 font-mono text-xs text-brown-dark bg-white border border-amber-300 rounded px-2 py-1.5 whitespace-pre-wrap break-all">
+              {RENDERER_START_COMMAND}
+            </code>
+            <button
+              type="button"
+              onClick={copyStartCommand}
+              className="btn-ghost text-xs inline-flex items-center gap-1 shrink-0"
+              title="Copy command"
+            >
+              {copied ? (
+                <>
+                  <ClipboardDocumentCheckIcon className="w-3.5 h-3.5" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <ClipboardIcon className="w-3.5 h-3.5" />
+                  Copy
+                </>
+              )}
+            </button>
+          </div>
+          <p className="text-xs text-amber-800 italic">
+            Wait until the terminal prints{' '}
+            <span className="font-mono not-italic">Ready</span> (a few seconds),
+            leave that terminal open, then click Try again. If it&apos;s still
+            down, restart the launchd service instead:{' '}
+            <span className="font-mono not-italic break-all">
+              launchctl unload ~/Library/LaunchAgents/com.oscrsj.renderer.plist &amp;&amp; launchctl load ~/Library/LaunchAgents/com.oscrsj.renderer.plist
+            </span>
+            .
+          </p>
+        </div>
+      )}
+
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
