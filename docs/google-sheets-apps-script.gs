@@ -47,6 +47,18 @@ const HEADERS = {
     'Admin Detail URL',
     'Participant Agreement Ack',
   ],
+  // Journal Formatter (/format) — one row per formatting job.
+  // Order MUST match app/api/format/jobs/route.ts.
+  'Formatter Submissions': [
+    'Submitted At (UTC)',
+    'Job ID',
+    'Email',
+    'Original Filename',
+    'Target Journal',
+    'Article Type',
+    'Figures',
+    'IP',
+  ],
 }
 
 function doPost(e) {

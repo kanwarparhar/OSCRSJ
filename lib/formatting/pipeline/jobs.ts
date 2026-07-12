@@ -10,6 +10,7 @@ import {
   RATE_LIMIT_PER_IP_PER_DAY,
   UPLOAD_URL_TTL_SECONDS,
   DOWNLOAD_URL_TTL_SECONDS,
+  storagePaths,
   type SignedUpload,
 } from './api'
 import type { FormattingJob, JobStatus } from './stages'
@@ -107,10 +108,10 @@ export async function createSignedUpload(path: string): Promise<SignedUpload | n
   return { path: data.path, url: data.signedUrl, token: data.token }
 }
 
-export async function createSignedDownload(path: string): Promise<string | null> {
+export async function createSignedDownload(path: string, downloadName?: string): Promise<string | null> {
   const { data, error } = await admin()
     .storage.from(FORMATTING_BUCKET)
-    .createSignedUrl(path, DOWNLOAD_URL_TTL_SECONDS)
+    .createSignedUrl(path, DOWNLOAD_URL_TTL_SECONDS, downloadName ? { download: downloadName } : undefined)
   if (error || !data) return null
   return data.signedUrl
 }
@@ -130,6 +131,29 @@ export async function uploadObject(
     .storage.from(FORMATTING_BUCKET)
     .upload(path, Buffer.from(bytes), { contentType, upsert: true })
   return !error
+}
+
+// ---------------------------------------------------------------------------
+// Job meta — small JSON sidecar in Storage (no schema migration needed)
+// ---------------------------------------------------------------------------
+
+export interface JobMeta {
+  /** Original filename of the uploaded manuscript, used to name outputs. */
+  originalFilename: string | null
+}
+
+export async function writeJobMeta(jobId: string, meta: JobMeta): Promise<void> {
+  await uploadObject(storagePaths.meta(jobId), Buffer.from(JSON.stringify(meta)), 'application/json')
+}
+
+export async function readJobMeta(jobId: string): Promise<JobMeta | null> {
+  const buf = await downloadObject(storagePaths.meta(jobId))
+  if (!buf) return null
+  try {
+    return JSON.parse(buf.toString('utf8')) as JobMeta
+  } catch {
+    return null
+  }
 }
 
 /** Signal that UPLOAD_URL_TTL applies to freshly-minted upload URLs. */

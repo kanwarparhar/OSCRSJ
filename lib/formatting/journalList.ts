@@ -54,6 +54,32 @@ export const JOURNAL_SUMMARIES: JournalSummary[] = JOURNALS.map((j) => ({
   verifiedDate: j.identity.verified_date,
 }))
 
+/**
+ * Filename-safe short abbreviation per journal — used to suffix output
+ * filenames ("My Case Report_JBJS.docx"). Falls back to the upcased slug for
+ * any journal added without an entry.
+ */
+export const JOURNAL_ABBREVIATIONS: Record<string, string> = {
+  oscrsj: 'OSCRSJ',
+  jbjs: 'JBJS',
+  bjj: 'BJJ',
+  corr: 'CORR',
+  ajsm: 'AJSM',
+  jses: 'JSES',
+  'journal-of-arthroplasty': 'JOA',
+  arthroscopy: 'Arthroscopy',
+  injury: 'Injury',
+  jot: 'JOT',
+  spine: 'Spine',
+  fai: 'FAI',
+  jhs: 'JHS',
+  jocr: 'JOCR',
+}
+
+export function journalAbbrev(slug: string): string {
+  return JOURNAL_ABBREVIATIONS[slug] ?? slug.replace(/[^a-z0-9]+/gi, '').toUpperCase()
+}
+
 /** Human labels for article-type enum values (picker + report). */
 export const ARTICLE_TYPE_LABELS: Record<ArticleType, string> = {
   case_report: 'Case Report',

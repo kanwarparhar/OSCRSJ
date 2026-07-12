@@ -7,15 +7,14 @@
 // in 'failed' with an actionable message rather than throwing to the route.
 
 import PizZip from 'pizzip'
-import { getJob, updateJob, downloadObject, uploadObject } from './jobs'
-import { storagePaths } from './api'
+import { getJob, updateJob, downloadObject, uploadObject, readJobMeta } from './jobs'
+import { storagePaths, outputBaseName } from './api'
 import { getJournal } from '../journalList'
 import { SCHEMA_VERSION, type ArticleType } from '../rulesSchema'
 import { ingestDocx } from '../ooxml/ingest'
 import { applyLayout } from '../ooxml/layout'
 import { blindManuscript } from '../ooxml/blinding'
 import { renumberCitations } from '../references/renumber'
-import { buildTitlePage } from '../ooxml/titlePage'
 import { emitDocxBuffer } from '../ooxml/emit'
 import { extractBodyText, PART } from '../ooxml/docx'
 import { assertBodyImmutable } from './immutability'
@@ -178,7 +177,9 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         const allSuggestions = [...flags, ...suggestions]
         const referenceAudit = state.verifiedReferences.map((v, i) => auditRow(v, i + 1))
 
-        // outputs
+        // outputs — user-facing names are the original filename + _<journal abbrev>
+        const meta = await readJobMeta(jobId)
+        const baseName = outputBaseName(meta?.originalFilename, job.journal_id)
         const manuscript = emitDocxBuffer(docx)
         const outputs: JobOutputPaths = {
           manuscript: storagePaths.outputManuscript(jobId),
@@ -189,21 +190,14 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         )
 
-        let titlePageBytes: Uint8Array | null = null
-        if (rules.blinding.separate_title_page && state.titlePageData.title) {
-          const tp = buildTitlePage(state.titlePageData, ctx)
-          titlePageBytes = tp.bytes
-          outputs.title_page = storagePaths.outputTitlePage(jobId)
-          await uploadObject(
-            storagePaths.outputTitlePage(jobId),
-            tp.bytes,
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          )
-        } else if (rules.blinding.separate_title_page) {
+        // Title-page generation removed (Kanwar directive 2026-07-11): the tool
+        // no longer emits a title-page file — authors prepare their own. When
+        // the journal requires one, remind them in the report instead.
+        if (rules.blinding.separate_title_page) {
           allSuggestions.push({
             title: 'Provide a separate title page',
             location: null,
-            detail: `${rules.identity.name} requires a separate anonymized title page. Include: ${rules.title_page.elements.join(', ')}.`,
+            detail: `${rules.identity.name} requires a separate title page uploaded as its own file. Include: ${rules.title_page.elements.join(', ')}.`,
             suggestedWording: null,
             severity: 'action-required',
           })
@@ -226,9 +220,8 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
 
         // zip bundle
         const zip = new PizZip()
-        zip.file('manuscript-formatted.docx', Buffer.from(manuscript))
-        if (titlePageBytes) zip.file('title-page.docx', Buffer.from(titlePageBytes))
-        zip.file('analysis-report.docx', Buffer.from(reportDocx))
+        zip.file(`${baseName}.docx`, Buffer.from(manuscript))
+        zip.file(`${baseName}_report.docx`, Buffer.from(reportDocx))
         const zipBytes = zip.generate({ type: 'nodebuffer', compression: 'DEFLATE' })
         outputs.zip = storagePaths.outputZip(jobId)
         await uploadObject(storagePaths.outputZip(jobId), zipBytes, 'application/zip')
@@ -237,9 +230,10 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         return { status: 'rendered' }
       }
 
-      // ---- complete: email delivery ----
+      // ---- complete: results are delivered on-page (no email; Kanwar
+      // directive 2026-07-11 — the email address is collected for the usage
+      // log only) ----
       case 'rendered': {
-        await sendCompletionEmail(jobId)
         await updateJob(jobId, { status: 'complete' })
         return { status: 'complete' }
       }
@@ -251,23 +245,4 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
   } catch (e) {
     return fail(jobId, job.status, e instanceof Error ? e.message : 'Unexpected pipeline error.')
   }
-}
-
-async function sendCompletionEmail(jobId: string): Promise<void> {
-  const job = await getJob(jobId)
-  if (!job) return
-  const { sendEmail } = await import('@/lib/email/resend')
-  const link = `https://www.oscrsj.com/format?job=${jobId}`
-  const zipBuf = job.output_paths?.zip ? await downloadObject(job.output_paths.zip) : null
-  const attach = zipBuf && zipBuf.length < 20 * 1024 * 1024
-  await sendEmail({
-    to: job.email,
-    subject: 'Your formatted manuscript is ready — OSCRSJ Journal Formatter',
-    html: `<p>Your manuscript has been formatted and your Analysis &amp; Suggestions Report is ready.</p>
-<p><a href="${link}">Open your results</a> to download the formatted .docx, the report, and the full package. Links are also attached where possible.</p>
-<p style="color:#664930;font-size:.85rem">Always verify the output against the journal's current Guide for Authors before submitting. This is a free beta of the OSCRSJ Journal Formatter.</p>`,
-    text: `Your formatted manuscript is ready. Open your results: ${link}`,
-    emailType: 'formatting_complete',
-    ...(attach ? { attachments: [{ filename: 'formatted-package.zip', content: zipBuf!, contentType: 'application/zip' }] } : {}),
-  })
 }

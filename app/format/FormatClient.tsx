@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { JOURNAL_SUMMARIES, ARTICLE_TYPE_LABELS } from '@/lib/formatting/journalList'
 import {
   MAX_MANUSCRIPT_BYTES,
@@ -62,7 +62,6 @@ const CHECK_STATUS: Record<'met' | 'fixed' | 'action-needed', { icon: string; la
 
 const DOWNLOAD_LABELS: { key: keyof JobOutputs; label: string; primary?: boolean }[] = [
   { key: 'manuscript', label: 'Formatted manuscript (.docx)', primary: true },
-  { key: 'titlePage', label: 'Title page (.docx)' },
   { key: 'reportDocx', label: 'Analysis report (.docx)' },
   { key: 'zip', label: 'Download everything (.zip)' },
 ]
@@ -303,6 +302,10 @@ export default function FormatClient() {
   const [phase, setPhase] = useState<Phase>('form')
   const [submitting, setSubmitting] = useState(false)
   const [progress, setProgress] = useState(0)
+  // What the bar actually shows: creeps smoothly toward (but never past) the
+  // next milestone while the server works, and snaps up when the server
+  // reports real progress — so it never sits frozen on one number.
+  const [displayProgress, setDisplayProgress] = useState(0)
   const [stageLabel, setStageLabel] = useState('')
   const [report, setReport] = useState<ReportModel | null>(null)
   const [downloads, setDownloads] = useState<JobOutputs>({})
@@ -315,6 +318,23 @@ export default function FormatClient() {
     () => JOURNAL_SUMMARIES.find((j) => j.slug === journalId) ?? null,
     [journalId],
   )
+
+  // Smooth progress animation: every 250ms, ease the displayed value toward a
+  // ceiling a little ahead of the last server-reported progress. Asymptotic,
+  // so it visibly moves during long stages but can't overtake reality by much.
+  useEffect(() => {
+    if (phase !== 'running') return
+    const id = setInterval(() => {
+      setDisplayProgress((p) => {
+        if (progress >= 1) return 1
+        const base = Math.max(p, progress)
+        const ceiling = Math.min(progress + 0.18, 0.98)
+        if (base >= ceiling) return base
+        return Math.min(base + Math.max((ceiling - base) * 0.04, 0.0006), ceiling)
+      })
+    }, 250)
+    return () => clearInterval(id)
+  }, [phase, progress])
 
   const emailValid = EMAIL_RE.test(email)
   const canSubmit =
@@ -399,6 +419,7 @@ export default function FormatClient() {
         journalId,
         articleType,
         figureCount: figures.length,
+        manuscriptFilename: manuscript.name,
       }
       const createRes = await fetch('/api/format/jobs', {
         method: 'POST',
@@ -418,7 +439,8 @@ export default function FormatClient() {
       }
 
       setPhase('running')
-      setProgress(0.08)
+      setProgress(0.05)
+      setDisplayProgress(0.05)
       setStageLabel('Uploaded — starting…')
 
       // Advance the pipeline one stage at a time, polling status after each nudge.
@@ -458,7 +480,7 @@ export default function FormatClient() {
       }
 
       setRunError(
-        'This is taking longer than expected. Your job may still be processing — we will email you a link when it is ready.',
+        'This is taking longer than expected. Your job may still be processing — please keep this page open and try again in a few minutes.',
       )
       setPhase('error')
     } catch (err) {
@@ -485,6 +507,7 @@ export default function FormatClient() {
     setReport(null)
     setDownloads({})
     setProgress(0)
+    setDisplayProgress(0)
     setStageLabel('')
     setRunError(null)
     setPhase('form')
@@ -493,7 +516,7 @@ export default function FormatClient() {
   /* ---- Render: running ---- */
 
   if (phase === 'running') {
-    const pct = Math.round(Math.min(Math.max(progress, 0), 1) * 100)
+    const pct = Math.round(Math.min(Math.max(displayProgress, 0), 1) * 100)
     return (
       <div className="rounded-xl border border-border bg-white p-8 text-center">
         <h3 className="mb-2 font-serif text-2xl text-brown-dark">Formatting your manuscript</h3>
@@ -509,7 +532,7 @@ export default function FormatClient() {
           aria-label="Formatting progress"
         >
           <div
-            className="h-full rounded-full bg-peach-dark transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-peach-dark transition-all duration-300 ease-linear"
             style={{ width: `${Math.max(pct, 4)}%` }}
           />
         </div>
@@ -539,7 +562,8 @@ export default function FormatClient() {
             <div>
               <h3 className="font-serif text-xl text-brown-dark">Your formatted manuscript is ready</h3>
               <p className="mt-1 text-sm text-ink">
-                Download your files below and review the report before you submit.
+                Download your files below and review the report before you submit. Files are only available on this
+                page — save them now.
               </p>
             </div>
           </div>
@@ -778,9 +802,10 @@ export default function FormatClient() {
 
       {/* Step 3 — Email + verification */}
       <div className="rounded-xl border border-border bg-white p-6">
-        <h3 className="mb-1 font-serif text-xl text-brown-dark">3. Where should we send your results?</h3>
+        <h3 className="mb-1 font-serif text-xl text-brown-dark">3. Your email</h3>
         <p className="mb-4 text-sm text-brown">
-          We will email you a link to your formatted files. We do not share your address.
+          Your results appear right here on this page — nothing is emailed. We ask for your email to track beta usage
+          and prevent abuse, and we do not share your address.
         </p>
 
         <div className="max-w-md">

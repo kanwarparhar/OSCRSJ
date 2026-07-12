@@ -1,8 +1,9 @@
 // /format API contract + storage layout (Sushant, Session C). Shared by the
 // route handlers and the client page so both sides agree on the wire shape.
 
-import type { JobStatus } from './stages'
+import type { JobStatus, StageCursor } from './stages'
 import type { ReportModel } from '../types'
+import { journalAbbrev } from '../journalList'
 
 export const FORMATTING_BUCKET = 'formatting'
 
@@ -26,10 +27,31 @@ export const DOWNLOAD_URL_TTL_SECONDS = 60 * 60 // 1 h on the results page
 export const storagePaths = {
   input: (jobId: string) => `${jobId}/input/manuscript.docx`,
   figure: (jobId: string, i: number, ext: string) => `${jobId}/input/figure-${i}.${ext}`,
+  meta: (jobId: string) => `${jobId}/meta.json`,
   outputManuscript: (jobId: string) => `${jobId}/output/manuscript-formatted.docx`,
-  outputTitlePage: (jobId: string) => `${jobId}/output/title-page.docx`,
   outputReportDocx: (jobId: string) => `${jobId}/output/analysis-report.docx`,
   outputZip: (jobId: string) => `${jobId}/output/formatted-package.zip`,
+}
+
+// ---------------------------------------------------------------------------
+// Output naming — original filename + _<journal abbreviation>
+// ---------------------------------------------------------------------------
+
+/**
+ * Base name for every user-facing output file: the uploaded manuscript's
+ * original name (extension stripped, filesystem-hostile characters removed)
+ * suffixed with the target journal's abbreviation, e.g.
+ * "My Case Report" + jbjs → "My Case Report_JBJS".
+ */
+export function outputBaseName(originalFilename: string | null | undefined, journalSlug: string): string {
+  const stripped = (originalFilename ?? '')
+    .replace(/\.docx$/i, '')
+    .replace(/[^A-Za-z0-9 ._()\[\]-]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120)
+  const base = stripped || 'manuscript'
+  return `${base}_${journalAbbrev(journalSlug)}`
 }
 
 // ---------------------------------------------------------------------------
@@ -42,6 +64,8 @@ export interface CreateJobRequest {
   articleType: string
   turnstileToken?: string
   figureCount?: number
+  /** Original filename of the uploaded manuscript (used to name outputs). */
+  manuscriptFilename?: string
 }
 
 export interface SignedUpload {
@@ -59,7 +83,6 @@ export interface CreateJobResponse {
 
 export interface JobOutputs {
   manuscript?: string
-  titlePage?: string
   reportDocx?: string
   zip?: string
 }
@@ -80,14 +103,39 @@ export interface JobStatusResponse {
 // Progress mapping for the client poller
 // ---------------------------------------------------------------------------
 
+// Progress values mark the START of the work that runs while the job sits at
+// that status; labels describe the work in flight. The reference-verify stage
+// (status 'extracted') is the long one, so it gets the widest band and is made
+// granular via the stage cursor.
 const STAGE_META: Record<JobStatus, { progress: number; label: string }> = {
-  uploaded: { progress: 0.1, label: 'Uploaded — starting…' },
-  parsed: { progress: 0.3, label: 'Reading your manuscript…' },
-  extracted: { progress: 0.5, label: 'Extracting metadata + references…' },
-  verified: { progress: 0.7, label: 'Verifying references against Crossref/PubMed…' },
-  rendered: { progress: 0.9, label: 'Formatting + building your report…' },
+  uploaded: { progress: 0.08, label: 'Reading your manuscript…' },
+  parsed: { progress: 0.25, label: 'Extracting metadata and references…' },
+  extracted: { progress: 0.4, label: 'Verifying references against Crossref and PubMed…' },
+  verified: { progress: 0.78, label: 'Applying the journal’s formatting and building your report…' },
+  rendered: { progress: 0.94, label: 'Finalizing…' },
   complete: { progress: 1, label: 'Done' },
   failed: { progress: 1, label: 'Failed' },
 }
 
-export const progressFor = (status: JobStatus) => STAGE_META[status]
+/**
+ * Progress + label for a status. When the job is mid reference-verification,
+ * the stage cursor interpolates smoothly across the 0.4 → 0.78 band and the
+ * label carries a "12 of 20" count.
+ */
+export const progressFor = (status: JobStatus, cursor?: StageCursor | null) => {
+  const meta = STAGE_META[status]
+  if (
+    status === 'extracted' &&
+    cursor &&
+    typeof cursor.references_verified === 'number' &&
+    typeof cursor.references_total === 'number' &&
+    cursor.references_total > 0
+  ) {
+    const frac = Math.min(cursor.references_verified / cursor.references_total, 1)
+    return {
+      progress: 0.4 + 0.38 * frac,
+      label: `Verifying references against Crossref and PubMed (${Math.min(cursor.references_verified, cursor.references_total)} of ${cursor.references_total})…`,
+    }
+  }
+  return meta
+}

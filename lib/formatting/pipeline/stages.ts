@@ -60,7 +60,6 @@ export function canTransition(from: JobStatus, to: JobStatus): boolean {
 
 export interface JobOutputPaths {
   manuscript?: string
-  title_page?: string
   report_docx?: string
   figures?: string[]
   zip?: string

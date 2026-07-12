@@ -112,11 +112,29 @@ export function analyze(input: {
   }
 
   // --- blinding / separate title page ---
+  // The formatter no longer generates a title-page file (removed 2026-07-11),
+  // so when the journal requires one it is the author's action item.
   if (rules.blinding.separate_title_page) {
     checklist.push({
-      requirement: 'Separate anonymized title page',
-      status: 'fixed',
+      requirement: 'Separate title page uploaded as its own file',
+      status: 'action-needed',
     })
+  }
+
+  // --- references: some journals require ALL authors (no "et al.") ---
+  // et_al_threshold === null encodes "list every author". The engine never
+  // rewrites the author's reference list (content immutability), so a
+  // truncated list is flagged for the author instead. JBJS is the canonical
+  // case: "journal citations must include all authors (not et al.)".
+  if (rules.references.et_al_threshold === null && model.rawReferences.some((r) => /\bet al\b/i.test(r))) {
+    suggestions.push({
+      title: 'References must list all authors — no “et al.”',
+      location: 'References',
+      detail: `${rules.identity.name} requires every author to be named in each reference. Some of your references truncate the author list with “et al.” — expand each one to list all authors (update your citation-manager style, e.g. switch Zotero/EndNote to the journal's own style, then regenerate the bibliography).`,
+      suggestedWording: null,
+      severity: 'action-required',
+    })
+    checklist.push({ requirement: 'References list all authors (no “et al.”)', status: 'action-needed' })
   }
 
   // --- structured abstract (info-level: hard to verify deterministically) ---

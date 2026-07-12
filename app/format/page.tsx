@@ -41,7 +41,7 @@ const howItWorks: { step: string; title: string; body: string }[] = [
   {
     step: '3',
     title: 'Download and review',
-    body: 'Get a journal-formatted manuscript, a separate title page where the journal requires one, your reference list verified and renumbered, and a compliance report. Read the report, apply anything flagged for your attention, and submit with confidence.',
+    body: 'Download your journal-formatted manuscript and compliance report directly on the page, with your reference list verified and renumbered. Read the report, apply anything flagged for your attention, and submit with confidence.',
   },
 ]
 
