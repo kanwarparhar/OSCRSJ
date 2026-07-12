@@ -7,11 +7,15 @@ import { Docx, PART, extractBodyText } from '../lib/formatting/ooxml/docx'
 import { progressFor } from '../lib/formatting/pipeline/api'
 import type { ContentModel } from '../lib/formatting/types'
 
-test('journal registry: all 14 validated + OSCRSJ present', () => {
-  assert.equal(JOURNALS.length, 14)
+test('journal registry: all validated + OSCRSJ present, summaries in sync', () => {
+  // The registry grows with the top-100 expansion; assert structural invariants
+  // rather than a fixed count so the test survives every wave.
+  assert.ok(JOURNALS.length >= 14, 'registry should not shrink below the original 14')
   assert.ok(getJournal('oscrsj'))
-  assert.equal(JOURNAL_SUMMARIES.length, 14)
-  assert.ok(JOURNAL_SUMMARIES.every((j) => j.slug && j.name && j.guidelinesUrl))
+  assert.equal(JOURNAL_SUMMARIES.length, JOURNALS.length)
+  assert.ok(JOURNAL_SUMMARIES.every((j) => j.slug && j.name && j.abbrev && j.guidelinesUrl))
+  // slugs are unique across the registry
+  assert.equal(new Set(JOURNALS.map((j) => j.identity.slug)).size, JOURNALS.length)
 })
 
 function fakeModel(): ContentModel {

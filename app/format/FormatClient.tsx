@@ -1,7 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { JOURNAL_SUMMARIES, ARTICLE_TYPE_LABELS } from '@/lib/formatting/journalList'
+import { ARTICLE_TYPE_LABELS, type JournalSummary } from '@/lib/formatting/registry-meta'
+import JournalCombobox from '@/components/JournalCombobox'
 import {
   MAX_MANUSCRIPT_BYTES,
   MAX_FIGURE_BYTES,
@@ -287,7 +288,7 @@ function ReportView({ report }: { report: ReportModel }) {
 /*  Main client component                                               */
 /* ------------------------------------------------------------------ */
 
-export default function FormatClient() {
+export default function FormatClient({ journals }: { journals: JournalSummary[] }) {
   // Inputs
   const [manuscript, setManuscript] = useState<File | null>(null)
   const [manuscriptError, setManuscriptError] = useState<string | null>(null)
@@ -315,7 +316,7 @@ export default function FormatClient() {
   const figureInputRef = useRef<HTMLInputElement>(null)
 
   const selectedJournal = useMemo(
-    () => JOURNAL_SUMMARIES.find((j) => j.slug === journalId) ?? null,
+    () => journals.find((j) => j.slug === journalId) ?? null,
     [journalId],
   )
 
@@ -390,7 +391,7 @@ export default function FormatClient() {
 
   function handleJournalChange(slug: string) {
     setJournalId(slug)
-    const j = JOURNAL_SUMMARIES.find((x) => x.slug === slug)
+    const j = journals.find((x) => x.slug === slug)
     setArticleType(j && j.articleTypes.length === 1 ? j.articleTypes[0] : '')
   }
 
@@ -747,21 +748,13 @@ export default function FormatClient() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="journal" className="mb-1 block text-sm font-medium text-ink">
-              Journal
+              Journal <span className="font-normal text-brown">({journals.length} supported)</span>
             </label>
-            <select
-              id="journal"
+            <JournalCombobox
+              journals={journals}
               value={journalId}
-              onChange={(e) => handleJournalChange(e.target.value)}
-              className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm text-ink transition-colors focus:border-peach-dark focus:outline-none focus:ring-2 focus:ring-peach-dark/50"
-            >
-              <option value="">Select a journal…</option>
-              {JOURNAL_SUMMARIES.map((j) => (
-                <option key={j.slug} value={j.slug}>
-                  {j.name}
-                </option>
-              ))}
-            </select>
+              onChange={handleJournalChange}
+            />
           </div>
 
           <div>

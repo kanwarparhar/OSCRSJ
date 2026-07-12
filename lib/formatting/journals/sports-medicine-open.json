@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Sports Medicine - Open",
+    "slug": "sports-medicine-open",
+    "issn": "2198-9761",
+    "publisher": "Springer Nature (SpringerOpen)",
+    "guidelines_url": "https://link.springer.com/journal/40798/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "97eed0663190273cfe33ea457fa6c6e4d30045c2be2b759abd87bb6c94efff83",
+    "source_note": "Platform migration: sportsmedicine-open.springeropen.com now 301-redirects to the Springer Nature Link platform at https://link.springer.com/journal/40798/submission-guidelines (same publisher, Springer Nature/SpringerOpen OA). Plain WebFetch of the live URL 303-redirects to an idp.springer.com cookie-authorize shell, so the guide was encoded from the live current page rendered in a headless browser (not an archive). Cron should treat this journal as needing headless fetch.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Background",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations"
+    ],
+    "review": [
+      "Background",
+      "Main text",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations"
+    ],
+    "systematic_review": [
+      "Background",
+      "Methods",
+      "Results and discussion",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations"
+    ],
+    "letter": [
+      "Main text",
+      "List of abbreviations",
+      "Declarations"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher/platform migration: sportsmedicine-open.springeropen.com 301-redirects to link.springer.com/journal/40798 (Springer Nature Link). Same publisher (Springer Nature / SpringerOpen OA), new hosting platform; live current content read via headless browser (plain fetch hits an idp.springer.com cookie shell).",
+    "Article-type mapping: Original Research Articles->original_research; Review Articles->review; Systematic Reviews->systematic_review; Letters to the Editor->letter; Current Opinions->editorial (guide describes it as 'more editorial in nature').",
+    "Omitted with no clean enum slot: Short Communications (brief research report ~ original_research) and Leading Articles (state-of-the-art review ~ review) would both collide with existing keys.",
+    "Abstract structure varies by type: original_research=Background/Results/Conclusions; systematic_review=Background/Methods/Results/Conclusions/Registration; review=loosely structured background/main-body/short-conclusion (non-structured allowed for narrative review). abstract.sections encoded for the primary type (original_research). All types share the 350-word abstract cap.",
+    "references.et_al_threshold=6 is DERIVED from the guide's reference EXAMPLE which lists 6 authors then 'et al.' (SpringerOpen Vancouver 'first 6 then et al'), not from an explicit numeric rule sentence.",
+    "references.in_text=bracket: guide states a numbered Vancouver style ('reference number') but does not explicitly show bracket vs superscript; bracket is the SpringerOpen rendering (low-risk assumption).",
+    "layout: 'Use double line spacing' and 'Include line and page numbering' are the only explicit rules -> line_spacing=double, page_numbers.show=true, line_numbers=continuous (continuous-vs-per-page not explicitly stated). No font family/size, margins, alignment, indent, or page size prescribed (tables reference 'A4 or Letter', both accepted -> page_size=null).",
+    "Figures: guide also accepts Word/PowerPoint/BMP/CDX (not in schema enum); encoded only eps/pdf/tiff/jpeg/png. ~300 dpi at final size; figure titles(<=15 words) + legends(<=300 words) go in the main manuscript, not in the graphic file; individual figure files uploaded separately, max 10 MB each.",
+    "Declarations (all required under a 'Declarations' heading, 'Not applicable' if irrelevant): Ethics approval and consent to participate, Consent for publication, Availability of data and materials, Competing interests, Funding, Authors' contributions, Acknowledgements, Authors' information (optional). 'Authors' information' has no schema slot; trial_registration appears as an abstract/SR field, not a standalone declaration, so it is not encoded here.",
+    "Key Points table (~3 stand-alone statements placed after the Abstract) is required for research/review/SR/short-comm/opinion types -> misc.highlights_required=true.",
+    "Peer review is single-anonymous (reviewers see author identities) -> double_blind=false; no separate blinded/anonymized title-page file required.",
+    "Letters to the Editor: <=500-word body, no abstract, must begin with 'To the Editor'. Not encoded (no schema field): APC (GBP 2990 / USD 4390 / EUR 3390) and licence options CC BY-NC-ND or CC BY."
+  ]
+}

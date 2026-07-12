@@ -184,7 +184,7 @@ export default function FormatPage() {
         <section id="tool" className="scroll-mt-24">
           <span className="section-label">Start Now</span>
           <h2 className="section-heading mb-6">Format your manuscript</h2>
-          <FormatClient />
+          <FormatClient journals={JOURNAL_SUMMARIES} />
         </section>
       </div>
     </div>

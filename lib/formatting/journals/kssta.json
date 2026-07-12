@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Knee Surgery, Sports Traumatology, Arthroscopy",
+    "slug": "kssta",
+    "issn": "1433-7347",
+    "publisher": "Wiley (on behalf of ESSKA — European Society of Sports Traumatology, Knee Surgery and Arthroscopy)",
+    "guidelines_url": "https://esskajournals.onlinelibrary.wiley.com/hub/journal/14337347/homepage/author-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "Publisher migrated from Springer to Wiley/ESSKA; the old Springer guide (link.springer.com/journal/167) was NOT used. Live Wiley page is Cloudflare-protected: WebFetch returned 403 and the browser hit a 'Just a moment...' Cloudflare interstitial. Encoded from the LIVE page read via a headless browser after the Cloudflare challenge cleared: https://esskajournals.onlinelibrary.wiley.com/hub/journal/14337347/homepage/author-guidelines . Freshness cron needs headless fetch for this domain (Cloudflare).",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "narrative_review",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times Roman",
+      "size_pt": 10
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "orcid",
+      "abstract",
+      "keywords",
+      "funding",
+      "disclosures",
+      "ethics_statement",
+      "data_availability",
+      "acknowledgments"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Purpose",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": 4,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": "before",
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": false,
+    "formats": [
+      "eps",
+      "tiff"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": "Fig.",
+    "naming_pattern": "Fig{n}"
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "author_contributions",
+      "acknowledgments",
+      "trial_registration"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "PUBLISHER MIGRATION confirmed: KSSTA left Springer and is now published by Wiley on behalf of ESSKA. Guide read from the live Wiley 'Author Guidelines' page at esskajournals.onlinelibrary.wiley.com; the old Springer guide was NOT used.",
+    "Live Wiley page is Cloudflare-protected (WebFetch 403; 'Just a moment...' interstitial). Full guide content was obtained via a headless browser after the Cloudflare challenge cleared — content is clean/complete, but the freshness cron will need headless fetch.",
+    "KSSTA offers 'Free Format submission': for initial submission most layout/reference formatting is relaxed ('References may be submitted in any style or format, as long as it is consistent'; figures/tables may be embedded OR separate 'whichever you prefer'). Values here encode the journal's stated house style for the tool to normalize toward; they are not hard desk-reject gates at initial submission.",
+    "font.family/size_pt = 'Times Roman' / 10 are given only as an EXAMPLE in the guide ('Use a normal, plain font (e.g., 10-point Times Roman) for text.'), not a strict mandate. Encoded from the literal guide text, not from memory.",
+    "line_numbers set to 'continuous' because the guide requires the automatic line-numbering function be enabled, but it does NOT specify continuous vs per-page; schema has no 'required-but-unspecified' value, so 'continuous' (the standard for double-anonymized manuscripts) was chosen.",
+    "references.style = 'custom': in-text numbers in SQUARE BRACKETS, but the reference LIST is 'alphabetized by the last names of the first author of each work and numbered consecutively' (order=alphabetical, NOT citation order). This Springer-legacy name-year-in-entry style matches none of vancouver/nlm/ama cleanly.",
+    "references.journal_abbrev mapped to 'nlm' (abbreviated): the guide says 'Always use the standard abbreviation of a journal's name according to the ISSN List of Title Word Abbreviations (LTWA)... If you are unsure, please use the full journal title.'",
+    "et_al_threshold = null: guide says 'Ideally, the names of all authors should be provided, but the usage of \"et al\" in long author lists will also be accepted' — no numeric threshold given.",
+    "SCHEMA GAP — tiered figure DPI: guide specifies Line Art min 1200 dpi, Halftone (photographs) min 300 dpi, Combination art min 600 dpi. min_dpi encoded as 300 (the halftone floor, most relevant to orthopedic radiographs/MRI); the 1200/600 tiers cannot be represented.",
+    "Article types: guide explicitly names 'original articles' (structured abstract), 'narrative reviews' (unstructured 350-word summary), general 'Review articles' (expert synthesis, require disclosure), 'Letters to the Editor' (dedicated submission page), and references 'editorials, book reviews, comments' as existing types. Mapped to original_research/narrative_review/review/letter/editorial. Systematic reviews/meta-analyses are almost certainly accepted by KSSTA but were NOT explicitly named in the extracted guide, so no separate systematic_review key was added.",
+    "Title page also required to contain a list of abbreviations, author contribution statements, and a consent statement — none have a clean title_page.elements enum slot; abbreviations has no schema home at all.",
+    "orcid_required set to false conservatively: the Free Format checklist lists 'An ORCID ID' under 'Before you submit, you will need', but the Title Page section says ORCID only 'If available' and Authorship says authors are 'recommended' to use ORCID — mixed/contradictory, so not treated as a hard requirement.",
+    "scrub_metadata = false: guide requires authors to anonymize the manuscript to remain anonymous to reviewers (scrub_body_identifiers=true), but does not explicitly mention stripping document/file metadata.",
+    "Figure captions: 'Include the captions in the text file of the manuscript, not in the figure file' and 'Figure captions begin with the term Fig. in bold type' (callout_style='Fig.'). legends_location mapped to 'in_text' (in the manuscript text file); guide does not prescribe a dedicated 'Figure Legends' end-section.",
+    "Graphical Abstract (optional feature) accepts tiff/eps/jpeg at min 300 dpi, dimensions 50mm x 60mm, with a one-sentence summary (max 200 chars) — separate from main-figure requirements, not encoded in figures.formats."
+  ]
+}

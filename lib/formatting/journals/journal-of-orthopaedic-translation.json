@@ -1,0 +1,227 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Orthopaedic Translation",
+    "slug": "journal-of-orthopaedic-translation",
+    "issn": "2214-031X",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/journal-of-orthopaedic-translation/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "5dc2df96b4c74f9e239611807e954b32aea014acd701821b94482ab49113d68c",
+    "source_note": "Live ScienceDirect guide bot-blocked (HTTP 403); encoded from Wayback archive snapshot https://web.archive.org/web/20240304234847/https://www.sciencedirect.com/journal/journal-of-orthopaedic-translation/publish/guide-for-authors dated 2024-03-04. This is the only 200-status Wayback snapshot of the page; it is >12 months old (no newer snapshot exists). e-ISSN 2214-0328.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "case_report",
+    "case_series",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_type",
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "running_title",
+      "acknowledgments",
+      "disclosures"
+    ],
+    "running_title_max_chars": 50,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background/Objective",
+      "Methods",
+      "Results",
+      "Conclusion",
+      "The Translational Potential of this Article"
+    ],
+    "max_words": 500,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Abstract",
+      "Introduction",
+      "Materials and methods",
+      "Results",
+      "Discussion",
+      "Conflicts of interest",
+      "Funding/Support statement",
+      "Acknowledgements",
+      "References"
+    ],
+    "case_report": [
+      "Abstract",
+      "Introduction",
+      "Case Report",
+      "Discussion",
+      "Conflicts of Interest",
+      "Funding/Support Statement",
+      "Acknowledgements",
+      "References"
+    ],
+    "case_series": [
+      "Abstract",
+      "Introduction",
+      "Case Report",
+      "Discussion",
+      "Conflicts of Interest",
+      "Funding/Support Statement",
+      "Acknowledgements",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 500,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 100,
+      "references_min": null,
+      "references_max": 80,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 1200,
+      "abstract_max_words": 500,
+      "references_min": 15,
+      "references_max": 30,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_series": {
+      "manuscript_max_words": 1200,
+      "abstract_max_words": 500,
+      "references_min": 15,
+      "references_max": 30,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 5,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": "before",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "funding",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Encoded from Wayback snapshot 2024-03-04 of the ScienceDirect guide; live page is bot-blocked (HTTP 403) and no snapshot <12mo exists. Journal still on Elsevier/ScienceDirect (no publisher migration found).",
+    "Publisher: 'published quarterly by Elsevier'; official journal of the Chinese Speaking Orthopaedic Society (CSOS) and International Chinese Musculoskeletal Research Society (ICMRS). Some JOT surfaces show KeAi co-publishing/production, but the guide names Elsevier.",
+    "Article-type mapping: Original article->original_research; Review article->review; Case reports (covers 'a case or case series')->case_report + case_series; Letter to the Editor->letter; Editorial->editorial.",
+    "Perspectives OMITTED — no clean schema slot (4000-word limit, abstract <=50 words, <=35 refs, 1-2 figs). Guide also lists a Graphical abstract (optional, min 531x1328 px @96dpi).",
+    "COMBINED figure+table caps that the schema (separate figures_max/tables_max) can't hold, so left null: original_research <=8 figures/tables total; review <=4; letter <=2; perspectives 1-2. Guide: 'not more than 8 figures/tables' etc. Also 'no limit on the number of pages, figures, or colour figures' stated for print, but per-type caps above govern manuscript body.",
+    "Figure DPI is TIERED (schema holds one int; set to the 300 floor): halftones/photographs >=300 dpi; bitmapped line drawings >=1000 dpi; combination line/halftone >=500 dpi.",
+    "Abstract: general cap is 500 words (original, review, perspectives, case reports) but the Types-of-article section gives tighter per-type caps used in word_limits: review 100, editorial has no abstract, letter has no abstract. Original-article abstract is structured (Background/Objective, Methods, Results, Conclusion); review abstract structured only for systematic reviews/meta-analyses, unstructured otherwise; case reports/perspectives = single paragraph, no subheadings.",
+    "'The Translational Potential of this Article' is a required heading immediately after the abstract, counted within the abstract word count — included as final abstract section.",
+    "Two title pages required by double-anonymized review: first title page carries author details + running title + acknowledgements + Declaration of Interest; second title page carries ONLY article type + article title (heads the anonymized manuscript).",
+    "Tables placement is author-choice per guide ('either next to the relevant text ... or on separate page(s) at the end'); set grouped_end to match the prescribed article structure (Figures and Tables listed at end). Avoid vertical rules.",
+    "Figure callout_style left null: guide never shows a main-text callout; appendix example uses 'Fig. A.1' but that is appendix-specific, not inferred to body callouts.",
+    "include_doi=true reflects guide's 'Use of the DOI is highly encouraged' (encouraged, not strictly mandatory).",
+    "Body text: single-column, British English spelling, do NOT justify or hyphenate (=> alignment left). Manuscript body font family/size NOT specified (illustration fonts Arial/Courier/Times New Roman are for artwork only).",
+    "scrub_metadata=false: guide requires scrubbing author identifiers from body/refs/figures/tables/acknowledgements but does not explicitly mention stripping file/document-property metadata."
+  ]
+}

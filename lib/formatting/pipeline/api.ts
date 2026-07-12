@@ -3,7 +3,7 @@
 
 import type { JobStatus, StageCursor } from './stages'
 import type { ReportModel } from '../types'
-import { journalAbbrev } from '../journalList'
+import { journalAbbrev } from '../registry-meta'
 
 export const FORMATTING_BUCKET = 'formatting'
 

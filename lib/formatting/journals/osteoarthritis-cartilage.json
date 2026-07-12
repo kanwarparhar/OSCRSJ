@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Osteoarthritis and Cartilage",
+    "slug": "osteoarthritis-cartilage",
+    "issn": "1063-4584",
+    "publisher": "Elsevier (official journal of the Osteoarthritis Research Society International, OARSI)",
+    "guidelines_url": "https://www.sciencedirect.com/journal/osteoarthritis-and-cartilage/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "d123b9af7c1ae4965382b5b5d1eeee03f1ec526a45784db91c9f93fd6bbd0c36",
+    "source_note": "Live ScienceDirect page 403-blocked to plain WebFetch; encoded from a headless-browser render of the LIVE canonical URL (Apify rag-web-browser), which returned the full guide text (not a shell/CAPTCHA). Note contains 'blocked' and 'headless' to route the freshness cron to a headless re-fetch.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "narrative_review",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "orcid",
+      "corresponding_author",
+      "running_title"
+    ],
+    "running_title_max_chars": 40,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Objective",
+      "Design",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Method",
+      "Results",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 50,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 800,
+      "abstract_max_words": 0,
+      "references_min": null,
+      "references_max": 8,
+      "figures_max": 0,
+      "tables_max": 0
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": "before",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "pdf"
+    ],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "author_contributions",
+      "funding",
+      "conflict_of_interest",
+      "data_availability"
+    ],
+    "required": [
+      "author_contributions",
+      "funding",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher verified: Elsevier on ScienceDirect, official journal of OARSI; no publisher migration. Submission via Editorial Manager (editorialmanager.com/OAC).",
+    "Live page 403-blocked to plain WebFetch and Wayback host blocked to WebFetch; full live guide text obtained via headless-browser scrape (Apify rag-web-browser). Content is live/clean, not a shell — treated as TIER_A but flagged headless/blocked for cron.",
+    "references.style set to 'custom': the guide says 'consult the AMA Manual of Style (ed. 8)' for general style, but the reference-list EXAMPLES are the Elsevier numbered format (initials-before-surname, journal names abbreviated per ISSN LTWA, DOI included) which is not classic AMA/Vancouver.",
+    "journal_abbrev='nlm' is an approximation: the guide specifies the ISSN List of Title Word Abbreviations (LTWA), not NLM specifically, but titles ARE abbreviated (not full), and the schema only offers nlm|full.",
+    "SCHEMA GAP - combined figure+table caps: full-length original research = 'no more than 4000 words, 8 figures and tables, and 50 references'; reviews = 'max 8 tables and/or figures, 100 references'; brief report = '2 figures and/or tables'; editorial/commentary = 'max 2 figures and/or tables'. These are COMBINED figure+table limits; figures_max/tables_max left null (per-type) to avoid implying separate caps. Full-length & reviews combined cap = 8; editorial combined cap = 2.",
+    "Article-type mapping: 'Full length original research article' -> original_research; 'Narrative Reviews' -> narrative_review; 'Systematic reviews and Meta-Analyses' -> systematic_review; 'Editorial and Commentary' -> editorial; 'Letter to the editor' -> letter.",
+    "OMITTED type: 'Brief report of original research' (abstract 250 words, main text 2000 words, 15 references, 2 figures/tables) has no clean enum slot distinct from original_research, so it is not encoded as its own key. Its limits are noted here for reference.",
+    "Letter to the editor: 800 words, no abstract, no tables or figures, max 8 references (encoded abstract_max_words=0, figures_max=0, tables_max=0).",
+    "Abstract is required and structured (Objective; Design; Results; Conclusions) for all relevant types INCLUDING narrative reviews and systematic reviews; max 350 words. Keywords: 3-6, English spelling; case/separator unstated.",
+    "line_numbers='continuous' and page_numbers.show=true from: 'Number each page sequentially and add line numbers, including the title page, abstract, text, references, figure legends, and tables.'",
+    "Font, size, line spacing, margins, page size, alignment, first-line indent, heading formatting: all UNSTATED in the guide -> null.",
+    "separate_title_page=true: submission requires a separate file containing title page + abstract, with the main-text file excluding the title page and abstract. No instruction to scrub author identifiers from the body -> scrub_body_identifiers=false; peer review described as 'internally and/or externally' with no double-blind/anonymized statement -> double_blind=false.",
+    "cover_letter_required=true inferred from: 'Approvals ... must be explicitly stated in the submission cover letter' (ethics approvals) plus Mendelian-Randomisation cover-letter rationale requirement; the guide treats the cover letter as a required submission component.",
+    "declarations.required lists universally-required statements (author contributions, funding/role of funding source, competing interests). ethics_approval and patient_consent are required only when human/animal subjects are involved (Section 4). data_availability/Data statement is 'encouraged', not required, so it is in order but not in required.",
+    "tables.placement='grouped_end': suggested position marked in text, but each table typed on a separate page; table legends typed ABOVE each table (caption_position='above'); Arabic numbering for both figures and tables.",
+    "figures.formats: guide lists 'BMP, TIF, or PDF' as readily-available formats and states JPG/PPT lack sufficient detail; encoded ['tif','pdf'] (BMP has no enum slot). No DPI value stated.",
+    "orcid_required=true: title page must include ORCID ID for each co-author."
+  ]
+}

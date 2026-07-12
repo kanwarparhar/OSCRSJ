@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "British Journal of Sports Medicine",
+    "slug": "bjsm",
+    "issn": "0306-3674 (print); 1473-0480 (online)",
+    "publisher": "BMJ Publishing Group (BMJ Group)",
+    "guidelines_url": "https://bjsm.bmj.com/pages/authors/",
+    "verified_date": "2026-07-12",
+    "source_hash": "82bcde3a69bdde3df88af5b1859326a032b296a782cb396845d9d4effb47ecf2",
+    "source_note": "Live BJSM guide at https://bjsm.bmj.com/pages/authors/ was bot-blocked (HTTP 403); web.archive.org and archive.ph were both unreachable from this tool (no archive snapshot could be fetched). BJSM-specific values (article-type word limits, abstract word limit, exact abstract section labels, declaration order) are UNVERIFIED and left null. Formatting, reference and figure values were encoded from the authoritative cross-journal BMJ author hub https://authors.bmj.com/writing-and-formatting/formatting-your-paper/ (BMJ house style applies to all BMJ journals including BJSM); publisher and ISSN from Wikipedia; citation style cross-checked at Paperpile. Route to needs-headless-recheck.",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "review",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "word_count_manuscript"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {},
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "eps",
+      "jpeg",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [],
+    "required": null
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live BJSM Instructions for Authors (bjsm.bmj.com/pages/authors/) returned HTTP 403 (bot-blocked); web.archive.org and archive.ph both unreachable via WebFetch. No live/archived BJSM page could be read.",
+    "Formatting/reference/figure values encoded from the authoritative BMJ cross-journal author hub (authors.bmj.com/writing-and-formatting/formatting-your-paper/), which BMJ applies to all its journals including BJSM. These are BMJ house style, not a BJSM-specific page read.",
+    "in_text: BMJ formatting page states references may be 'square brackets [6] or superscripts'; Paperpile CSL for BJSM shows square brackets. Encoded 'bracket'; superscript is ALSO permitted per BMJ house style (BJSM's rendered/production output is typically superscript).",
+    "et_al_threshold=3 from BMJ house style: 'The first three authors are listed by last name and initials, with additional authors acknowledged by the use of et al.'",
+    "include_doi=true: BMJ references include DOI when available.",
+    "journal_abbrev='nlm' inferred from Vancouver style (NLM/Index Medicus abbreviations); not explicitly restated on the fetched page.",
+    "Figures: BMJ requires min 300 dpi for non-vector images and 1200 dpi for line art — SCHEMA GAP: schema holds a single min_dpi (encoded 300, the general minimum); line-art 1200 dpi not representable.",
+    "article_types reflect BMJ/BJSM standard offerings (original research, systematic reviews, reviews, editorials, letters) corroborated by multiple secondary sources; NOT read from an enumerated live BJSM list because the page was blocked. BJSM does not focus on case reports/case series, so those were omitted.",
+    "abstract.structured=true: BJSM original-research abstracts are structured (well-established BMJ convention, corroborated by secondary template summaries); exact section labels and word cap were NOT verifiable from the live guide (null).",
+    "word_limits and sections left empty {}: no BJSM-specific per-article-type word/reference/figure caps could be verified from any reachable source.",
+    "title_page.elements limited to the near-universal BMJ set (title, authors, affiliations, corresponding author, manuscript word count); exact BJSM title-page composition unverified.",
+    "blinding all false: BMJ journals use multiple peer-review models and each specifies its own; BJSM's specific model (and any author-anonymization requirement) could not be verified, so conservative false was used. Do not assume double-blind.",
+    "declarations: BMJ adopts ICMJE Recommendations (competing interests, funding, ethics approval, contributorship, data availability) but the exact BJSM declaration set/order was not readable; left order=[] / required=null.",
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored)."
+  ]
+}

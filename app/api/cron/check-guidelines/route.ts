@@ -1,13 +1,20 @@
 // ============================================================
 // GET /api/cron/check-guidelines
 // ============================================================
-// Monthly Vercel Cron entry point (recommended schedule "0 12 1 * *" —
-// 12:00 UTC on the 1st; registered in vercel.json by the parent). Re-runs
-// the canonical fetch → normalize → SHA-256 recipe (see
-// lib/formatting/journals/README.md and ./normalize.ts) against every
-// journal's live Guide-for-Authors page and diffs the result against the
-// stored `identity.source_hash`. When a journal changes its guidelines the
-// hash drifts and the rule file is flagged for re-encoding.
+// WEEKLY Vercel Cron entry point (schedule "0 12 * * 1" — 12:00 UTC every
+// Monday; registered in vercel.json). Re-runs the canonical fetch → normalize
+// → SHA-256 recipe (see lib/formatting/journals/README.md and ./normalize.ts)
+// and diffs the result against the stored `identity.source_hash`. When a
+// journal changes its guidelines the hash drifts and the rule file is flagged
+// for re-encoding.
+//
+// CHUNKING (top-100 expansion, 2026-07-12): a full sweep of ~100 journals at
+// ~0.25-8s each would blow the Vercel function time limit, so each weekly run
+// checks a fixed-size CHUNK (default 25) selected by a STATELESS ISO-week
+// cursor: chunkIndex = isoWeek % ceil(total / CHUNK_SIZE). Four consecutive
+// Mondays therefore cover the whole registry, cycling forever with no stored
+// cursor and no migration. Overrides (all gated by CRON_SECRET): `?all=1`
+// checks every journal in one run; `?chunk=N` forces a specific chunk.
 //
 // Each journal is classified:
 //   - unchanged           hash matches the stored source_hash
@@ -49,6 +56,10 @@ import {
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+// Cap the run so a slow chunk can't hang the platform function. 25 journals ×
+// a fast fetch fits comfortably; stragglers that don't finish are simply
+// re-checked next cycle.
+export const maxDuration = 60
 
 // The reusable recipe (normalizeGuideText / hashGuideText) lives in the
 // colocated ./normalize module so a future headless fetch path can import it
@@ -61,8 +72,10 @@ export const runtime = 'nodejs'
 const RECIPIENT = 'oscrsjournal@gmail.com'
 
 const GUIDE_UA = 'Mozilla/5.0 (OSCRSJ-guidelines-checker)'
-const FETCH_TIMEOUT_MS = 15_000
-const POLITE_DELAY_MS = 500
+const FETCH_TIMEOUT_MS = 8_000
+const POLITE_DELAY_MS = 250
+// Journals checked per weekly run. Four Mondays cover ~100 journals.
+const CHUNK_SIZE = 25
 
 function authorized(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET
@@ -73,6 +86,41 @@ function authorized(req: NextRequest): boolean {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/** ISO-8601 week number (1-53) for a date — the stateless chunk cursor. */
+function isoWeek(d: Date): number {
+  const date = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))
+  // Thursday in the current week decides the year.
+  const day = date.getUTCDay() || 7
+  date.setUTCDate(date.getUTCDate() + 4 - day)
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1))
+  return Math.ceil(((date.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7)
+}
+
+/**
+ * Pick the slice of JOURNALS to check this run. `?all=1` → everything;
+ * `?chunk=N` → that chunk (0-based, wrapped); otherwise the ISO-week cursor.
+ * Returns the slice plus chunk metadata for the digest/audit.
+ */
+function selectChunk(req: NextRequest): {
+  slice: typeof JOURNALS
+  chunkIndex: number | 'all'
+  chunkCount: number
+} {
+  const total = JOURNALS.length
+  const chunkCount = Math.max(1, Math.ceil(total / CHUNK_SIZE))
+  const params = req.nextUrl.searchParams
+  if (params.get('all') === '1') {
+    return { slice: JOURNALS, chunkIndex: 'all', chunkCount }
+  }
+  const explicit = params.get('chunk')
+  const idx =
+    explicit !== null && Number.isFinite(Number(explicit))
+      ? ((Number(explicit) % chunkCount) + chunkCount) % chunkCount
+      : isoWeek(new Date()) % chunkCount
+  const start = idx * CHUNK_SIZE
+  return { slice: JOURNALS.slice(start, start + CHUNK_SIZE), chunkIndex: idx, chunkCount }
 }
 
 interface JournalRef {
@@ -241,13 +289,15 @@ export async function GET(req: NextRequest) {
   const admin = createAdminClient()
   const checkedAtIso = new Date().toISOString()
 
+  const { slice, chunkIndex, chunkCount } = selectChunk(req)
+
   const changed: ChangedEntry[] = []
   const needsHeadless: HeadlessEntry[] = []
   const unreachable: UnreachableEntry[] = []
   let checked = 0
 
-  for (let i = 0; i < JOURNALS.length; i++) {
-    const { identity } = JOURNALS[i]
+  for (let i = 0; i < slice.length; i++) {
+    const { identity } = slice[i]
     const ref: JournalRef = {
       name: identity.name,
       slug: identity.slug,
@@ -283,11 +333,12 @@ export async function GET(req: NextRequest) {
     }
 
     // Be polite: small gap between fetches (skip after the last one).
-    if (i < JOURNALS.length - 1) {
+    if (i < slice.length - 1) {
       await sleep(POLITE_DELAY_MS)
     }
   }
 
+  const chunkLabel = chunkIndex === 'all' ? 'all' : `${chunkIndex + 1}/${chunkCount}`
   const flaggedTotal = changed.length + needsHeadless.length + unreachable.length
 
   // ---- Clean sweep ⇒ skip the send ----
@@ -300,6 +351,7 @@ export async function GET(req: NextRequest) {
         details: {
           checked_at: checkedAtIso,
           checked,
+          chunk: chunkLabel,
         },
       })
     } catch {
@@ -307,6 +359,7 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json({
       checked,
+      chunk: chunkLabel,
       changed: 0,
       needsHeadless: 0,
       unreachable: 0,
@@ -323,7 +376,7 @@ export async function GET(req: NextRequest) {
     checked,
   })
   const subject =
-    `[OSCRSJ] Guidelines freshness: ${changed.length} changed, ` +
+    `[OSCRSJ] Guidelines freshness (chunk ${chunkLabel}): ${changed.length} changed, ` +
     `${needsHeadless.length} headless, ${unreachable.length} unreachable`
 
   const { error: sendErr, messageId } = await sendEmail({
@@ -344,6 +397,7 @@ export async function GET(req: NextRequest) {
       details: {
         checked_at: checkedAtIso,
         checked,
+        chunk: chunkLabel,
         recipient: RECIPIENT,
         message_id: messageId,
         error: sendErr,
@@ -360,6 +414,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         checked,
+        chunk: chunkLabel,
         changed: changed.length,
         needsHeadless: needsHeadless.length,
         unreachable: unreachable.length,
@@ -372,6 +427,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     checked,
+    chunk: chunkLabel,
     changed: changed.length,
     needsHeadless: needsHeadless.length,
     unreachable: unreachable.length,

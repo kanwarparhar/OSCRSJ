@@ -1,0 +1,165 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Sports Medicine",
+    "slug": "sports-medicine",
+    "issn": "0112-1642 (print), 1179-2035 (electronic)",
+    "publisher": "Adis (Springer Nature)",
+    "guidelines_url": "https://link.springer.com/journal/40279/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "77310f53789dd95b0e58b45d07f5adffbe8e8ac11e168ca17f38276b4ca724d9",
+    "source_note": "blocked — the live submission-guidelines page (https://link.springer.com/journal/40279/submission-guidelines) is cookie/bot-gated: it 303-redirects to https://idp.springer.com/authorize and returns error=cookies_not_supported; web.archive.org is unreachable from this tool. Core values encoded from the directly-fetched Springer 'Additional Information for Authors' PDF at https://media.springer.com/full/springer-instructions-for-authors-assets/pdf/40279_Sports%20Medicine.pdf (Tier A). Article types, in-text reference style, and figure formats corroborated via WebSearch of the gated page plus the manusights 2026 third-party guide (secondary).",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "review",
+    "systematic_review",
+    "original_research",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": true,
+      "position": null
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "as_is",
+        "bold": false,
+        "italic": false,
+        "numbered": true
+      },
+      {
+        "level": 2,
+        "case": "as_is",
+        "bold": false,
+        "italic": false,
+        "numbered": true
+      },
+      {
+        "level": 3,
+        "case": "as_is",
+        "bold": false,
+        "italic": false,
+        "numbered": true
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "orcid"
+    ],
+    "running_title_max_chars": 100,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {},
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "tiff"
+    ],
+    "min_dpi": null,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "data_availability",
+      "ethics_approval",
+      "patient_consent",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "data_availability",
+      "author_contributions"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": true,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live submission-guidelines page bot-blocked (cookie gate -> idp.springer.com, error=cookies_not_supported); web.archive.org blocked at tool level. Primary values from the directly-read Springer 'Additional Information for Authors' PDF (media.springer.com/.../40279_Sports Medicine.pdf).",
+    "Article types from the journal scope corroborated by two WebSearches + manusights 2026 guide: Review Articles, Systematic Reviews, Meta-Analyses, Current Opinions, Letters to the Editor, and selected Original Research Articles. Meta-Analysis folded into systematic_review.",
+    "Current Opinion omitted from article_types — no clean schema slot (peer-reviewed opinion/perspective piece; not a standard review or editorial).",
+    "Word limits NOT primary-verified and set null: WebSearch of the gated page indicated Review ~8000, Systematic Review ~10,000, Current Opinion ~3000 words, treated as guides only and excluding abstract/references/figure legends/table captions. Verify against the live guide before enforcing.",
+    "Abstract structure is type-dependent: narrative reviews unstructured (no headings); original research structured (CONSORT/PRISMA/STROBE); systematic reviews PRISMA. Encoded structured=false for the flagship Review type.",
+    "Text must be double-spaced with page numbering (starting with the title page) and line numbering; line-number type (continuous vs per-page) not specified — encoded 'continuous' as the Springer default.",
+    "Section headings numbered by the decimal system (1; 2, 2.1, 2.2, 2.2.1; ...), starting with the Introduction and finishing with the Conclusions.",
+    "Running heading up to 100 characters. Keywords not required. Key Points (two to three bullets beneath the abstract) required — mapped to highlights_required=true. Plain Language Summary optional, up to 250 words (no schema slot).",
+    "Reference style is Springer Basic (numeric, square brackets): 'Reference citations in the text should be identified by numbers in square brackets' and 'numbered consecutively' — mapped to vancouver, in_text=bracket, order=cited. DOI required for preprint references (include_doi left false as not stated for all refs).",
+    "Figure formats (EPS for vector graphics, TIFF for halftones) from WebSearch of the gated page (standard Springer template); separate_files inferred from Editorial Manager per-figure upload + format/DPI specs.",
+    "Declarations subsection order from the PDF: Funding, Conflicts of Interest, Availability of data and material, Ethics approval, Consent to participate, Consent for publication, Code availability, Author contributions, then Acknowledgements. Funding/Conflicts/Data-availability/Author-contributions are 'required for all manuscripts'; ethics/consent are conditional.",
+    "Trial registration number required at the end of the abstract and in the Methods section (PROSPERO for systematic reviews) — placed in abstract/methods, not a Declarations subsection.",
+    "orcid_required set false (not stated in primary PDF; manusights secondary guide lists ORCID iDs in the byline). cover_letter_required set true from the manusights guide + standard Editorial Manager practice.",
+    "[schema-required default] references.journal_abbrev defaulted to 'nlm' (guide silent; NLM/Index Medicus abbreviations assumed).",
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent).",
+    "[schema-required default] layout.headings level styling (case/bold/italic) defaulted where the guide stated only numbering; 'as_is'/false used for unspecified attributes."
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Cachexia, Sarcopenia and Muscle",
+    "slug": "jcsm",
+    "issn": "2190-6009",
+    "publisher": "Wiley (Wiley-Blackwell), in association with the Society on Sarcopenia, Cachexia and Wasting Disorders",
+    "guidelines_url": "https://onlinelibrary.wiley.com/page/journal/1353921906009/homepage/forauthors.html",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "Live Wiley Author Guidelines page (https://onlinelibrary.wiley.com/page/journal/1353921906009/homepage/forauthors.html) was bot-blocked (HTTP 403 Forbidden); web.archive.org was unreachable via the fetch tool. Values encoded from WebSearch extraction of the same Wiley guide plus citation-style databases (Paperpile/Citationsy). No archive snapshot could be loaded. blocked.",
+    "submission_system": "Wiley Authors / Research Exchange (submissions before 2025-12-15 via Editorial Manager)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 400,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Acknowledgements"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 400,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": 8,
+      "tables_max": 8
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": null,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live Wiley guide 403-blocked and archive.org unreachable via fetch tool; values encoded from WebSearch extraction of the Wiley Author Guidelines + Paperpile/Citationsy reference-style databases (secondary sources). Confidence medium on values; null where unverified.",
+    "Case reports are directed to the daughter journal 'JCSM Clinical Reports', so case_report/case_series were omitted from the main journal's accepted types.",
+    "Only Original Articles have explicitly verified word/figure/reference limits; Reviews and Editorials are accepted types but their per-type limits were not verified (nulled).",
+    "SCHEMA GAP: guide states Original Articles 'may include up to 8 figures ... and/or tables' — this reads as a COMBINED cap of 8 figures-and/or-tables, not 8 of each. Schema has no combined cap, so figures_max=8 and tables_max=8 each encode the same ceiling; a figures+tables sum >8 will not be caught.",
+    "Original Article figures also limited to 'max of 6 sub-sections per figure' — no schema slot for sub-panel limit.",
+    "Reference style labeled 'Vancouver/numbered' by citation databases with sequential SUPERSCRIPT in-text numbers and abbreviated journal names; formal AMA overlap is possible (AMA also uses superscript + abbreviations). include_doi set false because the reference style guide does not explicitly require DOI (unstated).",
+    "Peer review reported as single-blind, so double_blind=false and no body/metadata scrubbing.",
+    "Font, size, line spacing, margins, page size, alignment, line numbers, running head, figure formats/DPI, keyword count, running-title/title length caps, ORCID/cover-letter requirements were not stated in verified sources and are null.",
+    "title_page.elements lists only the near-certain minimum (title/authors/affiliations/corresponding author); the guide names 'Title page' as a required section but the verified sources did not enumerate its full contents.",
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
+    "[schema-required default] layout.line_numbers defaulted to 'none' (guide silent)."
+  ]
+}

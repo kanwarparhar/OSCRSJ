@@ -1,0 +1,192 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Bone and Mineral Research",
+    "slug": "jbmr",
+    "issn": "0884-0431",
+    "publisher": "Oxford University Press",
+    "guidelines_url": "https://academic.oup.com/jbmr/pages/general-instructions",
+    "verified_date": "2026-07-12",
+    "source_hash": "4bd2d53dfa4fb85bebc4e110832ccfa2537ce2070ae6e7ae6868715fca79f926",
+    "source_note": "[main-session: live fetch was bot-blocked/shell at finalize; hash is of a <=12mo Wayback archive snapshot: https://web.archive.org/web/20260306130252id_/https://academic.oup.com/jbmr/pages/general-instructions]",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "review",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "funding",
+      "disclosures",
+      "ethics_statement",
+      "data_availability"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": 15,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": 5,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": 10,
+      "references_max": 50,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": 50,
+      "references_max": 150,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": 10,
+      "references_max": 50,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": 5,
+      "references_max": 10,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 5,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "jpg",
+      "jpeg",
+      "png",
+      "tiff",
+      "pdf",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "data_availability",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration"
+    ],
+    "required": [
+      "data_availability",
+      "funding",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": true,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher migration: JBMR is the ASBMR flagship journal, now published by Oxford University Press (academic.oup.com/jbmr); it was formerly a Wiley title. Live OUP guide read cleanly (TIER_A).",
+    "Peer review is single-anonymized (author identity known to reviewers), so no blinding/title-page scrub is required: 'The Journal operates single-anonymized peer review... identity of the authors is known to the editors and to the reviewers.'",
+    "references.style='ama' is explicit ('JBMR follows AMA style'). in_text='superscript', order='cited', journal_abbrev='nlm' are the defining AMA norms encoded as formatter targets, NOT independently stated by the guide. Low desk-reject risk because the guide states authors 'may format references in any readable style at submission.' include_doi set false conservatively (guide silent).",
+    "et_al_threshold left null — guide does not state it (AMA 11th convention is 6-then-et-al but not stated by this guide).",
+    "SCHEMA GAP — display items: most types allow a COMBINED max of 8 display items (tables + figures), which the per-type figures_max/tables_max split cannot represent; both left null. Complex Clinical Challenges is 'usually 2 (1 table + 1 figure), max 3'.",
+    "SCHEMA GAP — tiered figure DPI: color halftones 300dpi, grayscale halftones 600dpi, combination/line-art 600-900dpi, monochrome line art 1200dpi. min_dpi encodes the 300 floor only.",
+    "Figure formats: guide also lists .svg, which is not in the schema's allowed format enum, so it was omitted from formats[].",
+    "SCHEMA GAP — Lay Summary is required for most types (max 100 words for Research/Invited Review/Systematic Review; max 200 for Clinical Trial/Perspective). No schema field exists; not encoded. highlights_required set false (no 'Highlights' feature; lay summary is separate).",
+    "Article-type mapping: Research Article->original_research; Clinical Trial omitted (would duplicate original_research; identical limits 6000/300 words, refs 10-50); Invited Review->review (invited only); Systematic Review->systematic_review; Editorial->editorial (invited); Letter to the Editor->letter. OMITTED with no clean slot: Perspective (invited opinion), Task Force, Complex Clinical Challenges (case-based clinical challenge, 3000 words, not currently unsolicited).",
+    "JBMR does NOT solicit case reports or case series — it is a bone/mineral research journal, so those OSCRSJ types are absent by design.",
+    "title_max_words=15 is a soft target: 'Title must be concise (aim for no more than 15 words)...'",
+    "Declarations required unconditionally: data availability, funding, conflict of interest. Ethics approval, patient consent, and clinical trial registration are 'if applicable'. All are placed on the title page.",
+    "line_numbers set to 'none' (schema has no null option) — the guide does not require line numbers; layout details (font, size, spacing, margins, page size, alignment) are all unstated by the guide, which defers to general OUP/AMA standards."
+  ]
+}

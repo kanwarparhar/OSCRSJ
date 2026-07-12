@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Biology of Sport",
+    "slug": "biology-of-sport",
+    "issn": "0860-021X (print), 2083-1862 (online)",
+    "publisher": "Termedia Publishing House, on behalf of the Institute of Sport - National Research Institute (Poland)",
+    "guidelines_url": "https://www.termedia.pl/Journal/Biology_of_Sport-78/For-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "e18cb22969d2224cb18b79ca1d7c417b76d72129868a3ae28e16202752fdf9a6",
+    "source_note": null,
+    "submission_system": "Editorial System"
+  },
+  "article_types": [
+    "original_research",
+    "review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25,
+      "bottom_mm": 25,
+      "left_mm": 25,
+      "right_mm": 25
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "running_title",
+      "authors",
+      "affiliations",
+      "orcid",
+      "acknowledgments",
+      "disclosures"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3800,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "author_contributions",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent"
+    ],
+    "required": [
+      "author_contributions",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": true,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Live page loaded cleanly via WebFetch (Tier A) — no archive/block used; source_note null.",
+    "Article types: guide accepts 'original research articles, short communications and review papers'. Mapped original->original_research, review papers->review. 'Short communications' (2000-word cap) has no clean enum slot and was OMITTED.",
+    "Figures+tables COMBINED cap = 8 ('figures and tables, counted together, should not exceed 8') — cannot be expressed as separate figures_max/tables_max; left both null. See schema_gaps.",
+    "references_max=40 applies ONLY to original papers ('40 references for original papers'); global references.max_count left null and per-type cap encoded in word_limits.original_research.",
+    "References: 'List all authors' — no et al. truncation, so et_al_threshold=null. NLM format, journal names abbreviated (example 'Biol Sport'). DOI optional ('a database's unique identifier could be added'), not required.",
+    "double_blind set true: system 'will automatically compose a file that will serve as a blind copy for reviewers and should not contain elements allowing identification of authors' — review copy is author-anonymized. Guide does not literally say 'double-blind'; separate title-page file + author-blinded main file are required, so blinding fields set to enforce scrubbing.",
+    "Abstract: 'no more than 250 words, including objectives, methods, results and conclusions' — content guidance, not labeled sub-headings; encoded as unstructured (structured=false).",
+    "Figure formats: guide lists 'bitmap formats (TIFF, GIF, JPEG, etc.)'. GIF has no allowed enum slot; encoded tiff+jpeg only. min_dpi 300 ('at least 300 dpi unless intentionally lower for scientific reasons').",
+    "Figure legends location unstated (only 'titles and legends ... self-explanatory'); left null. Tables 'on separate sheets' -> placement grouped_end (best fit).",
+    "page_size unstated; margins given in cm (2.5 cm all sides) suggest A4 but not explicitly stated, so page_size=null. line_numbers, page_numbers, running_head-on-page, alignment, first_line_indent all unstated.",
+    "Keywords: 'up to 6 key words (preferably ... MeSH terms)'; max=6, case/separator unstated.",
+    "Cover letter required: 'A cover letter (authors' statement) must be signed by all authors.'",
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored)."
+  ]
+}
