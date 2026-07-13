@@ -1997,5 +1997,58 @@
       "exclusion_reason": null,
       "schema_gaps": []
     }
-  ]
+  ],
+  "self_spot_check": {
+    "date": "2026-07-12",
+    "method": "main-session curl of each live guide; 3 encoded values re-verified verbatim per journal",
+    "result": "15/15 values confirmed present in the live guide",
+    "journals": {
+      "biology-of-sport": [
+        "3800-word original cap",
+        "250-word abstract",
+        "double spacing",
+        "2.5cm margins"
+      ],
+      "acta-orthopaedica": [
+        "double line spacing",
+        "structured summary (Background and purpose)",
+        "25-reference limit"
+      ],
+      "asian-spine-journal": [
+        "3000-word original cap",
+        "600 dpi figures",
+        "double spacing"
+      ],
+      "journal-of-bone-metabolism": [
+        "250-word abstract",
+        "12-point font",
+        "1200 dpi line art"
+      ],
+      "bone-joint-research": [
+        "4000-word cap",
+        "300-word abstract",
+        "8-table limit"
+      ]
+    }
+  },
+  "low_confidence_reencode": {
+    "note": "Tier B journals whose LIVE guide was fully bot-blocked with no <=12mo archive; encoded from house-style/websearch/templates with journal-specific caps left null. Re-encode when a Cloudflare-clearing headless fetch or fresh archive is available. All are on Janine's audit list.",
+    "slugs": [
+      "calcified-tissue-international",
+      "global-spine-journal",
+      "science-medicine-football",
+      "ejss",
+      "journal-of-sports-sciences",
+      "bmjosem",
+      "jeo",
+      "jor-spine",
+      "ejap"
+    ]
+  },
+  "progress": {
+    "encoded": 75,
+    "pending": 25,
+    "excluded": 6,
+    "note": "Waves 1-5 committed (ranks 1-75). Waves 6-7 (25 journals) pending; interrupted by an API session-limit (resets 2026-07-13 00:10 PDT). Fully resumable: re-run the pending slugs through the same subagent->finalize->update_manifest->gen-journal-list->commit pipeline."
+  }
 }
