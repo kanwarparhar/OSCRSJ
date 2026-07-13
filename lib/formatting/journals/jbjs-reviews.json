@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "JBJS Reviews",
+    "slug": "jbjs-reviews",
+    "issn": null,
+    "publisher": "The Journal of Bone & Joint Surgery, Inc. (Wolters Kluwer / Lippincott)",
+    "guidelines_url": "https://www.jbjs.org/reviews-ifa.php",
+    "verified_date": "2026-07-12",
+    "source_hash": "4df5bb8f26a7a716b39992a47993fa0b5f65f92f13018258c13327b523919970",
+    "source_note": "Live current JBJS Reviews Instructions for Authors on jbjs.org. Like the main jbjs.org IFA, this is a JS app whose instruction text is embedded in an in-page JavaScript content blob, so a plain strip-tags of the page yields only a shell string; rules were read directly from that in-page JS blob (the real current guide) plus the shared JBJS Reference Formatting Guidelines (jbjs.org/reference-guidelines.php) and JBJS Journals Guidelines for Figures (jbjs.org/guidelines-figures.php). No JBJS Reviews-specific New Submission Checklist PDF exists (unlike main JBJS / JBJS Case Connector), so manuscript font/size/spacing/line-numbering/margins are unstated and left null rather than copied from a sibling JBJS journal.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "review",
+    "systematic_review",
+    "narrative_review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "narrative_review": [
+      "Take-Home Points",
+      "Body",
+      "References",
+      "Figure Legends"
+    ],
+    "review": [
+      "Take-Home Points",
+      "Body",
+      "References",
+      "Figure Legends"
+    ],
+    "systematic_review": [
+      "Abstract",
+      "Body",
+      "References",
+      "Figure Legends"
+    ]
+  },
+  "word_limits": {
+    "review": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "tif",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "Figure{n}"
+  },
+  "declarations": {
+    "order": [
+      "author_contributions",
+      "conflict_of_interest",
+      "acknowledgments"
+    ],
+    "required": [
+      "author_contributions",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "guidelines_url is the live JBJS Reviews Instructions for Authors on jbjs.org. Content lives in an in-page JavaScript blob (the strip-tags recipe returns only a shell), so rules were read from that JS blob plus the shared JBJS Reference Formatting Guidelines and Guidelines for Figures pages. source_hash left PENDING for the cron to compute.",
+    "Article-type mapping: 'Narrative Review' -> narrative_review; 'Current Concepts Review' -> review (INVITATION ONLY per guide: 'considered by invitation only'; authors email a proposal to editorial@jbjsreviews.org, and it additionally requires a Grades of Recommendation table as Table 1); 'Systematic Review' (meta-analyses / systematic literature reviews conforming to PRISMA) -> systematic_review. 'Team Approach' articles were OMITTED: they are a multidisciplinary example-clinical-scenario format (Abstract / Introduction / Clinical Scenario / Team Approach / Discussion-Conclusions / References, bullet-point abstract <=325 words) with no clean enum slot.",
+    "Word limit: guide states 'manuscripts submitted to JBJS Reviews should be no longer than 3000 words' — applied uniformly to all article types (no per-type differentiation given).",
+    "Abstract encoding is type-dependent and the schema holds only one primary type, so it is set conservatively to structured:false / sections:null / max_words:null (primary/flagship = Narrative Review). Actual guide detail: Narrative Reviews AND Current Concepts Reviews must begin with a 'Take-Home Points' section = 3 to 5 bulleted statements (NOT a labeled abstract); Systematic Reviews use a complete structured abstract with sections Background / Methods / Results / Conclusions / Level of Evidence (no word cap stated for it); Team Approach uses a bulleted abstract <=325 words. The 325-word figure appears ONLY for Team Approach, so abstract.max_words is null for the mapped types.",
+    "misc.highlights_required left null: the required 'Take-Home Points' (3-5 bullets) for Narrative and Current Concepts Reviews is effectively a required highlights block, but it is JBJS-specific and NOT required for Systematic Reviews (which use the structured abstract instead), so it is documented here rather than encoded as a single journal-wide boolean.",
+    "Blinding: 'Articles submitted to JBJS Reviews undergo double-blinded peer review, with the Editorial Office removing all author and institution identifiers before sending papers to reviewers' -> double_blind true; blinding is done IN-HOUSE by the Editorial Office, so scrub_body_identifiers and scrub_metadata are false (author is not required to blind). The Required Items list a separate Title Page distinct from the Manuscript Text -> separate_title_page true.",
+    "Layout is almost entirely unstated: the JBJS Reviews IFA (and the shared reference/figure pages) specify NO manuscript font, font size, line spacing, margins, page size, alignment, first-line indent, running head, or page numbering. All left null. line_numbers set to 'none' only because the enum has no null option and the guide does not instruct authors to add line numbers (do NOT assume the main-JBJS 'continuous line numbering' rule, which comes from a JBJS checklist that has no JBJS Reviews equivalent).",
+    "references.style/journal_abbrev = nlm: 'A references section, in PubMed/Index Medicus format ... Number the references according to the order of citation in the text (not alphabetically)' -> order 'cited'. include_doi false: the shared Reference Formatting Guidelines state 'JBJS does not require DOIs or epub dates.' et_al_threshold null because the guide explicitly forbids abbreviating author lists: 'journal citations must include all authors (not \"et al.\") and complete page numbers' (ALL authors always listed). Preprint-server papers may not be cited.",
+    "references.in_text 'superscript' is JBJS house style (published articles use superscript reference numerals; consistent with the sibling jbjs.json), NOT literally stated in this guide — the guide specifies citation numbering/order but not the in-text marker glyph, so treat in_text as house-style-inferred/unverified. in_text_punctuation and max_count unstated (null).",
+    "Figures (from shared JBJS Guidelines for Figures): 'Image Format TIFF or EPS only. No JPG, no figures inserted into Word' -> formats [tiff, tif, eps], separate_files true; 'Name files using the number of the figure (e.g., Figure1.tif, Figure2.eps)' -> naming_pattern 'Figure{n}'; base resolution 300 ppi for color(RGB)/grayscale -> min_dpi 300 (black/white bitmap line art requires 1200 ppi, a tiered spec the schema cannot hold). Figure legends go at the END of the manuscript text file AFTER the References section -> legends_location figure_legends_section. Callouts use 'Figure' (e.g., Figure 1).",
+    "Tables: 'Tables (if included) should be submitted in Word or Excel format with a descriptive title ... Table file names should contain the table number (e.g., Table 1.docx)' -> placement separate_file, numbering arabic. caption_position set 'above' because a descriptive title/caption accompanies each table by number (JBJS convention places the title above); the guide does not state above-vs-below explicitly, so treat caption_position as lightly inferred.",
+    "Declarations are handled largely inside Editorial Manager rather than as a prescribed in-manuscript section order: CRediT contributor roles are required on the Add/Edit/Remove Authors screen (author_contributions) and an ICMJE Conflict of Interest form is required (conflict_of_interest) -> both in 'required'. Acknowledgment footnotes are conditional (minor contributors / non-author writers). No ethics_approval / patient_consent section is prescribed for review articles. The 'order' array is an approximate grouping, not a guide-mandated sequence.",
+    "misc.orcid_required true: 'All authors must register with ORCID ... it will not be possible to submit an article without such an identifier for each author.' cover_letter_required false: not required for standard submissions (only Current Concepts Review, invitation-only, asks for an emailed proposal). title_case and issn unstated (null); ISSN deliberately left null rather than pulled from memory.",
+    "No manuscript keywords are requested anywhere in the guide (the only 'keywords' on the page belong to the site search widget) -> keywords.required false with all sub-fields null."
+  ]
+}

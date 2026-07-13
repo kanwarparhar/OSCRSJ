@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Brazilian Journal of Physical Therapy",
+    "slug": "bjpt",
+    "issn": "1413-3555",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/brazilian-journal-of-physical-therapy/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "847283c61ec80403fc51d49ffb5b252820a94a7400b3b3f2bdd8cc0c8fa7049c",
+    "source_note": "Live ScienceDirect guide was bot-blocked to WebFetch (HTTP 403); encoded from a headless render (Apify rag-web-browser) of the live page at https://www.sciencedirect.com/science/journal/14133555/publish/guide-for-authors which returned HTTP 200 current content.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "acknowledgments",
+      "disclosures"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Objective",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Material and methods",
+      "Results",
+      "Discussion",
+      "Conclusions"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": "after",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Case reports and case series are explicitly NOT accepted: 'We do not accept single case studies and series of cases (i.e. clinical trials without a comparison group).'",
+    "Short communications (1,200 words, up to 2 figures, 1 table, 10 references; max six/year) are accepted but have no clean enum slot; not encoded as an article_type.",
+    "Masterclass articles (invited, state-of-the-art) mapped to 'review'; regular 'reviews' + systematic reviews also covered.",
+    "Combined figures+tables cap = 5 total ('A total of five (5) combined tables and figures is allowed'); schema holds figures_max/tables_max separately so both left null with the combined cap noted here.",
+    "Manuscript word cap 3,500 words excludes title page, abstract, references, tables, figures and legends; applied to all encoded types (review/masterclass cap not separately stated).",
+    "Tiered figure DPI: 300 dpi color/grayscale halftones, 1000 dpi bitmapped line drawings, 500 dpi line/halftone combinations; encoded min_dpi=300 as the lowest stated floor.",
+    "Reference numeral placement: 'outside periods and commas, inside colons and semicolons' — encoded in_text_punctuation='after' for the dominant period/comma case; colon/semicolon exception cannot be represented.",
+    "Reference style is AMA Manual of Style, 11th Edition, with superscript arabic numerals ordered by citation.",
+    "Journal abbreviations follow the ISSN List of Title Word Abbreviations (LTWA); encoded journal_abbrev='nlm' as the abbreviated option.",
+    "Tables may be placed either in-text or grouped on separate page(s) at the end (guide permits either); encoded placement='in_text'.",
+    "Alignment: guide instructs 'do not use the word processor's options to justify text' — encoded alignment='left'.",
+    "scrub_metadata set true to reflect the double-anonymized review requirement to remove all identifying information; guide does not explicitly mention document file metadata.",
+    "Copyright is assigned to the Associação Brasileira de Pesquisa e Pós-Graduação em Fisioterapia (ABRAPG-Ft); journal is hosted/published by Elsevier."
+  ]
+}

@@ -72,6 +72,19 @@ import josr from './journals/josr.json'
 import bmjosem from './journals/bmjosem.json'
 import journalOfSportsSciences from './journals/journal-of-sports-sciences.json'
 import ijsnem from './journals/ijsnem.json'
+import jbmrPlus from './journals/jbmr-plus.json'
+import bmcSportsScienceMedicineRehab from './journals/bmc-sports-science-medicine-rehab.json'
+import bjpt from './journals/bjpt.json'
+import jbjsReviews from './journals/jbjs-reviews.json'
+import internationalOrthopaedics from './journals/international-orthopaedics.json'
+import ejap from './journals/ejap.json'
+import jorSpine from './journals/jor-spine.json'
+import asmr from './journals/asmr.json'
+import jeo from './journals/jeo.json'
+import aots from './journals/aots.json'
+import journalOfBoneMetabolism from './journals/journal-of-bone-metabolism.json'
+import physicalTherapyInSport from './journals/physical-therapy-in-sport.json'
+import jpa from './journals/jpa.json'
 import jot from './journals/jot.json'
 import injury from './journals/injury.json'
 import jocr from './journals/jocr.json'
@@ -85,7 +98,9 @@ const RAW: unknown[] = [
   calcifiedTissueInternational, globalSpineJournal, fai, boneJointOpen, otsr, sportsHealth,
   journalOfIsakos, asianSpineJournal, actaOrthopaedica, jscr, tamd, corr, jaaos, jat, scj,
   ojsm, ejss, europeanSpineJournal, jssm, jhs, nassj, josr, bmjosem,
-  journalOfSportsSciences, ijsnem, jot, injury, jocr,
+  journalOfSportsSciences, ijsnem, jbmrPlus, bmcSportsScienceMedicineRehab, bjpt,
+  jbjsReviews, internationalOrthopaedics, ejap, jorSpine, asmr, jeo, aots,
+  journalOfBoneMetabolism, physicalTherapyInSport, jpa, jot, injury, jocr,
 ]
 
 /** All journal rules, validated against the schema, OSCRSJ first then by SJR rank. */

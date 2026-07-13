@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "European Journal of Applied Physiology",
+    "slug": "ejap",
+    "issn": "1439-6319 (Print), 1439-6327 (Electronic)",
+    "publisher": "Springer (Springer Nature)",
+    "guidelines_url": "https://link.springer.com/journal/421/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "bb137f8bd5a24cb428f1244936ad9ed99fd21f651daa7484157b30c06fce451f",
+    "source_note": "BLOCKED: the live Springer guide (link.springer.com and www.springer.com /journal/421/submission-guidelines) is Cloudflare-protected — returns a 'Client Challenge' shell and 303-redirects to the idp.springer.com authorize cookie flow via both WebFetch and 3 Apify headless renders. No Wayback snapshot of the guide URL exists within the last 12 months (20260601 capture = 'not archived that URL'). Journal-specific numeric caps left null. Reference style is current-verified via Paperpile EJAP citation-style page (updated Apr 2026); article types + Editorial Manager submission from current Springer scope/Updates pages (WebSearch); other encoded values are stable Springer house-style inferences. A 2012 archived Instructions-for-Authors PDF was read for structure only, NOT for current numeric values.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion"
+    ]
+  },
+  "word_limits": {},
+  "references": {
+    "style": "custom",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": null,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability"
+    ],
+    "required": [
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "LIVE GUIDE BLOCKED — Cloudflare 'Client Challenge' + idp.springer.com authorize-shell redirect on both link.springer.com and www.springer.com; defeated WebFetch and 3 Apify headless renders. No Wayback snapshot of the guide URL within 12 months. Encoded conservatively; journal-specific numeric caps left null.",
+    "Reference style CURRENT-verified (Paperpile EJAP page, updated Apr 2026): author-date 'name and year in parentheses', e.g. (Thomas 2011) / (Chien and Weissman 2001; Thomas 2011); 3+ authors -> (Ryu et al. 2008); reference list alphabetical by surname. Encoded as style=custom (Springer Basic author-date; NOT a numbered nlm/ama/vancouver style). in_text=paren; order=alphabetical.",
+    "journal_abbrev=nlm and include_doi=true are Springer Basic house-style inferences (Springer abbreviates journal titles and includes DOIs in reference entries), NOT quoted from the blocked live guide.",
+    "Article types from current Springer scope/Updates pages: journal publishes Original Articles, Editorials, Invited Reviews, Comments, Perspectives, Letters to the Editor, Replies. Mapped Original Articles->original_research, Invited Reviews->review, Editorials->editorial, Letters to the Editor->letter. Comments/Perspectives/Replies omitted (no clean enum slot).",
+    "IMPORTANT: 'review' = Invited Reviews, which are INVITATION-ONLY as of the current scope — unsolicited reviews are not accepted; authors submit a proposal to the Reviews Editor and, if approved, receive a formal invitation. Schema has no invitation-only flag.",
+    "Submission system Editorial Manager = current-verified (WebSearch).",
+    "Journal-specific numeric caps (manuscript word limits, abstract word count, keyword count, DPI, margins, font family/size, running-title/title length) left NULL — no current source. The only full-text guide reachable was a 2012 archived PDF (14 yrs old, NOT used for values); for reference only it stated abstract '150 to 250 words', '4 to 6 keywords', example font '10-point Times Roman', and no more than three heading levels.",
+    "abstract.structured=false: EJAP original-article abstracts are unstructured single-paragraph narrative (stable; 2012 guide + current practice). keywords.required=true is Springer house style; count left null.",
+    "Declarations, tables (grouped_end / caption above / arabic), figures (separate_files, legends section, 'Fig.' callout) are Springer HOUSE-STYLE inferences, not quoted from the blocked live guide. Conflict of Interest is mandatory for all article types (both the 2012 guide and the current Springer 'Compliance with Ethical Standards' requirement) -> declarations.required=[conflict_of_interest]. Declarations order is house-style inferred, not verbatim from the current guide.",
+    "double_blind=false: EJAP uses single-blind peer review (Springer default); no anonymized-title-page or identifier-scrub requirement found.",
+    "Booleans set to conservative defaults where the (blocked) guide could not confirm: orcid_required=false, cover_letter_required=false, highlights_required=false (EJAP is Springer, does not use Elsevier-style Highlights)."
+  ]
+}

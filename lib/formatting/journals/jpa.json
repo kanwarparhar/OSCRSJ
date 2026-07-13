@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Physiological Anthropology",
+    "slug": "jpa",
+    "issn": "1880-6805",
+    "publisher": "BMC (BioMed Central), part of Springer Nature",
+    "guidelines_url": "https://link.springer.com/journal/40101/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "cccc4b41385b4b3896d442864166e0e9c2c8bb611b801aad60b8d654a93716c5",
+    "source_note": "PUBLISHER MIGRATION + archive-encoded. JPA has migrated from BMC (jphysiolanthropol.biomedcentral.com) to Springer Nature Link (journal 40101): jphysiolanthropol.biomedcentral.com/submission-guidelines now 301-redirects to https://link.springer.com/journal/40101/submission-guidelines, which is Cloudflare/Akamai bot-blocked (Apify headless render returned the 'Client Challenge' interstitial, not the guide). Encoded from BMC Wayback ARCHIVE snapshots (BMC submission content is journal-specific but templated identically across BMC journals and unchanged by the platform migration): general house-style https://web.archive.org/web/20250530124631/https://jphysiolanthropol.biomedcentral.com/submission-guidelines/preparing-your-manuscript (30 May 2025); Research https://web.archive.org/web/20250701232504/https://jphysiolanthropol.biomedcentral.com/submission-guidelines/preparing-your-manuscript/research (01 Jul 2025); Review https://web.archive.org/web/20250701232524/https://jphysiolanthropol.biomedcentral.com/submission-guidelines/preparing-your-manuscript/review (01 Jul 2025). FRESHNESS CAVEAT: these snapshots are ~12.4-13.4 months old (marginally over the 12-month window); no fresher archive exists and the live page is blocked, so all encoded values are standard, stable BMC house-style / JPA-specific defaults that are cross-verifiable against the sibling BMC journal encodings.",
+    "submission_system": "Snapp (Springer Nature)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "technical_note",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusions",
+      "Trial registration"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Background",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions"
+    ],
+    "review": [
+      "Background",
+      "Main text",
+      "Conclusions"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "PUBLISHER MIGRATION: JPA moved from BMC (jphysiolanthropol.biomedcentral.com) to Springer Nature Link (journal 40101). guidelines_url points at the live Springer canonical (Cloudflare-blocked 'Client Challenge' via Apify headless) for freshness re-checks; actual encoding source is the BMC Wayback snapshots named in source_note. Snapshots are ~12.4-13.4 months old (just over the 12-month window) — flagged because no fresher archive exists; encoded values are standard stable BMC house-style.",
+    "Article-type mapping (from the 'Preparing your manuscript' tab list: Research, Comment, Methodology, Review, Brief Report): Research->original_research; Review->review; Methodology->technical_note (BMC Methodology presents a new experimental method/test/procedure); Comment->editorial (BMC Comment is an opinion/discussion piece — mapped to editorial as the closest slot; could also be argued as letter). OMITTED: 'Brief Report' — a short original-research report with no clean enum slot (original_research already occupies the research slot). sections/word_limits encoded ONLY for original_research and review (only these two article-type pages were fetched and prescribe a body-section order); technical_note and editorial appear in article_types only.",
+    "abstract.structured=true with sections Background/Methods/Results/Conclusions/Trial registration reflects the PRIMARY type (Research): 'The Abstract should not exceed 350 words... The abstract must include the following separate sections: Background, Methods, Results, Conclusions, Trial registration' (Trial registration conditional on health-care-intervention RCTs). Review abstract differs: 'should be structured with a background, main body of the abstract and short conclusion' — also capped 350 words. keywords min 3 / max 10 from 'Three to ten keywords representing the main content of the article.'",
+    "layout: line_spacing='double' from 'Use double line spacing'. page_numbers.show=true AND line-numbering required from 'Include line and page numbering'; guide does not state continuous vs per_page, so line_numbers='continuous' is the standard BMC interpretation (schema has no null option). Guide also states 'Do not use page breaks in your manuscript'. font family/size, margins_mm, alignment, first_line_indent, headings, running_head, page_size all UNSTATED for the manuscript body -> null (the only 'font'/'margin'/'pt' mentions in the guide concern figure preparation: 'All fonts must be embedded', line widths 'wider than 0.25 pt'). Accepted main-manuscript file formats: DOC/DOCX, RTF, TeX/LaTeX.",
+    "title_page.elements = article_title, authors (full names), affiliations (institutional addresses), corresponding_author — from 'The title page should: present a title...; list the full names and institutional addresses for all authors; ...indicate the corresponding author.' Abstract and Keywords are separate manuscript sections in BMC, NOT title-page elements. authors_degrees=null (guide lists full names + institutional addresses, silent on degrees). running_title/title length caps UNSTATED -> null. LLM-authorship note: LLMs do not satisfy authorship; LLM use must be documented in Methods (guide-wide policy, no schema field).",
+    "references: style='vancouver' from 'Journal of Physiological Anthropology uses Vancouver style citation format' + 'Examples of the Vancouver reference style are shown below'. journal_abbrev='nlm' from 'Journal abbreviations follow Index Medicus/MEDLINE.' include_doi=true (reference examples show 'doi:10.1007/...' forms). et_al_threshold=6 derived from the guide's own example listing exactly 6 authors then 'et al.' (Rohrmann S, Overvad K, Bueno-de-Mesquita HB, Jakobsen MU, Egeberg R, Tjonneland A, et al.) — not from explicit prose. order='cited' (Vancouver numbered-in-citation-order; references 'given a reference number', examples numbered). in_text=null: the JPA guide states Vancouver reference-LIST style but does NOT explicitly state the in-text citation rendering (the string 'bracket' appears nowhere in the guide; the only 'superscript' mentions concern table footnotes). Set null rather than inferring square-brackets from BMC house style. in_text_punctuation and max_count UNSTATED -> null.",
+    "tables: placement='in_text' ('Tables less than one A4 or Letter page in length can be placed in the appropriate location within the manuscript'; larger tables at end of text file). caption_position='above' ('Table titles (max 15 words) should be included above the table, and legends (max 300 words) should be included underneath the table'). numbering='arabic' ('numbered and cited in the text in sequence using Arabic numerals (i.e. Table 1, Table 2 etc.)').",
+    "figures: separate_files=true (numbered in order of first mention and uploaded individually, each file <=10 MB). min_dpi=300 ('image resolution of approximately 300 dpi (dots per inch) at the final size'). legends_location='in_text' ('Figure titles (max 15 words) and legends (max 300 words) should be provided in the main manuscript, not in the graphic file' — provided in the manuscript body; inline-vs-dedicated-section not specified). Accepted formats listed: EPS, PDF, Microsoft Word, PowerPoint, TIFF, JPEG, PNG, BMP, CDX — enum records only eps/pdf/tiff/jpeg/png (Word/PowerPoint/BMP/CDX have no enum slot). callout_style and naming_pattern UNSTATED -> null.",
+    "declarations: all seven listed subheadings are mandatory ('All manuscripts must contain the following sections under the heading Declarations ... If any of the sections are not relevant to your manuscript, please include the heading and write Not applicable'). Order + mapping: Ethics approval and consent to participate->ethics_approval; Consent for publication->patient_consent; Availability of data and materials->data_availability; Competing interests->conflict_of_interest; Funding->funding; Authors' contributions->author_contributions; Acknowledgements->acknowledgments. 'Authors' information (optional)' has no enum slot and is optional -> omitted. trial_registration is carried in the abstract's 'Trial registration' section rather than the Declarations block.",
+    "blinding all-false: peer-review-policy sub-page did not render its body text in the fetch (JS-loaded), but the title page (full author names + institutional addresses + corresponding author) is the first section of a SINGLE submitted manuscript with no anonymized version required -> single-blind review (BMC default), no separate title-page file, no body/metadata scrubbing.",
+    "misc: orcid_required=false and cover_letter_required=false (neither stated as required in the reachable guide; ORCID appears only in site nav/footer). highlights_required=false (BMC/JPA does not use a Highlights element). title_case=null (no title-case rule; guide only asks the title to indicate study design where appropriate).",
+    "submission_system='Snapp (Springer Nature)' is INFERRED from the confirmed migration to Springer Nature Link + the guide's Springer Nature LaTeX/pdfLaTeX production references; the guide does not name the submission portal explicitly. Low-stakes metadata (does not affect formatting).",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver')."
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Experimental Orthopaedics",
+    "slug": "jeo",
+    "issn": "2197-1153",
+    "publisher": "Wiley (on behalf of ESSKA)",
+    "guidelines_url": "https://esskajournals.onlinelibrary.wiley.com/hub/journal/21971153/homepage/author-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "Publisher MIGRATED: JEO left SpringerOpen (jeo-esska.springeropen.com, which now 301-redirects to link.springer.com/journal/40634) and is now published by Wiley for ESSKA. The live Wiley author-guidelines page was bot-blocked (HTTP 403 on WebFetch AND on Apify headless render) and NO Wayback snapshot exists (the ESSKA->Wiley migration is too recent). Values were encoded from Google search-rendered excerpts of the live Wiley page (URL above), which is effectively a blocked JS shell to direct fetching; a few excerpts may blend legacy SpringerOpen house-style, so uncertain fields are left null.",
+    "submission_system": null
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "narrative_review",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Purpose",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {},
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": false,
+    "formats": [],
+    "min_dpi": null,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent"
+    ],
+    "required": null
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "PUBLISHER MIGRATION: JEO moved from SpringerOpen to Wiley (esskajournals.onlinelibrary.wiley.com). Old SpringerOpen submission pages now 301-redirect to link.springer.com/journal/40634 (a cookie/auth shell). Wiley is the current, authoritative publisher.",
+    "SOURCE LIMITATION: Live Wiley guide 403-blocked on both direct fetch and headless render; no Wayback snapshot available. Encoded from Google-rendered snippets of the live page; treat as blocked-shell tier, medium confidence.",
+    "FREE FORMAT SUBMISSION: Wiley guide states 'Journal of Experimental Orthopaedics offers Free Format submission' and 'References may be submitted in any style or format, as long as it is consistent throughout the manuscript.' Hence font/size/spacing/margins/line-numbers/page-size and reference in-text style are NOT prescribed at submission and are honestly null; layout.line_numbers set to 'none' only because the enum has no null (unspecified in reachable guide).",
+    "references.style='vancouver' + journal_abbrev='nlm' reflects the journal's numbered Vancouver house style with Index Medicus/MEDLINE abbreviations (snippet: 'numbered (Vancouver) reference style; Journal abbreviations follow Index Medicus/MEDLINE') corroborated by Zotero/Paperpile JEO citation styles. Under Free Format this is the target/published style, not a strict submission requirement. order='cited' is definitional to numbered referencing. in_text (bracket vs superscript) was not quoted -> null.",
+    "BLINDING: 'Authors are responsible for anonymizing their manuscript in order to remain anonymous to the reviewers throughout the peer review process.' A separate title-page template is provided at esska.org/page/Journals_Title_Page_Template. Set double_blind/separate_title_page/scrub_body_identifiers true; scrub_metadata not explicitly required -> false.",
+    "ABSTRACT: 'a structured abstract of 150 to 250 words should be divided into the following four sections: Purpose ...' Only 'Purpose' was captured; Methods/Results/Conclusions listed per the standard ESSKA 4-section structured abstract (inferred, medium confidence). max_words=250 (min 150). A separate excerpt mentioned 'up to 300 words' and narrative reviews needing 'a short, unstructured, single paragraph ... no more than 350 words' -- likely per-type variants; encoded the primary Original Research value.",
+    "KEYWORDS: 'three to ten keywords representing the main content of the article are required' -> required, min 3, max 10. Case/separator not stated.",
+    "FIGURES/TABLES: 'Figure titles (max 15 words) and legends (max 300 words) should be provided in the main manuscript, not in the graphic file. Individual figure files should not exceed 10 MB.' 'Table titles (max 15 words) ... above the table, and legends (max 300 words) ... underneath the table.' Figure/table caption limits (title <=15 words, legend <=300 words) and figure file cap (<=10 MB) don't fit the schema -> recorded here. Legends live in the main manuscript (legends_location='in_text'); figure file formats and DPI were not captured -> formats [] and min_dpi null.",
+    "ARTICLE TYPES: JEO keyword-required categories listed as 'Book Reviews, Editorial notes, Study Protocols, Hypotheses, Meeting Reports, Original Papers and Review Papers'; plus narrative reviews referenced. Mapped Original Papers->original_research, Review Papers->review, narrative reviews->narrative_review, Editorial notes->editorial. Book Reviews / Study Protocols / Hypotheses / Meeting Reports have no clean schema slot and were omitted. Systematic reviews/meta-analyses and case reports were not explicitly confirmed on the live Wiley guide, so they were NOT added.",
+    "DECLARATIONS: A 'Compliance with Ethical Standards' section is described (sources of funding, conflicts of interest, informed consent for human participants, welfare-of-animals statement). Mapped to funding, conflict_of_interest, patient_consent (informed consent), ethics_approval (animal welfare/ethics). This phrasing may be legacy SpringerOpen house-style; 'required' left null due to live-vs-legacy uncertainty. A Data Availability Statement was not confirmed for this journal and was omitted.",
+    "OTHER CONFIRMED FACTS not in schema: manuscript text must be submitted in common word-processing formats (.docx or LaTeX); text/figures/tables may be in one editable file or separate files; authors must assign a Level of Evidence to all clinically oriented manuscripts; COPE member; fully Open Access, APC USD 1,940 / GBP 1,470 / EUR 1,630; title-page template at esska.org/page/Journals_Title_Page_Template.",
+    "submission_system unconfirmed (Wiley ESSKA journals typically use ScholarOne/Research Exchange) -> null. orcid_required/cover_letter_required not stated -> conservative false.",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver')."
+  ]
+}

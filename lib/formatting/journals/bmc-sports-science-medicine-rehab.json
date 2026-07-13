@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "BMC Sports Science, Medicine and Rehabilitation",
+    "slug": "bmc-sports-science-medicine-rehab",
+    "issn": "2052-1847",
+    "publisher": "BioMed Central (Springer Nature)",
+    "guidelines_url": "https://bmcsportsscimedrehabil.biomedcentral.com/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "f515fb1c887f9d4d1a240cdcd62dcf554fc3b77538a7e451ce99e9a66ad4fd59",
+    "source_note": "Live BMC guide URL 301-redirects to link.springer.com/journal/13102/submission-guidelines, which is bot-blocked (303 redirect to idp.springer.com/authorize Cloudflare/Imperva challenge shell) and returns no content via WebFetch or headless. Encoded from ≤12-month-old Wayback archive snapshots of the pre-migration BMC pages: general formatting page http://web.archive.org/web/20251114041138/https://bmcsportsscimedrehabil.biomedcentral.com/submission-guidelines/preparing-your-manuscript ; research-article page http://web.archive.org/web/20250831175539/https://bmcsportsscimedrehabil.biomedcentral.com/submission-guidelines/preparing-your-manuscript/research-article ; review page http://web.archive.org/web/20251104091447/.../review ; systematic-review page http://web.archive.org/web/20251114205932/.../systematic-review ; index http://web.archive.org/web/20251113162200/.../submission-guidelines . All within 12 months of 2026-07-12; values are BMC cross-journal house-style plus this journal's own abstract cap and section orders.",
+    "submission_system": "Snapp (Springer Nature) / Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 350,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Background",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations",
+      "References"
+    ],
+    "review": [
+      "Background",
+      "Main text",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations",
+      "References"
+    ],
+    "systematic_review": [
+      "Background",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions",
+      "List of abbreviations",
+      "Declarations",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": "above",
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff",
+      "jpeg",
+      "png"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "conflict_of_interest",
+      "funding",
+      "author_contributions",
+      "acknowledgments"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher migration: the live BMC guide (bmcsportsscimedrehabil.biomedcentral.com/submission-guidelines) now 301-redirects to Springer Nature Link (link.springer.com/journal/13102/submission-guidelines), which is served behind an idp.springer.com/authorize Cloudflare/Imperva bot challenge and yields no readable content. Encoded from ≤12-month-old Wayback snapshots of the still-live BMC-hosted pages (Nov 2025 for general/index/review/systematic; Aug 2025 for research-article).",
+    "Article-type mapping: Research article->original_research; Review->review (BMC 'Review' = narrative literature review; distinct from the separate Systematic Review type); Systematic Review->systematic_review. The journal ALSO accepts Study protocol, Database article, Software article, Matters Arising, and Comment; none map cleanly to the enum (Study protocol/Database/Software have no slot; Matters Arising and Comment are post-publication correspondence-style types) so they were omitted per instructions. Case report and Technical advance were accepted historically but are ABSENT from the current (2025) submission-guidelines index and have no <=12mo snapshot, so they were dropped.",
+    "line_spacing=double from quick-point 'Use double line spacing'. line_numbers='continuous' and page_numbers.show=true from 'Include line and page numbering' (line numbering is required; continuous vs per_page is not explicitly stated, continuous is the BMC production standard). 'Do not use page breaks in your manuscript'.",
+    "Abstract: max 350 words ('The Abstract should not exceed 350 words'), do not cite references, minimize abbreviations. For Research and Systematic Review it is STRUCTURED with Background/Methods/Results/Conclusions (plus a conditional 'Trial registration' subsection for health-care-intervention trials). For the Review type the abstract is UNSTRUCTURED (no section labels prescribed) though still 350 words; the abstract block here encodes the structured Research/SR form as the primary type.",
+    "Keywords: 'Three to ten keywords representing the main content of the article' => min 3, max 10; case/separator unstated => null.",
+    "references.style=vancouver ('Examples of the Vancouver reference style are shown below'); order=cited (numbered); journal_abbrev=nlm ('Journal abbreviations follow Index Medicus/MEDLINE'); include_doi=true (DOIs shown in the example reference list); et_al_threshold=6 (example lists 6 authors then 'et al.': 'Rohrmann S, Overvad K, Bueno-de-Mesquita HB, Jakobsen MU, Egeberg R, Tjonneland A, et al.'). in_text marker (superscript vs bracket) is NOT explicitly stated in the guide => in_text=null (the only 'superscript' mention concerns table footnotes, not citations).",
+    "Figures: uploaded as separate files, numbered in order of first mention; accepted formats listed = EPS, PDF, Word, PowerPoint, TIFF, JPEG, PNG, BMP, CDX (only eps/pdf/tiff/jpeg/png fit the enum; Word/PowerPoint/BMP/CDX omitted). Resolution 'approximately 300 dpi at the final size' => min_dpi=300. Figure titles (max 15 words) and legends (max 300 words) go in the main manuscript, not the graphic => legends_location=figure_legends_section. Callout style ('Figure' vs 'Fig.') not explicitly stated => callout_style=null. Individual figure files <=10 MB.",
+    "Tables: numbered with Arabic numerals ('Table 1, Table 2'); small tables (< one A4/Letter page) placed in-text, larger tables at end of document => placement=in_text; 'Table titles (max 15 words) should be included above the table' => caption_position=above; legends (max 300 words) go beneath the table.",
+    "Declarations: mandatory 'Declarations' section with all subheadings in this order: Ethics approval and consent to participate; Consent for publication; Availability of data and materials; Competing interests; Funding; Authors' contributions; Acknowledgements; Authors' information (optional). Mapped: ethics_approval, patient_consent, data_availability, conflict_of_interest, funding, author_contributions, acknowledgments (Authors' information optional, no enum slot, omitted). All required ('All manuscripts must contain the following sections'; write 'Not applicable' if a section is not relevant).",
+    "Blinding: peer-review terminology on the journal page states 'Identity transparency: Single anonymized' => single-blind review, NOT double-blind. No separate anonymized/title-page requirement (title, authors and affiliations sit in the main manuscript). All blinding flags false.",
+    "ORCID and cover letter are not mentioned as hard requirements on the pages read => orcid_required=false, cover_letter_required=false (conservative). highlights_required=false (BMC does not use a Highlights section). No overall manuscript word limit, reference-count cap, figure count, or table count is stated for any type => all such caps null.",
+    "page_size null: guide references 'A4 or Letter page' when describing table/figure sizing but does not prescribe a page size for the manuscript itself. font family/size, margins, alignment, first_line_indent, running_head, heading case all unstated => null.",
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver')."
+  ]
+}

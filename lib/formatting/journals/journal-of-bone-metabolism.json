@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Bone Metabolism",
+    "slug": "journal-of-bone-metabolism",
+    "issn": null,
+    "publisher": "Korean Society for Bone and Mineral Research (KSBMR)",
+    "guidelines_url": "https://www.e-jbm.org/authors/authors.php",
+    "verified_date": "2026-07-12",
+    "source_hash": "b135ee389e75814735d67b893b74b6998c5788fc0705f57f665c2bfc25e017ff",
+    "source_note": null,
+    "submission_system": "submit.e-jbm.org"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "case_report",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": "a4",
+    "font": {
+      "family": null,
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25,
+      "bottom_mm": 25,
+      "left_mm": 25,
+      "right_mm": 25
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "running_title",
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "funding"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Methods",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 5,
+      "case": "sentence",
+      "separator": "comma"
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion"
+    ],
+    "case_report": [
+      "Introduction",
+      "Case",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 50,
+      "figures_max": 15,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 100,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 20,
+      "figures_max": 8,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "nlm",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "conflict_of_interest",
+      "acknowledgments"
+    ],
+    "required": [
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Guide 'Revised on February 2019'; live page clean-fetched via WebFetch and full text confirmed via headless render (Apify).",
+    "ISSN not stated in the guide -> null (no fabrication from memory).",
+    "Font: only '12-point' stated, no typeface named -> font.family null.",
+    "Original-article and case-report length caps given in 'type-written pages' (10 and 5 pages), not word counts -> manuscript_max_words null; figures_max derived from 'sheets of figures' (15, 8).",
+    "Running title max = 10 words (guide states words, not chars) -> running_title_max_chars null.",
+    "line_numbers / page_numbers / alignment / first_line_indent unstated -> conservative defaults (none/false/null).",
+    "Blinding: review not stated as double-blind; guide item 7 requires no mention of the institution in the body (esp. Abstract/Methods) -> scrub_body_identifiers true; title page carries authors so separate_title_page true.",
+    "Figure DPI is tiered: 300 dpi for photos, 1200 dpi for line art; min_dpi=300 (schema holds one value).",
+    "Figure file formats not enumerated in guide (only 'MS Word or RTF' for main document) -> formats [].",
+    "Funding is disclosed within the Acknowledgments section (not a standalone funding section); it also appears on the title page if relevant.",
+    "Reviews and editorials are invited/requested, not open author submissions; letters are accepted but no format or limits are prescribed (omitted from sections/word_limits).",
+    "Data sharing statement required for clinical-trial reports (ICMJE, since 1 Jul 2018); ethics/IRB stated in Methods; patient image consent via JBM Authorization and Release Form -> conditional declarations, not placed in the fixed end sequence.",
+    "Manuscript title case not prescribed; table and figure titles use sentence case ('only the first letter of the first word ... capital').",
+    "Reference style: numbered/bracket in cited order, MEDLINE journal abbreviations, DOIs shown in every journal-article example; other types follow NLM 'Citing Medicine' -> style nlm."
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "JBMR Plus",
+    "slug": "jbmr-plus",
+    "issn": "2473-4039",
+    "publisher": "Oxford University Press",
+    "guidelines_url": "https://academic.oup.com/jbmrplus/pages/general-instructions",
+    "verified_date": "2026-07-12",
+    "source_hash": "1ef4ca3cc1c0930d9ff5f93b40106e4da6d8dd89a5b0db250f786a3d197fc97f",
+    "source_note": "Encoded from a Wayback archive snapshot of the Instructions to Authors (general-instructions) page: https://web.archive.org/web/20250907021856/https://academic.oup.com/jbmrplus/pages/general-instructions (captured 2025-09-07, within 12 months). The live page is reachable via plain fetch but truncates before the 'Manuscript Preparation Instructions' section; Apify headless render is 403-blocked by OUP's Cloudflare. Publisher, submission system, single-anonymized review, ORCID, article types, ISSN, and abstract cap were cross-checked against the live general-instructions page and matched.",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "case_report",
+    "technical_note",
+    "letter",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "data_availability",
+      "funding",
+      "disclosures",
+      "ethics_statement"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": 15,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": 5,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion"
+    ],
+    "case_report": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion"
+    ],
+    "technical_note": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 6,
+      "tables_max": 6
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": 6,
+      "tables_max": 6
+    },
+    "case_report": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 20,
+      "figures_max": 5,
+      "tables_max": 2
+    },
+    "technical_note": {
+      "manuscript_max_words": 3000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 50,
+      "figures_max": 6,
+      "tables_max": 6
+    },
+    "letter": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "jpg",
+      "jpeg",
+      "png",
+      "tiff",
+      "pdf",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": "fig{n}"
+  },
+  "declarations": {
+    "order": [
+      "data_availability",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration",
+      "acknowledgments"
+    ],
+    "required": [
+      "data_availability",
+      "funding",
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": true,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Publisher: JBMR Plus is the open-access ASBMR journal, companion to JBMR, published by Oxford University Press (academic.oup.com/jbmrplus). No migration. Submission via ScholarOne (mc.manuscriptcentral.com/jbmrplus).",
+    "Source: live general-instructions page is truncated by plain fetch before the manuscript-prep section, and OUP Cloudflare 403-blocks the Apify headless render; encoded instead from the 2025-09-07 Wayback snapshot of that same page (within the 12-month window). Values below are direct quotes from that snapshot.",
+    "Peer review is single-anonymized ('the identity of the authors is known to the editors and to the reviewers'), so double_blind=false and no blinding/title-page scrub is required. A title page IS required but as part of the manuscript, not for anonymization.",
+    "references.style='ama' is EXPLICIT ('JBMR Plus follows AMA style'). in_text='superscript', order='cited', journal_abbrev='nlm' are AMA-11th norms encoded as formatter targets, NOT independently quoted by the guide. Desk-reject risk is low because the guide states 'Authors may format references in any readable style at submission' and reformatting only occurs for the accepted version. include_doi=false set conservatively (guide silent).",
+    "et_al_threshold and references.max_count left null (guide states neither; per-type reference maxes live in word_limits).",
+    "Article-type mapping: Research Article->original_research (6000w; meta-analyses are welcomed under Research Article per the guide); Review->review (6000w, invited/unsolicited both accepted); Case Report->case_report (3000w); Methods and Techniques->technical_note (3000w); Letter to the Editor->letter (1000w); Editorial->editorial (1000w, invited). OMITTED with no clean schema slot (noted): Short Report (1000w brief study), Clinical Trial (3000w; duplicates original_research), Perspective (invited opinion), Task Force (invited ASBMR report), Registered Reports (1000w), Commentary (1000w, invited). No dedicated Systematic Review / Narrative Review type exists.",
+    "references_max by type: Case Report=20, Methods&Techniques=50 (EXPLICIT). Research Article, Review, Letter, Editorial list NO reference maximum -> references_max=null for those. references_min unstated for every type -> null.",
+    "figures_max/tables_max are stated as separate caps and map cleanly: original_research 6/6, review 6/6, case_report 5/2, technical_note 6/6. Letter/Editorial 'may include tables and figures in special circumstances' (contact editorial office) -> both null. (Omitted Short Report used a COMBINED cap of 2 figures-or-tables that the split schema can't hold.)",
+    "Abstract: 'unstructured, self-explanatory, have a maximum length of 300 words, and must not contain reference citations or abbreviations' -> structured=false, sections=null, max_words=300. Letters and Editorials have no abstract (abstract_max_words=null).",
+    "Keywords: 'maximum of 10 and minimum of 5' for research/review/case/methods types (Letter and Editorial cap at 10 with no stated minimum). Encoded min=5, max=10; case and separator unstated -> null.",
+    "SCHEMA GAP — Lay summary: every article type requires a Lay summary (max 100 words) placed after the abstract and keywords; a graphical abstract and video abstract are encouraged for all types. No schema field exists; not encoded. highlights_required=false (there is no 'Highlights' feature).",
+    "SCHEMA GAP — tiered figure DPI: color half-tones 300dpi, grayscale half-tones 600dpi, combination/line art 600-900dpi, monochrome line art 1200dpi; raster originals 300dpi minimum, TIFF preferred. min_dpi encodes the 300 floor only.",
+    "Figure formats: guide also lists .svg (with .eps/.pdf as the vector options), which is not in the schema's allowed format enum, so .svg was omitted from formats[]. Figure files 'named to match their citation (e.g., fig1.tiff, fig2.eps)' -> naming_pattern='fig{n}'. In-text callout wording (Figure vs Fig.) not stated -> callout_style=null.",
+    "figures.legends_location='figure_legends_section' encodes the guide's rule that 'Authors must include figure titles, legends, and captions within the manuscript file' (legends live in the manuscript, not as separate files); the guide does not prescribe inline vs. a dedicated legends section, so this is the closest available value.",
+    "Tables: 'Place all tables at the end of the main text' -> grouped_end; 'numbered consecutively ... table 1, table 2' -> arabic; supplied in editable format (Word), not as images. Caption/title position (above vs below) not stated -> null.",
+    "Title page (in order): title; author names + major degrees + affiliations; one corresponding-author email + mailing address; then disclosures (data availability, funding, conflict of interest, ethics approval if applicable, patient consent if applicable, permission to reproduce if applicable, clinical trial registration if applicable). authors_degrees='include' ('Author names, major degrees, and affiliations'). No running title is required (running_title_max_chars=null). title_max_words=15 is a soft target ('aim for no more than 15 words'); the '1-2 keywords within the first 65 characters' guidance is SEO advice, not a hard title character cap, so title_max_chars=null.",
+    "Declarations: data availability, funding, and conflict of interest are unconditionally required (title-page disclosures + 'data availability statement is a requirement' + 'requires all authors to disclose any potential conflict of interest'). Ethics approval, patient consent, and clinical trial registration are 'if applicable'. Acknowledgments is a required end-of-manuscript subheading when support exists (listed in order but not in required, since it is contingent). Author contributions are collected via CRediT at submission (system field), not written as a manuscript statement, so author_contributions is not encoded in declarations.",
+    "misc: orcid_required=true ('Submitting authors are required to provide an ORCID iD at submission'; co-authors encouraged). cover_letter_required=true (a Cover letter with required contents is specified under Manuscript Preparation). title_case unstated -> null.",
+    "Layout entirely unspecified: the guide prescribes no page size, font, line spacing, margins, alignment, indent, line numbers, page numbers, or running head (US spelling and AMA style are the only house-style rules). line_numbers set to 'none' (schema has no null option). Word counts exclude title page, abstract, tables, acknowledgments, references, and figure captions."
+  ]
+}
