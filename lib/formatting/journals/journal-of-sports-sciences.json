@@ -1,0 +1,152 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Sports Sciences",
+    "slug": "journal-of-sports-sciences",
+    "issn": "0264-0414 (print), 1466-447X (online)",
+    "publisher": "Taylor & Francis (Routledge)",
+    "guidelines_url": "https://www.tandfonline.com/action/authorSubmission?journalCode=rjsp20&show=instructions",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "blocked: the live Instructions for Authors (tandfonline.com, journal code rjsp20) returned HTTP 403 Cloudflare bot-block on WebFetch AND on the Apify rag-web-browser headless render; all of tandfonline.com (incl. the journal homepage) is Cloudflare-protected. The only Wayback captures of the instructions URL are a 301 redirect (2026-01-09) that chains to a 403 block snapshot (https://web.archive.org/web/20250414030700id_/https://www.tandfonline.com/action/authorSubmission?show=instructions&journalCode=rjsp20 = a Cloudflare challenge blob, no usable content); no ≤12-month capture with real content exists. Journal-specific values (word limits, abstract structure/limit, section orders, exact reference caps, keyword count, declarations order, table placement) are therefore NULL. Non-null layout/figure/heading/title-case values were encoded from Taylor & Francis cross-publisher HOUSE-STYLE pages rendered headless via Apify (authorservices.taylorandfrancis.com journal-manuscript-layout-guide + submit-electronic-artwork, both HTTP 200), NOT from this journal's own guide. Identity (ISSN, publisher), blinding (double-anonymized), and reference style (author-date, name+year in parentheses) are WebSearch-corroborated.",
+    "submission_system": "ScholarOne Manuscripts"
+  },
+  "article_types": [
+    "original_research",
+    "review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "sentence",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 2,
+        "case": "sentence",
+        "bold": true,
+        "italic": true,
+        "numbered": false
+      },
+      {
+        "level": 3,
+        "case": "sentence",
+        "bold": false,
+        "italic": true,
+        "numbered": false
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {},
+  "references": {
+    "style": "custom",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpeg",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "Figure {n}"
+  },
+  "declarations": {
+    "order": [],
+    "required": null
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": "sentence"
+  },
+  "encoding_notes": [
+    "LIVE GUIDE BOT-BLOCKED: tandfonline.com Instructions for Authors (rjsp20) returned 403 Cloudflare on WebFetch and on Apify headless render; the whole tandfonline.com domain (incl. journal homepage + mc.manuscriptcentral.com/rjsp portal) is Cloudflare-protected. No Wayback snapshot within 12 months carries real content — the instructions URL only has a 301 redirect (2026-01-09) chaining to a 403 challenge blob (2025-04-14). All journal-specific numeric/structural values left null per accuracy-over-completeness.",
+    "layout.font (Times New Roman 12), line_spacing (double), margins_mm (25.4 all = 1 inch / 2.5cm), the 3-level headings scheme, misc.title_case (sentence), and running_head (not required at submission) = Taylor & Francis HOUSE-STYLE, encoded from authorservices.taylorandfrancis.com/publishing-your-research/writing-your-paper/journal-manuscript-layout-guide/ (headless, HTTP 200: 'Use Times New Roman font in size 12 with double-line spacing.'; 'Margins should be at least 2.5cm (1 inch).'; 'First-level headings... bold'; 'Second-level headings... bold italics'; 'Third-level headings... italics'; 'Running heads... aren't required when submitting a manuscript for review.'). NOT this journal's own guide; may be overridden by the live JSS instructions. Note: many T&F journals offer optional format-free submission.",
+    "figures block (separate_files, formats tiff/jpeg/eps, min_dpi, legends in manuscript text, Figure {n} naming) = T&F house-style from authorservices submit-electronic-artwork (headless, HTTP 200): 'You must save figures separately to text, do not embed them in the manuscript file.'; peer-review preferred formats JPEG/TIFF (+ Word DOC/DOCX); EPS recommended for line art; captions supplied separately in the manuscript text file, not with image files; 'name artwork files as Figure 1, 2, 3... according to the order they appear in the text.'",
+    "SCHEMA GAP - tiered figure DPI: T&F house-style specifies color photographic 300dpi, grayscale photographic 600dpi, line-art/monochrome 1200dpi, combination 600dpi; schema holds one min_dpi so set to the 300 floor (color photos).",
+    "blinding = double-anonymized: WebSearch surfaced the standardized T&F peer-review statement for this journal ('All research and review articles in the Journal of Sports Sciences have undergone rigorous peer review, based on initial editor screening and anonymized (double-anonymized) refereeing by at least two referees.'). double_blind=true; separate_title_page + scrub flags are the standard corollaries. VERIFY against the live Instructions for Authors.",
+    "references: JSS uses AUTHOR-DATE (Harvard/APA-like) citation, WebSearch-corroborated ('References should be cited in the text by name and year in parentheses'). style set to 'custom' because author-date does not map to the numbered enums (nlm/ama/vancouver); in_text='paren' (name+year in parentheses); order='alphabetical' (definitional for author-date lists). in_text_punctuation, journal_abbrev, et_al_threshold, max_count left null (not verifiable from the blocked live guide). include_doi=false (house-style recommends DOIs but they are not mandatory; JSS-specific requirement unverified). Re-encode when the live guide is reachable.",
+    "article_types = original_research + review, DIRECTLY corroborated by the peer-review statement quote 'All research and review articles in the Journal of Sports Sciences...' JSS is a sports/exercise SCIENCE journal (physiology, biomechanics, performance analysis, psychology) and does NOT publish clinical case reports, so case_report is intentionally omitted. JSS also publishes systematic reviews / meta-analyses (would map to review or systematic_review) but the authoritative article-type list + distinct submission-category names live in the blocked guide.",
+    "submission_system = ScholarOne Manuscripts: the T&F artwork house-style names ScholarOne + Editorial Manager as the platforms; JSS's ScholarOne portal endpoint mc.manuscriptcentral.com/rjsp exists (returned a Cloudflare 403, i.e. a live protected page not a 404). Not independently confirmed this session; verify against the live guide.",
+    "ISSN 0264-0414 print / 1466-447X online and publisher Taylor & Francis (Routledge) WebSearch-corroborated; JSS is Medline- and Clarivate-listed.",
+    "abstract.structured=false, keywords.required=true, misc booleans (orcid/cover_letter false, highlights null), title_page.elements, and page_size=null are house-style-inferred or conservative defaults, NOT JSS-verified (blocked guide). T&F house-style default for keyword count is 'five or six' when the journal doesn't specify, but the JSS-specific count is unknown so keywords.min/max left null.",
+    "line_numbers=none reflects the T&F standard-formatting house-style (the layout guide does not mandate line numbers). CAVEAT: if JSS is enrolled in T&F format-free submission, the format-free house-style requires 'double spacing and line numbers' — confirm on the live guide.",
+    "declarations.order=[] and required=null: the JSS-specific declaration ordering is unverifiable (blocked guide). House-style does place the Data availability statement within the manuscript text, before the References section, under the heading 'Data availability statement'.",
+    "sections {} and word_limits {} intentionally empty - no per-type section order or word cap could be verified from the blocked live guide.",
+    "[schema-required default] references.journal_abbrev defaulted to 'nlm' (guide silent; NLM/Index Medicus abbreviations assumed).",
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+  ]
+}

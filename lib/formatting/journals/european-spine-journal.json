@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "European Spine Journal",
+    "slug": "european-spine-journal",
+    "issn": null,
+    "publisher": "Springer (Springer Nature) — official journal of EuroSpine and partner spine societies",
+    "guidelines_url": "https://link.springer.com/journal/586/submission-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "f69aa1157f2370eb328d452e2401fe7f02ddad533a4bcbcd243f751c02968011",
+    "source_note": "Live link.springer.com/journal/586/submission-guidelines is Cloudflare/bot-blocked. Encoded via Apify rag-web-browser HEADLESS render of an ARCHIVE (Wayback Machine) snapshot < 12 months old: https://web.archive.org/web/20251204070208/https://link.springer.com/journal/586/submission-guidelines (captured 2025-12-04). Render returned HTTP 200 with the full current Instructions for Authors. Freshness cron should use a headless fetch (live domain is bot-blocked).",
+    "submission_system": "SNAPP (Springer Nature Article Processing Platform)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "case_report",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times Roman",
+      "size_pt": 10
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "orcid",
+      "acknowledgments",
+      "funding",
+      "disclosures",
+      "ethics_statement",
+      "data_availability"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Purpose",
+      "Methods",
+      "Results",
+      "Conclusion"
+    ],
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 4,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "case_report": [
+      "Introduction",
+      "Case Presentation",
+      "Discussion",
+      "Conclusion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 25,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 250,
+      "references_min": 50,
+      "references_max": 70,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 3500,
+      "abstract_max_words": 250,
+      "references_min": 50,
+      "references_max": 70,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 1500,
+      "abstract_max_words": 350,
+      "references_min": null,
+      "references_max": 15,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 4,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": false,
+    "formats": [
+      "eps",
+      "tiff"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": "Fig.",
+    "naming_pattern": "Fig{n}"
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability",
+      "author_contributions",
+      "acknowledgments"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "author_contributions"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "SOURCE = archive (Wayback) rendered HEADLESS. Live link.springer.com/journal/586/submission-guidelines is Cloudflare/bot-blocked; encoded from the 2025-12-04 Wayback snapshot (web/20251204070208) via Apify rag-web-browser, HTTP 200 with the full current Instructions for Authors. Publisher = Springer (Springer Nature); no migration — the journal remains on link.springer.com/journal/586. ISSN not stated on the guide page -> null (per accuracy rule, not filled from memory).",
+    "submission_system = SNAPP: guide references 'SNAPP Double Anonymous Peer Review Guidelines' and 'This journal recently switched to a different submission and peer review system'; 'Submit your manuscript' points at submission.springernature.com. NOTE the transition: some title-page info/statements are now entered via SNAPP interface fields rather than a separate title page, though the guide still describes a separate title page throughout.",
+    "article_types mapping: 'Original articles' -> original_research; 'Review articles/meta-analysis' is ONE combined category in the guide, encoded as BOTH review and systematic_review (same caps: 3,500 words, 50-70 refs); 'Case Reports' -> case_report; 'Letters to Editor/Reviewer's Comments' -> letter. No editorial/technical-note author type offered.",
+    "double_blind = true: 'This journal follows a double-blind reviewing procedure... the author will remain anonymous to the reviewers.' separate_title_page = true: 'A separate Title Page should be submitted, containing title, author names, affiliations, and the contact information of the corresponding author.' scrub_body_identifiers = true: 'Author names, affiliations and any other potentially identifying information should be removed from the manuscript text and any accompanying files.' scrub_metadata = false: file/text identifiers must be removed but document metadata stripping is not mentioned (conservative default).",
+    "font = Times Roman 10pt: given as the guide's only concrete example -> 'Use a normal, plain font (e.g., 10-point Times Roman) for text.' Phrased as an example ('e.g.'), not a strict mandate; encoded as the safe guide-sourced default (an accepted font, so no desk-reject risk). line_spacing, margins, page_size, alignment, first_line_indent all null (unstated). Guide says use tab stops (not the space bar) for indents but does not mandate a first-line paragraph indent.",
+    "line_numbers = none: the guide does NOT mention line numbering (only page numbering). 'none' chosen as the conservative default so the formatter does not add line numbers the journal never requested. page_numbers.show = true: 'Use the automatic page numbering function to number the pages.' running_head not mentioned -> show false. headings null: guide only states 'no more than three levels of displayed headings' (a depth cap, no per-level case/bold/italic/numbering rule).",
+    "title_page.elements: guide is explicit that the SEPARATE title page carries title, author names, affiliations, corresponding-author email, ORCID (if available), Acknowledgments ('placed in a separate section on the title page'), and a 'Declarations' section (Funding, Competing interests/disclosures, Ethics approval, Consent, Data availability, Author contributions). author_contributions and patient_consent have no title_page-enum slot so are omitted here (they are in declarations). Abstract and Keywords, though nested under the guide's 'Title Page' IA heading, are manuscript content that stays in the BLINDED main file for double-blind review -> excluded from the separate identifying title page.",
+    "abstract: structured = true, sections Purpose/Methods/Results/Conclusion -> 'Please provide a structured abstract of 150 to 250 words which should be divided into the following sections: Purpose... Methods... Results... Conclusion.' max_words = 250 (primary type original article; min 150). The guide allows increasing to up to 450 words for systematic reviews / original research 'if the topic dictates' and to meet reporting guidelines. Trial-registration line is a CONDITIONAL abstract add-on (life-science/clinical trials, as the last line) -> omitted from sections. keywords 4-6 required: 'Please provide 4 to 6 keywords which can be used for indexing purposes.' keyword case/separator unstated -> null.",
+    "word_limits from the 'Types of papers' list: Original articles = 2,500 words / abstract 150-250 / max 25 refs. Review articles/meta-analysis = 3,500 words / 50-70 refs (applied to both review and systematic_review). Letters = 500 words / 4 refs (no abstract). Case Reports = 1,500 words / abstract <=350 words / 15 refs. review & systematic abstract_max_words = 250 derives from the journal-wide 150-250 structured-abstract rule (the Types line for reviews gave no abstract number).",
+    "case_report figures/tables = null (SCHEMA GAP): the guide states 'Case Reports: ...15 references, 5 Images/drawings, 2 figures/tables.' The '5 Images/drawings, 2 figures/tables' allowance is ambiguous/overlapping (images vs figures vs a combined figures+tables cap of 2) and cannot be cleanly split into figures_max/tables_max, so both left null and quoted here rather than guessed.",
+    "case_report section order (explicitly prescribed): 'Introduction, Case Presentation, Discussion, Conclusion, (optional) Patient Perspective.' Patient Perspective is optional -> excluded from the required-order array. No explicit ordered section structure is prescribed for original_research/review/systematic_review/letter (IMRaD is implied by the Text section's hypothesis/methods/conclusion notes but never listed as a required order), so only case_report is encoded in sections.",
+    "references.style = custom: Springer 'basic' numbered style with year in parentheses right after the authors -> 'Gamelin FX, Baquet G... (2009) Effect... Eur J Appl Physiol 105:731-738. https://doi.org/...' (year-after-authors, not Vancouver's year-at-end). in_text = bracket: 'Reference citations in the text should be identified by numbers in square brackets [3].' order = cited ('entries... numbered consecutively'). include_doi = true: 'always include DOIs as full DOI links.' et_al_threshold = null: 'Ideally, the names of all authors should be provided, but the usage of et al in long author lists will also be accepted' — no numeric threshold. journal_abbrev = nlm (closest enum): guide actually specifies the ISSN LTWA (List of Title Word Abbreviations), not NLM/Index Medicus, but both are abbreviated-name standards (with full title as the 'if unsure' fallback).",
+    "tables: placement = in_text (figures are placed 'within the body of the text' and tables use the Word 'table function' in the manuscript; the guide does not state a separate-file/end placement for tables). caption_position = null: the tables section does not state above vs below (only that footnotes go beneath the table body) — left null rather than assuming Springer house style. numbering = arabic: 'All tables are to be numbered using Arabic numerals.'",
+    "figures: separate_files = false — guide default is 'Figures should be submitted within the body of the text. Only if the file size... causes problems... submitted separately.' (Tension: figures are still named as separate files 'Fig1.eps' and supplied electronically for production; noted.) formats = eps, tiff only (schema-allowed subset): 'For vector graphics, the preferred format is EPS; for halftones, please use TIFF format. MSOffice files are also acceptable' (MSOffice has no enum slot). min_dpi = 300 (SCHEMA GAP — tiered): line art 1200 dpi, combination art 600 dpi, halftone 300 dpi; 300 encoded as the lowest floor (halftones/photos, the common clinical case) to avoid false-flagging. legends_location = in_text: 'Include the captions in the text file of the manuscript, not in the figure file' (figures embedded in body; no dedicated legends section named). callout_style = 'Fig.': 'Figure captions begin with the term Fig. in bold type.' naming_pattern = Fig{n}: 'Name your figure files with Fig and the figure number, e.g., Fig1.eps.'",
+    "declarations: the 'Declarations' section (on the separate title page) per the Competing-Interests summary includes Funding, Competing interests, Ethics approval, Consent, Data/Materials/Code availability, and Authors' contribution statements; Acknowledgments also on the title page. required = funding + conflict_of_interest + author_contributions (journal-wide mandatory; 'submissions that do not include relevant declarations will be returned as incomplete', Competing Interest + Author Contribution must be provided at submission). ethics_approval and patient_consent are required WHEN APPLICABLE (human participants/consent); data_availability is required specifically for original research articles ('must add a Data Availability Statement to original research articles') — kept out of the flat required list to avoid over-applying. trial_registration is reported as the last line of the abstract, not in Declarations -> omitted from declarations.order.",
+    "misc: cover_letter_required = false — EXPLICITLY 'A separate cover letter is not allowed' and 'Cover letters are not allowed to be sent as ESM.' (A minor contradiction: the Corresponding-Author role mentions transparency 'in a cover letter to the Editor'; the Submission section's explicit prohibition governs.) orcid_required = false: ORCID 'if available' / 'recommended', not required. highlights_required = false: no Highlights element mentioned ('Author slides are no longer published'). title_case = null: 'The title should be concise and informative' with no casing rule (note: guide asks that the article's subject appear within the first three words of the title — a content, not casing, rule).",
+    "SCHEMA GAPS: (1) case-report visual allowance '5 Images/drawings, 2 figures/tables' — no clean figures_max/tables_max split. (2) tiered figure DPI (line art 1200 / combination 600 / halftone 300) — single min_dpi field. (3) abstract may extend from 250 to up to 450 words for SR/original research — single max_words field. (4) 'no more than three levels of displayed headings' depth cap — headings field holds per-level formatting, not a depth cap. (5) title subject must appear within the first three words — no field. (6) Reviewer's Comments folded into the 'letter' type."
+  ]
+}

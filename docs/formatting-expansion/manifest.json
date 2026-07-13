@@ -964,16 +964,20 @@
       "quartile": "Q1",
       "title": "Journal of the American Academy of Orthopaedic Surgeons",
       "issn": null,
-      "publisher": null,
+      "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins), for the American Academy of Orthopaedic Surgeons",
       "slug": "jaaos",
       "abbrev": "JAAOS",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://edmgr.ovid.com/jaaos/accounts/ifauth.htm",
+      "source_tier": "B",
+      "source_note": "Encoded from the live Editorial Manager Instructions for Authors page via Apify rag-web-browser headless render (direct WebFetch 402s on edmgr.ovid.com); headless fetch returned HTTP 200 with the full current guide.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "SCHEMA GAP - combined figure+table cap: the guide caps 'total tables or figure images' (a single combined number), not separate figure and table maxes. Combined caps: review 16, research 16, surgical technique 8 (plus a required video), orthopaedic advances 6, on the horizon 6, letters 0. Encoded figures_max/tables_max as null (cannot split) except letters where the guide states 'None' (0). Letters also have no abstract ('None').",
+        "SCHEMA GAP - tiered figure DPI: line art must be vector or >=1200 dpi; electronic photographs/radiographs/CT/scanned images >=300 dpi; photographs containing text >=600 dpi. min_dpi encoded as 300 (the lowest floor); the 1200/600 tiers noted here.",
+        "Visual Abstract is REQUIRED as of June 1, 2026 (review authors at submission; research authors at first revision) - no schema field, noted here. AI-generated content and AI-generated images are NOT permitted. Hybrid open-access option available; no APC if the free-publication option is chosen."
+      ]
     },
     {
       "rank": 51,
@@ -981,16 +985,20 @@
       "quartile": "Q1",
       "title": "Journal of Athletic Training",
       "issn": null,
-      "publisher": null,
+      "publisher": "National Athletic Trainers' Association (NATA)",
       "slug": "jat",
       "abbrev": "JAT",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://meridian.allenpress.com/DocumentLibrary/NATA/2020_JAT_Authors'_Guide.pdf",
+      "source_tier": "B",
+      "source_note": "Live canonical guide (meridian.allenpress.com/jat/pages/Author_Guidelines) and the linked authors-guide PDF are Cloudflare-challenge-blocked (cf-mitigated: challenge, HTTP 403) to WebFetch, curl, AND the Apify rag-web-browser headless render; the live Author_Guidelines HTML page has NO Wayback snapshot. Encoded from the official NATA 'JOURNAL OF ATHLETIC TRAINING AUTHOR GUIDELINES' PDF (18 pp) retrieved from the Internet Archive snapshot http://web.archive.org/web/20230615224046id_/https://meridian.allenpress.com/DocumentLibrary/NATA/2020_JAT_Authors'_Guide.pdf (downloaded raw + pypdf-extracted, 42k chars). This is the same file the live document library still serves (the live PDF path returns a Cloudflare challenge, NOT a 404, and a July-2026 web search still surfaces this exact PDF as the top JAT author-guidelines result), so it is effectively the current posted guide; it cites the AMA Manual of Style 11th ed (2020), the current edition. Could not diff against the live HTML page (JS/Cloudflare shell, unarchived), so treat as blocked/archive-sourced.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "SCHEMA GAP combined figure+table caps: technical_note (Short Report/Technical Note) = 'No more than 3 tables or figures'; review (Current Clinical Concepts) = 'No more than 8 tables or figures'. These are COMBINED caps (tables + figures together); the schema only has separate figures_max/tables_max, so both left null to avoid a false-permissive independent cap (e.g. 3 tables AND 3 figures). original_research/systematic_review/case_report/case_series state no numeric table/figure cap.",
+        "MANDATORY 'Key Points' construct has no schema slot: every article type must supply 2-3 (case report/short report: 1-2) single-sentence 'take-home messages' placed immediately after the abstract; each key point max 30 words / 280 characters incl. spaces, supported by the study results. highlights_required left null (Key Points are JAT-specific, not Elsevier-style Highlights).",
+        "Title page (separate file) contains: brief title (16-word maximum RECOMMENDED, encoded as title_max_words=16), each author's name/title/affiliation/email/Twitter handle, and corresponding author name/address/phone/email. authors_degrees=include BUT capped: 'No more than 4 credentials should be listed for each author' (ATC preferred over state credentials) - the max-4 rule has no schema field. Trial/PROSPERO registration info goes at the BOTTOM of the title page (schema has no 'trial_registration' title_page element, so noted only here). Twitter handle also has no element."
+      ]
     },
     {
       "rank": 52,
@@ -1040,17 +1048,19 @@
       "sjr": 1.137,
       "quartile": "Q1",
       "title": "European Journal of Sport Science",
-      "issn": null,
-      "publisher": null,
+      "issn": "1536-7290 (online), 1746-1391 (print)",
+      "publisher": "Wiley (for the European College of Sport Science; migrated from Taylor & Francis, flipped to Gold Open Access 2024-01-01)",
       "slug": "ejss",
       "abbrev": "EJSS",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://onlinelibrary.wiley.com/page/journal/15367290/homepage/author-guidelines",
+      "source_tier": "C",
+      "source_note": "BLOCKED / headless-failed. Live Wiley Online Library author-guidelines page is hard bot-blocked: WebFetch returned HTTP 403; the Apify rag-web-browser headless render returned HTTP 403/500 on both the direct URL and via Google-search mode (it only rendered an unrelated third-party journal); Jina reader proxy returned 401; allorigins proxy returned 520; and the Wayback Machine has NO snapshot of this URL (availability API returned empty archived_snapshots for 2025/2026), so no archive source within 12 months exists. Structural facts were encoded from the live page's content as surfaced through the search-engine index (distinctive Wiley phrasing, cross-corroborated across multiple domain-restricted queries) plus Wiley/APA house style. All journal-specific numeric caps (word limits, abstract words, keyword counts, DPI, margins) left null because the page could not be rendered and the only numbers found were explicitly attributed to the SUPERSEDED Taylor & Francis guide. No snapshot URL was usable. Confidence: medium.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "HIGHLIGHTS/KEY POINTS: live page requires 'no more than 3 key points' published with the article, and lists 'highlights' among items excluded from the word count -> misc.highlights_required true. Separately, a Plain Language Summary is required: 'a single paragraph no more than 200 words long' (no schema field; recorded here)."
+      ]
     },
     {
       "rank": 55,
@@ -1058,16 +1068,21 @@
       "quartile": "Q1",
       "title": "European Spine Journal",
       "issn": null,
-      "publisher": null,
+      "publisher": "Springer (Springer Nature) — official journal of EuroSpine and partner spine societies",
       "slug": "european-spine-journal",
       "abbrev": "ESJ",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://link.springer.com/journal/586/submission-guidelines",
+      "source_tier": "B",
+      "source_note": "Live link.springer.com/journal/586/submission-guidelines is Cloudflare/bot-blocked. Encoded via Apify rag-web-browser HEADLESS render of an ARCHIVE (Wayback Machine) snapshot < 12 months old: https://web.archive.org/web/20251204070208/https://link.springer.com/journal/586/submission-guidelines (captured 2025-12-04). Render returned HTTP 200 with the full current Instructions for Authors. Freshness cron should use a headless fetch (live domain is bot-blocked).",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "article_types mapping: 'Original articles' -> original_research; 'Review articles/meta-analysis' is ONE combined category in the guide, encoded as BOTH review and systematic_review (same caps: 3,500 words, 50-70 refs); 'Case Reports' -> case_report; 'Letters to Editor/Reviewer's Comments' -> letter. No editorial/technical-note author type offered.",
+        "case_report figures/tables = null (SCHEMA GAP): the guide states 'Case Reports: ...15 references, 5 Images/drawings, 2 figures/tables.' The '5 Images/drawings, 2 figures/tables' allowance is ambiguous/overlapping (images vs figures vs a combined figures+tables cap of 2) and cannot be cleanly split into figures_max/tables_max, so both left null and quoted here rather than guessed.",
+        "figures: separate_files = false — guide default is 'Figures should be submitted within the body of the text. Only if the file size... causes problems... submitted separately.' (Tension: figures are still named as separate files 'Fig1.eps' and supplied electronically for production; noted.) formats = eps, tiff only (schema-allowed subset): 'For vector graphics, the preferred format is EPS; for halftones, please use TIFF format. MSOffice files are also acceptable' (MSOffice has no enum slot). min_dpi = 300 (SCHEMA GAP — tiered): line art 1200 dpi, combination art 600 dpi, halftone 300 dpi; 300 encoded as the lowest floor (halftones/photos, the common clinical case) to avoid false-flagging. legends_location = in_text: 'Include the captions in the text file of the manuscript, not in the figure file' (figures embedded in body; no dedicated legends section named). callout_style = 'Fig.': 'Figure captions begin with the term Fig. in bold type.' naming_pattern = Fig{n}: 'Name your figure files with Fig and the figure number, e.g., Fig1.eps.'",
+        "SCHEMA GAPS: (1) case-report visual allowance '5 Images/drawings, 2 figures/tables' — no clean figures_max/tables_max split. (2) tiered figure DPI (line art 1200 / combination 600 / halftone 300) — single min_dpi field. (3) abstract may extend from 250 to up to 450 words for SR/original research — single max_words field. (4) 'no more than three levels of displayed headings' depth cap — headings field holds per-level formatting, not a depth cap. (5) title subject must appear within the first three words — no field. (6) Reviewer's Comments folded into the 'letter' type."
+      ]
     },
     {
       "rank": 56,
@@ -1132,51 +1147,58 @@
       "sjr": 1.029,
       "quartile": "Q1",
       "title": "Journal of Orthopaedic Surgery and Research",
-      "issn": null,
-      "publisher": null,
+      "issn": "1749-799X",
+      "publisher": "BMC (BioMed Central), part of Springer Nature",
       "slug": "josr",
       "abbrev": "JOSR",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://link.springer.com/journal/13018/submission-guidelines",
+      "source_tier": "B",
+      "source_note": "PUBLISHER MIGRATION + archive-encoded. BMC is moving JOSR to Springer Nature Link (journal 13018); the Nov-2025 BMC landing page carries the banner 'BMC is moving to Springer Nature Link' pointing at https://link.springer.com/journal/13018/submission-guidelines, which is Cloudflare/Akamai bot-blocked. Encoded via Apify rag-web-browser HEADLESS render of BMC Wayback ARCHIVE snapshots (BMC submission content is journal-specific and unchanged by the platform migration): general formatting https://web.archive.org/web/20250526151157/https://josr-online.biomedcentral.com/submission-guidelines/preparing-your-manuscript (26 May 2025); Research https://web.archive.org/web/20250624070817/https://josr-online.biomedcentral.com/submission-guidelines/preparing-your-manuscript/research (24 Jun 2025); Review https://web.archive.org/web/20250624070852/https://josr-online.biomedcentral.com/submission-guidelines/preparing-your-manuscript/review ; Systematic reviews https://web.archive.org/web/20250624070827/https://josr-online.biomedcentral.com/submission-guidelines/preparing-your-manuscript/systematic-reviews ; landing https://web.archive.org/web/20251116141214/https://josr-online.biomedcentral.com/submission-guidelines (16 Nov 2025). Article-type snapshots are ~12.6 months old (June 2025).",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "Systematic reviews additionally require a populated PRISMA checklist (as an additional file) + PRISMA flow diagram (in the main text), and PROSPERO protocol registration is strongly recommended — no schema field for reporting-checklist requirements, noted here.",
+        "LLM/authorship policy: Large Language Models do not satisfy authorship criteria; LLM use must be documented in the Methods section (guide-wide policy; no schema field)."
+      ]
     },
     {
       "rank": 60,
       "sjr": 1.025,
       "quartile": "Q1",
       "title": "BMJ Open Sport and Exercise Medicine",
-      "issn": null,
-      "publisher": null,
+      "issn": "2055-7647",
+      "publisher": "BMJ Publishing Group Ltd (in association with the British Association of Sport and Exercise Medicine)",
       "slug": "bmjosem",
       "abbrev": "BMJOSEM",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://bmjopensem.bmj.com/pages/authors",
+      "source_tier": "C",
+      "source_note": "Journal-specific guide https://bmjopensem.bmj.com/pages/authors is bot-blocked: HTTP 403 to WebFetch AND to Apify headless render; the entire bmjopensem.bmj.com domain 403s to headless. Formatting, reference, table and figure values were encoded from the LIVE BMJ house-style hub https://authors.bmj.com/writing-and-formatting/formatting-your-paper/ (200 OK; general guidelines that apply across all BMJ journals). Article types, ISSN and publisher were read from a JS-shell archive snapshot https://web.archive.org/web/20250613093149/https://bmjopensem.bmj.com/pages/authors (2025-06-13, ~13 months old, navigation menu only) — NO journal-specific numeric caps were taken from that archive. Journal-specific word limits, abstract structure/length and title-page element order remain unverifiable and are left null.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "figures.min_dpi=300 general; house style also requires 1200 dpi for line art (tiered DPI not representable in single int field)."
+      ]
     },
     {
       "rank": 61,
       "sjr": 1.018,
       "quartile": "Q1",
       "title": "Journal of Sports Sciences",
-      "issn": null,
-      "publisher": null,
+      "issn": "0264-0414 (print), 1466-447X (online)",
+      "publisher": "Taylor & Francis (Routledge)",
       "slug": "journal-of-sports-sciences",
       "abbrev": "JSS",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://www.tandfonline.com/action/authorSubmission?journalCode=rjsp20&show=instructions",
+      "source_tier": "B",
+      "source_note": "blocked: the live Instructions for Authors (tandfonline.com, journal code rjsp20) returned HTTP 403 Cloudflare bot-block on WebFetch AND on the Apify rag-web-browser headless render; all of tandfonline.com (incl. the journal homepage) is Cloudflare-protected. The only Wayback captures of the instructions URL are a 301 redirect (2026-01-09) that chains to a 403 block snapshot (https://web.archive.org/web/20250414030700id_/https://www.tandfonline.com/action/authorSubmission?show=instructions&journalCode=rjsp20 = a Cloudflare challenge blob, no usable content); no ≤12-month capture with real content exists. Journal-specific values (word limits, abstract structure/limit, section orders, exact reference caps, keyword count, declarations order, table placement) are therefore NULL. Non-null layout/figure/heading/title-case values were encoded from Taylor & Francis cross-publisher HOUSE-STYLE pages rendered headless via Apify (authorservices.taylorandfrancis.com journal-manuscript-layout-guide + submit-electronic-artwork, both HTTP 200), NOT from this journal's own guide. Identity (ISSN, publisher), blinding (double-anonymized), and reference style (author-date, name+year in parentheses) are WebSearch-corroborated.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "SCHEMA GAP - tiered figure DPI: T&F house-style specifies color photographic 300dpi, grayscale photographic 600dpi, line-art/monochrome 1200dpi, combination 600dpi; schema holds one min_dpi so set to the 300 floor (color photos)."
+      ]
     },
     {
       "rank": 62,

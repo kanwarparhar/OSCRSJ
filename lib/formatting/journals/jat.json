@@ -1,0 +1,241 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Athletic Training",
+    "slug": "jat",
+    "issn": null,
+    "publisher": "National Athletic Trainers' Association (NATA)",
+    "guidelines_url": "https://meridian.allenpress.com/DocumentLibrary/NATA/2020_JAT_Authors'_Guide.pdf",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "Live canonical guide (meridian.allenpress.com/jat/pages/Author_Guidelines) and the linked authors-guide PDF are Cloudflare-challenge-blocked (cf-mitigated: challenge, HTTP 403) to WebFetch, curl, AND the Apify rag-web-browser headless render; the live Author_Guidelines HTML page has NO Wayback snapshot. Encoded from the official NATA 'JOURNAL OF ATHLETIC TRAINING AUTHOR GUIDELINES' PDF (18 pp) retrieved from the Internet Archive snapshot http://web.archive.org/web/20230615224046id_/https://meridian.allenpress.com/DocumentLibrary/NATA/2020_JAT_Authors'_Guide.pdf (downloaded raw + pypdf-extracted, 42k chars). This is the same file the live document library still serves (the live PDF path returns a Cloudflare challenge, NOT a 404, and a July-2026 web search still surfaces this exact PDF as the top JAT author-guidelines result), so it is effectively the current posted guide; it cites the AMA Manual of Style 11th ed (2020), the current edition. Could not diff against the live HTML page (JS/Cloudflare shell, unarchived), so treat as blocked/archive-sourced.",
+    "submission_system": "eJournalPress (jat.msubmit.net)"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "case_report",
+    "case_series",
+    "technical_note",
+    "review",
+    "narrative_review",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": "letter",
+    "font": {
+      "family": null,
+      "size_pt": 10
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": 16,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Context",
+      "Objective",
+      "Design",
+      "Setting",
+      "Patients or Other Participants",
+      "Intervention(s)",
+      "Main Outcome Measure(s)",
+      "Results",
+      "Conclusions"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 5,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion"
+    ],
+    "systematic_review": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion"
+    ],
+    "case_report": [
+      "Introduction",
+      "Case Presentation",
+      "Discussion",
+      "Clinical Bottom Line"
+    ],
+    "case_series": [
+      "Introduction",
+      "Case Presentation",
+      "Discussion",
+      "Clinical Bottom Line"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 30,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": 150,
+      "references_min": null,
+      "references_max": 15,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_series": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": 150,
+      "references_min": null,
+      "references_max": 15,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": 150,
+      "references_min": null,
+      "references_max": 15,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 150,
+      "references_min": null,
+      "references_max": 50,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "SOURCE: live Meridian/KGL guide + PDF are Cloudflare-challenge-blocked to WebFetch/curl/Apify-headless and the live HTML guide is unarchived; encoded from the official NATA 'Journal of Athletic Training Author Guidelines' PDF via Wayback snapshot 20230615224046 of meridian.allenpress.com/DocumentLibrary/NATA/2020_JAT_Authors'_Guide.pdf. Same file still served live (challenge, not 404) and top July-2026 search hit -> treated as effectively current. AMA 11th ed (2020) = current edition. Confidence medium (could not diff vs live HTML).",
+    "Article-type mapping: Quantitative Original Research + Qualitative Original Research -> original_research; Systematic Review or Meta-Analysis -> systematic_review; Clinical CASE Report (4-tier CASE system) Level 1 Validation -> case_report and Level 2 Exploration CASE Series -> case_series (one guide category, shared word/ref caps); Short Report or Technical Note -> technical_note; Current Clinical Concepts (succinct narrative best-practice reviews, usually by invitation) -> review; Narrative Literature Review (normally solicited) -> narrative_review; Letter to the Editor -> letter.",
+    "OMITTED categories (no clean enum slot): 'Quality Improvement' (SQUIRE-based QI reports; distinct sections Local Problem/Background/Measurement/Design/Strategy/Results/Lessons and Limitations/Conclusions; 4000 words, 30 refs, 150-word unstructured abstract); 'Communications' (solicited NATA position/consensus statements); 'Media Reviews' (solicited, published in NATA News, not JAT).",
+    "WORD-CAP SPLIT inside original_research: Quantitative Original Research body = 4000 words / <=30 refs; Qualitative Original Research body = 5000 words / <=30 refs. Encoded 4000 (quantitative, the first-listed flagship + stricter cap); a QUALITATIVE original-research paper is allowed 5000. All body word counts EXCLUDE abstract, references, tables, and figures.",
+    "SCHEMA GAP combined figure+table caps: technical_note (Short Report/Technical Note) = 'No more than 3 tables or figures'; review (Current Clinical Concepts) = 'No more than 8 tables or figures'. These are COMBINED caps (tables + figures together); the schema only has separate figures_max/tables_max, so both left null to avoid a false-permissive independent cap (e.g. 3 tables AND 3 figures). original_research/systematic_review/case_report/case_series state no numeric table/figure cap.",
+    "MANDATORY 'Key Points' construct has no schema slot: every article type must supply 2-3 (case report/short report: 1-2) single-sentence 'take-home messages' placed immediately after the abstract; each key point max 30 words / 280 characters incl. spaces, supported by the study results. highlights_required left null (Key Points are JAT-specific, not Elsevier-style Highlights).",
+    "Layout: 'Each page must be formatted for 8.5- by 11-inch paper, double spaced, with 1-inch margins and a font no smaller than 10 points' -> page_size letter, line_spacing double, margins 25.4mm all sides. font.size_pt=10 is a stated MINIMUM ('no smaller than 10 points'), not a fixed size (10pt is compliant); font.family unstated -> null. 'Do not right justify pages' -> alignment left (ragged right). first_line_indent unstated.",
+    "line_numbers: guide says 'Include line counts on each page to facilitate the review process' -> line numbering REQUIRED (not 'none'); encoded 'continuous' but the phrase 'line counts on each page' is ambiguous between continuous and per_page (LOW confidence on which). page_numbers.show=true ('Begin numbering the pages... with the abstract page as #1; then consecutively number all successive pages'); position unstated. No running head prescribed.",
+    "Blinding: 'The JAT uses a double-blind review process. Authors and institutions should not be identified anywhere in the manuscript except on the title page' + 'The title page and acknowledgments as well as each table or figure must be uploaded as separate documents' -> double_blind, separate_title_page, scrub_body_identifiers all true. scrub_metadata left false: guide mandates a de-identified manuscript body but says nothing about scrubbing document/file properties metadata.",
+    "Title page (separate file) contains: brief title (16-word maximum RECOMMENDED, encoded as title_max_words=16), each author's name/title/affiliation/email/Twitter handle, and corresponding author name/address/phone/email. authors_degrees=include BUT capped: 'No more than 4 credentials should be listed for each author' (ATC preferred over state credentials) - the max-4 rule has no schema field. Trial/PROSPERO registration info goes at the BOTTOM of the title page (schema has no 'trial_registration' title_page element, so noted only here). Twitter handle also has no element.",
+    "Primary manuscript file order (each section on a new page): (a) Abstract, Key Words, Key Points on the first numbered page; (b) Text/body; (c) References; (d) Legends to figures. Abstract page is numbered page 1 and repeats the article title (no author names).",
+    "Abstract: primary type (Quantitative Original Research) structured, max 300 words, mandatory subheadings Context/Objective/Design/Setting/Patients or Other Participants/Main Outcome Measure(s)/Results/Conclusions, with Intervention(s) inserted after 'Patients or Other Participants' ONLY when appropriate (conditional - encoded in order). OTHER structured-abstract subheading sets (not encodable in the single abstract.sections field, all 300-word cap): Qualitative Orig Research = Context/Objective/Design/Setting/Patients or Other Participants/Data Collection and Analysis/Results/Conclusions (Design listed as 'Qualitative study'); Systematic Review/Meta-Analysis = Objective/Data Sources/Study Selection/Data Extraction/Data Synthesis/Conclusions. UNSTRUCTURED 150-word abstracts: Clinical CASE Report (PICO format), Quality Improvement, Short Report/Technical Note, Current Clinical Concepts.",
+    "Keywords: 3-5 for original research + systematic review; 2-3 for Clinical CASE Report, Short Report/Technical Note, Quality Improvement. Encoded min 3/max 5 (primary type); required=true. Keyword case + separator unstated -> null.",
+    "References: 'numbered consecutively, using superscripted Arabic numerals, in the order in which they are cited in the text' -> in_text superscript, order cited. 'Journal title abbreviations should conform to Index Medicus style' -> journal_abbrev nlm. 'See the American Medical Association Manual of Style, 11th edition' -> style ama. include_doi=false: the guide's worked reference examples (e.g. 'J Athl Train. 2020;55(1):42-48.') carry NO DOIs. et_al_threshold null (unstated; a 4-author example is listed in full, no truncation rule given). in_text_punctuation null (AMA superscript placement not stated in guide). No global max reference count (per-type caps live in word_limits).",
+    "Tables: 'each table... must be uploaded as separate documents. None of these should be included as part of the primary manuscript file' -> placement separate_file. 'numbered sequentially as they are cited in the text' -> numbering arabic. Title is bold, title-case ('first letter of each major word... capitalized'); caption_position left null (guide describes title typography but not above/below placement, though the bold title is listed first in the table-formatting sequence).",
+    "Figures: uploaded as separate documents (separate_files true); 'Minimum recommended resolution is 300 dots per inch' -> min_dpi 300; figures use Arial, white background, no surrounding box; multipart figures mounted together with Arial capital-letter labels (A, B, C). Figure LEGENDS live in the primary manuscript file as a dedicated 'Legends to figures' section (numbered with Arabic numerals in order of appearance) -> legends_location figure_legends_section. formats=[]: this guide does not enumerate accepted figure file formats - it defers to a separate 'JAT Figure Guidelines' document. callout_style + naming_pattern unstated -> null. Color reproduction must be requested in a cover letter and costs $100/figure.",
+    "Declarations: no single ordered end-of-manuscript declarations block, so order=[]; declarations are placed contextually. required (all conditional): funding ('Sources of financial support... must be acknowledged', with grant/contract numbers + funder name/city/state); conflict_of_interest (each author verifies COI + financial disclosures via emailed authorship/copyright form at submission); ethics_approval (state in Methods that an IRB approved the project for experimental human/animal studies); patient_consent (signed release required for each patient in a clinical CASE report and for any recognizable individual in photos/video); trial_registration (public registry required for clinical trials before/at enrollment; PROSPERO for systematic reviews/meta-analyses; both listed at bottom of title page). Non-author contributors thanked in a separate 'Acknowledgments' file. data_availability + author_contributions statements not required by the guide.",
+    "Misc: fully open access, NO publication fees, released to PubMed Central. orcid_required=false (ORCID not mentioned; a Twitter handle field IS requested on the title page). cover_letter_required=false (a cover letter is required ONLY when requesting color figures). title_case null: the guide gives a title-case rule for TABLE titles but does not state a capitalization rule for the manuscript/article title. Submission at jat.msubmit.net (eJournalPress). Revisions must be resubmitted within 3 months of the decision letter. ISSN not stated in the guide -> null."
+  ]
+}

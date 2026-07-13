@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "European Journal of Sport Science",
+    "slug": "ejss",
+    "issn": "1536-7290 (online), 1746-1391 (print)",
+    "publisher": "Wiley (for the European College of Sport Science; migrated from Taylor & Francis, flipped to Gold Open Access 2024-01-01)",
+    "guidelines_url": "https://onlinelibrary.wiley.com/page/journal/15367290/homepage/author-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "BLOCKED / headless-failed. Live Wiley Online Library author-guidelines page is hard bot-blocked: WebFetch returned HTTP 403; the Apify rag-web-browser headless render returned HTTP 403/500 on both the direct URL and via Google-search mode (it only rendered an unrelated third-party journal); Jina reader proxy returned 401; allorigins proxy returned 520; and the Wayback Machine has NO snapshot of this URL (availability API returned empty archived_snapshots for 2025/2026), so no archive source within 12 months exists. Structural facts were encoded from the live page's content as surfaced through the search-engine index (distinctive Wiley phrasing, cross-corroborated across multiple domain-restricted queries) plus Wiley/APA house style. All journal-specific numeric caps (word limits, abstract words, keyword counts, DPI, margins) left null because the page could not be rendered and the only numbers found were explicitly attributed to the SUPERSEDED Taylor & Francis guide. No snapshot URL was usable. Confidence: medium.",
+    "submission_system": "Wiley Research Exchange / ScienceConnect (authors.wiley.com/journal/EJSC, group code EJSC)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "orcid"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Materials and Methods",
+      "Results",
+      "Discussion",
+      "Conclusion"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "full",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": false,
+    "formats": [
+      "eps",
+      "pdf",
+      "tiff"
+    ],
+    "min_dpi": null,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "data_availability"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding",
+      "data_availability"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": false,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "SOURCE HARD-BLOCKED: live Wiley author-guidelines page unrenderable via WebFetch (403), Apify headless (403/500 on direct URL and Google-search mode), Jina (401), allorigins (520); NO Wayback snapshot exists. Encoded from the live page's search-index content + Wiley/APA house style, per the invoking directive to encode Wiley house style with low confidence when hard-blocked. Classified TIER_B_blocked_shell.",
+    "PUBLISHER MIGRATION: European Journal of Sport Science moved from Taylor & Francis (tandfonline, tejs20) to Wiley and flipped to Gold Open Access on 2024-01-01 (APC $2,950 USD / £2,160 / €2,550; 20% ECSS society-member discount). The old tandfonline guide was deliberately NOT used as a source.",
+    "BLINDING confirmed high-confidence from the live Wiley page: 'The journal operates a double-anonymized peer review policy. Please anonymize your manuscript and supply a separate title page file.' -> double_blind, separate_title_page, scrub_body_identifiers, scrub_metadata all true.",
+    "FREE FORMAT SUBMISSION: EJSS uses Wiley Free Format ('Your manuscript should be an editable file including text, figures, and tables, or separate files - whichever you prefer'). Consequently layout numerics (font, size, spacing, margins, page size, alignment, indent) are NOT mandated at submission and are left null; line_numbers left 'none' as conservative default (enum has no null; not verified).",
+    "ARTICLE TYPES: Wiley page states the journal 'publishes original research as well as review articles' and invites 'original research and systematic reviews' -> original_research, review, systematic_review. Letters/editorials/short communications were NOT confirmed on the reachable content and are omitted rather than guessed.",
+    "SECTIONS (original research) confirmed from live page: 'the main body is formatted as introduction, materials & methods, results, discussion, conclusion.' Encoded for original_research only; no prescribed order confirmed for review/systematic_review.",
+    "REFERENCES: live page states 'APA reference style; as the journal offers Free Format submission, however, this is for information only and you do not need to format the references.' APA has no exact enum slot (enum = nlm/ama/vancouver/custom, all numbered) -> mapped to 'custom'. in_text=paren, order=alphabetical, journal_abbrev=full, include_doi=true encode APA author-date house style; et_al_threshold and max_count left null (the guide does not restate APA author-count rules).",
+    "FIGURES: live page states 'Electronic graphics files for the illustrations should be in Encapsulated PostScript (EPS), PDF or TIFF format' -> formats [eps, pdf, tiff]. DPI left null: guide says only 'uploaded in the highest resolution possible'; detailed DPI lives in a separate Wiley figure-requirements PDF, not the main guide. legends_location/callout_style/naming_pattern not confirmed -> null.",
+    "DECLARATIONS confirmed present on live page: competing-interests/conflict-of-interest statement; Wiley Data Sharing data-availability statement ('select the data availability statement that is right for your submission'); ethics/IRB approval, ethical treatment of participants, informed consent 'as appropriate'; funding statement (Wiley standard). Order shown follows Wiley house standard (the guide does not strictly enumerate a sequence). required = CoI + funding + data_availability; ethics_approval + patient_consent are conditional ('as appropriate').",
+    "ORCID required (live page: 'This journal requires ORCID.') -> misc.orcid_required true. title_page.elements inferred from the double-anonymized separate-title-page-with-author-details requirement + ORCID mandate; the guide does not print an explicit enumerated title-page element list.",
+    "HIGHLIGHTS/KEY POINTS: live page requires 'no more than 3 key points' published with the article, and lists 'highlights' among items excluded from the word count -> misc.highlights_required true. Separately, a Plain Language Summary is required: 'a single paragraph no more than 200 words long' (no schema field; recorded here).",
+    "NOT ENCODED (SUPERSEDED T&F LEGACY numbers surfaced only via search and explicitly attributed to the old Taylor & Francis guide; the task forbids the old guide, so these are NOT encoded and MUST be verified against the live Wiley page before use): Original Paper ~4,000 words; abstract ~250 words; 3-6 keywords; manuscript compile order title page/abstract/keywords/main text/acknowledgements/references/appendices/tables/figure captions. The live Wiley page does confirm a word limit EXISTS for Original Papers and that it 'excludes abstract, highlights, figure/table captions, figures and tables, and reference list' - but the numeric value itself was not obtainable from the blocked page.",
+    "cover_letter_required left false (conservative, unverified). abstract.structured false and abstract.max_words / keywords.min/max null because Wiley-page-specific values were not obtainable (only T&F legacy numbers were seen).",
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+  ]
+}

@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of the American Academy of Orthopaedic Surgeons",
+    "slug": "jaaos",
+    "issn": null,
+    "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins), for the American Academy of Orthopaedic Surgeons",
+    "guidelines_url": "https://edmgr.ovid.com/jaaos/accounts/ifauth.htm",
+    "verified_date": "2026-07-12",
+    "source_hash": "5f6119a5883aec0d2463d2d06fa70c8c70be9f4b3187a7bb2d0ab5c6a930ca77",
+    "source_note": "Encoded from the live Editorial Manager Instructions for Authors page via Apify rag-web-browser headless render (direct WebFetch 402s on edmgr.ovid.com); headless fetch returned HTTP 200 with the full current guide.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "technical_note",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "word_count_manuscript",
+      "funding",
+      "running_title"
+    ],
+    "running_title_max_chars": 40,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "include"
+  },
+  "abstract": {
+    "structured": true,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": false,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusions"
+    ],
+    "technical_note": [
+      "Introduction",
+      "Patient Selection",
+      "Surgical Technique",
+      "Pearls",
+      "Postoperative Care and Rehabilitation",
+      "Summary Outcomes"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 200,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "technical_note": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 200,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": 0,
+      "tables_max": 0
+    }
+  },
+  "references": {
+    "style": "ama",
+    "in_text": "superscript",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": 6,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "eps",
+      "jpg",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Fig.",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "ethics_approval",
+      "patient_consent"
+    ],
+    "required": [
+      "funding",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Source: live current Instructions for Authors fetched via Apify rag-web-browser headless render (WebFetch 402s on edmgr.ovid.com); HTTP 200, full guide captured.",
+    "Article-type mapping: Standard Review Article -> review; Research Article -> original_research; Surgical Technique Article -> technical_note; Letter to the Editor -> letter. JAAOS does NOT accept unsolicited editorials, so 'editorial' omitted. No case_report/case_series slot (not accepted); no systematic_review (JAAOS reviews are explicitly narrative expert distillations, 'specifically not a systematic review').",
+    "Folded/omitted types with no clean enum slot: Training Room (research OR review, 4000w/40ref/16 images), Orthopaedic Advances (review-type, 2250w/20ref/6 images), On the Horizon from the ORS (1500w/20ref/6 images). Committee/solicited-only types not author-submitted in the normal flow: AAOS CPG/AUC/Technology Overview summaries + case studies, Orthopaedic Video Theater.",
+    "SCHEMA GAP - combined figure+table cap: the guide caps 'total tables or figure images' (a single combined number), not separate figure and table maxes. Combined caps: review 16, research 16, surgical technique 8 (plus a required video), orthopaedic advances 6, on the horizon 6, letters 0. Encoded figures_max/tables_max as null (cannot split) except letters where the guide states 'None' (0). Letters also have no abstract ('None').",
+    "Abstract varies by type: research & training room = 300 words, 'Research structure'; standard review, surgical technique, orthopaedic advances, on the horizon = 200 words, 'Narrative structure'; letters = no abstract. Top-level abstract.structured set true (research 'Research structure'); abstract.max_words left null due to per-type variance (real caps live in word_limits). Guide does not enumerate the abstract subsection labels, so abstract.sections = null.",
+    "SCHEMA GAP - tiered figure DPI: line art must be vector or >=1200 dpi; electronic photographs/radiographs/CT/scanned images >=300 dpi; photographs containing text >=600 dpi. min_dpi encoded as 300 (the lowest floor); the 1200/600 tiers noted here.",
+    "References: AMA-style example ('Sonnadara RR, Van Vliet A, Safir O, et al: Title. Journal Year;Vol(Issue):Pages.'); guide also directs following the AMA Manual of Style for unit abbreviations. et_al_threshold=6 (list all author names up to six; for seven or more, list the first three plus et al). in_text=superscript is inferred from AMA/JAAOS house style: the guide states numeric-order in-text citation but does not explicitly state superscript vs bracket.",
+    "line_numbers: guide requires 'page and line numbers' but does not specify continuous vs per-page; encoded 'continuous' (enum has no null).",
+    "Blinding: title pages submitted as a SEPARATE file 'to allow for double blinded peer review' (double_blind + separate_title_page explicit). scrub_body_identifiers set true as implied by double-blind review (not a verbatim instruction to de-identify the body). Running head (<=40 chars incl. spaces) is placed at the BOTTOM OF THE TITLE PAGE, so it is captured as title_page.running_title, not a per-page layout.running_head (which is set show:false).",
+    "Tables: 'each table should begin on a new page' and figures are uploaded as separate files / not embedded; table placement encoded grouped_end (mild inference from LWW convention + 'new page' instruction). caption_position not explicitly stated -> null.",
+    "Figure formats acceptable per guide: .tif, .eps, .jpg, .pdf, .ppt (and .doc); encoded only enum-valid tif/eps/jpg/pdf (ppt/doc dropped). Visual abstracts require .png/.jpeg (separate item).",
+    "Visual Abstract is REQUIRED as of June 1, 2026 (review authors at submission; research authors at first revision) - no schema field, noted here. AI-generated content and AI-generated images are NOT permitted. Hybrid open-access option available; no APC if the free-publication option is chosen.",
+    "ISSN not stated on the guide page -> null. ORCID and cover letter not mentioned -> false (conservative)."
+  ]
+}

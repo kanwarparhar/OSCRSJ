@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "BMJ Open Sport & Exercise Medicine",
+    "slug": "bmjosem",
+    "issn": "2055-7647",
+    "publisher": "BMJ Publishing Group Ltd (in association with the British Association of Sport and Exercise Medicine)",
+    "guidelines_url": "https://bmjopensem.bmj.com/pages/authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "e048dde4a4dee1590f8d69a62da8c2452454f387014baf997dc49f6a725a713c",
+    "source_note": "Journal-specific guide https://bmjopensem.bmj.com/pages/authors is bot-blocked: HTTP 403 to WebFetch AND to Apify headless render; the entire bmjopensem.bmj.com domain 403s to headless. Formatting, reference, table and figure values were encoded from the LIVE BMJ house-style hub https://authors.bmj.com/writing-and-formatting/formatting-your-paper/ (200 OK; general guidelines that apply across all BMJ journals). Article types, ISSN and publisher were read from a JS-shell archive snapshot https://web.archive.org/web/20250613093149/https://bmjopensem.bmj.com/pages/authors (2025-06-13, ~13 months old, navigation menu only) — NO journal-specific numeric caps were taken from that archive. Journal-specific word limits, abstract structure/length and title-page element order remain unverifiable and are left null.",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "review",
+    "editorial"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": [
+      {
+        "level": 1,
+        "case": "upper",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 2,
+        "case": "sentence",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 3,
+        "case": "sentence",
+        "bold": false,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 4,
+        "case": "sentence",
+        "bold": false,
+        "italic": true,
+        "numbered": false
+      }
+    ]
+  },
+  "title_page": {
+    "elements": [],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": null,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {},
+  "references": {
+    "style": "vancouver",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "eps",
+      "jpeg",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "conflict_of_interest",
+      "funding"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "BLOCKED: journal-specific guide (bmjopensem.bmj.com/pages/authors) returns HTTP 403 to WebFetch and to Apify headless render; whole domain 403s. Live encoding source = BMJ house-style hub authors.bmj.com/writing-and-formatting/formatting-your-paper/ (cross-journal general guidelines).",
+    "article_types read from the journal's own archived navigation menu (2025-06-13 snapshot, ~13mo old): journal lists Editorial, Viewpoint, Short report, Protocol, Original research, Qualitative research, Systematic review, Review, Consensus statement. Mapped to enum: Original research->original_research, Systematic review->systematic_review, Review->review, Editorial->editorial.",
+    "OMITTED article types with no clean enum slot: Viewpoint (opinion), Short report (brief communication), Protocol, Qualitative research (a subtype of original research), Consensus statement.",
+    "ISSN 2055-7647 and publisher read from the archived journal-page footer (stable identifiers, not volatile numeric values).",
+    "references.in_text: house style permits BOTH square brackets [6] AND superscript ('References cited in the text should be presented in square brackets [6] or superscripts'); parentheses (6) for in-line lists. Encoded 'bracket' (listed first); superscript is equally acceptable per the guide.",
+    "references.journal_abbrev=nlm inferred from abbreviated example refs (e.g. 'Inj Prev', 'BMJ Open'); some house-style examples are spelled out ('Tobacco Control'), so mildly inconsistent.",
+    "references.include_doi=true: 'References in the reference list should include: author names in any format, article title, DOI or PubMed ID' (DOI OR PMID).",
+    "layout.headings from house-style hierarchy 'BOLD CAPS, bold lower case, Plain text, Italics' for main text headings/subheadings; case for L2 encoded 'sentence' (guide literally says 'bold lower case').",
+    "layout.line_numbers set to 'none' only because the enum has no null option and the live house style is silent on line numbering; the journal-specific requirement is UNVERIFIED (page blocked). Do not treat as authoritative.",
+    "figures.min_dpi=300 general; house style also requires 1200 dpi for line art (tiered DPI not representable in single int field).",
+    "figures: must be uploaded as separate files; legends at end of manuscript; multi-part figures must be a single composite file; TIFF must be single-layered flat file; EPS text outlined.",
+    "declarations.order/required from house-style manuscript order 'Acknowledgments, Competing Interests, Funding and all other required statements'; ethics-approval, patient-consent and data-availability statements are required when applicable but were not verified as always-required for this journal (page blocked) so are omitted from required.",
+    "keywords.required=true because BMJ house style asks authors to supply MeSH-descriptor keywords; count/case/separator unspecified.",
+    "Manuscript must be a Word document (PDF not accepted for the main manuscript); tables in Word placed in text at first citation, not as embedded Excel.",
+    "NULL-because-blocked (journal-specific, unverifiable from live sources): all word_limits, abstract.structured/sections/max_words, title_page elements & length caps, running-title cap, ORCID-required, cover-letter-required, page_size, font, line_spacing, margins, alignment. cover_letter guidance exists ('10 tips to writing a good Cover Letter') but requiredness unverified."
+  ]
+}
