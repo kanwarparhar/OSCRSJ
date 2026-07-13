@@ -1,9 +1,10 @@
-# Top-100 formatting-expansion — resume guide
+# Top-100 formatting-expansion — future-expansion guide (75 → 100)
 
-**State at 2026-07-12 20:42 PDT:** 75 / 100 journals encoded + committed (waves 1–5,
-ranks 1–75). Scale infra done. **25 pending** (waves 6–7) — interrupted by an API
-session-limit (resets **2026-07-13 00:10 PDT**). Everything is committed and the
-manifest is the single source of truth; resuming is mechanical.
+**FINAL state (2026-07-12):** 75 journals encoded + committed (waves 1–5, ranks 1–75) +
+all scale infra. **Kanwar stopped the expansion at 75** ("that is plenty") — 75 is the
+shipped registry. The remaining 25 (ranks 77–103) are **deferred, not excluded**; this
+guide is how to reach 100 if it's pursued later. The manifest marks these rows `deferred`;
+everything is committed and the manifest is the single source of truth.
 
 ## Pending journals (25) — publisher hints
 

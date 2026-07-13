@@ -13,6 +13,7 @@
 > Curated by topic, not chronology. Every session is listed under each workstream it touched (a single session may appear in 2-3 topics — that's correct). Newest anchors first within each topic. Update at every wrap-up: rule M1 step 2 in [[CLAUDE.md Refactor#§9 Add/move rules]].
 
 ### Manuscript Formatting Service (AI Journal Formatter) / AI Layer
+- [[#^session-92-formatter-top75-expansion]]
 - [[#^session-91-formatter-delivery-tracking-progress]]
 - [[#^session-87-formatting-service-phase0-scaffold]]
 - [[#^session-88-formatting-service-engine]]
@@ -137,6 +138,7 @@
 
 ## Sequential Index (chronological — newest first)
 
+- Session 92 — 2026-07-12 — Sushant Claude Code (Opus) — Journal Formatter registry expansion 14 → 75 (top-100 SJR; stopped at 75 by Kanwar) + scale infra (searchable combobox, client-bundle split, chunked freshness cron, list generator); 7 commits `162371a`..`724eb1e` — `^session-92-formatter-top75-expansion`
 - Session 89 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service /format product (Phase 3): job pipeline + API + indexable UI + freshness cron; next build ✓, 62 tests (`8a9e994`) — `^session-89-formatting-service-product`
 - Session 88 — 2026-07-10 — Sushant Claude Code (Opus) — Manuscript Formatting Service engine (Phases 1-2): OOXML transforms + reference pipeline + immutability gate; 58 tests (`fe725c9`) — `^session-88-formatting-service-engine`
 - Session 87 — 2026-07-09 — Sushant Claude Code (Opus) — Manuscript Formatting Service Phase 0 + scaffold: zod rules schema + 14 journal rule files + lib/formatting scaffold (`3cecb32`) — `^session-87-formatting-service-phase0-scaffold`
@@ -293,6 +295,30 @@
 ## Session entries
 
 *Newest first.*
+
+### Session 92 — 2026-07-12 — Sushant Claude Code (Opus) — Journal Formatter registry expansion 14 → 75 (top-100 SJR) + scale infra; stopped at 75 by Kanwar — 7 OSCRSJ commits `162371a`..`724eb1e` ^session-92-formatter-top75-expansion
+
+Executed `docs/2026-07-12-formatting-journal-expansion-build-brief.md` (Manvir plan; handoff `^handoff-sushant-formatting-top100-expansion-2026-07-12`). Goal was the top-100 orthopedic journals by Scimago SJR; **Kanwar stopped it at 75 mid-session** ("stop at 75, that is plenty") — 75 is the final shipped registry (14 pre-existing + 61 newly encoded, ranks 1-75). Ranks 77-103 (25 journals) are **deferred** (not excluded) with a full resume guide.
+
+**Step 0.** Pulled the Scimago "Orthopedics and Sports Medicine" (id 2732) top-100 + backfill pool via the in-app Browser pane (Cloudflare-cleared; curl/WebFetch both 403) — 2025 SJR, Scopus data March 2026, 341 journals in category. Built the resumable `docs/formatting-expansion/manifest.json` (one row per journal: rank/sjr/quartile/title/issn/publisher/slug/abbrev/status/guidelines_url/source_tier/source_note/verified_date/exclusion_reason/schema_gaps). **6 off-product exclusions** (education/sociology/management journals — Journal of Sport Management, Physical Education & Sport Pedagogy, European Physical Education Review, Sport Education & Society, Curriculum Studies in Health & PE, Sociology of Sport Journal), **Kanwar-approved (exclude + backfill)** since the orthopedic manuscript formatter's IMRAD/Vancouver/figure-DPI/blinding logic doesn't apply. Zero slug/abbrev collisions (collision-checked against the 14 existing).
+
+**Scale infra (brief items 1-5), committed with wave 1 (`162371a`):** (1) **searchable combobox** `components/JournalCombobox.tsx` (typeahead over name/abbrev/publisher, keyboard-nav ARIA combobox) replaces the unusable 100-entry `<select>`; (2) **client-bundle leak fixed** — split rules-independent metadata into a client-safe `lib/formatting/registry-meta.ts` (JOURNAL_ABBREVIATIONS/journalAbbrev/ARTICLE_TYPE_LABELS/JournalSummary, no rule-JSON imports); `FormatClient` now takes `JOURNAL_SUMMARIES` as a server prop and `pipeline/api.ts` imports `journalAbbrev` from registry-meta, so the ~75 rule JSONs + zod no longer ship to the browser; `journalList.ts` re-exports meta for server callers; (3) **freshness cron chunked** — `/api/cron/check-guidelines` now weekly (`0 12 * * 1`) processing a 25-journal chunk chosen by a stateless ISO-week cursor (`?all=1`/`?chunk=N` overrides, `maxDuration=60`); (4) **`scripts/gen-journal-list.ts` generator** emits registry-meta.ts + journalList.ts from the manifest (order+abbrev) + on-disk JSONs — hand-editing 75 static imports was error-prone; (5) journal-count copy already derives from `JOURNAL_SUMMARIES.length` (no hardcode).
+
+**Encoding mechanics.** Waves of ~10-13 parallel general-purpose subagents (read a shared research contract, headless-render bot-blocked guides via the **Apify rag-web-browser**, write a draft JSON + a compact evidence report). The MAIN session then ran a reproducible-hash finalizer (`finalize_journal.py`: curl live → clean = Tier A hash; blocked → ≤12mo Wayback via CDX, else the live shell; + coercion of schema-required non-nullable enums the subagents left null, each with a transparent `[schema-required default]` encoding_note), validated against the schema, updated the manifest, regenerated the list, ran tsc + tests, and committed by explicit path. **Key finding: main-session curl reaches many link.springer.com / boneandjoint.org.uk / edmgr.ovid.com / Korean-OA / Elsevier-PDF / SAGE-PDF-mirror pages the subagents' headless path could not** — yielding real reproducible `source_hash`es even where the encoded values came from an archive. Doctrine held throughout: unknown ⇒ null, never fabricated; every non-null value evidence-quoted by the subagent.
+
+**Publisher migrations caught:** KSSTA (Springer→Wiley/ESSKA), JEO (SpringerOpen→Wiley/ESSKA), EJSS (Taylor&Francis→Wiley), ASMR (Elsevier→Wiley), Acta Orthopaedica (Taylor&Francis→Medical Journals Sweden), and several BMC titles → SpringerLink (ksrr, arthroplasty, skeletal-muscle, josr, jpa, bmc-sports-science-medicine-rehab).
+
+**Commits (7, none pushed — the /format launch gate governs deploy):** `162371a` wave 1 + infra (ranks 1-12), `df68d36` wave 2 (14-27), `edbf846` wave 3 (28-47), `90013aa` wave 4a (6 of 48-62), `5f7855f` wave 4b (remaining 7 of 48-62), `efbbbed` wave 5 (63-75), `724eb1e` the 75/100 checkpoint (audit sample + self-spot-check + resume guide). `validate:rules` 0, tsc 0, `npm test` 61 pass + 1 live-gated at every wave. Tree 429 files (healthy).
+
+**Interruptions.** Three API session-limit hits (org rolling budget) killed whole waves mid-flight — wave 3 (all 13, re-run clean), wave 4b (7 re-run), and wave 6 (all 12, before any draft landed → 0 encoded there). The per-wave commit + manifest design absorbed every hit losslessly; nothing needed reconstruction. The third hit (resets 2026-07-13 00:10 PDT) is why the session stopped, and Kanwar then chose to finalize at 75.
+
+**Validation of accuracy.** Mandated 5-journal self-spot-check via main-session curl: **15/15 encoded values re-verified verbatim** against the live guides (biology-of-sport 3800w/250-abstract/double/2.5cm; acta-orthopaedica double/structured-summary/25-refs; asian-spine-journal 3000w/600dpi/double; journal-of-bone-metabolism 250-abstract/12pt/1200dpi; bone-joint-research 4000w/300-abstract/8-tables). Logged in `manifest.self_spot_check`.
+
+**Tiering + audit.** Of 61 newly-encoded: ~50 Tier B (headless/archive/blocked — most top ortho journals are on bot-blocked platforms, so headless/archive fetch dominates; Tier B per the brief's definition), 8 Tier C (thin), 3 Tier A (clean curl). `docs/formatting-expansion/janine-audit-sample.md` lists **58 journals** for Janine's pre-launch hand-audit (all Tier B/C + 15% Tier A). **9 low-confidence journals flagged for re-encode** (`manifest.low_confidence_reencode`): calcified-tissue-international, global-spine-journal, science-medicine-football, ejss, journal-of-sports-sciences, bmjosem, jeo, jor-spine, ejap — all live guides fully bot-blocked with no ≤12mo archive; encoded from house-style/templates with journal-specific caps left null.
+
+**Non-goals honored:** schema frozen (gaps → manifest/encoding_notes, never schema edits); no engine changes; no re-encoding of the healthy existing 14; no push.
+
+Full pipeline + the 25 deferred journals with publisher hints: `docs/formatting-expansion/RESUME.md`.
 
 ### Session 91 — 2026-07-11/12 — Cowork — Journal Formatter UX overhaul: on-page delivery + Google Sheets submission log + granular progress + title-page output removed + JBJS accuracy audit — 1 OSCRSJ commit `f04ac17` ^session-91-formatter-delivery-tracking-progress
 

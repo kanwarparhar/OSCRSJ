@@ -3,7 +3,7 @@
   "ranking_source": "Scimago Journal Rank (scimagojr.com), category 'Orthopedics and Sports Medicine' (id 2732)",
   "sjr_year": 2025,
   "sjr_note": "Metrics based on Scopus data as of March 2026; category holds 341 journals total.",
-  "target": "100 total registry files = 14 pre-existing + 86 newly encoded. Top-100 SJR journals covered except 6 off-product exclusions (Kanwar-approved), replaced by clinical backfills 101-103.",
+  "target": "Shipped 75 journals (14 pre-existing + 61 newly encoded, ranks 1-75). Kanwar stopped the expansion at 75 on 2026-07-12; the remaining top-100 ranks (77-103) are DEFERRED, not excluded.",
   "counts": {
     "top100_ranks": 100,
     "pre_existing_in_top100": 11,
@@ -1496,12 +1496,12 @@
       "publisher": null,
       "slug": "foot-and-ankle-surgery",
       "abbrev": "FAS",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1530,12 +1530,12 @@
       "publisher": null,
       "slug": "clinics-shoulder-elbow",
       "abbrev": "CiSE",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1547,12 +1547,12 @@
       "publisher": null,
       "slug": "patient-safety-surgery",
       "abbrev": "PSS",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1564,12 +1564,12 @@
       "publisher": null,
       "slug": "sports",
       "abbrev": "Sports",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1581,12 +1581,12 @@
       "publisher": null,
       "slug": "oac-open",
       "abbrev": "OACOpen",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1615,12 +1615,12 @@
       "publisher": null,
       "slug": "cios",
       "abbrev": "CiOS",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1632,12 +1632,12 @@
       "publisher": null,
       "slug": "the-knee",
       "abbrev": "Knee",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1649,12 +1649,12 @@
       "publisher": null,
       "slug": "bmc-musculoskeletal-disorders",
       "abbrev": "BMC-MSD",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1666,12 +1666,12 @@
       "publisher": null,
       "slug": "research-in-sports-medicine",
       "abbrev": "RSM",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1683,12 +1683,12 @@
       "publisher": null,
       "slug": "smhs",
       "abbrev": "SMHS",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1700,12 +1700,12 @@
       "publisher": null,
       "slug": "arthroplasty-today",
       "abbrev": "ArthToday",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1717,12 +1717,12 @@
       "publisher": null,
       "slug": "jpah",
       "abbrev": "JPAH",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1734,12 +1734,12 @@
       "publisher": null,
       "slug": "physician-sportsmedicine",
       "abbrev": "PhysSportsmed",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1751,12 +1751,12 @@
       "publisher": null,
       "slug": "gait-and-posture",
       "abbrev": "GaitPosture",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1768,12 +1768,12 @@
       "publisher": null,
       "slug": "current-trauma-reports",
       "abbrev": "CurrTraumaRep",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1785,12 +1785,12 @@
       "publisher": null,
       "slug": "sports-biomechanics",
       "abbrev": "SportsBiomech",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1802,12 +1802,12 @@
       "publisher": null,
       "slug": "jses-international",
       "abbrev": "JSES-Int",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1819,12 +1819,12 @@
       "publisher": null,
       "slug": "jor",
       "abbrev": "JOR",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1836,12 +1836,12 @@
       "publisher": null,
       "slug": "fsal",
       "abbrev": "FSAL",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1853,12 +1853,12 @@
       "publisher": null,
       "slug": "orr",
       "abbrev": "ORR",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1870,12 +1870,12 @@
       "publisher": null,
       "slug": "bone-reports",
       "abbrev": "BoneRep",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1887,12 +1887,12 @@
       "publisher": null,
       "slug": "ijss",
       "abbrev": "IJSS",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": null,
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1904,12 +1904,12 @@
       "publisher": null,
       "slug": "jbmm",
       "abbrev": "JBMM",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": "Backfill for an off-product exclusion (keeps registry at 100 total files).",
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1921,12 +1921,12 @@
       "publisher": null,
       "slug": "jdrs",
       "abbrev": "JDRS",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": "Backfill for an off-product exclusion (keeps registry at 100 total files).",
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -1938,12 +1938,12 @@
       "publisher": null,
       "slug": "orthopaedic-surgery",
       "abbrev": "OrthSurg",
-      "status": "pending",
+      "status": "deferred",
       "guidelines_url": null,
       "source_tier": null,
       "source_note": "Backfill for an off-product exclusion (keeps registry at 100 total files).",
       "verified_date": null,
-      "exclusion_reason": null,
+      "exclusion_reason": "Deferred: Kanwar directed stopping at 75 journals (2026-07-12); ranks 77-103 not encoded. Registry ships 75 = 14 pre-existing + 61 newly encoded. Re-open via docs/formatting-expansion/RESUME.md if 100 is pursued later.",
       "schema_gaps": []
     },
     {
@@ -2047,8 +2047,8 @@
   },
   "progress": {
     "encoded": 75,
-    "pending": 25,
+    "deferred": 25,
     "excluded": 6,
-    "note": "Waves 1-5 committed (ranks 1-75). Waves 6-7 (25 journals) pending; interrupted by an API session-limit (resets 2026-07-13 00:10 PDT). Fully resumable: re-run the pending slugs through the same subagent->finalize->update_manifest->gen-journal-list->commit pipeline."
+    "note": "FINAL at Kanwar's direction (stop at 75). Waves 1-5 committed (ranks 1-75). Waves 6-7 deferred; RESUME.md documents how to reach 100 later."
   }
 }
