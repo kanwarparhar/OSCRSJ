@@ -1,0 +1,211 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Journal of Sports Science and Medicine",
+    "slug": "jssm",
+    "issn": null,
+    "publisher": "Journal of Sports Science and Medicine (self-published; Department of Sports Medicine, Medical Faculty of Uludağ University, Bursa, Turkey)",
+    "guidelines_url": "https://www.jssm.org/newauthors.php",
+    "verified_date": "2026-07-12",
+    "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_note": "Live current guide (newauthors.php) rendered via Apify rag-web-browser headless browser; direct WebFetch could not resolve the host DNS. Content is the current page, not an archive; HTTP 200.",
+    "submission_system": "Email to Editor-in-Chief (electronic submission; no Editorial Manager/ScholarOne)"
+  },
+  "article_types": [
+    "original_research",
+    "systematic_review",
+    "case_report",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 30,
+      "bottom_mm": 30,
+      "left_mm": 30,
+      "right_mm": 30
+    },
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "running_title",
+      "abstract",
+      "keywords"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": null,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "Acknowledgments",
+      "References"
+    ],
+    "systematic_review": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion",
+      "Conclusion",
+      "Acknowledgments",
+      "References"
+    ],
+    "case_report": [
+      "Introduction",
+      "Case Report",
+      "Discussion",
+      "Conclusion",
+      "Acknowledgment",
+      "References"
+    ],
+    "letter": [
+      "Text",
+      "References"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 200,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": 5,
+      "references_max": 8,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "full",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpg",
+      "jpeg"
+    ],
+    "min_dpi": 96,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": "{MainAuthorSurname}Figure{n}"
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent"
+    ],
+    "required": [
+      "conflict_of_interest"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": true,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Referencing is the Harvard author-date system (in-text 'surname, year' in parentheses; reference list alphabetical) — no clean nlm/ama/vancouver slot, mapped to 'custom'.",
+    "In-text et al. rule: single author '(Gür, 1999)', two '(Gür and Akova, 2001)', more than two '(Gür et al., 2000)'. This is in-text only; the reference LIST lists ALL authors (example lists 6), so references.et_al_threshold left null to avoid wrongly truncating the reference list.",
+    "Reference example journal names are given in FULL (e.g. 'European Journal of Applied Physiology') -> journal_abbrev 'full'; examples show no DOI.",
+    "'There is no page and reference limitation for the manuscript' -> manuscript_max_words, references_max and references.max_count all null.",
+    "Margins '3 cm on all sides' = 30 mm; page size not stated (cm units hint A4 but unstated) -> page_size null.",
+    "TITLE must be in capital letters (ALL CAPS); misc.title_case enum has no 'upper' value -> null (schema gap).",
+    "Running head required, 'Maximum 5 words' (word-based); running_title_max_chars is char-based -> null.",
+    "REVIEW ARTICLE: JSSM accepts ONLY systematic review or meta-analysis -> mapped to systematic_review; title must include 'a Systematic Review'; PRISMA checklist + flow diagram required in Methods.",
+    "'Brief reports' and conference/symposium summaries are mentioned as acceptable but have no prescribed structure/clean type slot -> omitted from article_types.",
+    "Letter to the Editor: limited to 2-3 pages, 5-8 references (references_min 5 / references_max 8), and a max of 2 tables/figures combined (or 1 table + 1 figure) — combined cap does not fit figures_max/tables_max, left null.",
+    "Figures: guide states 'GIF, or TIFF format' (+ MS Office Word/Excel/PowerPoint); JPEG used for photos/biography and figure file-name examples (GurFigure1.jpg). GIF and Office formats are not in the schema enum -> formats limited to tiff/jpg/jpeg.",
+    "Figure resolution 96 dpi; still-art files limited to 700 KB.",
+    "Figure files named with main author surname + 'Figure' + number (e.g. GurFigure1.jpg); tables/figures submitted as separate files with in-text location indicated.",
+    "Double-blind review is stated, but the guide gives NO explicit separate-title-page or identifier/metadata-scrub instruction and even asks authors to name figure files with the main author's surname -> separate_title_page and scrub_* set false.",
+    "Highlights required: 'Provide a box with 3-5 bullet points listing the key points of the paper' (checklist) -> highlights_required true (3-5 bullets).",
+    "Research-article abstract 'not more than 300 words that includes objectives, methods, results, and conclusions' — describes required content, not labeled headings -> structured false, sections null.",
+    "Author biography (~50 words per author with degrees/affiliation/research focus/e-mail and optional JPEG photo) required — no schema slot.",
+    "Conflict of interest must always be stated ('none declared' if none) -> required; funding acknowledged in Acknowledgment section; ethics (Declaration of Helsinki + legal-compliance declaration at end of acknowledgments) and patient consent/anonymity required for human/animal or identifiable-patient work (conditional).",
+    "AI-use disclosure required in Acknowledgment or Methods section; copyright transfer statement required at submission; author royalty fee USD 3300 / EUR 2900 / GBP 2500 (not a formatting field).",
+    "A signed 'letter of submission' from the corresponding author is referenced but not listed as a required cover-letter deliverable -> cover_letter_required false (uncertain)."
+  ]
+}

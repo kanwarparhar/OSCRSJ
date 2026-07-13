@@ -57,8 +57,14 @@ import journalOfIsakos from './journals/journal-of-isakos.json'
 import asianSpineJournal from './journals/asian-spine-journal.json'
 import actaOrthopaedica from './journals/acta-orthopaedica.json'
 import jscr from './journals/jscr.json'
+import tamd from './journals/tamd.json'
 import corr from './journals/corr.json'
+import scj from './journals/scj.json'
+import ojsm from './journals/ojsm.json'
+import jssm from './journals/jssm.json'
 import jhs from './journals/jhs.json'
+import nassj from './journals/nassj.json'
+import ijsnem from './journals/ijsnem.json'
 import jot from './journals/jot.json'
 import injury from './journals/injury.json'
 import jocr from './journals/jocr.json'
@@ -70,7 +76,8 @@ const RAW: unknown[] = [
   jbjsOpenAccess, bjj, efortOpenReviews, crmm, skeletalMuscle, arthroplasty, sjmss, jsams,
   essr, journalOfOrthopaedicsAndTraumatology, msse, jbjs, spine, boneJointResearch, aprm,
   calcifiedTissueInternational, globalSpineJournal, fai, boneJointOpen, otsr, sportsHealth,
-  journalOfIsakos, asianSpineJournal, actaOrthopaedica, jscr, corr, jhs, jot, injury, jocr,
+  journalOfIsakos, asianSpineJournal, actaOrthopaedica, jscr, tamd, corr, scj, ojsm, jssm,
+  jhs, nassj, ijsnem, jot, injury, jocr,
 ]
 
 /** All journal rules, validated against the schema, OSCRSJ first then by SJR rank. */

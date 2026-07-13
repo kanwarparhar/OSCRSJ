@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Strength and Conditioning Journal",
+    "slug": "scj",
+    "issn": null,
+    "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins), for the National Strength and Conditioning Association (NSCA)",
+    "guidelines_url": "https://edmgr.ovid.com/scj/accounts/ifauth.htm",
+    "verified_date": "2026-07-12",
+    "source_hash": "48775fec6eec58a84e897c44898bc02cd646b1d6bdda5aff705888143014bb39",
+    "source_note": "Encoded from the live canonical Instructions for Authors on the Ovid/Editorial Manager site via Apify rag-web-browser headless render (HTTP 200); WebFetch on the same URL returned 402. SCJ is the professional (practitioner) journal of the NSCA — the SIBLING of JSCR — published by Wolters Kluwer/LWW; journals.lww.com/nsca-scj is a presentation page and the canonical IFA lives at https://edmgr.ovid.com/scj/accounts/ifauth.htm. No publisher migration.",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "review",
+    "narrative_review",
+    "systematic_review",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": "left",
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": true,
+      "position": "top-right"
+    },
+    "running_head": {
+      "show": true,
+      "position": "top-right"
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author",
+      "disclosures",
+      "funding"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": "strip"
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 200,
+    "keywords": {
+      "required": true,
+      "min": 5,
+      "max": 6,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {
+    "review": {
+      "manuscript_max_words": 8000,
+      "abstract_max_words": 200,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "narrative_review": {
+      "manuscript_max_words": 8000,
+      "abstract_max_words": 200,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 8000,
+      "abstract_max_words": 200,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": 3,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "separate_file",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "eps"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": "Figure",
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "conflict_of_interest",
+      "funding"
+    ],
+    "required": [
+      "conflict_of_interest",
+      "funding"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "TIER_A live-clean: canonical IFA at edmgr.ovid.com/scj/accounts/ifauth.htm rendered headless via Apify rag-web-browser, HTTP 200; WebFetch on the same URL 402'd. Publisher Wolters Kluwer/LWW for the NSCA; no migration. SCJ is the professional/practitioner journal (sibling of the research journal JSCR); values encoded from SCJ's OWN guide, not copied from JSCR.",
+    "CRITICAL scope: 'the SCJ does not publish original research' (stated twice, emphasized). All manuscripts must provide practical applications for S&C practitioners. Hence NO original_research / case types are accepted.",
+    "Article-type mapping: 'review articles'->review; 'brief reviews or narrative reviews written by authors with experience on the topic'->narrative_review; 'systematic reviews, scoping reviews' (must follow PRISMA 2020)->systematic_review; 'Letters to the Editor'->letter. narrative_review is ALSO the closest slot for the SCJ's flagship 'applied topic articles' (expert-authored, topic-focused, research-referenced practical articles, 4,000-6,000 words) — no dedicated 'applied/professional practice article' enum slot exists, so applied topic articles are folded into narrative_review and noted here.",
+    "Omitted with no clean enum slot: the three by-INVITATION-ONLY columns 'Inside the Box', 'Exercise Techniques', and 'Hot Topics' (not openly author-submittable).",
+    "Word limits: 'All articles are limited to an 8,000-word maximum for the main text.' -> manuscript_max_words=8000 for review/narrative_review/systematic_review. Typical ranges (not caps): applied topic articles 4,000-6,000 words; review articles generally 5,000-8,000 words. Letters 'limited to approximately 1000 words and approximately 10 references, including the original article' -> letter manuscript_max_words=1000, references_max=10 (both stated as 'approximately').",
+    "Abstract: 'Abstracts should be no more than 200 words' -> max_words=200; unstructured (no headings prescribed) -> structured=false, sections=null. abstract_max_words=200 applied to review/narrative_review/systematic_review; left null for letter (guide does not require an abstract for Letters, which 'follow the submission requirements for manuscripts' but abstract not specified).",
+    "Keywords: 'The blinded title page should also list five or six keywords or short phrases' -> required, min 5, max 6; case/separator not stated -> null.",
+    "Blinding: 'double-blind peer review by two or more reviewers' -> double_blind=true. Manuscript split into 'nonblinded' and 'blinded' sections; nonblinded title page (identifying) + blinded title page (no author contact) -> separate_title_page=true. 'The blinded section should not identify the authors in any way' -> scrub_body_identifiers=true. File/document metadata scrubbing not mentioned -> scrub_metadata=false (unstated).",
+    "Layout: 'All manuscripts must be double-spaced and left-justified with an additional space between paragraphs' -> line_spacing=double, alignment=left. 'a minimum of 1-inch margins' -> 25.4 mm all sides (stated as a minimum). 'page numbers in the upper right corner next to the running head' -> page_numbers top-right + running_head top-right, both shown. Guide is silent on manuscript line numbers -> line_numbers='none' (enum has no null option; guide silent).",
+    "Layout gaps: font family/size NOT specified -> null/null. page_size NOT specified -> null (US journal but not stated). first_line_indent NOT specified -> null. No heading case/style/order is prescribed for SCJ (unlike JSCR's ALL-CAPS IMRaD sections) -> headings=null; sections={} (no required section order given; not original research).",
+    "Title page: NONBLINDED title page begins with article title, author name(s), and institutional/organizational affiliations, plus corresponding author address/telephone/email. 'All relevant conflicts of interest and sources of funding should be included on the title page ... with the heading \"Conflicts of Interest and Source of Funding\"' -> disclosures + funding on the title page. running_title (running head), keywords, and abstract live on the separate BLINDED title page (not listed in elements to keep the nonblinded identifying page ordered). running_title/title max chars/words NOT stated -> null.",
+    "authors_degrees=strip: 'Academic degrees and NSCA certifications are under \"current position\" in the blinded section of the submission. Other certifications/certificates should not be included.' Degrees are NOT appended as suffixes to the author byline (they appear only within the 'current position' bio, e.g. 'W. George Smith, PhD, CSCS, is Professor ...') -> strip degrees from author names on the title page byline.",
+    "references.style='custom': NSCA house style (identical to JSCR) — references are ALPHABETIZED by lead-author surname AND then numbered; cited in text as parenthetical numbers e.g. (1); (4, 5); (1-3, 5, 6, 10). Format 'Author AB, Author CD. Title. Journal vol: pages, year.' with NLM-abbreviated italic journal titles (e.g. Strength Cond J, J Strength Cond Res). Guide adds 'Use AMA reference styles for references not listed' (fallback only) and 'Provide DOI if available' -> include_doi=true. Does not match standard Vancouver (cited-order) or AMA core -> custom.",
+    "references.et_al_threshold SCHEMA GAP: rule is 'For journal entries with 6 or more co-authors, please list the first 3 names followed by et al.' The single-int field cannot hold both the 6-author trigger AND the keep-3 count; encoded 3 (the kept count / NSCA-distinctive 'first 3 et al.').",
+    "references.max_count=null: no overall reference cap for articles; only the ~10-reference cap for Letters (captured in word_limits.letter.references_max).",
+    "Tables SCHEMA GAP / mild contradiction: 'Note: all table and figure files should be submitted separately as individual files' and 'Authors should submit tables as separate files ... Tables must be created and submitted in Word format' -> placement='separate_file'. A conflicting line ('Table files may be submitted in Microsoft Word (.doc) as a part of the main document') exists; the emphasized dominant instruction is separate files. Table/figure CAPTIONS go in the main manuscript file after the references. caption_position (above/below the table) not explicitly stated -> null; an abbreviation legend goes 'at the bottom of tables and figures'. numbering consecutive -> arabic.",
+    "Figures: submitted as separate files. 'We accept TIFF or EPS format ... PowerPoint is acceptable for figures' + text-accepted figure formats .tif/.eps/.ppt -> formats=['tiff','eps'] (PowerPoint/.ppt has no enum slot; noted). DPI tiered: halftone/color images min 300 ppi, line art 1200 ppi -> min_dpi=300 (SCHEMA GAP: line-art 1200 ppi floor not representable). Captions after references -> legends_location=figure_legends_section. Callouts 'Figure 1' -> callout_style='Figure'. Model Release Forms required for any identifiable person in photos/video; SCJ does not block out faces and requires non-patient models (a submission form, not a manuscript declaration).",
+    "Declarations: an Acknowledgments section AFTER the references must contain 1) recognition of non-author contributors, 2) a conflict-of-interest statement (state 'none declared' if none), 3) a funding statement -> order=[acknowledgments, conflict_of_interest, funding]; required=[conflict_of_interest, funding]. Copyright transfer (eCTA) to the NSCA is required at submission (not a declaration section). No IRB/ethics requirement (SCJ publishes no original research). ICMJE 4-criteria authorship; authorship limited to 8 individuals, first author >=21% of work, contributors <10% acknowledged (not authors) — no schema field for author-count caps.",
+    "misc: cover letter NOT mentioned in the SCJ guide -> cover_letter_required=false (JSCR requires one; SCJ does not — NOT copied). ORCID not mentioned -> orcid_required=false. No Highlights -> highlights_required=false. Article title case not specified -> title_case=null.",
+    "AI policy: nongenerative editing software recommended; generative-AI tools do not qualify for authorship and any AI use must be disclosed. Open access is optional (hybrid), APC on acceptance, CC BY-NC-ND license for OA articles. identity.issn: not stated anywhere in the guide -> null (not inferred from memory)."
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "International Journal of Sport Nutrition and Exercise Metabolism",
+    "slug": "ijsnem",
+    "issn": "1526-484X (print), 1543-2742 (online)",
+    "publisher": "Human Kinetics, Inc.",
+    "guidelines_url": "https://journals.humankinetics.com/view/journals/ijsnem/ijsnem-overview.xml?tab_body=author-guidelines",
+    "verified_date": "2026-07-12",
+    "source_hash": "9ed77fa27bd2d2793dbc3d5ea0ba7ae1b42cf8eefa483e05cb0fe5608f6ba45c",
+    "source_note": "Live journals.humankinetics.com page returned HTTP 403 to direct WebFetch; encoded from a clean headless render (Apify rag-web-browser, HTTP 200) of the CURRENT live Author Guidelines tab on 2026-07-12 — not an archive/Wayback snapshot. (Latest Wayback capture was 2025-04-11, >12 months old, so headless of the live page was used instead.)",
+    "submission_system": "ScholarOne"
+  },
+  "article_types": [
+    "original_research",
+    "case_report",
+    "case_series",
+    "review",
+    "narrative_review",
+    "systematic_review"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": true,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": "double",
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "continuous",
+    "page_numbers": {
+      "show": true,
+      "position": "top-right"
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "running_title",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": 25,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 3,
+      "max": 3,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {
+    "original_research": [
+      "Introduction",
+      "Methods",
+      "Results",
+      "Discussion"
+    ],
+    "case_report": [
+      "Background to issue",
+      "Presentation of athlete/subject",
+      "Athlete/subject assessment",
+      "Overview of nutrition plan/intervention",
+      "Outcome of the implementation of the plan",
+      "Reflections"
+    ],
+    "case_series": [
+      "Background to issue",
+      "Presentation of athlete/subject",
+      "Athlete/subject assessment",
+      "Overview of nutrition plan/intervention",
+      "Outcome of the implementation of the plan",
+      "Reflections"
+    ]
+  },
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 40,
+      "figures_max": 10,
+      "tables_max": 10
+    },
+    "case_report": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 25,
+      "figures_max": 4,
+      "tables_max": 4
+    },
+    "case_series": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 25,
+      "figures_max": 4,
+      "tables_max": 4
+    },
+    "review": {
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 75,
+      "figures_max": 8,
+      "tables_max": 8
+    },
+    "narrative_review": {
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 75,
+      "figures_max": 8,
+      "tables_max": 8
+    },
+    "systematic_review": {
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": 75,
+      "figures_max": 8,
+      "tables_max": 8
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "paren",
+    "in_text_punctuation": null,
+    "order": "alphabetical",
+    "journal_abbrev": "full",
+    "include_doi": false,
+    "et_al_threshold": 2,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "grouped_end",
+    "caption_position": "above",
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tif",
+      "tiff",
+      "jpg",
+      "jpeg",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "author_contributions",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval"
+    ],
+    "required": [
+      "author_contributions",
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Source: CURRENT live Human Kinetics page rendered clean via headless (Apify rag-web-browser, HTTP 200) on 2026-07-12; direct WebFetch 403'd. Not an archive. Latest Wayback capture (2025-04-11) was >12 months old and not used.",
+    "references.style='custom' because the guide specifies a MODIFIED APA 7th ed. (author-date) style, which has no dedicated enum slot (nlm/ama/vancouver/custom). Quote: 'IJSNEM follows a modified version of the style laid out in the Publication Manual of the American Psychological Association (APA), 7th ed.' In-text = author name(s) + date in parentheses (paren); reference list alphabetical, un-numbered; journal titles spelled out in full (journal_abbrev=full).",
+    "et_al_threshold=2 encodes the guide's IN-TEXT rule ('where there are more than two authors, the first author's name can be followed by et al.'), i.e. list up to 2 authors then et al. The reference-LIST author-count threshold is not stated (defers to the APA manual).",
+    "include_doi=false: the guide's three worked reference examples show NO DOI, and it is a 'modified' APA; DOI inclusion not explicitly required.",
+    "Article-type mapping: 'Original Research'->original_research; 'Case Study'->case_report AND case_series (guide references 'subject(s)', permitting >1 subject; identical 2,000-word/25-ref/4-media rules); 'Scholarly Review' (explicitly 'including narrative reviews and meta-analyses')->review + narrative_review + systematic_review, all sharing the 5,000-word/75-ref/8-media Scholarly Review limits.",
+    "Types OMITTED (no clean enum slot / not standard author submission): 'Rapid Communication' (author-submittable expedited original research, 2,000 words, 25 refs, 4 figs/tables — could not add without colliding with original_research); 'Methodology Review' (follows Scholarly Review rules; usually commissioned); '10 Questions; 10 Experts' (4,000 words, symposium summary, commissioned); 'Other'/invited editorials (commissioned). Journal also publishes Letters to the Editor/Responses but the guide gives no author-formatting instructions for them.",
+    "COMBINED media caps (schema stores figures_max and tables_max separately, but the real constraint is a combined total): Original Research = 10 figures AND/OR tables total; Case Study/Series = 4 total; Scholarly Review = 8 total. Quote (Original Research): 'A total of 10 figures and/or tables may be used'.",
+    "Word limits exclude title page, abstract, acknowledgments, references, figures, tables. Original Research target is 3,000 words with an ABSOLUTE MAXIMUM of 4,000 (encoded the 4,000 hard cap).",
+    "Abstract: max 250 words, ONE continuous paragraph WITHOUT subheadings (structured=false) for all types. Quote: 'The abstract should be a maximum of 250 words and be written in one continuous paragraph without subheadings.'",
+    "Keywords: exactly 3 keywords/phrases NOT included in the title. Quote: 'Include three keywords or phrases not included in the manuscript title.' Case and separator unspecified (null).",
+    "Title max 25 words (no character limit stated). Running title limited to 8 WORDS (schema has running_title_max_chars only, which is word-limited here -> null; the 8-word cap is noted). Quote: 'The title of the paper should be limited to 25 words. The running title ... should be limited to 8 words.'",
+    "Layout: double-spaced; continuous line numbers; page numbers in upper-right; each table/figure on a separate page; figure legends aggregated on a separate page at the conclusion of the references (legends_location=figure_legends_section). Manuscript element order: (1) title page; (2) abstract and keywords; (3) text; (4) acknowledgments/authorships/funding/conflicts; (5) references; (6) tables; (7) figure legends; (8) figures.",
+    "Font family, font size, margins, page size, alignment, first-line indent, and heading case/style are NOT specified in the guide (all null). blinding.separate_title_page=true reflects the required separate title page ('The manuscript must have a separate title page'), but review is NON-anonymous ('Manuscripts are read by an editor and two reviewers; reviews will not be anonymous'), so no body/metadata scrubbing is required (scrub_*=false, double_blind=false).",
+    "Figures: black-and-white/grayscale only (no color); photos min 300 dpi, line art/graphs/charts/diagrams min 600 dpi (min_dpi=300 encoded, 600 tier noted); formats TIFF/PDF/JPEG. Alt text (<=250 chars) required per figure in a separate document (WCAG accessibility).",
+    "Declarations: funding sources and conflicts of interest must be declared at end of text; per-author CRediT contribution paragraph required; human/animal studies require an ethics-approval + informed-consent statement. Case studies additionally require written subject permission-for-publication (signed consent form) -> patient_consent applies to case_report/case_series (noted, not added to global 'required').",
+    "cover_letter_required=false conservatively: the guide REFERENCES a cover letter for CONDITIONAL disclosures (AI-tool use if used; justification for exceeding figure/table caps; Rapid Communication novelty case) but states no unconditional 'a cover letter is required' rule. ScholarOne submission also requires authors to supply >=2 suggested peer-reviewer names/emails.",
+    "orcid_required=false: ORCID not mentioned in the guide. highlights_required=false: no Elsevier-style Highlights; instead a 'Nontechnical Summary' (<=1,000 words, plain language) is requested only at REVISION, not initial submission.",
+    "AI policy: generative-AI use must be disclosed in the cover letter and the manuscript; AI cannot be an author; AI-assisted peer review is prohibited. PRESENT 2020 checklist recommended for sport-nutrition trials. tables.caption_position='above' inferred from 'headings should be included with each table' (general instructions); numbering (arabic/roman) not stated -> null."
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "Therapeutic Advances in Musculoskeletal Disease",
+    "slug": "tamd",
+    "issn": null,
+    "publisher": "SAGE Publications",
+    "guidelines_url": "https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-therapeutic-advances-in-musculoskeletal-disease_-sage-journals.pdf?sfvrsn=be901b02_5",
+    "verified_date": "2026-07-12",
+    "source_hash": "f682fee50b5965c62a590006ccd9637a64880afbc8cca1959d0e800bdf408ca6",
+    "source_note": "Live canonical HTML guide (https://journals.sagepub.com/author-instructions/TAB) was Cloudflare/bot-blocked — WebFetch returned HTTP 403 and the Apify rag-web-browser headless render also returned 'Request blocked - received 403 status code.' Encoded instead from SAGE's own current official PDF mirror of the same Submission Guidelines page at https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-therapeutic-advances-in-musculoskeletal-disease_-sage-journals.pdf?sfvrsn=be901b02_5 (HTTP 200, application/pdf, 19 pages, extracted with pypdf). Content confirmed current: Impact Factor 4.1 / 5-Year 4.1, Single-anonymized identity transparency, $3,000 USD APC, CC BY-NC standard license, Sage Track/ScholarOne submission, ChatGPT/generative-AI authorship policy. Reference in-text/abbrev/order values were corroborated against SAGE's published 'Sage Vancouver' house reference-style page (the journal mandates that style but the journal guide itself does not quote the marker format).",
+    "submission_system": "ScholarOne (Sage Track)"
+  },
+  "article_types": [
+    "original_research",
+    "review",
+    "systematic_review",
+    "case_report",
+    "case_series",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": false,
+    "separate_title_page": false,
+    "scrub_body_identifiers": false,
+    "scrub_metadata": false
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": true,
+    "sections": [
+      "Background",
+      "Objectives",
+      "Design",
+      "Methods",
+      "Results",
+      "Conclusion",
+      "Registration (if applicable)"
+    ],
+    "max_words": 300,
+    "keywords": {
+      "required": true,
+      "min": 2,
+      "max": null,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": 2500,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_series": {
+      "manuscript_max_words": 6000,
+      "abstract_max_words": 300,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": 2000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 20,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": 10,
+      "figures_max": 1,
+      "tables_max": 1
+    }
+  },
+  "references": {
+    "style": "vancouver",
+    "in_text": "superscript",
+    "in_text_punctuation": "after",
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": false,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": null
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [],
+    "min_dpi": 300,
+    "legends_location": "figure_legends_section",
+    "callout_style": null,
+    "naming_pattern": null
+  },
+  "declarations": {
+    "order": [
+      "acknowledgments",
+      "author_contributions",
+      "ethics_approval",
+      "patient_consent",
+      "conflict_of_interest",
+      "funding",
+      "data_availability"
+    ],
+    "required": [
+      "author_contributions",
+      "ethics_approval",
+      "patient_consent",
+      "conflict_of_interest",
+      "funding",
+      "data_availability"
+    ]
+  },
+  "misc": {
+    "orcid_required": true,
+    "cover_letter_required": true,
+    "highlights_required": null,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "SOURCE: live HTML guide (journals.sagepub.com/author-instructions/TAB) Cloudflare/bot-blocked — 403 on both WebFetch AND the Apify rag-web-browser headless render. Encoded from SAGE's current official PDF mirror at www.sagepub.com/docs/default-source/msg/submission-guidelines_-therapeutic-advances-in-musculoskeletal-disease_-sage-journals.pdf (sfvrsn token be901b02_5, HTTP 200), text extracted via pypdf. Full clean current content (Impact Factor 4.1) — treat as TIER_A content obtained via the sagepub.com PDF mirror rather than a shell/archive.",
+    "Article-type mapping: Original Articles -> original_research; Review Articles (general reviews, perspective reviews, drug reviews) -> review; Systematic Reviews AND Meta-analyses both -> systematic_review (single slot; both use the same 300-word structured abstract [Background; Objectives; Design; Data Sources and Methods; Results; Conclusion; Registration] and 4000-6000-word body); Case Reports -> case_report; Case Series -> case_series; Editorials -> editorial; Letters to the Editor -> letter.",
+    "Omitted types (no clean enum slot): Scoping Reviews (the guide instructs authors to submit these UNDER the Original Research article type and flag 'scoping review' in the title; structured abstract Background/Objectives/Eligibility Criteria/Sources of Evidence/Charting Methods/Results/Conclusions; PRISMA-ScR checklist); Study Protocols (structured abstract Background/Objectives/Design/Methods and Analysis/Ethics/Discussion/Registration; up to 6000 words); Brief Reports (concise original research; 150-word structured abstract Background/Objectives/Design/Methods/Results/Conclusion; up to 2000 words; 2 figures/tables in total; max 20 references); Plain Language Summary of Publications (PLS-Ps; standalone peer-reviewed summaries of a prior article; APC $5000).",
+    "Blinding: 'Identity transparency: Single-anonymized' and 'adheres to an anonymized peer review process in which the reviewer's name is routinely withheld from the author' -> SINGLE-blind, so double_blind=false and no author-blinding scrub required (scrub_body_identifiers=false, scrub_metadata=false). separate_title_page=false: the guide references 'your manuscript and/or title page' (a title page MAY exist) but does not mandate a separate de-identified title-page document, consistent with single-anonymized review. 'To ensure the integrity of the peer review process we assign reviewers and cannot accept author recommendations.'",
+    "Abstract: abstract.structured/sections/max_words encode the PRIMARY type (Original Articles): 'Abstract: Maximum 300 words. Should be structured to include: Background; Objectives; Design; Methods; Results; Conclusion; Registration (if applicable).' max_words=300 is the common cap across most types. NOTE abstract structure/length VARIES by type and cannot all be held in the single abstract block: Review Articles + Case Reports + Case Series = UNSTRUCTURED, max 300; Systematic Reviews/Meta-analyses = structured (Background; Objectives; Design; Data Sources and Methods; Results; Conclusion; Registration); Brief Reports = structured, max 150; Editorials = optional/unstructured; Letters = none. For clinical trials the trial registry name+URL+registration number must appear at the END of the abstract.",
+    "Word limits are RECOMMENDED and explicitly flexible ('is recommended (this can be flexible)') and EXCLUDE tables, figure legends and references. Encoded values: original_research 6000; review 'around 4000-6000' -> 6000 upper bound; systematic_review (covers Systematic Reviews + Meta-analyses) 'around 4000-6000' -> 6000; case_report up to 2500; case_series up to 6000; editorial up to 2000 (refs max 20, abstract optional); letter up to 500 excluding references (refs 'should not exceed 10'). Most types state 'Figures/Tables: no limit' and 'References: no limit' -> those caps null. figures_max/tables_max null for all except letter.",
+    "SCHEMA GAP (letter figures/tables): the guide says 'There is a limit of one figure OR one table' (a COMBINED cap of one graphic total). The schema's separate figures_max/tables_max fields cannot express the OR; encoded figures_max=1 AND tables_max=1, but the real constraint is one-graphic-total. Editorial APC and Letter APC are 'Free of charge'; all peer-reviewed research/review types carry the standard $3,000 USD APC; PLS-Ps $5000.",
+    "sections={}: the guide prescribes ABSTRACT heading structures per type but does NOT give an ordered list of BODY section headings for any article type ('You do not need to follow a template, but please ensure your heading levels are clear'). So no body-sections order is encoded.",
+    "References: 'The journal follows the Sage Vancouver reference style' -> style=vancouver. The TAMD guide itself does not quote the in-text marker; the required non-null in_text/order/journal_abbrev fields were set from SAGE's published Sage Vancouver house style page (corroboration): in_text=superscript ('Please use superscript numerals where publications are cited in the text'); in_text_punctuation=after ('If the citation comes at the end of the sentence, the citation number should be placed after the end of sentence punctuation mark'); order=cited ('Publications are referenced in the order in which they appear in the text'); journal_abbrev=nlm ('Journal titles should be abbreviated according to the standard in the Index Medicus'). include_doi=false: not confirmed in reachable text -> conservative false. et_al_threshold=null: Sage Vancouver uses a two-tier rule ('Up to six authors may be listed. If more, list the first three authors and represent the rest by et al.') that the single-integer field cannot represent, and it is not quoted in the journal guide -> left null. max_count=null ('References: no limit' for main types).",
+    "Layout ALL null/none: 'The preferred format for your manuscript is Word. You do not need to follow a template' — the guide specifies NO font, size, line spacing, margins, page size, alignment, indent, page numbers, or running head. line_numbers set to 'none' (required non-null enum; guide is silent on line numbering, so the conservative default is no line numbers). page_numbers.show=false and running_head.show=false likewise reflect guide silence.",
+    "Figures: separate_files=true (the 'Files' submission list itemizes 'Figures and images' as separate uploads distinct from the manuscript; artwork prepared per Sage's external artwork guidelines). min_dpi=300 ('Figure resolution is 300dpi'). callout_style=null (guide says figures are 'numbered consecutively in the order in which they appear in the text' but does not specify 'Figure' vs 'Fig.'). formats=[]: the guide does NOT enumerate accepted figure file formats in this text (defers to Sage artwork guidelines). legends_location=figure_legends_section: required non-null enum; figures are separate files (so legends cannot be truly inline) and 'figure legends' is named as a distinct manuscript element excluded from the word count, so legends are collected in the manuscript text — dedicated-section is the most defensible mapping, but the guide does not explicitly name a legends section.",
+    "Tables: placement=in_text is a required non-null enum default chosen because the guide gives NO table-placement instruction; in_text = do-not-relocate (least-destructive). numbering=null and caption_position=null: the guide does not state table numbering or caption position. Word count excludes tables; most types state 'Figures/Tables: no limit'.",
+    "Declarations: the guide prescribes an ordered back-matter block. Order: 'Acknowledgments' (published at end of article), then 'Author Contributions heading ... after the Acknowledgements section', then a 'Statements and Declarations' heading whose sub-headings in listed order are 'Ethical considerations' (->ethics_approval), 'Consent to participate' + 'Consent for publication' (both ->patient_consent), 'Declaration of conflicting interest' (->conflict_of_interest), 'Funding statement' (->funding), 'Data availability' (->data_availability). required=all of the Statements-and-Declarations sub-headings plus Author Contributions ('If a declaration is not applicable to your submission, you must still include the heading and state Not applicable'; 'All articles need to include a funding statement ... even if you did not receive funding'; 'The journal requires a declaration of conflicting interests from all authors'; 'Please include the Author Contributions heading'). Acknowledgments left out of required (conditional: 'If you are including an Acknowledgements section'). trial_registration is NOT a declarations sub-heading here — the trial registry name/URL/number goes at the END OF THE ABSTRACT instead.",
+    "Misc: orcid_required=true ('Other information required for submission: ORCID ID of the submitting author'; co-author ORCIDs strongly encouraged before acceptance). cover_letter_required=true ('Files: Cover letter. To help the Editor in their preliminary evaluation, please indicate why you think the manuscript suitable for publication' — listed as a submission file with a directive; mildly ambiguous whether strictly mandatory). highlights_required=null (no 'highlights'; the journal offers OPTIONAL plain language summaries ~50-word title + ~300-word summary, video abstracts, infographics). title_case=null (title must be 'concise, descriptive, unambiguous, accurate' but no title/sentence-case rule stated).",
+    "Keywords: 'Please include a minimum of 2 keywords, listed after the abstract' -> required=true, min=2; max/case/separator unstated -> null. issn=null: the ISSN is not stated in the guide text (not encoded from memory). Standard license CC BY-NC; APC $3,000 USD (research/review types), Editorials & Letters free, PLS-Ps $5000. Reporting checklists (CARE for case reports/series; PRISMA for systematic reviews; PRISMA-ScR for scoping; PRISMA/MOOSE for meta-analyses) uploaded as supplementary material per EQUATOR."
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "name": "North American Spine Society Journal (NASSJ)",
+    "slug": "nassj",
+    "issn": "2666-5484",
+    "publisher": "Elsevier",
+    "guidelines_url": "https://www.sciencedirect.com/journal/north-american-spine-society-journal-nassj/publish/guide-for-authors",
+    "verified_date": "2026-07-12",
+    "source_hash": "95f4f8dbbf3089f31df4553ce43360fbff494c2ee9e0c54dcc4a094e0aa1c7a3",
+    "source_note": "Encoded from a headless render (Apify rag-web-browser) of the live ScienceDirect Guide for Authors; direct WebFetch returned HTTP 403. Note the correct ScienceDirect slug carries the -nassj suffix (the plain north-american-spine-society-journal path 404s).",
+    "submission_system": "Editorial Manager"
+  },
+  "article_types": [
+    "original_research",
+    "case_report",
+    "case_series",
+    "systematic_review",
+    "editorial",
+    "letter"
+  ],
+  "blinding": {
+    "double_blind": true,
+    "separate_title_page": true,
+    "scrub_body_identifiers": true,
+    "scrub_metadata": true
+  },
+  "layout": {
+    "page_size": null,
+    "font": {
+      "family": null,
+      "size_pt": null
+    },
+    "line_spacing": null,
+    "margins_mm": null,
+    "alignment": null,
+    "first_line_indent": null,
+    "line_numbers": "none",
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
+    "headings": null
+  },
+  "title_page": {
+    "elements": [
+      "article_title",
+      "authors",
+      "affiliations",
+      "corresponding_author"
+    ],
+    "running_title_max_chars": null,
+    "title_max_chars": null,
+    "title_max_words": null,
+    "authors_degrees": null
+  },
+  "abstract": {
+    "structured": false,
+    "sections": null,
+    "max_words": 250,
+    "keywords": {
+      "required": true,
+      "min": 6,
+      "max": 10,
+      "case": null,
+      "separator": null
+    }
+  },
+  "sections": {},
+  "word_limits": {
+    "original_research": {
+      "manuscript_max_words": 4500,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_report": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "case_series": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 500,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "editorial": {
+      "manuscript_max_words": null,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
+  "references": {
+    "style": "custom",
+    "in_text": "bracket",
+    "in_text_punctuation": null,
+    "order": "cited",
+    "journal_abbrev": "nlm",
+    "include_doi": true,
+    "et_al_threshold": null,
+    "max_count": null
+  },
+  "tables": {
+    "placement": "in_text",
+    "caption_position": null,
+    "numbering": "arabic"
+  },
+  "figures": {
+    "separate_files": true,
+    "formats": [
+      "tiff",
+      "jpg",
+      "png",
+      "eps",
+      "pdf"
+    ],
+    "min_dpi": 300,
+    "legends_location": "in_text",
+    "callout_style": null,
+    "naming_pattern": "Figure_{n}"
+  },
+  "declarations": {
+    "order": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration",
+      "data_availability",
+      "acknowledgments"
+    ],
+    "required": [
+      "funding",
+      "conflict_of_interest",
+      "ethics_approval",
+      "patient_consent",
+      "trial_registration"
+    ]
+  },
+  "misc": {
+    "orcid_required": false,
+    "cover_letter_required": false,
+    "highlights_required": false,
+    "title_case": null
+  },
+  "encoding_notes": [
+    "Peer review: guide explicitly states 'This journal follows a double anonymized review process' -> double_blind=true. The guide gives no explicit step-by-step de-identification instructions; separate_title_page/scrub flags are set true as entailed by the double-anonymized model plus the dedicated Title page section.",
+    "Article-type mapping: Clinical studies + Basic science studies + Spine surgery education studies all -> original_research; Clinical case reports/studies -> case_report + case_series; Systematic reviews/meta-analyses -> systematic_review; Editorials -> editorial; Letters to the editor / Replies -> letter.",
+    "Types with no clean enum slot (omitted): Commentaries (target 1,500 words, solicited on NASSJ content), Errata/Corrigenda, and 'critical reviews' mentioned in Aims & Scope (no dedicated article-type section with a structure/word cap).",
+    "Word limits: Clinical studies stated as 1500-4500 words (approx. 6-12 double-spaced pages); schema holds only the max (4500) -- the 1500 minimum has no slot. Basic science / spine education / case reports / systematic reviews have no explicit manuscript word cap in the guide. Commentaries 1,500 and Letters/Replies <500 words.",
+    "line_spacing left null: guide references '6 to 12 double-spaced pages' only as an approximation for word count, not as a prescribed formatting requirement; File format section mandates only single-column Word layout and removal of strikethrough/underline.",
+    "line_numbers null (unstated), page_numbers/running_head unstated -> conservative false/null. No running title is mentioned anywhere.",
+    "Abstract: primary instruction is a plain concise abstract <=250 words. A 'Structured abstract' section offers heading-based guidance but does not mandate structure or give fixed section labels, so structured=false / sections=null.",
+    "Keywords: 6-10 required, English, avoid multi-word keywords; no case or separator rule stated.",
+    "sections map left empty {}: guide says to 'divide into clearly defined sections using headings' but prescribes no ordered heading list (no explicit IMRAD ordering) for any type.",
+    "References style: numbered, square-bracket in-text [3,6], numbered in citation order; example format is Elsevier's numbered style with initials-before-surname authors, LTWA-abbreviated journal, (year) volume, pages, and DOI, and OMITS article titles -> encoded as 'custom' (not Vancouver/NLM/AMA, which include article titles).",
+    "journal_abbrev encoded as 'nlm' (nearest enum for 'abbreviated'); the guide actually specifies the ISSN List of Title Word Abbreviations (LTWA), not NLM/PubMed abbreviations.",
+    "include_doi=true: DOIs are encouraged as reference links and appear in every reference example.",
+    "et_al_threshold null: no 'et al.' rule stated; the software reference example lists ~17 authors in full.",
+    "Tables placement: guide permits either 'next to the relevant text' OR 'on a separate page(s) at the end' -> encoded in_text (first-listed); grouped_end is equally permitted. Caption position not specified (notes go below the table body).",
+    "Figures: separate files; formats EPS/PDF (vector) + TIFF/JPG/PNG (raster). min_dpi is TIERED and the schema holds one int: halftones/photos 300 dpi, bitmapped line drawings 1000 dpi, line/halftone combinations 500 dpi -> encoded the 300 dpi baseline. legends_location and callout_style left null (guide is silent on a fixed callout abbreviation; 'Fig. A.1' appears only for appendix figures, while file naming uses 'Figure_1').",
+    "Declarations: guide does not prescribe a strict ordered declarations block; 'order' is a reasonable sequence. Acknowledgements and the Generative-AI-use declaration are each stated to go directly before the reference list. Required set uses 'must' language (funding, competing interests) plus conditionally-required statements (ethics approval, patient consent, and trial registration when applicable to human/animal/trial studies). Data statement is 'encouraged' only -> not required.",
+    "A required 'Declaration of generative AI use' section (new section before references, when AI tools used) has no enum slot in declarations.",
+    "ORCID: not mentioned in the guide -> orcid_required=false. Cover letter: not required/mentioned -> false. Highlights: 'encouraged' (3-5 bullets, max 85 chars each, separate file) -> highlights_required=false.",
+    "Prospective clinical trials must be registered in an ICMJE-compliant public registry before submission; registration number preferably at end of the abstract.",
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
+    "[schema-required default] layout.line_numbers defaulted to 'none' (guide silent)."
+  ]
+}

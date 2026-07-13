@@ -924,16 +924,22 @@
       "quartile": "Q1",
       "title": "Therapeutic Advances in Musculoskeletal Disease",
       "issn": null,
-      "publisher": null,
+      "publisher": "SAGE Publications",
       "slug": "tamd",
       "abbrev": "TAMD",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-therapeutic-advances-in-musculoskeletal-disease_-sage-journals.pdf?sfvrsn=be901b02_5",
+      "source_tier": "B",
+      "source_note": "Live canonical HTML guide (https://journals.sagepub.com/author-instructions/TAB) was Cloudflare/bot-blocked — WebFetch returned HTTP 403 and the Apify rag-web-browser headless render also returned 'Request blocked - received 403 status code.' Encoded instead from SAGE's own current official PDF mirror of the same Submission Guidelines page at https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-therapeutic-advances-in-musculoskeletal-disease_-sage-journals.pdf?sfvrsn=be901b02_5 (HTTP 200, application/pdf, 19 pages, extracted with pypdf). Content confirmed current: Impact Factor 4.1 / 5-Year 4.1, Single-anonymized identity transparency, $3,000 USD APC, CC BY-NC standard license, Sage Track/ScholarOne submission, ChatGPT/generative-AI authorship policy. Reference in-text/abbrev/order values were corroborated against SAGE's published 'Sage Vancouver' house reference-style page (the journal mandates that style but the journal guide itself does not quote the marker format).",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "Blinding: 'Identity transparency: Single-anonymized' and 'adheres to an anonymized peer review process in which the reviewer's name is routinely withheld from the author' -> SINGLE-blind, so double_blind=false and no author-blinding scrub required (scrub_body_identifiers=false, scrub_metadata=false). separate_title_page=false: the guide references 'your manuscript and/or title page' (a title page MAY exist) but does not mandate a separate de-identified title-page document, consistent with single-anonymized review. 'To ensure the integrity of the peer review process we assign reviewers and cannot accept author recommendations.'",
+        "Abstract: abstract.structured/sections/max_words encode the PRIMARY type (Original Articles): 'Abstract: Maximum 300 words. Should be structured to include: Background; Objectives; Design; Methods; Results; Conclusion; Registration (if applicable).' max_words=300 is the common cap across most types. NOTE abstract structure/length VARIES by type and cannot all be held in the single abstract block: Review Articles + Case Reports + Case Series = UNSTRUCTURED, max 300; Systematic Reviews/Meta-analyses = structured (Background; Objectives; Design; Data Sources and Methods; Results; Conclusion; Registration); Brief Reports = structured, max 150; Editorials = optional/unstructured; Letters = none. For clinical trials the trial registry name+URL+registration number must appear at the END of the abstract.",
+        "SCHEMA GAP (letter figures/tables): the guide says 'There is a limit of one figure OR one table' (a COMBINED cap of one graphic total). The schema's separate figures_max/tables_max fields cannot express the OR; encoded figures_max=1 AND tables_max=1, but the real constraint is one-graphic-total. Editorial APC and Letter APC are 'Free of charge'; all peer-reviewed research/review types carry the standard $3,000 USD APC; PLS-Ps $5000.",
+        "References: 'The journal follows the Sage Vancouver reference style' -> style=vancouver. The TAMD guide itself does not quote the in-text marker; the required non-null in_text/order/journal_abbrev fields were set from SAGE's published Sage Vancouver house style page (corroboration): in_text=superscript ('Please use superscript numerals where publications are cited in the text'); in_text_punctuation=after ('If the citation comes at the end of the sentence, the citation number should be placed after the end of sentence punctuation mark'); order=cited ('Publications are referenced in the order in which they appear in the text'); journal_abbrev=nlm ('Journal titles should be abbreviated according to the standard in the Index Medicus'). include_doi=false: not confirmed in reachable text -> conservative false. et_al_threshold=null: Sage Vancouver uses a two-tier rule ('Up to six authors may be listed. If more, list the first three authors and represent the rest by et al.') that the single-integer field cannot represent, and it is not quoted in the journal guide -> left null. max_count=null ('References: no limit' for main types).",
+        "Figures: separate_files=true (the 'Files' submission list itemizes 'Figures and images' as separate uploads distinct from the manuscript; artwork prepared per Sage's external artwork guidelines). min_dpi=300 ('Figure resolution is 300dpi'). callout_style=null (guide says figures are 'numbered consecutively in the order in which they appear in the text' but does not specify 'Figure' vs 'Fig.'). formats=[]: the guide does NOT enumerate accepted figure file formats in this text (defers to Sage artwork guidelines). legends_location=figure_legends_section: required non-null enum; figures are separate files (so legends cannot be truly inline) and 'figure legends' is named as a distinct manuscript element excluded from the word count, so legends are collected in the manuscript text — dedicated-section is the most defensible mapping, but the guide does not explicitly name a legends section."
+      ]
     },
     {
       "rank": 49,
@@ -992,16 +998,21 @@
       "quartile": "Q1",
       "title": "Strength and Conditioning Journal",
       "issn": null,
-      "publisher": null,
+      "publisher": "Wolters Kluwer (Lippincott Williams & Wilkins), for the National Strength and Conditioning Association (NSCA)",
       "slug": "scj",
       "abbrev": "SCJ",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://edmgr.ovid.com/scj/accounts/ifauth.htm",
+      "source_tier": "B",
+      "source_note": "Encoded from the live canonical Instructions for Authors on the Ovid/Editorial Manager site via Apify rag-web-browser headless render (HTTP 200); WebFetch on the same URL returned 402. SCJ is the professional (practitioner) journal of the NSCA — the SIBLING of JSCR — published by Wolters Kluwer/LWW; journals.lww.com/nsca-scj is a presentation page and the canonical IFA lives at https://edmgr.ovid.com/scj/accounts/ifauth.htm. No publisher migration.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "references.et_al_threshold SCHEMA GAP: rule is 'For journal entries with 6 or more co-authors, please list the first 3 names followed by et al.' The single-int field cannot hold both the 6-author trigger AND the keep-3 count; encoded 3 (the kept count / NSCA-distinctive 'first 3 et al.').",
+        "Tables SCHEMA GAP / mild contradiction: 'Note: all table and figure files should be submitted separately as individual files' and 'Authors should submit tables as separate files ... Tables must be created and submitted in Word format' -> placement='separate_file'. A conflicting line ('Table files may be submitted in Microsoft Word (.doc) as a part of the main document') exists; the emphasized dominant instruction is separate files. Table/figure CAPTIONS go in the main manuscript file after the references. caption_position (above/below the table) not explicitly stated -> null; an abbreviation legend goes 'at the bottom of tables and figures'. numbering consecutive -> arabic.",
+        "Figures: submitted as separate files. 'We accept TIFF or EPS format ... PowerPoint is acceptable for figures' + text-accepted figure formats .tif/.eps/.ppt -> formats=['tiff','eps'] (PowerPoint/.ppt has no enum slot; noted). DPI tiered: halftone/color images min 300 ppi, line art 1200 ppi -> min_dpi=300 (SCHEMA GAP: line-art 1200 ppi floor not representable). Captions after references -> legends_location=figure_legends_section. Callouts 'Figure 1' -> callout_style='Figure'. Model Release Forms required for any identifiable person in photos/video; SCJ does not block out faces and requires non-patient models (a submission form, not a manuscript declaration).",
+        "Declarations: an Acknowledgments section AFTER the references must contain 1) recognition of non-author contributors, 2) a conflict-of-interest statement (state 'none declared' if none), 3) a funding statement -> order=[acknowledgments, conflict_of_interest, funding]; required=[conflict_of_interest, funding]. Copyright transfer (eCTA) to the NSCA is required at submission (not a declaration section). No IRB/ethics requirement (SCJ publishes no original research). ICMJE 4-criteria authorship; authorship limited to 8 individuals, first author >=21% of work, contributors <10% acknowledged (not authors) — no schema field for author-count caps."
+      ]
     },
     {
       "rank": 53,
@@ -1009,16 +1020,20 @@
       "quartile": "Q1",
       "title": "Orthopaedic Journal of Sports Medicine",
       "issn": null,
-      "publisher": null,
+      "publisher": "SAGE Publications (on behalf of the American Orthopaedic Society for Sports Medicine)",
       "slug": "ojsm",
       "abbrev": "OJSM",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-orthopaedic-journal-of-sports-medicine_-sage-journals.pdf?sfvrsn=d081593b_4",
+      "source_tier": "B",
+      "source_note": "The canonical live HTML guide (https://journals.sagepub.com/author-instructions/OJS) is Cloudflare/bot-blocked — WebFetch returned HTTP 403 and the Apify rag-web-browser headless render returned 0 pages scraped / 1 failed (403). Encoded instead from SAGE's own current PDF mirror of the identical Submission Guidelines page at https://www.sagepub.com/docs/default-source/msg/submission-guidelines_-orthopaedic-journal-of-sports-medicine_-sage-journals.pdf?sfvrsn=d081593b_4 (HTTP 200, 8-page PDF, text extracted with pypdf). PDF footer timestamps every page '4/30/26, 12:46 PM' confirming a current (2026-04-30) capture of the live page. Content confirmed current: Impact Factor 2.5 / 5-Year 3.2, January 1 2026 updated APC pricing structure, generative-AI declaration policy, double-anonymized review.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "Figures: separate_files=true — 'If figures are embedded in the submitted manuscript for ease of reading, they should also be submitted as separate files for use in the publication process' (and photos embedded in Word/PowerPoint are 'not acceptable for publication'). legends_location=in_text — 'Be sure to include figure legends in the text.' SCHEMA GAP tiered DPI: 'Files for line-based drawings ... should be 1200 dots per inch (dpi). Color photos should be submitted at 600 dpi and black-and-white photos at 300 dpi' -> min_dpi=300 encoded as the floor; the 600 (color) and 1200 (line art) tiers are not representable. formats=[]: the guide does NOT enumerate accepted figure file formats (only DPI + 'original form created, e.g., Word, Excel, or PowerPoint' for charts). callout_style and naming_pattern unstated -> null. Color is unlimited/free in the Journal.",
+        "Declarations: order=[] and required=null because the guide prescribes no ordered in-manuscript declarations block. Compliance items are handled as separate uploaded forms / conditional statements: the OJSM Author Disclosure Statement (conflict of interest) is required for ALL submissions (incl. letters) and is uploaded as a Word file using the 'conflict of interest' file type, checked against the CMS Open Payments Database for combined payments >$500/yr over the prior 5 years; IRB/ethics approval (or waiver) letter is required when human/animal subjects/tissues/health information are used, with an in-text approval statement + enrollment date range; a signed patient permission letter is required for case reports and identifiable photos; clinical-trial registration is required for trials started after Jan 1 2016 (CONSORT flow diagram + checklist for RCTs; STROBE for observational; MIBO for biologics; ARRIVE for animal studies); AI use 'must' be declared if applicable, naming the program and how it was used. Acknowledgments go on the title page.",
+        "Misc: orcid_required=false ('We strongly encourage all authors ... to link their ORCID ID' — encouraged, not mandated). cover_letter_required=false ('Cover letter, acknowledgments, and suggested reviewers are optional'), though conditionally required for >5 authors ('If a paper has more than 5 authors, a cover letter detailing the contributions of all authors should be included'). highlights_required=null (unmentioned). title_case=null (no article-title capitalization rule). No submission fees; APCs assessed only on acceptance, tiered $330–$1700 by World Bank income group / society membership / cascade (submissions on/after Jan 1 2026). License: CC BY-NC-ND 4.0 (creativecommons.org/licenses/by-nc-nd/4.0/). Use metric units; actual P values unless <.001; 95% CIs encouraged. ISSN=null: not stated in the guide text (not encoded from memory)."
+      ]
     },
     {
       "rank": 54,
@@ -1060,16 +1075,20 @@
       "quartile": "Q1",
       "title": "Journal of Sports Science and Medicine",
       "issn": null,
-      "publisher": null,
+      "publisher": "Journal of Sports Science and Medicine (self-published; Department of Sports Medicine, Medical Faculty of Uludağ University, Bursa, Turkey)",
       "slug": "jssm",
       "abbrev": "JSSM",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://www.jssm.org/newauthors.php",
+      "source_tier": "B",
+      "source_note": "Live current guide (newauthors.php) rendered via Apify rag-web-browser headless browser; direct WebFetch could not resolve the host DNS. Content is the current page, not an archive; HTTP 200.",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "TITLE must be in capital letters (ALL CAPS); misc.title_case enum has no 'upper' value -> null (schema gap).",
+        "Letter to the Editor: limited to 2-3 pages, 5-8 references (references_min 5 / references_max 8), and a max of 2 tables/figures combined (or 1 table + 1 figure) — combined cap does not fit figures_max/tables_max, left null.",
+        "Author biography (~50 words per author with degrees/affiliation/research focus/e-mail and optional JPEG photo) required — no schema slot."
+      ]
     },
     {
       "rank": 57,
@@ -1093,17 +1112,20 @@
       "sjr": 1.04,
       "quartile": "Q1",
       "title": "North American Spine Society Journal",
-      "issn": null,
-      "publisher": null,
+      "issn": "2666-5484",
+      "publisher": "Elsevier",
       "slug": "nassj",
       "abbrev": "NASSJ",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://www.sciencedirect.com/journal/north-american-spine-society-journal-nassj/publish/guide-for-authors",
+      "source_tier": "B",
+      "source_note": "Encoded from a headless render (Apify rag-web-browser) of the live ScienceDirect Guide for Authors; direct WebFetch returned HTTP 403. Note the correct ScienceDirect slug carries the -nassj suffix (the plain north-american-spine-society-journal path 404s).",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "Word limits: Clinical studies stated as 1500-4500 words (approx. 6-12 double-spaced pages); schema holds only the max (4500) -- the 1500 minimum has no slot. Basic science / spine education / case reports / systematic reviews have no explicit manuscript word cap in the guide. Commentaries 1,500 and Letters/Replies <500 words.",
+        "Figures: separate files; formats EPS/PDF (vector) + TIFF/JPG/PNG (raster). min_dpi is TIERED and the schema holds one int: halftones/photos 300 dpi, bitmapped line drawings 1000 dpi, line/halftone combinations 500 dpi -> encoded the 300 dpi baseline. legends_location and callout_style left null (guide is silent on a fixed callout abbreviation; 'Fig. A.1' appears only for appendix figures, while file naming uses 'Figure_1')."
+      ]
     },
     {
       "rank": 59,
@@ -1161,17 +1183,20 @@
       "sjr": 1.007,
       "quartile": "Q1",
       "title": "International Journal of Sport Nutrition and Exercise Metabolism",
-      "issn": null,
-      "publisher": null,
+      "issn": "1526-484X (print), 1543-2742 (online)",
+      "publisher": "Human Kinetics, Inc.",
       "slug": "ijsnem",
       "abbrev": "IJSNEM",
-      "status": "pending",
-      "guidelines_url": null,
-      "source_tier": null,
-      "source_note": null,
-      "verified_date": null,
+      "status": "encoded",
+      "guidelines_url": "https://journals.humankinetics.com/view/journals/ijsnem/ijsnem-overview.xml?tab_body=author-guidelines",
+      "source_tier": "B",
+      "source_note": "Live journals.humankinetics.com page returned HTTP 403 to direct WebFetch; encoded from a clean headless render (Apify rag-web-browser, HTTP 200) of the CURRENT live Author Guidelines tab on 2026-07-12 — not an archive/Wayback snapshot. (Latest Wayback capture was 2025-04-11, >12 months old, so headless of the live page was used instead.)",
+      "verified_date": "2026-07-12",
       "exclusion_reason": null,
-      "schema_gaps": []
+      "schema_gaps": [
+        "COMBINED media caps (schema stores figures_max and tables_max separately, but the real constraint is a combined total): Original Research = 10 figures AND/OR tables total; Case Study/Series = 4 total; Scholarly Review = 8 total. Quote (Original Research): 'A total of 10 figures and/or tables may be used'.",
+        "AI policy: generative-AI use must be disclosed in the cover letter and the manuscript; AI cannot be an author; AI-assisted peer review is prohibited. PRESENT 2020 checklist recommended for sport-nutrition trials. tables.caption_position='above' inferred from 'headings should be included with each table' (general instructions); numbering (arabic/roman) not stated -> null."
+      ]
     },
     {
       "rank": 63,
