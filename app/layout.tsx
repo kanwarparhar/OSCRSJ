@@ -2,9 +2,6 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import { SOCIAL_CHANNELS } from '@/lib/social'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.oscrsj.com'),
@@ -48,51 +45,10 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebSite',
-        '@id': 'https://www.oscrsj.com/#website',
-        name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
-        url: 'https://www.oscrsj.com',
-        description:
-          'A peer-reviewed, open-access journal publishing orthopedic case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor.',
-        publisher: { '@id': 'https://www.oscrsj.com/#organization' },
-        inLanguage: 'en-US',
-      },
-      {
-        '@type': 'Organization',
-        '@id': 'https://www.oscrsj.com/#organization',
-        name: 'OSCRSJ — Orthopedic Surgery Case Reports & Series Journal',
-        alternateName: 'OSCRSJ',
-        url: 'https://www.oscrsj.com',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://www.oscrsj.com/logo.svg',
-        },
-        foundingDate: '2026',
-        description:
-          'Independent, peer-reviewed, open-access orthopedic journal publishing case reports, case series, systematic reviews and meta-analyses, surgical techniques, images in orthopedics, and letters to the editor for the global orthopedic surgery community.',
-        // sameAs: Knowledge Graph entity disambiguation — when Google sees these URLs in
-        // Organization JSON-LD, it links the OSCRSJ entity to the social profiles, strengthening
-        // the brand SERP panel and AI-citation surface presence (ChatGPT, Claude, Perplexity, etc.).
-        // URLs are sourced from lib/social.ts so footer + contact + press-kit + JSON-LD never drift.
-        sameAs: SOCIAL_CHANNELS.map((c) => c.url),
-      },
-      {
-        '@type': 'Periodical',
-        '@id': 'https://www.oscrsj.com/#periodical',
-        name: 'Orthopedic Surgery Case Reports and Series Journal',
-        alternateName: 'OSCRSJ',
-        url: 'https://www.oscrsj.com',
-        publisher: { '@id': 'https://www.oscrsj.com/#organization' },
-        inLanguage: 'en-US',
-        // issn: '' — populate once Janine lands ISSN (Gate 1, post-5-articles)
-      },
-    ],
-  }
-
+  // Site chrome (Header/Footer) and the journal-level JSON-LD @graph live in the
+  // (site) route-group layout, so the (formatter) group can present a standalone
+  // design world at /format with no OSCRSJ nav/footer. This root layout only owns
+  // the html/body shell, global analytics, and the shared metadata template.
   return (
     <html lang="en">
       <head>
@@ -110,13 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
       </head>
       <body className="min-h-screen flex flex-col bg-white">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
         <Analytics />
       </body>
     </html>

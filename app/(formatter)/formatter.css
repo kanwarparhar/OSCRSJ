@@ -1,0 +1,44 @@
+/* ============================================================================
+   Journal Formatter — "Swiss editorial" design world (scoped to .fmt-root)
+   Tokens per build brief §4.1. Everything here is namespaced under .fmt-root so
+   the formatter's design language never leaks into the OSCRSJ site, and the
+   site's "Neutral Elegance" tokens never leak in here.
+   Font-family vars (--fmt-font-*) are provided by next/font in the layout.
+   ============================================================================ */
+
+.fmt-root {
+  /* palette (keep in sync with the `fmt` namespace in tailwind.config.ts) */
+  --fmt-paper: #ffffff;
+  --fmt-surface: #fafafc;
+  --fmt-ink: #0a0a0f;
+  --fmt-ink-2: #52525e;
+  --fmt-ink-3: #9494a1;
+  --fmt-hairline: #e8e8ec;
+  --fmt-accent: #3b5bdb;
+  --fmt-accent-deep: #2b44a8;
+  --fmt-accent-wash: #eef1fb;
+  --fmt-ok: #147a4d;
+  --fmt-warn: #a16207;
+  --fmt-bad: #b3261e;
+
+  /* type stacks (display/body/mono from next/font; serif fallbacks for the demo/intro) */
+  --disp: var(--fmt-font-display), 'Inter Tight', system-ui, sans-serif;
+  --body: var(--fmt-font-body), 'Inter', system-ui, sans-serif;
+  --mono: var(--fmt-font-mono), 'JetBrains Mono', ui-monospace, monospace;
+  --serif-doc: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+  font-family: var(--body);
+  color: var(--fmt-ink);
+  background: var(--fmt-paper);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.fmt-root a {
+  color: var(--fmt-accent);
+  text-decoration: none;
+}
+.fmt-root a:hover {
+  text-decoration: underline;
+}

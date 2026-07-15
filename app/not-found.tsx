@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Page Not Found',
@@ -7,8 +9,13 @@ export const metadata: Metadata = {
 }
 
 export default function NotFound() {
+  // The root layout no longer renders site chrome (moved to the (site) route group,
+  // which does not wrap the root-level not-found). Render Header/Footer here so 404s
+  // keep the OSCRSJ chrome.
   return (
-    <div className="bg-white">
+    <>
+      <Header />
+      <main className="flex-1 bg-white">
       <section
         className="flex items-center justify-center text-center"
         style={{
@@ -86,6 +93,8 @@ export default function NotFound() {
           ))}
         </div>
       </section>
-    </div>
+      </main>
+      <Footer />
+    </>
   )
 }
