@@ -4,7 +4,8 @@
 // unusable at 100 journals, so this is a self-contained typeahead combobox
 // (no dependencies) that filters by journal name, abbreviation, or publisher
 // and is fully keyboard-navigable (ARIA combobox + listbox pattern). Styled
-// with the OSCRSJ Neutral Elegance tokens to match the rest of /format.
+// with the formatter's "Swiss editorial" fmt-* tokens (used only inside
+// app/(formatter), so this restyle is safe).
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import type { JournalSummary } from '@/lib/formatting/registry-meta'
@@ -157,12 +158,12 @@ export default function JournalCombobox({
           setHighlight(0)
         }}
         onKeyDown={onKeyDown}
-        className="w-full rounded-lg border border-border bg-white px-4 py-2.5 pr-9 text-sm text-ink placeholder:text-brown/70 transition-colors focus:border-peach-dark focus:outline-none focus:ring-2 focus:ring-peach-dark/50 disabled:cursor-not-allowed disabled:bg-cream-alt/40 disabled:text-brown"
+        className="w-full rounded-lg border border-fmt-hairline bg-fmt-paper px-4 py-2.5 pr-9 text-sm text-fmt-ink placeholder:text-fmt-ink-3 transition-colors focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40 disabled:cursor-not-allowed disabled:bg-fmt-surface disabled:text-fmt-ink-3"
       />
       {/* caret / clear affordance */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-brown"
+        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-fmt-ink-3"
       >
         ▾
       </span>
@@ -172,10 +173,10 @@ export default function JournalCombobox({
           ref={listRef}
           id={listboxId}
           role="listbox"
-          className="absolute z-20 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-border bg-white py-1 shadow-lg"
+          className="absolute z-20 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-fmt-hairline bg-fmt-paper py-1 shadow-lg"
         >
           {filtered.length === 0 ? (
-            <li className="px-4 py-3 text-sm text-brown">No journals match “{query}”.</li>
+            <li className="px-4 py-3 text-sm text-fmt-ink-2">No journals match “{query}”.</li>
           ) : (
             filtered.map((j, i) => {
               const isSel = j.slug === value
@@ -195,14 +196,14 @@ export default function JournalCombobox({
                     choose(j)
                   }}
                   className={`flex cursor-pointer items-baseline justify-between gap-3 px-4 py-2 text-sm ${
-                    isHi ? 'bg-cream-alt' : 'bg-white'
+                    isHi ? 'bg-fmt-accent-wash' : 'bg-fmt-paper'
                   }`}
                 >
-                  <span className="min-w-0 flex-1 truncate text-ink">
+                  <span className="min-w-0 flex-1 truncate text-fmt-ink">
                     {j.name}
-                    {isSel && <span className="ml-2 text-xs text-brown">✓</span>}
+                    {isSel && <span className="ml-2 text-xs text-fmt-accent-deep">✓</span>}
                   </span>
-                  <span className="flex-shrink-0 text-xs text-brown">{j.abbrev}</span>
+                  <span className="flex-shrink-0 text-xs text-fmt-ink-3">{j.abbrev}</span>
                 </li>
               )
             })

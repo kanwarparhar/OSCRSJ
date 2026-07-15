@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google'
 import './formatter.css'
+import IntroTransition from './_components/IntroTransition'
 
 // Self-hosted (via next/font) so the standalone formatter world makes no external
 // font request and scopes its type to this route group only. First use of next/font
@@ -36,6 +37,7 @@ export default function FormatterLayout({ children }: { children: React.ReactNod
     <div
       className={`fmt-root flex-1 ${interBody.variable} ${interTight.variable} ${jetBrainsMono.variable}`}
     >
+      <IntroTransition />
       {children}
     </div>
   )

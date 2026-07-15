@@ -39,26 +39,26 @@ function friendlyDate(iso: string): string {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const SEVERITY_STYLES: Record<Severity, { label: string; chip: string }> = {
-  fixed: { label: 'Fixed', chip: 'bg-green-50 text-green-700 border-green-200' },
-  'action-required': { label: 'Action required', chip: 'bg-amber-50 text-amber-800 border-amber-200' },
-  suggestion: { label: 'Suggestion', chip: 'bg-cream-alt text-brown border-border' },
-  info: { label: 'Info', chip: 'bg-white text-brown border-taupe/60' },
+  fixed: { label: 'Fixed', chip: 'bg-[#E8F5EE] text-fmt-ok border-transparent' },
+  'action-required': { label: 'Action required', chip: 'bg-[#FBF3E4] text-fmt-warn border-transparent' },
+  suggestion: { label: 'Suggestion', chip: 'bg-fmt-surface text-fmt-ink-2 border-fmt-hairline' },
+  info: { label: 'Info', chip: 'bg-fmt-paper text-fmt-ink-2 border-fmt-hairline' },
 }
 
 const REF_STATUS: Record<
   ReferenceVerificationStatus,
   { icon: string; label: string; text: string }
 > = {
-  verified: { icon: '✅', label: 'Verified', text: 'text-green-700' },
-  corrected: { icon: '🔧', label: 'Corrected', text: 'text-brown-dark' },
-  unverified: { icon: '⚠️', label: 'Unverified', text: 'text-amber-800' },
-  'possibly-retracted': { icon: '🚩', label: 'Possibly retracted', text: 'text-red-700' },
+  verified: { icon: '✅', label: 'Verified', text: 'text-fmt-ok' },
+  corrected: { icon: '🔧', label: 'Corrected', text: 'text-fmt-ink' },
+  unverified: { icon: '⚠️', label: 'Unverified', text: 'text-fmt-warn' },
+  'possibly-retracted': { icon: '🚩', label: 'Possibly retracted', text: 'text-fmt-bad' },
 }
 
 const CHECK_STATUS: Record<'met' | 'fixed' | 'action-needed', { icon: string; label: string; text: string }> = {
-  met: { icon: '✓', label: 'Met', text: 'text-green-700' },
-  fixed: { icon: '✓', label: 'Fixed for you', text: 'text-green-700' },
-  'action-needed': { icon: '!', label: 'Action needed', text: 'text-amber-800' },
+  met: { icon: '✓', label: 'Met', text: 'text-fmt-ok' },
+  fixed: { icon: '✓', label: 'Fixed for you', text: 'text-fmt-ok' },
+  'action-needed': { icon: '!', label: 'Action needed', text: 'text-fmt-warn' },
 }
 
 const DOWNLOAD_LABELS: { key: keyof JobOutputs; label: string; primary?: boolean }[] = [
@@ -99,23 +99,23 @@ function ReportView({ report }: { report: ReportModel }) {
   return (
     <div className="space-y-8">
       {/* Summary verdict banner */}
-      <div className="rounded-xl border border-peach/40 bg-cream-alt p-5 sm:p-6">
-        <p className="section-label mb-1">Analysis &amp; Suggestions Report</p>
-        <h3 className="mb-2 font-serif text-2xl text-brown-dark">Formatted for {v.journal}</h3>
-        <p className="text-sm leading-relaxed text-ink">
-          <strong className="text-brown-dark">{v.changesApplied}</strong>{' '}
+      <div className="rounded-xl border border-fmt-hairline bg-fmt-surface p-5 sm:p-6">
+        <p className="kicker mb-2">Analysis &amp; Suggestions Report</p>
+        <h3 className="mb-2 font-fmt-display text-2xl text-fmt-ink">Formatted for {v.journal}</h3>
+        <p className="text-sm leading-relaxed text-fmt-ink">
+          <strong className="text-fmt-ink">{v.changesApplied}</strong>{' '}
           {v.changesApplied === 1 ? 'change was' : 'changes were'} applied automatically ·{' '}
-          <strong className="text-brown-dark">{v.itemsNeedingAttention}</strong>{' '}
+          <strong className="text-fmt-ink">{v.itemsNeedingAttention}</strong>{' '}
           {v.itemsNeedingAttention === 1 ? 'item needs' : 'items need'} your attention
           {clean ? ' — nothing is blocking your submission.' : '.'}
         </p>
-        <p className="mt-3 text-xs text-brown">
+        <p className="mt-3 text-xs text-fmt-ink-2">
           Rules verified {friendlyDate(v.verifiedDate)} ·{' '}
           <a
             href={v.guidelinesUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:text-brown-dark"
+            className="underline hover:text-fmt-accent-deep"
           >
             Journal Guide for Authors
           </a>
@@ -125,14 +125,14 @@ function ReportView({ report }: { report: ReportModel }) {
       {/* Changes applied */}
       {report.changesApplied.length > 0 && (
         <section>
-          <h4 className="mb-1 font-serif text-lg text-brown-dark">Changes applied</h4>
-          <p className="mb-3 text-xs text-brown">
+          <h4 className="mb-1 font-fmt-display text-lg text-fmt-ink">Changes applied</h4>
+          <p className="mb-3 text-xs text-fmt-ink-2">
             Formatting we adjusted for you. Your body text was not changed.
           </p>
-          <div className="overflow-x-auto rounded-xl border border-border">
+          <div className="overflow-x-auto rounded-xl border border-fmt-hairline">
             <table className="w-full min-w-[560px] border-collapse text-sm">
               <thead>
-                <tr className="bg-cream-alt text-left text-xs uppercase tracking-wide text-brown">
+                <tr className="bg-fmt-surface text-left font-fmt-mono text-xs uppercase tracking-wide text-fmt-ink-2">
                   <th className="px-4 py-2.5 font-semibold">Element</th>
                   <th className="px-4 py-2.5 font-semibold">Before</th>
                   <th className="px-4 py-2.5 font-semibold">After</th>
@@ -141,10 +141,10 @@ function ReportView({ report }: { report: ReportModel }) {
               </thead>
               <tbody>
                 {report.changesApplied.map((c, i) => (
-                  <tr key={i} className="border-t border-border align-top">
-                    <td className="px-4 py-2.5 font-medium text-ink">{c.element}</td>
-                    <td className="px-4 py-2.5 text-brown">{c.before || '—'}</td>
-                    <td className="px-4 py-2.5 text-ink">{c.after || '—'}</td>
+                  <tr key={i} className="border-t border-fmt-hairline align-top">
+                    <td className="px-4 py-2.5 font-medium text-fmt-ink">{c.element}</td>
+                    <td className="px-4 py-2.5 text-fmt-ink-2">{c.before || '—'}</td>
+                    <td className="px-4 py-2.5 text-fmt-ink">{c.after || '—'}</td>
                     <td className="px-4 py-2.5">
                       <SeverityChip severity={c.severity} />
                     </td>
@@ -159,25 +159,23 @@ function ReportView({ report }: { report: ReportModel }) {
       {/* Suggested changes */}
       {report.suggestedChanges.length > 0 && (
         <section>
-          <h4 className="mb-1 font-serif text-lg text-brown-dark">Suggested changes (author action required)</h4>
-          <p className="mb-3 text-xs text-brown">
+          <h4 className="mb-1 font-fmt-display text-lg text-fmt-ink">Suggested changes (author action required)</h4>
+          <p className="mb-3 text-xs text-fmt-ink-2">
             Items only you can resolve. We never edit your content — any wording below is offered for you to adopt.
           </p>
           <ul className="space-y-3">
             {report.suggestedChanges.map((s, i) => (
-              <li key={i} className="rounded-xl border border-border bg-white p-4">
+              <li key={i} className="rounded-xl border border-fmt-hairline bg-white p-4">
                 <div className="mb-1 flex flex-wrap items-center gap-2">
                   <SeverityChip severity={s.severity} />
-                  <span className="font-medium text-ink">{s.title}</span>
+                  <span className="font-medium text-fmt-ink">{s.title}</span>
                 </div>
-                {s.location && <p className="mb-1 text-xs text-brown">Location: {s.location}</p>}
-                <p className="text-sm leading-relaxed text-ink">{s.detail}</p>
+                {s.location && <p className="mb-1 text-xs text-fmt-ink-2">Location: {s.location}</p>}
+                <p className="text-sm leading-relaxed text-fmt-ink">{s.detail}</p>
                 {s.suggestedWording && (
-                  <div className="mt-3 rounded-lg border border-border bg-cream-alt/60 p-3">
-                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-brown">
-                      Suggested wording (you may adopt)
-                    </p>
-                    <p className="text-sm italic text-ink">{s.suggestedWording}</p>
+                  <div className="mt-3 rounded-lg border border-fmt-hairline bg-fmt-surface p-3">
+                    <p className="kicker mb-1">Suggested wording (you may adopt)</p>
+                    <p className="text-sm italic text-fmt-ink">{s.suggestedWording}</p>
                   </div>
                 )}
               </li>
@@ -189,15 +187,15 @@ function ReportView({ report }: { report: ReportModel }) {
       {/* Reference audit */}
       {report.referenceAudit.length > 0 && (
         <section>
-          <h4 className="mb-1 font-serif text-lg text-brown-dark">Reference audit</h4>
-          <p className="mb-3 text-xs text-brown">
+          <h4 className="mb-1 font-fmt-display text-lg text-fmt-ink">Reference audit</h4>
+          <p className="mb-3 text-xs text-fmt-ink-2">
             Every reference checked against Crossref and PubMed. ✅ verified · 🔧 corrected · ⚠️ unverified · 🚩 possibly
             retracted.
           </p>
-          <div className="overflow-x-auto rounded-xl border border-border">
+          <div className="overflow-x-auto rounded-xl border border-fmt-hairline">
             <table className="w-full min-w-[560px] border-collapse text-sm">
               <thead>
-                <tr className="bg-cream-alt text-left text-xs uppercase tracking-wide text-brown">
+                <tr className="bg-fmt-surface text-left font-fmt-mono text-xs uppercase tracking-wide text-fmt-ink-2">
                   <th className="px-4 py-2.5 font-semibold">#</th>
                   <th className="px-4 py-2.5 font-semibold">Status</th>
                   <th className="px-4 py-2.5 font-semibold">What changed</th>
@@ -208,19 +206,19 @@ function ReportView({ report }: { report: ReportModel }) {
                 {report.referenceAudit.map((r) => {
                   const meta = REF_STATUS[r.status]
                   return (
-                    <tr key={r.index} className="border-t border-border align-top">
-                      <td className="px-4 py-2.5 font-medium text-ink">{r.index}</td>
+                    <tr key={r.index} className="border-t border-fmt-hairline align-top">
+                      <td className="px-4 py-2.5 font-medium text-fmt-ink">{r.index}</td>
                       <td className={`whitespace-nowrap px-4 py-2.5 font-medium ${meta.text}`}>
                         <span aria-hidden="true">{meta.icon}</span> {meta.label}
                       </td>
-                      <td className="px-4 py-2.5 text-ink">{r.changed || '—'}</td>
-                      <td className="px-4 py-2.5 text-brown">
+                      <td className="px-4 py-2.5 text-fmt-ink">{r.changed || '—'}</td>
+                      <td className="px-4 py-2.5 text-fmt-ink-2">
                         {r.doi ? (
                           <a
                             href={`https://doi.org/${r.doi}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="underline hover:text-brown-dark"
+                            className="underline hover:text-fmt-accent-deep"
                           >
                             {r.doi}
                           </a>
@@ -229,7 +227,7 @@ function ReportView({ report }: { report: ReportModel }) {
                             href={`https://pubmed.ncbi.nlm.nih.gov/${r.pmid}/`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="underline hover:text-brown-dark"
+                            className="underline hover:text-fmt-accent-deep"
                           >
                             PMID {r.pmid}
                           </a>
@@ -249,9 +247,9 @@ function ReportView({ report }: { report: ReportModel }) {
       {/* Submission checklist */}
       {report.submissionChecklist.length > 0 && (
         <section>
-          <h4 className="mb-1 font-serif text-lg text-brown-dark">Submission checklist</h4>
-          <p className="mb-3 text-xs text-brown">Where your manuscript stands against the journal&apos;s requirements.</p>
-          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border">
+          <h4 className="mb-1 font-fmt-display text-lg text-fmt-ink">Submission checklist</h4>
+          <p className="mb-3 text-xs text-fmt-ink-2">Where your manuscript stands against the journal&apos;s requirements.</p>
+          <ul className="divide-y divide-fmt-hairline overflow-hidden rounded-xl border border-fmt-hairline">
             {report.submissionChecklist.map((c, i) => {
               const meta = CHECK_STATUS[c.status]
               return (
@@ -259,13 +257,13 @@ function ReportView({ report }: { report: ReportModel }) {
                   <span
                     aria-hidden="true"
                     className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                      c.status === 'action-needed' ? 'bg-amber-50 text-amber-800' : 'bg-green-50 text-green-700'
+                      c.status === 'action-needed' ? 'bg-[#FBF3E4] text-fmt-warn' : 'bg-[#E8F5EE] text-fmt-ok'
                     }`}
                   >
                     {meta.icon}
                   </span>
                   <div className="flex-1">
-                    <p className="text-sm text-ink">{c.requirement}</p>
+                    <p className="text-sm text-fmt-ink">{c.requirement}</p>
                     <p className={`text-xs font-medium ${meta.text}`}>{meta.label}</p>
                   </div>
                 </li>
@@ -276,7 +274,7 @@ function ReportView({ report }: { report: ReportModel }) {
       )}
 
       {/* Disclaimer footer */}
-      <p className="border-t border-border pt-4 text-xs italic leading-relaxed text-brown">
+      <p className="border-t border-fmt-hairline pt-4 text-xs italic leading-relaxed text-fmt-ink-2">
         {report.disclaimer}
         <span className="not-italic"> · Rules version {report.rulesVersion}</span>
       </p>
@@ -519,26 +517,23 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   if (phase === 'running') {
     const pct = Math.round(Math.min(Math.max(displayProgress, 0), 1) * 100)
     return (
-      <div className="rounded-xl border border-border bg-white p-8 text-center">
-        <h3 className="mb-2 font-serif text-2xl text-brown-dark">Formatting your manuscript</h3>
-        <p className="mb-6 text-sm text-brown" aria-live="polite">
+      <div className="rounded-xl border border-fmt-hairline bg-white p-8">
+        <h3 className="mb-2 font-fmt-display text-2xl text-fmt-ink">Formatting your manuscript</h3>
+        <p className="mb-6 font-fmt-mono text-sm text-fmt-ink-2" aria-live="polite">
           {stageLabel || 'Working…'}
         </p>
         <div
-          className="mx-auto h-2.5 w-full max-w-md overflow-hidden rounded-full bg-cream-alt"
+          className="pbar w-full"
           role="progressbar"
           aria-valuenow={pct}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label="Formatting progress"
         >
-          <div
-            className="h-full rounded-full bg-peach-dark transition-all duration-300 ease-linear"
-            style={{ width: `${Math.max(pct, 4)}%` }}
-          />
+          <i style={{ width: `${Math.max(pct, 4)}%` }} />
         </div>
-        <p className="mt-3 text-xs text-brown">{pct}% complete</p>
-        <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-brown">
+        <p className="plabel">{pct}% complete</p>
+        <p className="mt-6 max-w-md text-xs leading-relaxed text-fmt-ink-2">
           This usually takes a couple of minutes. Please keep this tab open — reference verification against Crossref and
           PubMed is the slowest step.
         </p>
@@ -552,17 +547,17 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
     const availableDownloads = DOWNLOAD_LABELS.filter((d) => downloads[d.key])
     return (
       <div className="space-y-8">
-        <div className="rounded-xl border border-green-200 bg-green-50 p-6">
+        <div className="rounded-xl border border-[#CDE9D8] bg-[#E8F5EE] p-6">
           <div className="flex items-start gap-3">
             <span
               aria-hidden="true"
-              className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-green-100 text-sm font-bold text-green-700"
+              className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-fmt-ok"
             >
               ✓
             </span>
             <div>
-              <h3 className="font-serif text-xl text-brown-dark">Your formatted manuscript is ready</h3>
-              <p className="mt-1 text-sm text-ink">
+              <h3 className="font-fmt-display text-xl text-fmt-ink">Your formatted manuscript is ready</h3>
+              <p className="mt-1 text-sm text-fmt-ink">
                 Download your files below and review the report before you submit. Files are only available on this
                 page — save them now.
               </p>
@@ -571,28 +566,28 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         </div>
 
         {availableDownloads.length > 0 && (
-          <div className="rounded-xl border border-border bg-white p-6">
-            <p className="section-label mb-3">Downloads</p>
+          <div className="rounded-xl border border-fmt-hairline bg-white p-6">
+            <p className="kicker mb-3">Downloads</p>
             <div className="flex flex-wrap gap-3">
               {availableDownloads.map((d) => (
                 <a
                   key={d.key}
                   href={downloads[d.key]}
                   download
-                  className={d.primary ? 'btn-primary-light' : 'btn-outline !text-brown !border-brown/40 hover:!bg-brown hover:!text-white'}
+                  className={d.primary ? 'btn btn-primary' : 'btn btn-secondary'}
                 >
                   {d.label}
                 </a>
               ))}
             </div>
-            <p className="mt-3 text-xs text-brown">Download links expire after about an hour.</p>
+            <p className="mt-3 font-fmt-mono text-xs text-fmt-ink-3">Download links expire after about an hour.</p>
           </div>
         )}
 
         {report && <ReportView report={report} />}
 
-        <div className="flex flex-wrap gap-3 border-t border-border pt-6">
-          <button type="button" onClick={startOver} className="btn-primary-light">
+        <div className="flex flex-wrap gap-3 border-t border-fmt-hairline pt-6">
+          <button type="button" onClick={startOver} className="btn btn-primary">
             Format another manuscript
           </button>
         </div>
@@ -607,7 +602,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       {phase === 'error' && runError && (
         <div
           role="alert"
-          className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          className="flex items-start gap-3 rounded-xl border border-[#F0C7C4] bg-[#FBEAE9] px-4 py-3 text-sm text-fmt-bad"
         >
           <span aria-hidden="true" className="mt-0.5 font-bold">
             !
@@ -620,9 +615,9 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       )}
 
       {/* Step 1 — Upload */}
-      <div className="rounded-xl border border-border bg-white p-6">
-        <h3 className="mb-1 font-serif text-xl text-brown-dark">1. Upload your manuscript</h3>
-        <p className="mb-4 text-sm text-brown">
+      <div className="rounded-xl border border-fmt-hairline bg-white p-6">
+        <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">1. Upload your manuscript</h3>
+        <p className="mb-4 text-sm text-fmt-ink-2">
           A blinded Word .docx, up to {formatBytes(MAX_MANUSCRIPT_BYTES)}. Figures are optional.
         </p>
 
@@ -648,9 +643,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
             setDragging(false)
             if (e.dataTransfer.files?.[0]) acceptManuscript(e.dataTransfer.files[0])
           }}
-          className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors ${
-            dragging ? 'border-peach-dark bg-cream-alt' : 'border-border bg-cream-alt/40 hover:border-tan'
-          }`}
+          className={`drop cursor-pointer${dragging ? ' dragging' : ''}`}
         >
           <input
             ref={manuscriptInputRef}
@@ -664,18 +657,21 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           />
           {manuscript ? (
             <div className="flex flex-col items-center gap-1">
-              <p className="font-medium text-ink">{manuscript.name}</p>
-              <p className="text-xs text-brown">{formatBytes(manuscript.size)} · click to replace</p>
+              <p className="font-medium text-fmt-ink">Drop your manuscript here</p>
+              <p className="mono" style={{ color: 'var(--fmt-ok)' }}>
+                {manuscript.name} · {formatBytes(manuscript.size)} ✓
+              </p>
+              <p className="mono">click to replace</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-1">
-              <p className="font-medium text-ink">Drag your .docx here, or click to browse</p>
-              <p className="text-xs text-brown">Microsoft Word only · max {formatBytes(MAX_MANUSCRIPT_BYTES)}</p>
+              <p className="font-medium text-fmt-ink">Drag your .docx here, or click to browse</p>
+              <p className="mono">Microsoft Word only · max {formatBytes(MAX_MANUSCRIPT_BYTES)} · figures optional</p>
             </div>
           )}
         </div>
         {manuscriptError && (
-          <p role="alert" className="mt-2 text-sm text-red-700">
+          <p role="alert" className="mt-2 text-sm text-fmt-bad">
             {manuscriptError}
           </p>
         )}
@@ -683,10 +679,10 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         {/* Figures */}
         <div className="mt-6">
           <div className="mb-2 flex items-center justify-between">
-            <label htmlFor="figures" className="text-sm font-medium text-ink">
-              Figures <span className="font-normal text-brown">(optional)</span>
+            <label htmlFor="figures" className="text-sm font-medium text-fmt-ink">
+              Figures <span className="font-normal text-fmt-ink-2">(optional)</span>
             </label>
-            <span className="text-xs text-brown">
+            <span className="font-fmt-mono text-xs text-fmt-ink-3">
               {figures.length}/{MAX_FIGURES} · JPG, PNG, TIFF · max {formatBytes(MAX_FIGURE_BYTES)} each
             </span>
           </div>
@@ -706,7 +702,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
             type="button"
             onClick={() => figureInputRef.current?.click()}
             disabled={figures.length >= MAX_FIGURES}
-            className="rounded-lg border border-border bg-white px-4 py-2 text-sm text-ink transition-colors hover:border-tan disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
           >
             Add figures
           </button>
@@ -715,16 +711,16 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
               {figures.map((f, i) => (
                 <li
                   key={`${f.name}-${i}`}
-                  className="flex items-center justify-between rounded-lg border border-border bg-cream-alt/40 px-3 py-2 text-sm"
+                  className="flex items-center justify-between rounded-lg border border-fmt-hairline bg-fmt-surface px-3 py-2 text-sm"
                 >
-                  <span className="truncate text-ink">
-                    {f.name} <span className="text-xs text-brown">({formatBytes(f.size)})</span>
+                  <span className="truncate font-fmt-mono text-fmt-ink">
+                    {f.name} <span className="text-xs text-fmt-ink-3">({formatBytes(f.size)})</span>
                   </span>
                   <button
                     type="button"
                     onClick={() => removeFigure(i)}
                     aria-label={`Remove ${f.name}`}
-                    className="ml-3 flex-shrink-0 text-xs font-medium text-brown hover:text-brown-dark hover:underline"
+                    className="ml-3 flex-shrink-0 text-xs font-medium text-fmt-ink-2 hover:text-fmt-accent-deep hover:underline"
                   >
                     Remove
                   </button>
@@ -733,7 +729,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
             </ul>
           )}
           {figureError && (
-            <p role="alert" className="mt-2 text-sm text-red-700">
+            <p role="alert" className="mt-2 text-sm text-fmt-bad">
               {figureError}
             </p>
           )}
@@ -741,14 +737,14 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       </div>
 
       {/* Step 2 — Journal + article type */}
-      <div className="rounded-xl border border-border bg-white p-6">
-        <h3 className="mb-1 font-serif text-xl text-brown-dark">2. Choose your target journal</h3>
-        <p className="mb-4 text-sm text-brown">We will format to this journal&apos;s current requirements.</p>
+      <div className="rounded-xl border border-fmt-hairline bg-white p-6">
+        <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">2. Choose your target journal</h3>
+        <p className="mb-4 text-sm text-fmt-ink-2">We will format to this journal&apos;s current requirements.</p>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="journal" className="mb-1 block text-sm font-medium text-ink">
-              Journal <span className="font-normal text-brown">({journals.length} supported)</span>
+            <label htmlFor="journal" className="mb-1 block text-sm font-medium text-fmt-ink">
+              Journal <span className="font-normal text-fmt-ink-2">({journals.length} supported)</span>
             </label>
             <JournalCombobox
               journals={journals}
@@ -758,7 +754,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           </div>
 
           <div>
-            <label htmlFor="articleType" className="mb-1 block text-sm font-medium text-ink">
+            <label htmlFor="articleType" className="mb-1 block text-sm font-medium text-fmt-ink">
               Article type
             </label>
             <select
@@ -766,7 +762,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
               value={articleType}
               onChange={(e) => setArticleType(e.target.value)}
               disabled={!selectedJournal}
-              className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm text-ink transition-colors focus:border-peach-dark focus:outline-none focus:ring-2 focus:ring-peach-dark/50 disabled:cursor-not-allowed disabled:bg-cream-alt/40 disabled:text-brown"
+              className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink transition-colors focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40 disabled:cursor-not-allowed disabled:bg-fmt-surface disabled:text-fmt-ink-3"
             >
               <option value="">{selectedJournal ? 'Select an article type…' : 'Choose a journal first'}</option>
               {selectedJournal?.articleTypes.map((t) => (
@@ -779,13 +775,13 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         </div>
 
         {selectedJournal && (
-          <p className="mt-3 text-xs text-brown">
+          <p className="mt-3 text-xs text-fmt-ink-2">
             Rules verified {friendlyDate(selectedJournal.verifiedDate)} ·{' '}
             <a
               href={selectedJournal.guidelinesUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-brown-dark"
+              className="underline hover:text-fmt-accent-deep"
             >
               {selectedJournal.name} Guide for Authors
             </a>
@@ -794,15 +790,15 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       </div>
 
       {/* Step 3 — Email + verification */}
-      <div className="rounded-xl border border-border bg-white p-6">
-        <h3 className="mb-1 font-serif text-xl text-brown-dark">3. Your email</h3>
-        <p className="mb-4 text-sm text-brown">
+      <div className="rounded-xl border border-fmt-hairline bg-white p-6">
+        <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">3. Your email</h3>
+        <p className="mb-4 text-sm text-fmt-ink-2">
           Your results appear right here on this page — nothing is emailed. We ask for your email to track beta usage
           and prevent abuse, and we do not share your address.
         </p>
 
         <div className="max-w-md">
-          <label htmlFor="email" className="mb-1 block text-sm font-medium text-ink">
+          <label htmlFor="email" className="mb-1 block text-sm font-medium text-fmt-ink">
             Email address
           </label>
           <input
@@ -812,10 +808,10 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
             placeholder="you@institution.edu"
-            className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm text-ink placeholder:text-brown/70 transition-colors focus:border-peach-dark focus:outline-none focus:ring-2 focus:ring-peach-dark/50"
+            className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink placeholder:text-fmt-ink-3 transition-colors focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40"
           />
           {email.length > 0 && !emailValid && (
-            <p className="mt-1 text-xs text-red-700">Please enter a valid email address.</p>
+            <p className="mt-1 text-xs text-fmt-bad">Please enter a valid email address.</p>
           )}
         </div>
 
@@ -826,7 +822,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         <button
           type="submit"
           disabled={!canSubmit}
-          className="btn-primary-light w-full justify-center sm:w-auto sm:min-w-[240px] disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn btn-primary inline-flex w-full items-center justify-center gap-2 sm:w-auto sm:min-w-[240px] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? (
             <>
@@ -841,11 +837,11 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           )}
         </button>
         {phase === 'error' && (
-          <button type="button" onClick={backToForm} className="text-sm text-brown hover:underline">
+          <button type="button" onClick={backToForm} className="text-sm text-fmt-ink-2 hover:underline">
             Reset the form
           </button>
         )}
-        <p className="max-w-md text-center text-xs text-brown">
+        <p className="max-w-md text-center text-xs text-fmt-ink-2">
           Free during beta. By continuing you confirm you have the right to upload this manuscript. Always verify the
           output against the journal&apos;s current Guide for Authors before submitting.
         </p>
