@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { JOURNAL_SUMMARIES } from '@/lib/formatting/journalList'
 import FormatClient from './FormatClient'
+import FinderClient from '../_components/FinderClient'
 import BeforeAfterDemo from '../_components/BeforeAfterDemo'
 import JournalWall from '../_components/JournalWall'
 import FormatterMotion from '../_components/FormatterMotion'
@@ -92,6 +93,10 @@ const faqs = [
     a: `${JOURNAL_COUNT} orthopedic journals today, each encoded directly from its published Guide for Authors and re-checked monthly. The full list, with the date each was last verified, is on this page.`,
   },
   {
+    q: 'What is the Journal Finder?',
+    a: `A free tool that scores all ${JOURNAL_COUNT} orthopedic journals against your manuscript's actual numbers — article type, word count, abstract length, figures, tables, and references — and tells you which you're eligible for, which fit, and exactly how far over each limit you are where you're not. It reads only the numbers you enter, never your manuscript text, and never charges. If you've just formatted a manuscript, those numbers carry straight into the Finder.`,
+  },
+  {
     q: 'What does the AI actually see?',
     a: 'A language model reads document structure only — which lines are the title, authors, affiliations, and references. It never writes, paraphrases, or alters your prose; all formatting is applied by deterministic code.',
   },
@@ -126,7 +131,13 @@ const softwareLd = {
   operatingSystem: 'Web',
   url: 'https://www.oscrsj.com/format',
   description:
-    'Free tool that formats an orthopedic manuscript to a target journal’s house style, verifies references against Crossref and PubMed, and returns a submission-ready .docx with a transparent compliance report.',
+    'Free tool that formats an orthopedic manuscript to a target journal’s house style, verifies references against Crossref and PubMed, and returns a submission-ready .docx with a transparent compliance report. Includes a Journal Finder that scores every supported journal against a manuscript’s word count, figures, and article-type eligibility.',
+  featureList: [
+    'Deterministic journal formatting to house style',
+    'Reference verification against Crossref and PubMed',
+    'Transparent compliance report',
+    'Journal Finder — eligibility and fit scoring across every supported journal',
+  ],
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   publisher: {
     '@type': 'Organization',
@@ -181,7 +192,8 @@ export default function FormatPage() {
         <div className="wrap hero-grid">
           <div>
             <span className="kicker reveal">
-              Free during beta · {JOURNAL_COUNT} orthopedic journals · references verified against Crossref &amp; PubMed
+              Free during beta · {JOURNAL_COUNT} orthopedic journals · references verified against Crossref &amp; PubMed ·
+              journal finder
             </span>
             <h1 className="reveal">
               Your science.
@@ -336,7 +348,7 @@ export default function FormatPage() {
         </div>
       </section>
 
-      {/* ---------- JOURNAL FINDER (shell — v1 lands in Session 2) ---------- */}
+      {/* ---------- JOURNAL FINDER (v1 — Session 2) ---------- */}
       <section
         id="finder"
         style={{
@@ -349,21 +361,19 @@ export default function FormatPage() {
         <div className="wrap">
           <div className="rule-head" style={{ borderTopColor: '#DDDDE4' }}>
             <span className="kicker">Journal Finder</span>
-            <span className="chip on">Coming soon</span>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--fmt-ink-3)' }}>
+              {JOURNAL_COUNT} journals scored
+            </span>
           </div>
           <h2 className="reveal">Find where your manuscript actually fits</h2>
           <p className="sub reveal" style={{ marginTop: '16px' }}>
-            The only journal finder that reads your actual manuscript — and the only one built just for orthopedics. Not
-            topic vibes: your real word count, figures, and article type, checked against every journal&apos;s real
-            limits.
+            Not topic vibes — your real numbers. Enter your article type, word count, figures, and references, and we
+            check them against every journal&apos;s published limits: what you&apos;re eligible for, what fits, and
+            exactly how far over you are where you&apos;re not. Just finished a formatting job? We carry those numbers
+            straight down here.
           </p>
-          <div className="finder-badge reveal">
-            <span
-              aria-hidden="true"
-              style={{ width: '8px', height: '8px', borderRadius: '99px', background: 'var(--fmt-warn)' }}
-            />
-            Launching shortly — finish a formatting job and we&apos;ll tell you which journals your manuscript actually
-            fits.
+          <div className="reveal" style={{ marginTop: '40px' }}>
+            <FinderClient />
           </div>
         </div>
       </section>

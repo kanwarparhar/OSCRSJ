@@ -13,6 +13,8 @@ import {
   type JobOutputs,
 } from '@/lib/formatting/pipeline/api'
 import type { ReportModel, Severity, ReferenceVerificationStatus } from '@/lib/formatting/types'
+import type { ArticleType } from '@/lib/formatting/rulesSchema'
+import { publishFormatHandoff, subscribeJournalRequest } from '@/lib/finder/handoff'
 
 /* ------------------------------------------------------------------ */
 /*  Constants + helpers                                                 */
@@ -318,6 +320,15 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
     [journalId],
   )
 
+  // "Format for this journal →" from the Journal Finder pre-selects here.
+  useEffect(() => {
+    return subscribeJournalRequest((req) => {
+      setJournalId(req.slug)
+      setArticleType(req.articleType)
+      setPhase('form')
+    })
+  }, [])
+
   // Smooth progress animation: every 250ms, ease the displayed value toward a
   // ceiling a little ahead of the last server-reported progress. Asymptotic,
   // so it visibly moves during long stages but can't overtake reality by much.
@@ -465,6 +476,15 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           setReport(status.report)
           setDownloads(status.downloads)
           setPhase('complete')
+          // Hand the numbers we already know to the Journal Finder below, so the
+          // author can find fitting journals without retyping (in-memory only).
+          publishFormatHandoff({
+            filename: manuscript?.name ?? null,
+            articleType: (articleType || null) as ArticleType | null,
+            journalSlug: journalId || null,
+            figureCount: figures.length,
+            referenceCount: status.report?.referenceAudit?.length ?? null,
+          })
           return
         }
         if (status.status === 'failed') {

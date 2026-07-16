@@ -59,6 +59,17 @@ const HEADERS = {
     'Figures',
     'IP',
   ],
+  // Journal Finder (/format #finder) — one row per match query. Stateless: no
+  // email is collected. Order MUST match app/api/finder/match/route.ts.
+  'Finder Submissions': [
+    'Submitted At (UTC)',
+    'Article Type',
+    'Word Count',
+    'Subspecialty',
+    'Top Result',
+    'Bucket Summary',
+    'IP',
+  ],
 }
 
 function doPost(e) {
