@@ -13,6 +13,22 @@ const AI_ORTHO_CATEGORY_SLUGS = [
   'research-tools',
 ]
 
+/**
+ * Regenerate hourly (2026-07-15). Without this the sitemap is generated ONCE
+ * at build time and then served from the CDN indefinitely — observed live at
+ * `x-vercel-cache: HIT`, `age: 7363` with e0005 and e0006 both missing hours
+ * after publishing, i.e. Google could not discover either article until the
+ * next unrelated deploy happened to rebuild it.
+ *
+ * Publishing is editor-driven and infrequent, so a fixed 1h ceiling makes new
+ * articles discoverable promptly while keeping this cheap: crawlers hit
+ * sitemap.xml rarely, and force-dynamic would run a DB query on every bot
+ * request for no benefit. Pairs with the Data Cache fix in
+ * lib/supabase/server.ts createAdminClient — without that, this route would
+ * revalidate on schedule and still replay a cached PostgREST response.
+ */
+export const revalidate = 3600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.oscrsj.com'
 

@@ -37,6 +37,29 @@ export async function createClient() {
  * Admin Supabase client using the service role key.
  * Bypasses RLS entirely. Use only in trusted server-side contexts
  * (API routes, background jobs, admin operations).
+ *
+ * STALE-READ BUG + FIX (2026-07-15). This client deliberately returns []
+ * from cookies.getAll(), so — unlike createClient() — it never touches the
+ * real cookie store. Next.js only opts a route out of the Data Cache when
+ * something dynamic (cookies/headers) is read, so every PostgREST GET made
+ * through this client was being cached by the Data Cache and replayed on
+ * later requests. `export const dynamic = 'force-dynamic'` does NOT save
+ * you: it controls the ROUTE's render mode, not the fetch-level Data Cache.
+ *
+ * Observed live: after OSCRSJ-2026-0040's metadata was written,
+ * /api/publish/payload/[id] kept returning a pre-edit snapshot
+ * ("patient_consent_variant is not set", "running_title is 87 chars") for
+ * 20+ minutes and across an in-app save, while the admin page and
+ * /api/preview/[id] — both of which call auth.getUser() and therefore read
+ * cookies — saw the new values immediately. Same pattern left the homepage
+ * "latest article" card pinned to e0004 after e0005/e0006 published. The
+ * payload endpoint is what feeds the renderer, so a stale read here can
+ * silently publish an article from outdated metadata.
+ *
+ * Forcing cache: 'no-store' on this client's fetch opts every service-role
+ * read out of the Data Cache at the source, which fixes all consumers at
+ * once (payload endpoint, homepage, sitemap, /articles) instead of needing
+ * a per-route incantation that is easy to forget on the next route.
  */
 export function createAdminClient() {
   return createServerClient<Database>(
@@ -50,6 +73,12 @@ export function createAdminClient() {
       auth: {
         autoRefreshToken: false,
         persistSession: false,
+      },
+      global: {
+        // See the stale-read note above. Admin reads are always
+        // editor-driven state that must reflect the DB right now.
+        fetch: (input: RequestInfo | URL, init?: RequestInit) =>
+          fetch(input, { ...init, cache: 'no-store' }),
       },
     }
   )
