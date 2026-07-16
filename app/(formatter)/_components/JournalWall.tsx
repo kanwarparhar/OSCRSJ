@@ -62,6 +62,11 @@ export default function JournalWall({ journals }: { journals: WallJournal[] }) {
                   {j.typeCount} article {j.typeCount === 1 ? 'type' : 'types'}
                 </span>
               </div>
+              {/* The whole card has always linked to the source guide, but nothing
+                  said so. Authors want to check our rules against the journal's own
+                  words, so the affordance is now explicit (Kanwar directive item 8,
+                  2026-07-15). */}
+              <span className="jguide">Read this journal&apos;s Guide for Authors ↗</span>
             </a>
           ))}
         </div>

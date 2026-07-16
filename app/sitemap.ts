@@ -102,6 +102,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 1.0,
     },
+    // Submission Studio (2026-07-15). The old single /format page was never in
+    // the sitemap at all, which is part of why it took six weeks to get crawled.
+    // All four routes are listed now; each is independently indexable and each
+    // targets a distinct author query.
+    {
+      url: `${baseUrl}/studio`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/studio/format`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/studio/find`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/studio/journals`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
     {
       url: `${baseUrl}/articles`,
       lastModified: new Date(),

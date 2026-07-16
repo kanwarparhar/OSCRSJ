@@ -11,6 +11,7 @@
 // sort never re-hits the endpoint (and never burns a rate-limit slot).
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ARTICLE_TYPE_LABELS } from '@/lib/formatting/registry-meta'
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import { describeCheck, sortScores } from '@/lib/finder/match'
@@ -49,12 +50,12 @@ const BUCKET_META: Record<Exclude<Bucket, 'not_eligible'>, { label: string; blur
   },
   near_fit: {
     label: 'Near fit',
-    blurb: 'Within 10% on one or two limits — a light trim gets you there.',
+    blurb: 'Within 10% on one or two limits. A light trim gets you there.',
     chip: 'bg-[#FBF3E4] text-fmt-warn border-transparent',
   },
   needs_work: {
     label: 'Needs work',
-    blurb: 'Over one or more limits — see the exact deltas.',
+    blurb: 'Over one or more limits. See the exact deltas.',
     chip: 'bg-[#FBEAE9] text-fmt-bad border-transparent',
   },
 }
@@ -189,6 +190,7 @@ function ResultCard({ score, onFormat }: { score: JournalScore; onFormat: (s: Jo
 type Phase = 'form' | 'loading' | 'results' | 'error'
 
 export default function FinderClient() {
+  const router = useRouter()
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [sortBy, setSortBy] = useState<SortKey>('fit')
   const [phase, setPhase] = useState<Phase>('form')
@@ -258,8 +260,12 @@ export default function FinderClient() {
 
   function handleFormatFor(score: JournalScore) {
     if (form.articleType === '') return
+    // Session 95: the Formatter is its own route now, so this publishes the
+    // request (sessionStorage-backed, so it survives the navigation) and routes
+    // there, instead of scrolling to a #app section that no longer exists on
+    // this page.
     requestFormatJournal({ slug: score.slug, articleType: form.articleType })
-    document.getElementById('app')?.scrollIntoView({ behavior: 'smooth' })
+    router.push('/studio/format')
   }
 
   /* ---- render: results ---- */
@@ -311,8 +317,8 @@ export default function FinderClient() {
 
         {/* OSCRSJ disclosure */}
         <p className="text-xs italic leading-relaxed text-fmt-ink-3">
-          OSCRSJ builds this tool and appears in results only when your manuscript genuinely fits our scope and limits —
-          scored identically to every other journal, with no boost.
+          OSCRSJ builds this tool and appears in results only when your manuscript genuinely fits our scope and limits.
+          We are scored identically to every other journal, with no boost.
         </p>
 
         {/* Not eligible (collapsed) */}
@@ -350,7 +356,7 @@ export default function FinderClient() {
             ↑
           </span>
           <p>
-            Using the numbers from <strong>{handoffFilename}</strong> — edit any of them below. Add your word, abstract,
+            Using the numbers from <strong>{handoffFilename}</strong>. Edit any of them below. Add your word, abstract,
             and table counts for the most accurate match.
           </p>
         </div>
@@ -359,7 +365,7 @@ export default function FinderClient() {
       <div className="rounded-xl border border-fmt-hairline bg-white p-6">
         <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">Describe your manuscript</h3>
         <p className="mb-5 text-sm text-fmt-ink-2">
-          Only the article type is required. The more numbers you add, the sharper the fit — leave any you don&apos;t
+          Only the article type is required. The more numbers you add, the sharper the fit. Leave any you&apos;re
           know blank and we&apos;ll skip that check.
         </p>
 
@@ -413,7 +419,7 @@ export default function FinderClient() {
         {/* Subspecialty chips */}
         <div className="mt-5">
           <p className="mb-2 text-sm font-medium text-fmt-ink">
-            Subspecialty <span className="font-normal text-fmt-ink-3">(optional — sharpens ordering)</span>
+            Subspecialty <span className="font-normal text-fmt-ink-3">(optional, sharpens ordering)</span>
           </p>
           <div className="flex flex-wrap gap-2">
             {SCOPE_TAGS.map((tag) => {

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google'
+import { DM_Serif_Display, Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google'
 import './formatter.css'
 import IntroTransition from './_components/IntroTransition'
 
@@ -24,18 +24,26 @@ const jetBrainsMono = JetBrains_Mono({
   variable: '--fmt-font-mono',
   display: 'swap',
 })
+// The OSCRSJ masthead face. Scoped to the Studio wordmark so the journal signs
+// the product without disturbing the Studio's own type language.
+const dmSerif = DM_Serif_Display({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--fmt-font-brand',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Journal Formatter',
-    default: 'Journal Formatter — by OSCRSJ',
+    template: '%s | Submission Studio',
+    default: 'Submission Studio by OSCRSJ',
   },
 }
 
 export default function FormatterLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className={`fmt-root flex-1 ${interBody.variable} ${interTight.variable} ${jetBrainsMono.variable}`}
+      className={`fmt-root flex-1 ${interBody.variable} ${interTight.variable} ${jetBrainsMono.variable} ${dmSerif.variable}`}
     >
       <IntroTransition />
       {children}

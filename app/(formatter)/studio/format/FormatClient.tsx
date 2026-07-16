@@ -109,7 +109,7 @@ function ReportView({ report }: { report: ReportModel }) {
           {v.changesApplied === 1 ? 'change was' : 'changes were'} applied automatically ·{' '}
           <strong className="text-fmt-ink">{v.itemsNeedingAttention}</strong>{' '}
           {v.itemsNeedingAttention === 1 ? 'item needs' : 'items need'} your attention
-          {clean ? ' — nothing is blocking your submission.' : '.'}
+          {clean ? '. Nothing is blocking your submission.' : '.'}
         </p>
         <p className="mt-3 text-xs text-fmt-ink-2">
           Rules verified {friendlyDate(v.verifiedDate)} ·{' '}
@@ -163,7 +163,7 @@ function ReportView({ report }: { report: ReportModel }) {
         <section>
           <h4 className="mb-1 font-fmt-display text-lg text-fmt-ink">Suggested changes (author action required)</h4>
           <p className="mb-3 text-xs text-fmt-ink-2">
-            Items only you can resolve. We never edit your content — any wording below is offered for you to adopt.
+            Items only you can resolve. We never edit your content. Any wording below is offered for you to adopt.
           </p>
           <ul className="space-y-3">
             {report.suggestedChanges.map((s, i) => (
@@ -381,7 +381,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           continue
         }
         if (f.size > MAX_FIGURE_BYTES) {
-          err = `${f.name} is ${formatBytes(f.size)} — over the ${formatBytes(MAX_FIGURE_BYTES)} per-figure limit.`
+          err = `${f.name} is ${formatBytes(f.size)}, over the ${formatBytes(MAX_FIGURE_BYTES)} per-figure limit.`
           continue
         }
         if (next.some((existing) => existing.name === f.name && existing.size === f.size)) continue
@@ -451,7 +451,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       setPhase('running')
       setProgress(0.05)
       setDisplayProgress(0.05)
-      setStageLabel('Uploaded — starting…')
+      setStageLabel('Uploaded, starting…')
 
       // Advance the pipeline one stage at a time, polling status after each nudge.
       for (let iteration = 0; iteration < 150; iteration++) {
@@ -499,7 +499,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       }
 
       setRunError(
-        'This is taking longer than expected. Your job may still be processing — please keep this page open and try again in a few minutes.',
+        'This is taking longer than expected. Your job may still be processing, so please keep this page open and try again in a few minutes.',
       )
       setPhase('error')
     } catch (err) {
@@ -554,7 +554,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         </div>
         <p className="plabel">{pct}% complete</p>
         <p className="mt-6 max-w-md text-xs leading-relaxed text-fmt-ink-2">
-          This usually takes a couple of minutes. Please keep this tab open — reference verification against Crossref and
+          This usually takes a couple of minutes. Please keep this tab open. Reference verification against Crossref and
           PubMed is the slowest step.
         </p>
       </div>
@@ -579,7 +579,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
               <h3 className="font-fmt-display text-xl text-fmt-ink">Your formatted manuscript is ready</h3>
               <p className="mt-1 text-sm text-fmt-ink">
                 Download your files below and review the report before you submit. Files are only available on this
-                page — save them now.
+                page, so save them now.
               </p>
             </div>
           </div>
@@ -813,8 +813,8 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       <div className="rounded-xl border border-fmt-hairline bg-white p-6">
         <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">3. Your email</h3>
         <p className="mb-4 text-sm text-fmt-ink-2">
-          Your results appear right here on this page — nothing is emailed. We ask for your email to track beta usage
-          and prevent abuse, and we do not share your address.
+          Your results appear right here on this page and nothing is emailed. We ask for your email only to prevent
+          abuse of a free tool, and we do not share your address.
         </p>
 
         <div className="max-w-md">
@@ -862,8 +862,8 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           </button>
         )}
         <p className="max-w-md text-center text-xs text-fmt-ink-2">
-          Free during beta. By continuing you confirm you have the right to upload this manuscript. Always verify the
-          output against the journal&apos;s current Guide for Authors before submitting.
+          Free to use. By continuing you confirm you have the right to upload this manuscript. Always verify the output
+          against the journal&apos;s current Guide for Authors before submitting.
         </p>
       </div>
     </form>

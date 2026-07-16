@@ -47,7 +47,7 @@ export default function IntroTransition() {
         <div className="presents">presents</div>
       </div>
       <div className="jf">
-        <div className="name">Journal Formatter</div>
+        <div className="name">Submission Studio</div>
         <div className="by">by OSCRSJ</div>
       </div>
     </div>

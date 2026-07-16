@@ -27,6 +27,12 @@ const nextConfig = {
       // /about retired 2026-04-27 — redundant landing page, content overlap
       // with /aims-scope. Closest semantic redirect target is /aims-scope.
       { source: '/about', destination: '/aims-scope', permanent: true },
+      // /format renamed + split 2026-07-15: the Journal Formatter became
+      // Submission Studio (it finds journals now, not just formats for them) and
+      // the single long page became four routes. /format was live and indexed, so
+      // it 308s to the tool that used to live there — NOT to the hub — because
+      // that is what an inbound link to /format was promising.
+      { source: '/format', destination: '/studio/format', permanent: true },
     ]
   },
 }

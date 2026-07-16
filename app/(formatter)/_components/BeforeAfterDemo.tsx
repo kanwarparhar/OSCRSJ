@@ -12,10 +12,10 @@ import { useEffect, useRef, useState } from 'react'
 type Scene = { cls: string; cap: string; note: string; dur: number }
 
 const SCENES: Scene[] = [
-  { cls: 'before s1', cap: 'manuscript_draft.docx', note: 'Scene 1/4 — the "before" manuscript', dur: 3500 },
-  { cls: 'before s2', cap: 'Target: The Journal of Bone & Joint Surgery', note: 'Scene 2/4 — pick the journal', dur: 2500 },
-  { cls: 'before s3', cap: 'Formatting…', note: 'Scene 3/4 — parse · verify · apply', dur: 3500 },
-  { cls: 's4', cap: 'manuscript_JBJS.docx ✓', note: 'Scene 4/4 — submission-ready', dur: 4500 },
+  { cls: 'before s1', cap: 'manuscript_draft.docx', note: 'Scene 1 of 4: the "before" manuscript', dur: 3500 },
+  { cls: 'before s2', cap: 'Target: The Journal of Bone & Joint Surgery', note: 'Scene 2 of 4: pick the journal', dur: 2500 },
+  { cls: 'before s3', cap: 'Formatting…', note: 'Scene 3 of 4: parse · verify · apply', dur: 3500 },
+  { cls: 's4', cap: 'manuscript_JBJS.docx ✓', note: 'Scene 4 of 4: submission-ready', dur: 4500 },
 ]
 
 export default function BeforeAfterDemo() {

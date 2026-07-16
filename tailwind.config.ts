@@ -40,9 +40,11 @@ const config: Config = {
           'ink-2': '#52525E',
           'ink-3': '#9494A1',
           hairline: '#E8E8EC',
-          accent: '#3B5BDB',
-          'accent-deep': '#2B44A8',
-          'accent-wash': '#EEF1FB',
+          // OSCRSJ signature brown (Kanwar directive 2026-07-15) — mirrors the
+          // site's brown / brown-dark / cream-alt tokens.
+          accent: '#664930',
+          'accent-deep': '#3D2A18',
+          'accent-wash': '#F5EFE8',
           ok: '#147A4D',
           warn: '#A16207',
           bad: '#B3261E',
@@ -55,6 +57,7 @@ const config: Config = {
         'fmt-display': ['var(--fmt-font-display)', 'Inter Tight', 'system-ui', 'sans-serif'],
         'fmt-body': ['var(--fmt-font-body)', 'Inter', 'system-ui', 'sans-serif'],
         'fmt-mono': ['var(--fmt-font-mono)', 'JetBrains Mono', 'ui-monospace', 'monospace'],
+        'fmt-brand': ['var(--fmt-font-brand)', 'DM Serif Display', 'Georgia', 'serif'],
       },
       maxWidth: {
         content: '1100px',

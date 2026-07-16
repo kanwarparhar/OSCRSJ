@@ -29,8 +29,13 @@ const navItems = [
   },
   {
     label: 'Tools',
-    href: '/format',
-    dropdown: [{ label: 'Journal Formatter', href: '/format' }],
+    href: '/studio',
+    dropdown: [
+      { label: 'Submission Studio', href: '/studio' },
+      { label: 'Format a manuscript', href: '/studio/format' },
+      { label: 'Find a journal', href: '/studio/find' },
+      { label: 'Supported journals', href: '/studio/journals' },
+    ],
   },
   {
     label: 'News',
