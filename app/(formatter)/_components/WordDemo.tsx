@@ -180,8 +180,18 @@ export default function WordDemo({ specs }: { specs: DemoSpec[] }) {
         <div className="wd-ribbon">
           <div className="wd-grp">
             <div className="wd-row">
-              <span className={`wd-box wd-font${fontUnspecified ? ' muted' : ''}`}>{fontLabel}</span>
-              <span className={`wd-box wd-size${fontUnspecified ? ' muted' : ''}`}>{sizeLabel}</span>
+              <span
+                className={`wd-box wd-font${fontUnspecified ? ' muted' : ''}`}
+                title={fontUnspecified ? `${spec.name}: font ${NOT_SPECIFIED}` : undefined}
+              >
+                {fontLabel}
+              </span>
+              <span
+                className={`wd-box wd-size${fontUnspecified ? ' muted' : ''}`}
+                title={fontUnspecified ? `${spec.name}: font size ${NOT_SPECIFIED}` : undefined}
+              >
+                {sizeLabel}
+              </span>
             </div>
             <div className="wd-lbl">Font{fontUnspecified ? ' (yours)' : ''}</div>
           </div>
@@ -190,7 +200,10 @@ export default function WordDemo({ specs }: { specs: DemoSpec[] }) {
               <span className="wd-btn b">B</span>
               <span className="wd-btn i">I</span>
               <span className="wd-btn u">U</span>
-              <span className={`wd-box wd-space${layout.lineSpacing ? '' : ' muted'}`}>
+              <span
+                className={`wd-box wd-space${layout.lineSpacing ? '' : ' muted'}`}
+                title={layout.lineSpacing ? undefined : `${spec.name}: line spacing ${NOT_SPECIFIED}`}
+              >
                 {layout.lineSpacing ? SPACING_LABEL[layout.lineSpacing] : 'Not specified'}
               </span>
             </div>
