@@ -1073,3 +1073,304 @@
 .fmt-root a.jcard:hover .jguide {
   color: var(--fmt-accent-deep);
 }
+
+/* ============ WORD DEMO (Session 97) ============
+   A Word-like window on /studio/format whose every value comes from the real
+   encoded rule files (lib/formatting/demoSpecs.ts). Chrome is deliberately
+   Office-ish (its own greys/blues), NOT the fmt-* palette — it is depicting a
+   third-party app, so it should look like one. The OSCRSJ brown only appears on
+   the switcher chips below the window, which are ours.
+   ============================================================================ */
+
+.fmt-root .wd {
+  margin: 0;
+}
+.fmt-root .wd-win {
+  border: 1px solid #d4d4d8;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 8px 30px rgba(10, 10, 15, 0.09);
+  font-family: 'Segoe UI', var(--body);
+}
+
+/* title bar */
+.fmt-root .wd-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #2b579a; /* Word blue */
+  padding: 0 12px;
+  height: 34px;
+}
+.fmt-root .wd-traffic {
+  display: flex;
+  gap: 6px;
+}
+.fmt-root .wd-traffic i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+}
+.fmt-root .wd-traffic .r { background: #ff5f57; }
+.fmt-root .wd-traffic .y { background: #febc2e; }
+.fmt-root .wd-traffic .g { background: #28c840; }
+.fmt-root .wd-fname {
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fmt-root .wd-saved {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 400;
+}
+
+/* ribbon tabs */
+.fmt-root .wd-tabs {
+  display: flex;
+  gap: 2px;
+  background: #f3f2f1;
+  border-bottom: 1px solid #e1dfdd;
+  padding: 0 8px;
+}
+.fmt-root .wd-tabs span {
+  font-size: 12px;
+  color: #444;
+  padding: 7px 11px;
+  border-bottom: 2px solid transparent;
+}
+.fmt-root .wd-tabs span.on {
+  color: #2b579a;
+  border-bottom-color: #2b579a;
+  font-weight: 600;
+  background: #fff;
+}
+
+/* ribbon */
+.fmt-root .wd-ribbon {
+  display: flex;
+  gap: 0;
+  background: #fff;
+  border-bottom: 1px solid #e1dfdd;
+  padding: 7px 10px 4px;
+  flex-wrap: wrap;
+}
+.fmt-root .wd-grp {
+  padding: 0 12px;
+  border-right: 1px solid #edebe9;
+}
+.fmt-root .wd-grp:last-child { border-right: 0; }
+.fmt-root .wd-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.fmt-root .wd-lbl {
+  font-size: 9.5px;
+  color: #8a8886;
+  text-align: center;
+  margin-top: 5px;
+}
+.fmt-root .wd-box {
+  font-size: 11.5px;
+  color: #201f1e;
+  border: 1px solid #d2d0ce;
+  border-radius: 3px;
+  padding: 3px 8px;
+  background: #fff;
+  white-space: nowrap;
+  transition: background 0.3s ease-out, color 0.3s ease-out, border-color 0.3s ease-out;
+}
+.fmt-root .wd-font { min-width: 104px; }
+.fmt-root .wd-size { min-width: 32px; text-align: center; }
+.fmt-root .wd-box.muted {
+  color: #a19f9d;
+  font-style: italic;
+  background: #faf9f8;
+}
+.fmt-root .wd-box.on {
+  border-color: #2b579a;
+  background: #eff4fb;
+  color: #2b579a;
+  font-weight: 600;
+}
+.fmt-root .wd-btn {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 11.5px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #201f1e;
+}
+.fmt-root .wd-btn.b { font-weight: 700; }
+.fmt-root .wd-btn.i { font-style: italic; font-family: Georgia, serif; }
+.fmt-root .wd-btn.u { text-decoration: underline; }
+
+/* ruler */
+.fmt-root .wd-ruler {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  height: 16px;
+  background: #faf9f8;
+  border-bottom: 1px solid #edebe9;
+  padding: 0 30px;
+}
+.fmt-root .wd-ruler i {
+  flex: 1;
+  height: 4px;
+  border-left: 1px solid #c8c6c4;
+}
+.fmt-root .wd-ruler i.maj { height: 9px; border-left-color: #8a8886; }
+
+/* page */
+.fmt-root .wd-canvas {
+  background: #e6e6e6;
+  padding: 18px;
+}
+.fmt-root .wd-page {
+  background: #fff;
+  border: 1px solid #d6d6d6;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09);
+  position: relative;
+  transition: opacity 0.25s ease-out;
+}
+.fmt-root .wd-page.applying { opacity: 0.45; }
+.fmt-root .wd-body {
+  position: relative;
+  color: #1a1a1a;
+  transition: font-family 0.3s ease-out, font-size 0.3s ease-out, line-height 0.3s ease-out,
+    padding 0.3s ease-out;
+}
+.fmt-root .wd-lineno {
+  position: absolute;
+  left: 8px;
+  top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--mono);
+  font-size: 8px;
+  color: #b9b9b9;
+  line-height: 1.35;
+}
+.fmt-root .wd-h1 {
+  font-weight: 700;
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+.fmt-root .wd-auth {
+  margin: 0 0 12px;
+  font-size: 0.86em;
+  color: #444;
+}
+.fmt-root .wd-p { margin: 0 0 9px; }
+.fmt-root .wd-dim { color: #6b6b6b; }
+.fmt-root .wd-body .cite {
+  background: #fff3cd;
+  border-radius: 2px;
+  padding: 0 2px;
+  font-weight: 600;
+  color: #7a5c00;
+}
+.fmt-root .wd-body sup.cite { font-size: 0.62em; padding: 0 1px; }
+.fmt-root .wd-margin-tag {
+  position: absolute;
+  right: 6px;
+  bottom: 5px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  color: #b3b3b3;
+}
+
+/* status bar */
+.fmt-root .wd-status {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  background: #2b579a;
+  color: #fff;
+  font-size: 11px;
+  padding: 5px 12px;
+  flex-wrap: wrap;
+}
+.fmt-root .wd-status .wd-spec {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* journal switcher — ours, so OSCRSJ brown */
+.fmt-root .wd-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.fmt-root .wd-switch-lbl {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fmt-ink-3);
+}
+.fmt-root .wd-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fmt-root .wd-chip {
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--fmt-hairline);
+  background: #fff;
+  color: var(--fmt-ink-2);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.18s ease-out;
+}
+.fmt-root .wd-chip:hover {
+  border-color: var(--fmt-accent);
+  color: var(--fmt-accent);
+}
+.fmt-root .wd-chip.on {
+  background: var(--fmt-accent);
+  border-color: var(--fmt-accent);
+  color: #fff;
+}
+.fmt-root .wd-note {
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fmt-ink-2);
+  max-width: 68ch;
+}
+.fmt-root .wd-note strong { color: var(--fmt-ink); font-weight: 600; }
+.fmt-root .wd-hint { color: var(--fmt-ink-3); font-style: italic; }
+
+@media (max-width: 700px) {
+  .fmt-root .wd-ribbon { padding: 6px 4px 3px; }
+  .fmt-root .wd-grp { padding: 0 7px; }
+  .fmt-root .wd-lbl { display: none; }
+  .fmt-root .wd-canvas { padding: 10px; }
+  .fmt-root .wd-status .wd-spec { margin-left: 0; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fmt-root .wd-page,
+  .fmt-root .wd-body,
+  .fmt-root .wd-box {
+    transition: none;
+  }
+}

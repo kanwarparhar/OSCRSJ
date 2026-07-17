@@ -1,12 +1,19 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { JOURNAL_SUMMARIES } from '@/lib/formatting/journalList'
+import { getDemoSpecs } from '@/lib/formatting/demoSpecs'
 import FormatClient from './FormatClient'
+import WordDemo from '../../_components/WordDemo'
 import FormatterMotion from '../../_components/FormatterMotion'
 import { StudioNav, StudioFooter } from '../../_components/StudioChrome'
 import { DISCLAIMER, HOW_IT_WORKS, NEVER_DOES } from '../../_copy'
 
 const JOURNAL_COUNT = JOURNAL_SUMMARIES.length
+
+// Derived at build time on the server from the real encoded rule files, then
+// handed to the client component as a prop — same contract as JOURNAL_SUMMARIES,
+// so no rule JSON reaches the client bundle.
+const DEMO_SPECS = getDemoSpecs()
 
 export const metadata: Metadata = {
   title: { absolute: 'Format a manuscript | Submission Studio by OSCRSJ' },
@@ -44,6 +51,37 @@ export default function FormatToolPage() {
           </p>
           <div className="reveal" style={{ marginTop: '40px' }}>
             <FormatClient journals={JOURNAL_SUMMARIES} />
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- SEE IT WORK (interactive Word demo) ---------- */}
+      <section
+        id="see-it"
+        style={{
+          paddingTop: '72px',
+          paddingBottom: '72px',
+          background: 'var(--fmt-surface)',
+          borderTop: '1px solid var(--fmt-hairline)',
+          borderBottom: '1px solid var(--fmt-hairline)',
+          scrollMarginTop: '80px',
+        }}
+      >
+        <div className="wrap">
+          <div className="rule-head" style={{ borderTopColor: '#DDDDE4' }}>
+            <span className="kicker">See it work</span>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--fmt-ink-3)' }}>
+              live from the encoded rules
+            </span>
+          </div>
+          <h2 className="reveal">The same paper, five journals</h2>
+          <p className="sub reveal" style={{ marginTop: '16px', maxWidth: '70ch' }}>
+            Pick a journal and watch the document change. Font, spacing, line numbers, margins, and the shape of
+            every citation are read straight from that journal&apos;s published Guide for Authors. Nothing here is a
+            mockup: it is the exact ruleset the Studio applies to your manuscript.
+          </p>
+          <div className="reveal" style={{ marginTop: '40px' }}>
+            <WordDemo specs={DEMO_SPECS} />
           </div>
         </div>
       </section>
