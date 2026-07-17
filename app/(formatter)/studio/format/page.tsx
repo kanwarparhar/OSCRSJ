@@ -33,8 +33,12 @@ export default function FormatToolPage() {
       <FormatterMotion />
       <StudioNav />
 
-      {/* ---------- TOOL ---------- */}
-      <section id="app" style={{ paddingBottom: '72px', scrollMarginTop: '80px' }}>
+      {/* ---------- SEE IT WORK (interactive Word demo) ----------
+           Deliberately ABOVE the upload form (Kanwar directive): show what the
+           tool does before asking anyone to hand over an unpublished manuscript.
+           Starts on the author's own unformatted draft so the first transition is
+           a real before/after rather than a tweak. */}
+      <section id="see-it" style={{ paddingBottom: '64px', scrollMarginTop: '80px' }}>
         <div className="wrap">
           <div className="rule-head">
             <span className="kicker">Tool 01</span>
@@ -43,21 +47,25 @@ export default function FormatToolPage() {
             </span>
           </div>
           <h1 className="reveal">Format a manuscript</h1>
-          <p className="sub reveal" style={{ marginTop: '16px', maxWidth: '70ch' }}>
-            Upload your .docx, choose your target journal, and download a manuscript formatted to that journal&apos;s
-            published requirements, with references verified and renumbered. Free to use. Your files are used only to
-            produce your output, and nothing is published or indexed.{' '}
-            <Link href="/studio#confidentiality">How we handle your manuscript →</Link>
+          <p className="sub reveal" style={{ marginTop: '16px', maxWidth: '72ch' }}>
+            Start with your draft, pick a target journal, and watch the document change. Font, spacing, line numbers,
+            margins, and the shape of every citation are read straight from that journal&apos;s published Guide for
+            Authors. This is not a mockup: it is the exact ruleset the Studio applies to your manuscript.
           </p>
-          <div className="reveal" style={{ marginTop: '40px' }}>
-            <FormatClient journals={JOURNAL_SUMMARIES} />
+          <div className="reveal" style={{ marginTop: '36px' }}>
+            <WordDemo specs={DEMO_SPECS} />
+          </div>
+          <div className="reveal" style={{ marginTop: '36px' }}>
+            <a className="btn btn-primary" href="#app">
+              Do this to my manuscript ↓
+            </a>
           </div>
         </div>
       </section>
 
-      {/* ---------- SEE IT WORK (interactive Word demo) ---------- */}
+      {/* ---------- THE TOOL ---------- */}
       <section
-        id="see-it"
+        id="app"
         style={{
           paddingTop: '72px',
           paddingBottom: '72px',
@@ -69,19 +77,17 @@ export default function FormatToolPage() {
       >
         <div className="wrap">
           <div className="rule-head" style={{ borderTopColor: '#DDDDE4' }}>
-            <span className="kicker">See it work</span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--fmt-ink-3)' }}>
-              live from the encoded rules
-            </span>
+            <span className="kicker">Your manuscript</span>
           </div>
-          <h2 className="reveal">The same paper, five journals</h2>
+          <h2 className="reveal">Format yours</h2>
           <p className="sub reveal" style={{ marginTop: '16px', maxWidth: '70ch' }}>
-            Pick a journal and watch the document change. Font, spacing, line numbers, margins, and the shape of
-            every citation are read straight from that journal&apos;s published Guide for Authors. Nothing here is a
-            mockup: it is the exact ruleset the Studio applies to your manuscript.
+            Upload your .docx, choose your target journal, and download a submission-ready manuscript with references
+            verified and renumbered. Free to use. Your files are used only to produce your output, and nothing is
+            published or indexed.{' '}
+            <Link href="/studio#confidentiality">How we handle your manuscript →</Link>
           </p>
           <div className="reveal" style={{ marginTop: '40px' }}>
-            <WordDemo specs={DEMO_SPECS} />
+            <FormatClient journals={JOURNAL_SUMMARIES} />
           </div>
         </div>
       </section>
