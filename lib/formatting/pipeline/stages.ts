@@ -61,6 +61,8 @@ export function canTransition(from: JobStatus, to: JobStatus): boolean {
 export interface JobOutputPaths {
   manuscript?: string
   report_docx?: string
+  /** Separate title-page draft, when the journal requires one. */
+  title_page?: string
   figures?: string[]
   zip?: string
 }

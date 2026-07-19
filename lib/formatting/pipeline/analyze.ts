@@ -202,8 +202,9 @@ export function analyze(input: {
   }
 
   // --- blinding / separate title page ---
-  // The formatter no longer generates a title-page file (removed 2026-07-11),
-  // so when the journal requires one it is the author's action item.
+  // A draft title page IS generated again (reinstated 2026-07-18), but it is a
+  // starting draft with bracketed prompts for anything we could not extract, so
+  // uploading a verified title page remains the author's action item.
   if (rules.blinding.separate_title_page) {
     checklist.push({
       requirement: 'Separate title page uploaded as its own file',

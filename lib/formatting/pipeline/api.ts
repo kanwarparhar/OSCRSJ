@@ -30,6 +30,7 @@ export const storagePaths = {
   meta: (jobId: string) => `${jobId}/meta.json`,
   outputManuscript: (jobId: string) => `${jobId}/output/manuscript-formatted.docx`,
   outputReportDocx: (jobId: string) => `${jobId}/output/analysis-report.docx`,
+  outputTitlePage: (jobId: string) => `${jobId}/output/title-page.docx`,
   outputZip: (jobId: string) => `${jobId}/output/formatted-package.zip`,
 }
 
@@ -86,6 +87,8 @@ export interface CreateJobResponse {
 export interface JobOutputs {
   manuscript?: string
   reportDocx?: string
+  /** Separate title-page draft, when the journal requires one. */
+  titlePage?: string
   zip?: string
 }
 

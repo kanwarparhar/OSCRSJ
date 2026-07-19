@@ -22,13 +22,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     // Downloads are served under the original filename + _<journal abbrev>.
     const jobMeta = await readJobMeta(job.id)
     const base = outputBaseName(jobMeta?.originalFilename, job.journal_id)
-    const [m, r, z] = await Promise.all([
+    const [m, r, t, z] = await Promise.all([
       op.manuscript ? createSignedDownload(op.manuscript, `${base}.docx`) : null,
       op.report_docx ? createSignedDownload(op.report_docx, `${base}_report.docx`) : null,
+      op.title_page ? createSignedDownload(op.title_page, `${base}_title-page.docx`) : null,
       op.zip ? createSignedDownload(op.zip, `${base}_package.zip`) : null,
     ])
     if (m) downloads.manuscript = m
     if (r) downloads.reportDocx = r
+    if (t) downloads.titlePage = t
     if (z) downloads.zip = z
   }
 

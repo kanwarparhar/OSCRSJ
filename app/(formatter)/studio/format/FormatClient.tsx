@@ -67,6 +67,7 @@ const CHECK_STATUS: Record<'met' | 'fixed' | 'action-needed', { icon: string; la
 const DOWNLOAD_LABELS: { key: keyof JobOutputs; label: string; primary?: boolean }[] = [
   { key: 'manuscript', label: 'Formatted manuscript (.docx)', primary: true },
   { key: 'reportDocx', label: 'Analysis report (.docx)' },
+  { key: 'titlePage', label: 'Title page draft (.docx)' },
   { key: 'zip', label: 'Download everything (.zip)' },
 ]
 

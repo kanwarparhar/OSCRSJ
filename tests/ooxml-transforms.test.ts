@@ -105,3 +105,60 @@ test('blinding: scrubs author metadata (AUTO) and flags body self-identification
   assert.ok(flags.some((f) => /self-identification/i.test(f.title)), 'self-id flagged')
   assert.ok(flags.every((f) => f.suggestedWording === null), 'never proposes a rewrite')
 })
+
+/* ---------- Session 97 Part H: title-page placeholders (never invented) ------ */
+
+const EMPTY_EXTRACT: ExtractedTitlePageData = {
+  title: null,
+  runningTitle: null,
+  authors: [],
+  affiliations: [],
+  correspondingAuthor: null,
+  keywords: [],
+}
+
+test('title page: unextractable fields become bracketed prompts, not invented values', async () => {
+  // A pre-blinded upload extracts nothing. The file is then mostly prompts —
+  // acceptable and stated, but it must never contain a fabricated name or email.
+  const rules = loadRules('ajsm')
+  const ctx: FormattingContext = { rules, articleType: 'case_report' }
+  const { bytes, placeholders, order } = buildTitlePage(EMPTY_EXTRACT, ctx)
+
+  assert.ok(placeholders.length > 0, 'everything should be a placeholder')
+  assert.equal(
+    order.length,
+    rules.title_page.elements.length,
+    'every element the journal asks for is represented, none silently dropped',
+  )
+
+  const doc = new Docx(bytes).part(PART.document)!
+  assert.match(doc, /\[Add: /, 'bracketed prompts present')
+  // Nothing fabricated.
+  assert.doesNotMatch(doc, /@/, 'no invented email address')
+  assert.doesNotMatch(doc, /Jane|John|Doe|Roe/, 'no invented author names')
+})
+
+test('title page: a populated extract produces no placeholders for the fields it has', async () => {
+  const rules = loadRules('ajsm')
+  const ctx: FormattingContext = { rules, articleType: 'case_report' }
+  const { placeholders } = buildTitlePage(SAMPLE, ctx)
+
+  for (const el of ['article_title', 'running_title', 'authors', 'affiliations'] as const) {
+    assert.ok(!placeholders.includes(el), `${el} was extracted, so must not be a placeholder`)
+  }
+})
+
+test('title page: a missing corresponding-author email is prompted for specifically', async () => {
+  const rules = loadRules('ajsm')
+  const ctx: FormattingContext = { rules, articleType: 'case_report' }
+  const partial: ExtractedTitlePageData = {
+    ...SAMPLE,
+    correspondingAuthor: { name: 'Jane A Doe', email: null, address: null, phone: null },
+  }
+  const { bytes, placeholders } = buildTitlePage(partial, ctx)
+  const doc = new Docx(bytes).part(PART.document)!
+
+  assert.match(doc, /\[Add: corresponding author email\]/)
+  assert.match(doc, /Jane A Doe/, 'the name we DID extract is kept')
+  assert.ok(placeholders.includes('corresponding_author'))
+})

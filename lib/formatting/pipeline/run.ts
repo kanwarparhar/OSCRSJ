@@ -14,6 +14,7 @@ import { SCHEMA_VERSION, type ArticleType } from '../rulesSchema'
 import { ingestDocx } from '../ooxml/ingest'
 import { applyLayout } from '../ooxml/layout'
 import { blindManuscript } from '../ooxml/blinding'
+import { buildTitlePage } from '../ooxml/titlePage'
 import { renumberCitations } from '../references/renumber'
 import { buildFormattedReferences, hasStyleCaveat } from '../references/formattedList'
 import { emitDocxBuffer } from '../ooxml/emit'
@@ -193,6 +194,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         // outputs — user-facing names are the original filename + _<journal abbrev>
         const meta = await readJobMeta(jobId)
         const baseName = outputBaseName(meta?.originalFilename, job.journal_id)
+        let titlePageBytes: Uint8Array | null = null
 
         // Report-only figure checks. Jobs created before 2026-07-18 have no
         // figure fields in their meta sidecar; they simply produce no flags.
@@ -214,14 +216,35 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         )
 
-        // Title-page generation removed (Kanwar directive 2026-07-11): the tool
-        // no longer emits a title-page file — authors prepare their own. When
-        // the journal requires one, remind them in the report instead.
+        // Title-page generation was removed 2026-07-11 and REINSTATED 2026-07-18
+        // (Kanwar approval, Session 97 Part H): in both live assessment runs the
+        // #1 action-required item was "provide a separate title page", while
+        // buildTitlePage sat complete and uncalled.
+        //
+        // It is a SEPARATE FILE, never merged into the manuscript, so the
+        // content-immutability gate above is untouched by it. Fields we could
+        // not extract render as bracketed prompts, never invented values — a
+        // pre-blinded upload yields a mostly-placeholder file, which is a
+        // useful skeleton and is described as a draft, not a finished page.
         if (rules.blinding.separate_title_page) {
+          const titlePage = buildTitlePage(state.titlePageData, ctx)
+          outputs.title_page = storagePaths.outputTitlePage(jobId)
+          await uploadObject(
+            storagePaths.outputTitlePage(jobId),
+            Buffer.from(titlePage.bytes),
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          )
+          titlePageBytes = titlePage.bytes
+          const n = titlePage.placeholders.length
           allSuggestions.push({
             title: 'Provide a separate title page',
             location: null,
-            detail: `${rules.identity.name} requires a separate title page uploaded as its own file. Include: ${rules.title_page.elements.join(', ')}.`,
+            detail:
+              `${rules.identity.name} requires a separate title page uploaded as its own file. ` +
+              `We generated a starting draft (${baseName}_title-page.docx) in the journal's element order` +
+              (n > 0
+                ? `, with ${n} field${n === 1 ? '' : 's'} left as a bracketed prompt because we could not read ${n === 1 ? 'it' : 'them'} from your manuscript. Fill every bracket and verify every other field before submitting.`
+                : '. Verify every field before submitting.'),
             suggestedWording: null,
             severity: 'action-required',
           })
@@ -257,6 +280,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         const zip = new PizZip()
         zip.file(`${baseName}.docx`, Buffer.from(manuscript))
         zip.file(`${baseName}_report.docx`, Buffer.from(reportDocx))
+        if (titlePageBytes) zip.file(`${baseName}_title-page.docx`, Buffer.from(titlePageBytes))
         const zipBytes = zip.generate({ type: 'nodebuffer', compression: 'DEFLATE' })
         outputs.zip = storagePaths.outputZip(jobId)
         await uploadObject(storagePaths.outputZip(jobId), zipBytes, 'application/zip')
