@@ -40,6 +40,17 @@ export async function POST(req: NextRequest) {
   if (typeof articleType !== 'string' || !(articleType in ARTICLE_TYPE_LABELS)) {
     return NextResponse.json({ error: 'Select a valid article type.' }, { status: 400 })
   }
+  // Eligibility is gated in the UI but was NOT gated here, so the API happily
+  // accepted (and billed a pipeline run for) a case report "for" Injury, whose
+  // own rule file records that Injury does not accept case reports. Same source
+  // of truth the Finder and registry-meta's JournalSummary.articleTypes use.
+  const typeLabel = ARTICLE_TYPE_LABELS[articleType as keyof typeof ARTICLE_TYPE_LABELS]
+  if (!(rules.article_types as readonly string[]).includes(articleType)) {
+    return NextResponse.json(
+      { error: `${rules.identity.name} does not accept ${typeLabel} submissions.` },
+      { status: 400 },
+    )
+  }
   const ip = clientIp(req)
   const rl = await checkRateLimit(email, ip)
   if (!rl.ok) {
@@ -81,7 +92,7 @@ export async function POST(req: NextRequest) {
       email,
       originalFilename ?? '',
       rules.identity.name,
-      ARTICLE_TYPE_LABELS[articleType as keyof typeof ARTICLE_TYPE_LABELS] ?? articleType,
+      typeLabel ?? articleType,
       nFigs,
       ip ?? '',
     ],
