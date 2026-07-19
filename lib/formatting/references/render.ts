@@ -111,19 +111,67 @@ function abbreviateJournalNlm(name: string): string {
 // Field-level helpers
 // ---------------------------------------------------------------------------
 
-/** Initials from a given name: "John A" → "JA", "Sang Hoon" → "SH". No dots. */
+/**
+ * Normalize a SHOUTED family name to NLM casing.
+ *
+ * Why this exists: `verify.ts` replaces a matched reference's author list with
+ * Crossref's record, and Crossref metadata is inconsistently cased — some
+ * publishers deposit "SKAGGS DL". Observed live (job 2efc02ee): the author's
+ * own manuscript said "Skaggs DL" and the enrichment step made it WORSE.
+ * NLM/Vancouver/AMA never render an all-caps surname, so this is safe in one
+ * direction only.
+ *
+ * SAFETY PROPERTY: a name containing ANY lowercase letter is returned
+ * untouched. "McKee", "van der Berg", "d'Auvergne" are already correct and
+ * must never be rewritten — we only repair names that carry no case
+ * information at all, where any casing we produce is strictly better than
+ * shouting.
+ *
+ * This is deterministic string work on the emit path. It is NOT delegated to
+ * the structurer: the model is told to copy verbatim, and correctness here
+ * must not depend on which model is behind the parse step.
+ */
+export function normalizeFamilyName(family: string): string {
+  if (!family || /[a-z]/.test(family)) return family
+  // Case each run of letters, so separators (space, hyphen, apostrophe) are
+  // preserved exactly: "O'BRIEN" → "O'Brien", "SMITH-JONES" → "Smith-Jones".
+  const cased = family.replace(
+    /[A-Z]+/g,
+    (w) => w.charAt(0) + w.slice(1).toLowerCase(),
+  )
+  // "MCKEE" → "Mckee" → "McKee". Mc- surnames essentially always capitalize
+  // the following letter. Mac- is deliberately NOT handled: it is genuinely
+  // ambiguous (MacDonald vs Macon vs Mackey), and "Macdonald" is an accepted
+  // NLM rendering, so guessing there could make a correct name wrong.
+  return cased.replace(/\bMc([a-z])/g, (_, c: string) => 'Mc' + c.toUpperCase())
+}
+
+/**
+ * Initials from a given name: "John A" → "JA", "Sang Hoon" → "SH". No dots.
+ *
+ * A token that is ALREADY an unseparated initial block keeps all its letters:
+ * the structurer parses "Skaggs DL" into given "DL", and taking only the first
+ * character would silently DROP an initial from the author's own citation.
+ *
+ * The all-caps test is capped at two letters on purpose. "DL"/"JM" as a
+ * two-letter full given name effectively does not occur, whereas a shouted
+ * three-letter given name ("ANN", "AMY") very much does — and those must still
+ * reduce to a single initial. Beyond two letters we treat it as a name.
+ */
 function initials(given: string): string {
   return given
     .split(/[\s.\-]+/)
     .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase())
+    .map((part) =>
+      !/[a-z]/.test(part) && part.length === 2 ? part.toUpperCase() : part.charAt(0).toUpperCase(),
+    )
     .join('')
 }
 
 /** One author as "Family AB" (family + space + concatenated initials, no dots). */
 function formatAuthor(author: { family: string; given: string }): string {
   const inits = initials(author.given ?? '')
-  return [author.family ?? '', inits].filter(Boolean).join(' ')
+  return [normalizeFamilyName(author.family ?? ''), inits].filter(Boolean).join(' ')
 }
 
 /**
@@ -166,12 +214,22 @@ function journalSegment(ref: CslReference, rules: JournalRules): string {
  * Publication-detail segment: "Year;Volume(Issue):Pages." — every element is
  * optional and omitted absences leave no stray separators.
  */
+/**
+ * Page ranges use a plain hyphen in NLM/Vancouver/AMA. Crossref deposits
+ * frequently carry a typographic en dash ("702–707"), which then ships in a
+ * list we told the author is formatted for their journal. Only dash characters
+ * are touched, so "e51", "S12-S18" and single pages are unaffected.
+ */
+function normalizePageRange(page: string): string {
+  return page.replace(/[‐‑‒–—―−]/g, '-')
+}
+
 function publicationSegment(ref: CslReference): string {
   let s = ''
   if (ref.year) s += ref.year
   if (ref.volume) s += (s ? ';' : '') + ref.volume
   if (ref.issue) s += '(' + ref.issue + ')'
-  if (ref.page) s += (s ? ':' : '') + ref.page
+  if (ref.page) s += (s ? ':' : '') + normalizePageRange(ref.page)
   return s ? s + '.' : ''
 }
 

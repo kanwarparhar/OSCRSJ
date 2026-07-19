@@ -198,3 +198,84 @@ test('renderReferenceList maps each reference in the given order', () => {
     'Wong K. A note on distal radius fractures. J Hand Surg. 2019.',
   ])
 })
+
+/* ---- Session 97 post-deploy: Crossref data hygiene on the emit path ------- */
+//
+// verify.ts substitutes Crossref's author record for the author's own, and
+// Crossref metadata is inconsistently cased and dashed. These normalizations
+// are deterministic string work in the renderer — correctness must NOT depend
+// on which model sits behind the parse step.
+
+test('shouted Crossref family names are cased down to NLM style', () => {
+  // Observed live (job 2efc02ee): the manuscript said "Skaggs DL"; Crossref's
+  // JBJS record said "SKAGGS DL", and enrichment made the output worse.
+  const shouted: CslReference = {
+    ...kimSmith,
+    authors: [
+      { family: 'SKAGGS', given: 'D L' },
+      { family: 'CLUCK', given: 'M W' },
+    ],
+  }
+  const out = renderReference(shouted, rules({}))
+  assert.match(out, /^Skaggs DL, Cluck MW\./)
+  assert.doesNotMatch(out, /SKAGGS|CLUCK/)
+})
+
+test('a name carrying any lowercase is NEVER rewritten', () => {
+  // The safety property. Correctly-cased names must survive untouched.
+  for (const family of ['McKee', 'MacDonald', 'van der Berg', "d'Auvergne", 'Smith-Jones', 'de la Cruz']) {
+    const r: CslReference = { ...kimSmith, authors: [{ family, given: 'A B' }] }
+    assert.match(renderReference(r, rules({})), new RegExp(`^${family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} AB\\.`))
+  }
+})
+
+test('shouted names keep their separators and handle Mc', () => {
+  const cases: [string, string][] = [
+    ["O'BRIEN", "O'Brien"],
+    ['SMITH-JONES', 'Smith-Jones'],
+    ['VAN DER BERG', 'Van Der Berg'],
+    ['MCKEE', 'McKee'],
+    ['MCDONALD', 'McDonald'],
+    // Mac is deliberately left alone: MacDonald vs Macon is ambiguous, and
+    // "Macdonald" is an accepted NLM rendering.
+    ['MACON', 'Macon'],
+    ['KAY', 'Kay'],
+  ]
+  for (const [input, expected] of cases) {
+    const r: CslReference = { ...kimSmith, authors: [{ family: input, given: 'A' }] }
+    assert.match(renderReference(r, rules({})), new RegExp(`^${expected.replace(/'/g, "'")} A\\.`), `${input} → ${expected}`)
+  }
+})
+
+test('typographic dashes in page ranges become plain hyphens', () => {
+  const enDash: CslReference = { ...kimSmith, page: '702–707' }
+  assert.match(renderReference(enDash, rules({})), /:702-707\./)
+  const emDash: CslReference = { ...kimSmith, page: '702—707' }
+  assert.match(renderReference(emDash, rules({})), /:702-707\./)
+})
+
+test('page normalization leaves non-range page strings intact', () => {
+  for (const [page, expect] of [['e51', 'e51'], ['S12-S18', 'S12-S18'], ['1234', '1234']] as [string, string][]) {
+    const r: CslReference = { ...kimSmith, page }
+    assert.match(renderReference(r, rules({})), new RegExp(`:${expect}\\.`))
+  }
+})
+
+test('an already-abbreviated given name keeps every initial', () => {
+  // The structurer turns "Skaggs DL" into given "DL". Taking only the first
+  // character would drop an initial from the author's own citation.
+  const r: CslReference = { ...kimSmith, authors: [{ family: 'Skaggs', given: 'DL' }] }
+  assert.match(renderReference(r, rules({})), /^Skaggs DL\./)
+})
+
+test('a shouted three-letter given name still reduces to one initial', () => {
+  for (const given of ['ANN', 'AMY']) {
+    const r: CslReference = { ...kimSmith, authors: [{ family: 'Smith', given }] }
+    assert.match(renderReference(r, rules({})), new RegExp(`^Smith ${given[0]}\\.`), given)
+  }
+})
+
+test('ordinary given names still reduce to initials', () => {
+  const r: CslReference = { ...kimSmith, authors: [{ family: 'Kim', given: 'David H' }] }
+  assert.match(renderReference(r, rules({})), /^Kim DH\./)
+})
