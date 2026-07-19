@@ -30,7 +30,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -152,6 +152,7 @@
     "declarations.order is not prescribed by the guide; the listed items are the declarations the guide mentions, arranged conventionally.",
     "RCTs must be prospectively registered (trial_registration) — required only for RCTs, hence in order but not in the universally-required list.",
     "title_page.elements derived from 'all identifying information should be on a separate title page' — the guide does not enumerate an explicit element list.",
-    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

@@ -27,18 +27,50 @@
   },
   "layout": {
     "page_size": "letter",
-    "font": { "family": "Times New Roman", "size_pt": 12 },
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
     "line_spacing": "double",
-    "margins_mm": { "top_mm": 25.4, "bottom_mm": 25.4, "left_mm": 25.4, "right_mm": 25.4 },
-    "alignment": "left",
+    "margins_mm": {
+      "top_mm": 25.4,
+      "bottom_mm": 25.4,
+      "left_mm": 25.4,
+      "right_mm": 25.4
+    },
+    "alignment": null,
     "first_line_indent": null,
     "line_numbers": "continuous",
-    "page_numbers": { "show": true, "position": "bottom-center" },
-    "running_head": { "show": true, "position": "top-right" },
+    "page_numbers": {
+      "show": true,
+      "position": "bottom-center"
+    },
+    "running_head": {
+      "show": true,
+      "position": "top-right"
+    },
     "headings": [
-      { "level": 1, "case": "sentence", "bold": true, "italic": false, "numbered": false },
-      { "level": 2, "case": "sentence", "bold": true, "italic": false, "numbered": false },
-      { "level": 3, "case": "sentence", "bold": true, "italic": false, "numbered": false }
+      {
+        "level": 1,
+        "case": "sentence",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 2,
+        "case": "sentence",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      },
+      {
+        "level": 3,
+        "case": "sentence",
+        "bold": true,
+        "italic": false,
+        "numbered": false
+      }
     ]
   },
   "title_page": {
@@ -59,7 +91,12 @@
   },
   "abstract": {
     "structured": true,
-    "sections": ["Introduction", "Case Presentation", "Discussion", "Conclusion"],
+    "sections": [
+      "Introduction",
+      "Case Presentation",
+      "Discussion",
+      "Conclusion"
+    ],
     "max_words": 300,
     "keywords": {
       "required": true,
@@ -202,7 +239,13 @@
   },
   "figures": {
     "separate_files": true,
-    "formats": ["tif", "tiff", "png", "jpg", "jpeg"],
+    "formats": [
+      "tif",
+      "tiff",
+      "png",
+      "jpg",
+      "jpeg"
+    ],
     "min_dpi": 300,
     "legends_location": "figure_legends_section",
     "callout_style": "Figure",
@@ -216,7 +259,10 @@
       "funding",
       "acknowledgments"
     ],
-    "required": ["patient_consent", "conflict_of_interest"]
+    "required": [
+      "patient_consent",
+      "conflict_of_interest"
+    ]
   },
   "misc": {
     "orcid_required": false,
@@ -231,6 +277,7 @@
     "IRB approval/exemption statement is required specifically for case_series (JBI checklist mandatory).",
     "narrative_review carries two extra declarations not in DECLARATION_ELEMENTS: 'Author Track Declaration' and 'AI Tools Used' (ICMJE 2025-aligned) — enforced as required sections, not declaration-block items.",
     "Mandatory reporting checklists per type (CARE / JBI / PRISMA / SANRA) are submission-portal supplementary files, not manuscript formatting — tracked out-of-schema.",
-    "alignment 'left' inferred from double-spaced Times New Roman manuscript format with continuous line numbering (submission format is never justified); not stated verbatim."
+    "alignment 'left' inferred from double-spaced Times New Roman manuscript format with continuous line numbering (submission format is never justified); not stated verbatim.",
+    "2026-07-18 doctrine audit: alignment 'left' was inferred, not stated — the OSCRSJ Guide for Authors specifies double spacing but says nothing about justification, so this is nulled and the author's alignment is preserved."
   ]
 }

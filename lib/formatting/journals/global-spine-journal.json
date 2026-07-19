@@ -34,7 +34,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -122,6 +122,7 @@
     "word_limits and sections left empty {}: no per-type section order or word caps were readable. The SAGE landing page states 'No page limits or page charges' — i.e. no manuscript length cap — which is consistent with manuscript_max_words being unconstrained.",
     "FORCED-ENUM conservative defaults (schema allows no null): layout.line_numbers='none', tables.placement='in_text', figures.legends_location='in_text' were set to the non-transforming value because the guide could not be read — treat as UNVERIFIED, not asserted requirements.",
     "declarations.order left [] and required null: SAGE house-style typically mandates Declaration of Conflicting Interests + Funding (+ ethics/consent), but the specific GSJ list/order was not readable and the SAGE generic house-style page (www.sagepub.com/en-us/sam/manuscript-submission-guidelines) 404'd.",
-    "CONFIDENCE: medium-low overall. Blinding, abstract structure, publisher/ISSN, submission system are solid; layout/figure/table/reference-detail values are conservative defaults pending a successful read of the blocked live guide (recommend headless recheck at launch / Janine spot-audit)."
+    "CONFIDENCE: medium-low overall. Blinding, abstract structure, publisher/ISSN, submission system are solid; layout/figure/table/reference-detail values are conservative defaults pending a successful read of the blocked live guide (recommend headless recheck at launch / Janine spot-audit).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

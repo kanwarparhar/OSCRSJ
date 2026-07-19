@@ -36,7 +36,7 @@
     },
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -147,6 +147,7 @@
     "declarations.order=[] and required=null: the JSS-specific declaration ordering is unverifiable (blocked guide). House-style does place the Data availability statement within the manuscript text, before the References section, under the heading 'Data availability statement'.",
     "sections {} and word_limits {} intentionally empty - no per-type section order or word cap could be verified from the blocked live guide.",
     "[schema-required default] references.journal_abbrev defaulted to 'nlm' (guide silent; NLM/Index Medicus abbreviations assumed).",
-    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

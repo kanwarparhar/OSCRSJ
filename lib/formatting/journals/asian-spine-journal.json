@@ -36,7 +36,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": true,
       "position": null
@@ -207,6 +207,7 @@
     "Declarations order not prescribed by the guide (order=[]); required set = conflict of interest, funding, author contributions (CRediT), data availability (ICMJE), ethics approval (clinical/animal).",
     "abstract_max_words 300 stated for the structured abstract (original articles); left null for review/technical/letter where not separately stated.",
     "Case reports and editorials are accepted but the guide states no type-specific word/reference/figure limits or abstract structure -> nulls.",
-    "[schema-required default] layout.margins_mm nulled — guide stated only {'top_mm': 30, 'bottom_mm': 30, 'left_mm': 30} but the schema requires all four edges; a partial margin can't be applied."
+    "[schema-required default] layout.margins_mm nulled — guide stated only {'top_mm': 30, 'bottom_mm': 30, 'left_mm': 30} but the schema requires all four edges; a partial margin can't be applied.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

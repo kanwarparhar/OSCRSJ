@@ -38,7 +38,7 @@
     },
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -206,6 +206,7 @@
     "Author biography (~50 words per author with degrees/affiliation/research focus/e-mail and optional JPEG photo) required — no schema slot.",
     "Conflict of interest must always be stated ('none declared' if none) -> required; funding acknowledged in Acknowledgment section; ethics (Declaration of Helsinki + legal-compliance declaration at end of acknowledgments) and patient consent/anonymity required for human/animal or identifiable-patient work (conditional).",
     "AI-use disclosure required in Acknowledgment or Methods section; copyright transfer statement required at submission; author royalty fee USD 3300 / EUR 2900 / GBP 2500 (not a formatting field).",
-    "A signed 'letter of submission' from the corresponding author is referenced but not listed as a required cover-letter deliverable -> cover_letter_required false (uncertain)."
+    "A signed 'letter of submission' from the corresponding author is referenced but not listed as a required cover-letter deliverable -> cover_letter_required false (uncertain).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

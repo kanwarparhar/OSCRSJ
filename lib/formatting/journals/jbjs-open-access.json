@@ -33,7 +33,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -181,6 +181,7 @@
     "Tables: 'submitted in Word or Excel format with a descriptive title'; file names contain the table number (e.g., Table 1.docx) -> placement separate_file, numbering arabic. Caption above/below not stated -> caption_position null.",
     "Declarations: required set = ethics_approval (IRB approval letter for clinical studies / animal committee approval for animal studies), conflict_of_interest (ICMJE Conflict of Interest form), author_contributions (each author must indicate CRediT contributor roles in Editorial Manager). trial_registration is required for RCTs only (public trials registry prior to enrollment) and acknowledgments is used for non-author/one-section contributors -> both in order but not in required. Most declarations are collected via Editorial Manager forms/screens rather than a prescribed in-manuscript declaration-section order.",
     "misc: 'it will not be possible to submit an article without such an identifier for each author' -> orcid_required true. No cover letter is mentioned -> cover_letter_required false (unstated). Bulleted Take-Home Points are required for JBJS Review / Critical Analysis Review abstracts but that is an abstract format, not a separate highlights block -> highlights_required null. title_case not stated -> null.",
-    "ISSN not stated on the guide page -> null. APC (not schema-encoded): $2,400 USD on acceptance; Research4Life waivers for LMIC authors; CC BY-NC-ND 4.0 or CC BY 4.0 license, authors retain copyright."
+    "ISSN not stated on the guide page -> null. APC (not schema-encoded): $2,400 USD on acceptance; Research4Life waivers for LMIC authors; CC BY-NC-ND 4.0 or CC BY 4.0 license, authors retain copyright.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

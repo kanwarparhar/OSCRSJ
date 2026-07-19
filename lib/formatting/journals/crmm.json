@@ -31,7 +31,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": true,
       "position": null
@@ -144,6 +144,7 @@
     "Max 3 levels of displayed headings (count limit only; no case/bold/italic rule) -> headings null.",
     "Double-blind not stated for this journal (guide references single OR double blind generically) -> double_blind false; separate_title_page true because the guide references a 'separate title page' carrying author info, acknowledgments and contribution statements.",
     "ORCID recommended, not required -> orcid_required false. Cover letter referenced only for re-use disclosures / reviewer suggestions, not mandated -> false.",
-    "Submission system not named in the guide text -> null (Springer journals typically use Editorial Manager, not stated here)."
+    "Submission system not named in the guide text -> null (Springer journals typically use Editorial Manager, not stated here).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

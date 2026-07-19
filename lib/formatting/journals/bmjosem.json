@@ -33,7 +33,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -154,6 +154,7 @@
     "declarations.order/required from house-style manuscript order 'Acknowledgments, Competing Interests, Funding and all other required statements'; ethics-approval, patient-consent and data-availability statements are required when applicable but were not verified as always-required for this journal (page blocked) so are omitted from required.",
     "keywords.required=true because BMJ house style asks authors to supply MeSH-descriptor keywords; count/case/separator unspecified.",
     "Manuscript must be a Word document (PDF not accepted for the main manuscript); tables in Word placed in text at first citation, not as embedded Excel.",
-    "NULL-because-blocked (journal-specific, unverifiable from live sources): all word_limits, abstract.structured/sections/max_words, title_page elements & length caps, running-title cap, ORCID-required, cover-letter-required, page_size, font, line_spacing, margins, alignment. cover_letter guidance exists ('10 tips to writing a good Cover Letter') but requiredness unverified."
+    "NULL-because-blocked (journal-specific, unverifiable from live sources): all word_limits, abstract.structured/sections/max_words, title_page elements & length caps, running-title cap, ORCID-required, cover-letter-required, page_size, font, line_spacing, margins, alignment. cover_letter guidance exists ('10 tips to writing a good Cover Letter') but requiredness unverified.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

@@ -32,7 +32,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -167,6 +167,7 @@
     "tables placement: main-document order lists tables after references (grouped_end); free format allows single-file embedding at initial submission, but figures/tables MUST be separate files at revision stage.",
     "figures separate_files=false: 'Parts of the Manuscript' lists figures as a separate part, but Free Format explicitly allows a single document at initial submission; separate files required only at revision.",
     "declarations required=conflict_of_interest (must state even if none) + data_availability (required for all accepted manuscripts); funding/ethics_approval/patient_consent/trial_registration are conditional. Keywords max also stated as 'maximum of 8'.",
-    "ISSN 1600-0838 (online) derived from canonical URL slug 16000838; not stated in guide prose."
+    "ISSN 1600-0838 (online) derived from canonical URL slug 16000838; not stated in guide prose.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

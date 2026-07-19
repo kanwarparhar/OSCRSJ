@@ -36,7 +36,7 @@
     },
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -162,6 +162,7 @@
     "page_size unstated; margins given in cm (2.5 cm all sides) suggest A4 but not explicitly stated, so page_size=null. line_numbers, page_numbers, running_head-on-page, alignment, first_line_indent all unstated.",
     "Keywords: 'up to 6 key words (preferably ... MeSH terms)'; max=6, case/separator unstated.",
     "Cover letter required: 'A cover letter (authors' statement) must be signed by all authors.'",
-    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored)."
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

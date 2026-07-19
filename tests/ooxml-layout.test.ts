@@ -72,3 +72,47 @@ test('layout → OSCRSJ applies font/size/spacing/page-numbers/running-head', as
 
   assert.ok(changes.length >= 4, `report changes recorded (${changes.length})`)
 })
+
+/* ------------- Session 97 Part B: line-number preservation doctrine --------- */
+
+// The fixture ships WITH continuous line numbering, exactly like a manuscript
+// prepared for a double-blind journal, so it is the natural test case.
+
+/**
+ * A null line_numbers rule means the guide is SILENT, and the engine must leave
+ * whatever the author has alone. Injury is the proven case: its rule file said
+ * 'none' while its own encoding notes recorded line numbering as "unspecified
+ * and defaulted", and the engine read that as an instruction and stripped the
+ * author's line numbers in a live run.
+ */
+test("layout \u2192 a null line_numbers rule preserves the author's line numbering", async () => {
+  const rules = loadRules('injury')
+  assert.equal(rules.layout.line_numbers, null, 'injury must be null after the doctrine audit')
+
+  const ctx: FormattingContext = { rules, articleType: 'case_report' }
+  const { docx, model } = await ingestDocx(readFileSync(FIXTURE))
+  assert.match(docx.part(PART.document)!, /<w:lnNumType/, 'fixture ships with line numbers')
+
+  const { changes } = applyLayout(docx, model, ctx)
+
+  assert.match(docx.part(PART.document)!, /<w:lnNumType/, 'author line numbering must survive a null rule')
+  assert.ok(
+    !changes.some((c) => c.element === 'Line numbering'),
+    'a null rule must not report a line-numbering change',
+  )
+})
+
+test('layout \u2192 an explicit "none" rule still strips line numbering', async () => {
+  // OTSR genuinely states it: Editorial Manager generates the line-numbered
+  // PDF and authors are told NOT to submit a line-numbered manuscript. The
+  // audit must not have flattened real guide statements into null.
+  const rules = loadRules('otsr')
+  assert.equal(rules.layout.line_numbers, 'none', 'otsr states this explicitly')
+
+  const ctx: FormattingContext = { rules, articleType: 'case_report' }
+  const { docx, model } = await ingestDocx(readFileSync(FIXTURE))
+  assert.match(docx.part(PART.document)!, /<w:lnNumType/, 'fixture ships with line numbers')
+
+  applyLayout(docx, model, ctx)
+  assert.ok(!/<w:lnNumType/.test(docx.part(PART.document)!), 'explicit none removes line numbers')
+})

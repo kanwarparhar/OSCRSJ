@@ -23,14 +23,23 @@
   },
   "layout": {
     "page_size": null,
-    "font": { "family": "Times New Roman", "size_pt": 12 },
+    "font": {
+      "family": "Times New Roman",
+      "size_pt": 12
+    },
     "line_spacing": "double",
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
-    "page_numbers": { "show": false, "position": null },
-    "running_head": { "show": false, "position": null },
+    "line_numbers": null,
+    "page_numbers": {
+      "show": false,
+      "position": null
+    },
+    "running_head": {
+      "show": false,
+      "position": null
+    },
     "headings": null
   },
   "title_page": {
@@ -105,7 +114,11 @@
   },
   "figures": {
     "separate_files": true,
-    "formats": ["jpeg", "tiff", "png"],
+    "formats": [
+      "jpeg",
+      "tiff",
+      "png"
+    ],
     "min_dpi": null,
     "legends_location": "figure_legends_section",
     "callout_style": "Fig.",
@@ -119,7 +132,10 @@
       "trial_registration",
       "acknowledgments"
     ],
-    "required": ["conflict_of_interest", "ethics_approval"]
+    "required": [
+      "conflict_of_interest",
+      "ethics_approval"
+    ]
   },
   "misc": {
     "orcid_required": false,
@@ -138,6 +154,7 @@
     "Figures uploaded separately in JPEG/TIFF/PNG; numbered in arabic numerals; legends removed from figures and placed in a section following the References list -> figure_legends_section; multi-part figures cited as e.g. 'Fig. 2a-b' -> callout_style 'Fig.'. min_dpi not stated for static figures (null). Tables provided as separate editable Word .doc/x files with a heading (no legend) -> placement separate_file; heading above/below not explicitly stated (caption_position null); arabic numbering.",
     "Layout font and spacing are guide-stated ('all text must be double-spaced and 12-point Times New Roman font'). line_numbers 'none', page_numbers.show false, and running_head.show false because the guide specifies none of these; page_size, margins, alignment, first_line_indent, and heading styles are not stated (null).",
     "declarations: ICMJE conflict-of-interest disclosure form required at original submission and an ethical review committee statement (with a copy of the ethics-committee letter) is required -> both required. patient_consent required for identifiable patient photographs, and trial_registration required for RCTs (a registration number is needed before review) — included in order but treated as conditional, not in the always-required set.",
-    "misc.orcid_required false: 'it is not required that authors register an ORCID before submitting to CORR.' cover_letter_required false: no cover letter is required by the page. issn, highlights, and title_case not stated (null). Only a single corresponding author is permitted (not representable in schema)."
+    "misc.orcid_required false: 'it is not required that authors register an ORCID before submitting to CORR.' cover_letter_required false: no cover letter is required by the page. issn, highlights, and title_case not stated (null). Only a single corresponding author is permitted (not representable in schema).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

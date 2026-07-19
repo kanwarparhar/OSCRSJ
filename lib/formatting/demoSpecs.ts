@@ -31,7 +31,8 @@ export interface DemoSpec {
     fontFamily: string | null
     fontSizePt: number | null
     lineSpacing: 'single' | '1.5' | 'double' | null
-    lineNumbers: 'none' | 'continuous' | 'per_page'
+    /** null = the guide is silent, so the author's setting is preserved. */
+    lineNumbers: 'none' | 'continuous' | 'per_page' | null
     /** Uniform margin in mm when all four sides match, else null. */
     marginMm: number | null
   }

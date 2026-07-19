@@ -34,7 +34,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -124,6 +124,7 @@
     "title_page.elements limited to the near-universal BMJ set (title, authors, affiliations, corresponding author, manuscript word count); exact BJSM title-page composition unverified.",
     "blinding all false: BMJ journals use multiple peer-review models and each specifies its own; BJSM's specific model (and any author-anonymization requirement) could not be verified, so conservative false was used. Do not assume double-blind.",
     "declarations: BMJ adopts ICMJE Recommendations (competing interests, funding, ethics approval, contributorship, data availability) but the exact BJSM declaration set/order was not readable; left order=[] / required=null.",
-    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored)."
+    "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

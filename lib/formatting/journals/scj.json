@@ -38,7 +38,7 @@
     },
     "alignment": "left",
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": true,
       "position": "top-right"
@@ -173,6 +173,7 @@
     "Figures: submitted as separate files. 'We accept TIFF or EPS format ... PowerPoint is acceptable for figures' + text-accepted figure formats .tif/.eps/.ppt -> formats=['tiff','eps'] (PowerPoint/.ppt has no enum slot; noted). DPI tiered: halftone/color images min 300 ppi, line art 1200 ppi -> min_dpi=300 (SCHEMA GAP: line-art 1200 ppi floor not representable). Captions after references -> legends_location=figure_legends_section. Callouts 'Figure 1' -> callout_style='Figure'. Model Release Forms required for any identifiable person in photos/video; SCJ does not block out faces and requires non-patient models (a submission form, not a manuscript declaration).",
     "Declarations: an Acknowledgments section AFTER the references must contain 1) recognition of non-author contributors, 2) a conflict-of-interest statement (state 'none declared' if none), 3) a funding statement -> order=[acknowledgments, conflict_of_interest, funding]; required=[conflict_of_interest, funding]. Copyright transfer (eCTA) to the NSCA is required at submission (not a declaration section). No IRB/ethics requirement (SCJ publishes no original research). ICMJE 4-criteria authorship; authorship limited to 8 individuals, first author >=21% of work, contributors <10% acknowledged (not authors) — no schema field for author-count caps.",
     "misc: cover letter NOT mentioned in the SCJ guide -> cover_letter_required=false (JSCR requires one; SCJ does not — NOT copied). ORCID not mentioned -> orcid_required=false. No Highlights -> highlights_required=false. Article title case not specified -> title_case=null.",
-    "AI policy: nongenerative editing software recommended; generative-AI tools do not qualify for authorship and any AI use must be disclosed. Open access is optional (hybrid), APC on acceptance, CC BY-NC-ND license for OA articles. identity.issn: not stated anywhere in the guide -> null (not inferred from memory)."
+    "AI policy: nongenerative editing software recommended; generative-AI tools do not qualify for authorship and any AI use must be disclosed. Open access is optional (hybrid), APC on acceptance, CC BY-NC-ND license for OA articles. identity.issn: not stated anywhere in the guide -> null (not inferred from memory).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

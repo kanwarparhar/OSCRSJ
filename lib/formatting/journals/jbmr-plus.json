@@ -35,7 +35,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -215,6 +215,7 @@
     "Title page (in order): title; author names + major degrees + affiliations; one corresponding-author email + mailing address; then disclosures (data availability, funding, conflict of interest, ethics approval if applicable, patient consent if applicable, permission to reproduce if applicable, clinical trial registration if applicable). authors_degrees='include' ('Author names, major degrees, and affiliations'). No running title is required (running_title_max_chars=null). title_max_words=15 is a soft target ('aim for no more than 15 words'); the '1-2 keywords within the first 65 characters' guidance is SEO advice, not a hard title character cap, so title_max_chars=null.",
     "Declarations: data availability, funding, and conflict of interest are unconditionally required (title-page disclosures + 'data availability statement is a requirement' + 'requires all authors to disclose any potential conflict of interest'). Ethics approval, patient consent, and clinical trial registration are 'if applicable'. Acknowledgments is a required end-of-manuscript subheading when support exists (listed in order but not in required, since it is contingent). Author contributions are collected via CRediT at submission (system field), not written as a manuscript statement, so author_contributions is not encoded in declarations.",
     "misc: orcid_required=true ('Submitting authors are required to provide an ORCID iD at submission'; co-authors encouraged). cover_letter_required=true (a Cover letter with required contents is specified under Manuscript Preparation). title_case unstated -> null.",
-    "Layout entirely unspecified: the guide prescribes no page size, font, line spacing, margins, alignment, indent, line numbers, page numbers, or running head (US spelling and AMA style are the only house-style rules). line_numbers set to 'none' (schema has no null option). Word counts exclude title page, abstract, tables, acknowledgments, references, and figure captions."
+    "Layout entirely unspecified: the guide prescribes no page size, font, line spacing, margins, alignment, indent, line numbers, page numbers, or running head (US spelling and AMA style are the only house-style rules). line_numbers set to 'none' (schema has no null option). Word counts exclude title page, abstract, tables, acknowledgments, references, and figure captions.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

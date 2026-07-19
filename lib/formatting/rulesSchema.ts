@@ -159,7 +159,24 @@ const layoutSchema = z
     alignment: z.enum(['left', 'justified']).nullable(),
     /** true = first-line indent paragraphs; false = block paragraphs. */
     first_line_indent: z.boolean().nullable(),
-    line_numbers: z.enum(['none', 'continuous', 'per_page']),
+    /**
+     * ENCODING DOCTRINE (applies to every field that drives a REMOVAL or an
+     * override, not just this one — see `alignment` and `line_spacing` above):
+     *
+     *   null    = the guide is SILENT. The engine preserves whatever the author
+     *             already has. This is the correct value whenever a rule was
+     *             defaulted, inferred, assumed, or simply not found.
+     *   'none'  = the guide EXPLICITLY says no line numbers. Only then may the
+     *             engine strip the author's line numbering. A note citing the
+     *             guide statement is required alongside this value.
+     *
+     * This field was non-nullable until 2026-07-18, so encoders were forced to
+     * write 'none' for "unspecified" and said so in 36 of 37 encoding_notes.
+     * The engine read that as an instruction and stripped line numbers the
+     * author had deliberately added (observed live on the Injury fixture).
+     * Never re-default this field to 'none' to satisfy a type error.
+     */
+    line_numbers: z.enum(['none', 'continuous', 'per_page']).nullable(),
     page_numbers: z
       .object({
         show: z.boolean(),

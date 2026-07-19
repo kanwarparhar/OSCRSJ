@@ -32,7 +32,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -175,6 +175,7 @@
     "tables.placement not explicitly stated (single Word document upload; figures uploaded separately). Encoded 'grouped_end' as the conservative in-document convention; guide silent on exact table location. tables.caption_position 'above' from 'Each table should have a short, descriptive heading'. tables.numbering left null (Table numbering scheme not stated).",
     "figures.legends_location not explicitly stated ('Each figure will need a full descriptive legend'); encoded 'figure_legends_section' (legends compiled in the main document) as the conventional read; guide does not pin the location. figures.formats 'jpeg or tiff'; min_dpi / callout style / naming pattern unstated -> null. Figures uploaded as individual files, not embedded in the Word doc.",
     "Declarations: title page must carry Funding, Conflicts of Interest (ICMJE form required), Acknowledgements + affiliations, and Author's contributions; a data-availability statement is required in published manuscripts; ethics-committee approval and informed consent required for studies on patients/volunteers (conditional -> not in 'required').",
-    "ORCID 'We ask that authors add an ORCID ID ... if available' -> encouraged, not required. Cover letter / highlights (classic) / title case not specified -> null/false."
+    "ORCID 'We ask that authors add an ORCID ID ... if available' -> encouraged, not required. Cover letter / highlights (classic) / title case not specified -> null/false.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

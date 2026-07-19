@@ -34,7 +34,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -187,6 +187,7 @@
     "JBMR does NOT solicit case reports or case series — it is a bone/mineral research journal, so those OSCRSJ types are absent by design.",
     "title_max_words=15 is a soft target: 'Title must be concise (aim for no more than 15 words)...'",
     "Declarations required unconditionally: data availability, funding, conflict of interest. Ethics approval, patient consent, and clinical trial registration are 'if applicable'. All are placed on the title page.",
-    "line_numbers set to 'none' (schema has no null option) — the guide does not require line numbers; layout details (font, size, spacing, margins, page size, alignment) are all unstated by the guide, which defers to general OUP/AMA standards."
+    "line_numbers set to 'none' (schema has no null option) — the guide does not require line numbers; layout details (font, size, spacing, margins, page size, alignment) are all unstated by the guide, which defers to general OUP/AMA standards.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

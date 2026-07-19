@@ -32,7 +32,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -160,6 +160,7 @@
     "Font, size, line spacing, margins, page size, alignment, line numbers, running head, figure formats/DPI, keyword count, running-title/title length caps, ORCID/cover-letter requirements were not stated in verified sources and are null.",
     "title_page.elements lists only the near-certain minimum (title/authors/affiliations/corresponding author); the guide names 'Title page' as a required section but the verified sources did not enumerate its full contents.",
     "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
-    "[schema-required default] layout.line_numbers defaulted to 'none' (guide silent)."
+    "[schema-required default] layout.line_numbers defaulted to 'none' (guide silent).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

@@ -33,7 +33,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -126,6 +126,7 @@
     "DECLARATIONS: A 'Compliance with Ethical Standards' section is described (sources of funding, conflicts of interest, informed consent for human participants, welfare-of-animals statement). Mapped to funding, conflict_of_interest, patient_consent (informed consent), ethics_approval (animal welfare/ethics). This phrasing may be legacy SpringerOpen house-style; 'required' left null due to live-vs-legacy uncertainty. A Data Availability Statement was not confirmed for this journal and was omitted.",
     "OTHER CONFIRMED FACTS not in schema: manuscript text must be submitted in common word-processing formats (.docx or LaTeX); text/figures/tables may be in one editable file or separate files; authors must assign a Level of Evidence to all clinically oriented manuscripts; COPE member; fully Open Access, APC USD 1,940 / GBP 1,470 / EUR 1,630; title-page template at esska.org/page/Journals_Title_Page_Template.",
     "submission_system unconfirmed (Wiley ESSKA journals typically use ScholarOne/Research Exchange) -> null. orcid_required/cover_letter_required not stated -> conservative false.",
-    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver')."
+    "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'vancouver').",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

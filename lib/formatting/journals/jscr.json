@@ -39,7 +39,7 @@
     },
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": true,
       "position": "top-right"
@@ -201,6 +201,7 @@
     "figures: submitted as separate files, one figure per separate page ('One set of figures should accompany each manuscript'). Accepted print formats TIFF or EPS (also native .psd/.ai/.ppt/.qxd which have no enum slot). DPI tiered: images min 300 ppi, line art 1200 ppi -> min_dpi=300 (photograph floor). Figure legends on a separate page -> figure_legends_section. Callouts 'Figure 1 about here' -> callout_style='Figure'.",
     "declarations: Acknowledgments section (section 6, before References) bundles: (1) disclose professional relationships/conflict of interest, (2) cite specific grant support/funding, plus an NSCA non-endorsement statement, and optionally individual author contributions ('may be listed here'). Ethics/IRB approval + informed consent required in the Methods/'Subjects' subsection ('the manuscript will not be considered for publication' otherwise) -> required includes ethics_approval. Trial registration 'recommended' and data sharing 'recommended' (not mandatory) -> not encoded as required. Patient consent / photo release conditional on identifiable subjects -> not always-required.",
     "misc: cover letter required (must include the originality statement + corresponding-author contact). ORCID not mentioned -> orcid_required=false. No Highlights -> highlights_required=false. Article title case not specified -> title_case=null.",
-    "identity.issn: not stated anywhere in the guide -> null (not inferred from memory)."
+    "identity.issn: not stated anywhere in the guide -> null (not inferred from memory).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

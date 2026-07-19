@@ -39,7 +39,7 @@
     },
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -180,6 +180,7 @@
     "Reviews and editorials are invited/requested, not open author submissions; letters are accepted but no format or limits are prescribed (omitted from sections/word_limits).",
     "Data sharing statement required for clinical-trial reports (ICMJE, since 1 Jul 2018); ethics/IRB stated in Methods; patient image consent via JBM Authorization and Release Form -> conditional declarations, not placed in the fixed end sequence.",
     "Manuscript title case not prescribed; table and figure titles use sentence case ('only the first letter of the first word ... capital').",
-    "Reference style: numbered/bracket in cited order, MEDLINE journal abbreviations, DOIs shown in every journal-article example; other types follow NLM 'Citing Medicine' -> style nlm."
+    "Reference style: numbered/bracket in cited order, MEDLINE journal abbreviations, DOIs shown in every journal-article example; other types follow NLM 'Citing Medicine' -> style nlm.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

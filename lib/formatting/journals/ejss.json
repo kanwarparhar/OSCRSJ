@@ -32,7 +32,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -165,6 +165,7 @@
     "NOT ENCODED (SUPERSEDED T&F LEGACY numbers surfaced only via search and explicitly attributed to the old Taylor & Francis guide; the task forbids the old guide, so these are NOT encoded and MUST be verified against the live Wiley page before use): Original Paper ~4,000 words; abstract ~250 words; 3-6 keywords; manuscript compile order title page/abstract/keywords/main text/acknowledgements/references/appendices/tables/figure captions. The live Wiley page does confirm a word limit EXISTS for Original Papers and that it 'excludes abstract, highlights, figure/table captions, figures and tables, and reference list' - but the numeric value itself was not obtainable from the blocked page.",
     "cover_letter_required left false (conservative, unverified). abstract.structured false and abstract.max_words / keywords.min/max null because Wiley-page-specific values were not obtainable (only T&F legacy numbers were seen).",
     "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
-    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

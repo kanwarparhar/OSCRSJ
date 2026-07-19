@@ -32,7 +32,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -169,6 +169,7 @@
     "UNVERIFIED / null due to blocked guide (no reachable evidence): page_size, font family/size, line_spacing, margins, alignment, first_line_indent, page_numbers, running_head, headings; figures.separate_files (set conservative false though Springer norm is separate files), figures.formats ([]), figures.min_dpi, callout_style, naming_pattern; tables caption_position + numbering; misc.orcid_required (false conservative), cover_letter_required (false — IO's current Editorial Manager system collects statements in-interface, no cover-letter requirement evidenced), highlights_required (null), title_case (null).",
     "identity.issn = null: IO is widely published as ISSN 0341-2695 (print) / 1432-5195 (electronic), but this was NOT confirmed from a reachable source this session and the contract forbids filling from training memory — left null. submission_system = Editorial Manager (www.editorialmanager.com/inor), confirmed by the SICOT.org journal page and multiple snippets.",
     "article_types mapping: 'Original Article' -> original_research; 'Review Article' -> review; 'Case Report' -> case_report. IO likely also accepts editorials/letters/current-concepts, but no reachable evidence delimited them, so only the three evidenced author-submittable types are encoded.",
-    "SCHEMA GAPS: (1) IO's dual abstract length (target 150 / ceiling 250) is collapsed to a single max_words=250. (2) Compliance note from the guide — 'Articles not compliant with the submission instructions will be immediately sent back to the author' — has no schema slot. (3) File-format requirement (.docx/.doc, Word 2007+) has no schema slot. (4) 'Use the table function, not spreadsheets, to make tables' has no schema slot."
+    "SCHEMA GAPS: (1) IO's dual abstract length (target 150 / ceiling 250) is collapsed to a single max_words=250. (2) Compliance note from the guide — 'Articles not compliant with the submission instructions will be immediately sent back to the author' — has no schema slot. (3) File-format requirement (.docx/.doc, Word 2007+) has no schema slot. (4) 'Use the table function, not spreadsheets, to make tables' has no schema slot.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

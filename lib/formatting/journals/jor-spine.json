@@ -31,7 +31,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -108,6 +108,7 @@
     "FORCED-ENUM PLACEHOLDERS (schema has no null option for these; do NOT trust them): references.style='custom' (unverified), references.in_text='superscript', references.order='cited', references.journal_abbrev='nlm', tables.placement='in_text', figures.legends_location='figure_legends_section', layout.line_numbers='none'. These are non-authoritative fillers required to satisfy the non-nullable schema, chosen as the most neutral/common option; the reference and table/figure-placement rules were NOT read from the live guide.",
     "Declarations: guide references ICMJE authorship, an Acknowledgments section for non-author contributors, funding/material-support disclosure, and a conflict-of-interest statement 'provided during the submission process.' Because the guide's declaration ORDER and required-set could not be read, declarations.order left [] and required left null rather than fabricate an order.",
     "Figure formats/DPI, layout (font, size, spacing, margins, page size, alignment, indent), title-page element set, and title/running-title caps are all null — unreadable from the blocked guide.",
-    "RECOMMENDATION: re-encode when a headless fetch that clears Cloudflare (or a fresh < 12-month Wayback capture) becomes available. Editorial contact surfaced in search: JORSpine@wiley.com."
+    "RECOMMENDATION: re-encode when a headless fetch that clears Cloudflare (or a fresh < 12-month Wayback capture) becomes available. Editorial contact surfaced in search: JORSpine@wiley.com.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

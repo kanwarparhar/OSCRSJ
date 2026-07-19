@@ -38,7 +38,7 @@
     },
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -149,6 +149,7 @@
     "[schema-required default] references.in_text defaulted to 'bracket' (guide did not state the in-text citation marker; schema requires a value; inferred from reference style 'custom').",
     "[schema-required default] references.journal_abbrev defaulted to 'nlm' (guide silent; NLM/Index Medicus abbreviations assumed).",
     "[schema-required default] references.order defaulted to 'cited' (guide silent).",
-    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent)."
+    "[schema-required default] tables.placement defaulted to 'in_text' (guide silent).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

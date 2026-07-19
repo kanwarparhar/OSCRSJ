@@ -266,11 +266,16 @@ export function applyLayout(
       const before = sect
       if (L.page_size) sect = setPageSize(sect, L.page_size)
       if (L.margins_mm) sect = setMargins(sect, L.margins_mm)
-      const beforeLn = /<w:lnNumType/.test(before)
-      sect = setLineNumbers(sect, L.line_numbers)
-      const afterLn = /<w:lnNumType/.test(sect)
-      if (beforeLn !== afterLn || L.line_numbers !== 'none') {
-        change(changes, 'Line numbering', beforeLn ? 'present' : 'none', L.line_numbers)
+      // null = the guide is silent on line numbering, so we leave the author's
+      // setting alone. Only an explicit "no line numbers" statement in the
+      // guide ('none') licenses stripping line numbering the author added.
+      if (L.line_numbers !== null) {
+        const beforeLn = /<w:lnNumType/.test(before)
+        sect = setLineNumbers(sect, L.line_numbers)
+        const afterLn = /<w:lnNumType/.test(sect)
+        if (beforeLn !== afterLn || L.line_numbers !== 'none') {
+          change(changes, 'Line numbering', beforeLn ? 'present' : 'none', L.line_numbers)
+        }
       }
       if (L.margins_mm) {
         change(

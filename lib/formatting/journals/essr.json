@@ -33,7 +33,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -186,6 +186,7 @@
     "Title <=89 characters (no abbreviations); short/running title <=40 characters. Subsection headings: main headings BOLD CAPS <=84 chars; sub-headings Bold Mixed Case <=90 chars.",
     "Additional required non-formatting items with no schema slot: AI-tool-use disclosure; 8-10 continuing-education-credit (CEC) multiple-choice questions; at least one Digital Content Feature (Journal Club / Video Abstract / Visual Abstract); ICMJE-based Copyright Transfer Agreement per author.",
     "line_numbers, font family/size, margins, page size, alignment, first-line indent, page numbers, running-head display, title case, ORCID, and cover letter are all unstated in the guide -> null / conservative false.",
-    "Print ISSN 0091-6331 encoded in issn; online ISSN is 1538-3008. Open-access option default license CC BY-NC-ND (not a formatting rule)."
+    "Print ISSN 0091-6331 encoded in issn; online ISSN is 1538-3008. Open-access option default license CC BY-NC-ND (not a formatting rule).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

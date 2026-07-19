@@ -32,7 +32,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -170,6 +170,7 @@
     "declarations: Declaration of competing interests and funding disclosure are mandatory; CRediT author contributions are required for corresponding authors. Data statement is encouraged (not required). Clinical-trial registration (ICMJE) is required for trials, conditionally (noted, not in 'required').",
     "layout: the guide only mandates an editable single-column Word/LaTeX file. Font (Times New Roman 12) and line_spacing (double) are placeholder defaults — NOT specified by the guide (Elsevier 'Your Paper Your Way' leaves initial-submission formatting flexible); page size, margins, alignment, line numbering, page numbers, and running head are unspecified and defaulted to none/false/null for the engine to flag.",
     "misc: guide does not mention ORCID or a cover letter as required -> both false; title case not specified -> null.",
-    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

@@ -50,7 +50,8 @@ interface Entry {
     fontFamily: string | null
     fontSizePt: number | null
     lineSpacing: 'single' | '1.5' | 'double' | null
-    lineNumbers: 'none' | 'continuous' | 'per_page'
+    /** null = the guide is silent, so the author's setting is preserved. */
+    lineNumbers: 'none' | 'continuous' | 'per_page' | null
     marginMm: number | null
   }
   references: {
@@ -152,6 +153,7 @@ function fieldValue(e: Entry, k: FieldKey): string {
     case 'spacing':
       return e.layout.lineSpacing ? SPACING_LABEL[e.layout.lineSpacing] : 'not specified, yours kept'
     case 'lineNumbers':
+      if (e.layout.lineNumbers === null) return 'not specified, yours kept'
       return e.layout.lineNumbers === 'none' ? 'off' : 'on, continuous'
     case 'margins':
       return e.layout.marginMm ? `${e.layout.marginMm} mm all round` : 'not specified'
@@ -283,7 +285,8 @@ export default function WordDemo({ specs }: { specs: DemoSpec[] }) {
   if (!entry) return null
 
   const { layout, references } = entry
-  const showLineNos = layout.lineNumbers !== 'none'
+  // null (guide silent) preserves the draft, which carries no line numbers.
+  const showLineNos = layout.lineNumbers === 'continuous' || layout.lineNumbers === 'per_page'
   const fontUnspecified = !entry.isDraft && layout.fontFamily === null
   const spacingUnspecified = !entry.isDraft && layout.lineSpacing === null
   const fontLabel = layout.fontFamily ?? 'Calibri'

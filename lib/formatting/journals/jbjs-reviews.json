@@ -32,7 +32,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -171,6 +171,7 @@
     "Tables: 'Tables (if included) should be submitted in Word or Excel format with a descriptive title ... Table file names should contain the table number (e.g., Table 1.docx)' -> placement separate_file, numbering arabic. caption_position set 'above' because a descriptive title/caption accompanies each table by number (JBJS convention places the title above); the guide does not state above-vs-below explicitly, so treat caption_position as lightly inferred.",
     "Declarations are handled largely inside Editorial Manager rather than as a prescribed in-manuscript section order: CRediT contributor roles are required on the Add/Edit/Remove Authors screen (author_contributions) and an ICMJE Conflict of Interest form is required (conflict_of_interest) -> both in 'required'. Acknowledgment footnotes are conditional (minor contributors / non-author writers). No ethics_approval / patient_consent section is prescribed for review articles. The 'order' array is an approximate grouping, not a guide-mandated sequence.",
     "misc.orcid_required true: 'All authors must register with ORCID ... it will not be possible to submit an article without such an identifier for each author.' cover_letter_required false: not required for standard submissions (only Current Concepts Review, invitation-only, asks for an emailed proposal). title_case and issn unstated (null); ISSN deliberately left null rather than pulled from memory.",
-    "No manuscript keywords are requested anywhere in the guide (the only 'keywords' on the page belong to the site search widget) -> keywords.required false with all sub-fields null."
+    "No manuscript keywords are requested anywhere in the guide (the only 'keywords' on the page belong to the site search widget) -> keywords.required false with all sub-fields null.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

@@ -40,7 +40,7 @@
     },
     "alignment": "left",
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": true,
       "position": null
@@ -210,6 +210,7 @@
     "figures: each illustration submitted as a separate file; captions supplied separately and listed by order of appearance (-> legends_location='figure_legends_section'). Formats: EPS(or PDF) for vector, TIFF(or JPEG) for photos/line drawings; MS Office native also accepted (-> ['tiff','jpeg','eps','pdf']). SCHEMA GAP tiered DPI: halftones/photos >=300 dpi, combination line/halftone >=500 dpi, bitmapped line drawings >=1000 dpi - encoded min_dpi=300 (the absolute floor for photos) with tiers noted here. Callout style for main figures not explicitly prescribed (appendix example uses 'Fig. A.1') -> callout_style null; naming_pattern 'logical naming convention' only -> null.",
     "blinding: journal 'operates a single anonymized review process' (single-blind, reviewers know authors) -> double_blind=false. Separate title page file exists (declaration of interest + title info live there; highlights, tables, figure captions are also separate files) -> separate_title_page=true. No instruction to scrub author identifiers from the body or metadata -> scrub_body_identifiers=false, scrub_metadata=false.",
     "misc: cover_letter_required=true ('All submissions should also contain a covering letter describing the type of article and specifying the length of the main text and abstract along with the number of tables and figures'; must also declare not published/submitted elsewhere). highlights_required=true ('Highlights are mandatory for this journal'; 3-5 bullets, max 85 chars incl. spaces each, no abbreviations, separate file). orcid_required=false (ORCID not listed among essential title page info or required elsewhere - unstated). title_case (title vs sentence case) not specified -> null.",
-    "declarations.required limited to conflict_of_interest (competing-interests statement mandatory 'even if the authors have no competing interests to declare'; 'Declarations of interest: none'). Funding is requested with a recommended 'no funding' fallback sentence but not stated as strictly mandatory -> kept in order, not in required. ethics_approval, patient_consent, and trial_registration are conditional (human/animal subjects; interventional/systematic-review registration) -> in order, not universally required. Generative-AI-use declaration required when AI tools used, placed in a new section before the references list (no schema slot)."
+    "declarations.required limited to conflict_of_interest (competing-interests statement mandatory 'even if the authors have no competing interests to declare'; 'Declarations of interest: none'). Funding is requested with a recommended 'no funding' fallback sentence but not stated as strictly mandatory -> kept in order, not in required. ethics_approval, patient_consent, and trial_registration are conditional (human/animal subjects; interventional/systematic-review registration) -> in order, not universally required. Generative-AI-use declaration required when AI tools used, placed in a new section before the references list (no schema slot).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

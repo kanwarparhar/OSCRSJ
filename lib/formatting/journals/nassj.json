@@ -35,7 +35,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -195,6 +195,7 @@
     "ORCID: not mentioned in the guide -> orcid_required=false. Cover letter: not required/mentioned -> false. Highlights: 'encouraged' (3-5 bullets, max 85 chars each, separate file) -> highlights_required=false.",
     "Prospective clinical trials must be registered in an ICMJE-compliant public registry before submission; registration number preferably at end of the abstract.",
     "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
-    "[schema-required default] layout.line_numbers defaulted to 'none' (guide silent)."
+    "[schema-required default] layout.line_numbers defaulted to 'none' (guide silent).",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }

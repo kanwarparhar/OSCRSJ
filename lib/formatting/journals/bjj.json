@@ -30,7 +30,7 @@
     "margins_mm": null,
     "alignment": null,
     "first_line_indent": null,
-    "line_numbers": "none",
+    "line_numbers": null,
     "page_numbers": {
       "show": false,
       "position": null
@@ -145,6 +145,7 @@
     "Figures are uploaded individually to ScholarOne; composite figures must be split into separate images (1a, 1b, 1c); each figure needs a full descriptive legend. formats jpeg/tiff are taken from the guide's illustration/infographic guidance (no distinct format stated for standard figures); legends_location figure_legends_section is a best-fit default (the guide requires a per-figure legend but does not state its location); min_dpi, callout_style, and naming_pattern not stated (null).",
     "Declarations: ethical approval by an IRB/ethics board must be stated in the manuscript; patient consent must be obtained for all human studies and stated in the manuscript; ICMJE conflict-of-interest disclosure documents are required and a COI statement is published — all three required. RCTs must be prospectively registered (trial registration), captured here as a note rather than a declaration-block item.",
     "misc.orcid_required false: authors are asked/encouraged to add an ORCID iD 'if available', not required. cover_letter_required false: no cover letter requirement stated. issn, title_case, highlights, running-title and title length limits, and author-degree handling are not stated (null). Preprints are not permitted and are out of formatting scope.",
-    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess."
+    "Session-A consolidation (2026-07-09): supersedes any earlier note in this list that describes source_hash as a bot-challenge 'shell' hash or that records a placeholder body font/line-spacing. Authoritative current state: source_hash is reproducible per identity.source_note; font family/size and line-spacing are null wherever the live guide is silent, so the engine preserves the author's value rather than imposing a guess.",
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
   ]
 }
