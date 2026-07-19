@@ -267,3 +267,180 @@ test('16. sanity: exported constants + review-speed parser', () => {
   assert.equal(parseReviewWeeks(null), Infinity)
   assert.equal(parseReviewWeeks('fast'), Infinity)
 })
+
+/* ------------------- Session 97 Part E: verified-vs-unknown ----------------- */
+
+test('17. checkedCount counts only the numbers this journal had a limit for', () => {
+  // Author supplies 3 numbers; the journal publishes a limit for 2 of them.
+  const j = journal({
+    slug: 'a',
+    limits: { ...NO_LIMITS, manuscript_max_words: 5000, abstract_max_words: 300 },
+  })
+  const r = scoreJournals(
+    stats({ wordCount: 2000, abstractWordCount: 200, referenceCount: 15 }),
+    FIT,
+    [j],
+  )
+  assert.equal(r.results[0].suppliedCount, 3)
+  assert.equal(r.results[0].checkedCount, 2)
+})
+
+test('17b. a journal publishing no limits reports zero checks despite bucket fits', () => {
+  const silent = journal({ slug: 'silent', limits: { ...NO_LIMITS } })
+  const r = scoreJournals(stats({ wordCount: 2000, figureCount: 4 }), FIT, [silent])
+  assert.equal(r.results[0].bucket, 'fits')
+  assert.equal(r.results[0].checkedCount, 0, 'nothing was actually verified')
+  assert.equal(r.results[0].suppliedCount, 2)
+})
+
+test('17c. checkedCount never exceeds suppliedCount when both reference rules fire', () => {
+  // references_max and references_min both derive from referenceCount. Counting
+  // raw checks here would report "checked 2 of 1".
+  const j = journal({
+    slug: 'a',
+    limits: { ...NO_LIMITS, references_max: 40, references_min: 20 },
+  })
+  const r = scoreJournals(stats({ referenceCount: 5 }), FIT, [j])
+  assert.ok(r.results[0].checks.length >= 2, 'both reference checks should fire')
+  assert.equal(r.results[0].suppliedCount, 1)
+  assert.equal(r.results[0].checkedCount, 1)
+})
+
+test('17d. suppliedCount is reported on ineligible journals too', () => {
+  const inelig = journal({ slug: 'x', articleTypes: ['letter'] })
+  const r = scoreJournals(stats({ wordCount: 2000 }), FIT, [inelig])
+  assert.equal(r.results[0].bucket, 'not_eligible')
+  assert.equal(r.results[0].checkedCount, 0)
+  assert.equal(r.results[0].suppliedCount, 1)
+})
+
+test('18. a verified fit outranks a nothing-was-checked fit at equal scope', () => {
+  // The live-query failure: journals that publish no limits floated to the top
+  // of "Fits" purely because there was nothing there to fail.
+  const silent = journal({ slug: 'aaa', name: 'AAA silent', limits: { ...NO_LIMITS } })
+  const checked = journal({
+    slug: 'zzz',
+    name: 'ZZZ checked',
+    limits: { ...NO_LIMITS, manuscript_max_words: 5000 },
+  })
+  const r = scoreJournals(stats({ wordCount: 2000 }), FIT, [silent, checked])
+  assert.equal(r.results[0].bucket, 'fits')
+  assert.equal(r.results[1].bucket, 'fits')
+  assert.equal(r.results[0].slug, 'zzz', 'checked journal sorts first despite later name')
+  assert.equal(r.results[1].slug, 'aaa')
+  assert.equal(r.topResult, 'zzz')
+})
+
+test('18b. the checks tiebreak does not override bucket or scope', () => {
+  // A scope-matching silent journal still beats a checked journal with no scope.
+  const scoped = journal({
+    slug: 'scoped',
+    limits: { ...NO_LIMITS },
+    meta: meta({ scope_tags: ['trauma' as ScopeTag] }),
+  })
+  const checked = journal({
+    slug: 'checked',
+    limits: { ...NO_LIMITS, manuscript_max_words: 5000 },
+    meta: meta({ scope_tags: ['spine' as ScopeTag] }),
+  })
+  const r = scoreJournals(
+    stats({ wordCount: 2000, subspecialty: 'trauma' as ScopeTag }),
+    FIT,
+    [checked, scoped],
+  )
+  assert.equal(r.results[0].slug, 'scoped')
+})
+
+test('19. scopeMismatch truth table', () => {
+  const s = (over: Partial<ManuscriptStats>) => stats({ wordCount: 2000, ...over })
+  const withTags = (tags: ScopeTag[]) =>
+    journal({ slug: 'j', limits: { ...NO_LIMITS }, meta: meta({ scope_tags: tags }) })
+
+  // exact tag match → no mismatch
+  let r = scoreJournals(s({ subspecialty: 'trauma' as ScopeTag }), FIT, [withTags(['trauma' as ScopeTag])])
+  assert.equal(r.results[0].scopeMismatch, false)
+  assert.equal(r.results[0].scopeMatch, true)
+
+  // 'general' journal → not a mismatch (it takes everything)
+  r = scoreJournals(s({ subspecialty: 'trauma' as ScopeTag }), FIT, [withTags(['general' as ScopeTag])])
+  assert.equal(r.results[0].scopeMismatch, false)
+
+  // tagged, but not for this subspecialty and not general → mismatch
+  r = scoreJournals(s({ subspecialty: 'trauma' as ScopeTag }), FIT, [withTags(['spine' as ScopeTag])])
+  assert.equal(r.results[0].scopeMismatch, true)
+  assert.equal(r.results[0].scopeMatch, false)
+
+  // no tags at all → unknown scope is silence, not a mismatch
+  r = scoreJournals(s({ subspecialty: 'trauma' as ScopeTag }), FIT, [withTags([])])
+  assert.equal(r.results[0].scopeMismatch, false)
+
+  // author gave no subspecialty → never a mismatch
+  r = scoreJournals(s({ subspecialty: null }), FIT, [withTags(['spine' as ScopeTag])])
+  assert.equal(r.results[0].scopeMismatch, false)
+})
+
+test('19b. scopeMismatch never changes the bucket', () => {
+  const j = journal({
+    slug: 'j',
+    limits: { ...NO_LIMITS, manuscript_max_words: 5000 },
+    meta: meta({ scope_tags: ['spine' as ScopeTag] }),
+  })
+  const r = scoreJournals(
+    stats({ wordCount: 2000, subspecialty: 'trauma' as ScopeTag }),
+    FIT,
+    [j],
+  )
+  assert.equal(r.results[0].scopeMismatch, true)
+  assert.equal(r.results[0].bucket, 'fits', 'scope is editorial judgement, not a hard constraint')
+})
+
+test('20. uncheckedStats counts eligible journals with a limit for each blank stat', () => {
+  const a = journal({ slug: 'a', limits: { ...NO_LIMITS, manuscript_max_words: 3000 } })
+  const b = journal({ slug: 'b', limits: { ...NO_LIMITS, manuscript_max_words: 4000, figures_max: 5 } })
+  // Ineligible journals must NOT count toward a missed check.
+  const c = journal({
+    slug: 'c',
+    articleTypes: ['letter'],
+    limits: { ...NO_LIMITS, manuscript_max_words: 1500 },
+  })
+  const r = scoreJournals(stats({ referenceCount: 12 }), FIT, [a, b, c])
+  const byStat = Object.fromEntries((r.uncheckedStats ?? []).map((u) => [u.stat, u]))
+
+  assert.equal(byStat.wordCount.journalsWithLimit, 2, 'ineligible journal c excluded')
+  assert.equal(byStat.wordCount.label, 'word count')
+  assert.equal(byStat.figureCount.journalsWithLimit, 1)
+  // referenceCount was supplied → not reported as unchecked
+  assert.equal(byStat.referenceCount, undefined)
+  // no eligible journal states a table limit → nothing to warn about
+  assert.equal(byStat.tableCount, undefined)
+})
+
+test('20b. uncheckedStats is empty when every number was supplied', () => {
+  const a = journal({ slug: 'a', limits: { ...NO_LIMITS, manuscript_max_words: 3000 } })
+  const r = scoreJournals(
+    stats({ wordCount: 1, abstractWordCount: 1, referenceCount: 1, figureCount: 1, tableCount: 1 }),
+    FIT,
+    [a],
+  )
+  assert.deepEqual(r.uncheckedStats, [])
+})
+
+test('21. OSCRSJ no-boost still holds with the checks tiebreak in place', () => {
+  // Self must not benefit from the new ordering term either.
+  const self = journal({
+    slug: 'oscrsj',
+    name: 'OSCRSJ',
+    isSelf: true,
+    limits: { ...NO_LIMITS, manuscript_max_words: 5000 },
+  })
+  const rival = journal({
+    slug: 'aaa-rival',
+    name: 'AAA Rival',
+    limits: { ...NO_LIMITS, manuscript_max_words: 5000 },
+  })
+  const r = scoreJournals(stats({ wordCount: 2000 }), FIT, [self, rival])
+  // Identical on every ordering term → alphabetical, and self does not jump.
+  assert.equal(r.results[0].slug, 'aaa-rival')
+  assert.equal(r.results[1].slug, 'oscrsj')
+  assert.equal(r.results[0].checkedCount, r.results[1].checkedCount)
+})

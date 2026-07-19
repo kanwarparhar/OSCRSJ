@@ -158,7 +158,27 @@ export interface JournalScore {
   ineligibleReason: string | null
   /** Non-neutral checks only (a null limit produces no check). */
   checks: ConstraintCheck[]
+  /**
+   * How many of the author's supplied numbers this journal actually had a
+   * limit for — i.e. how much of the verdict is evidence rather than silence.
+   * A 'fits' bucket with checkedCount === 0 means NOTHING was verified; the UI
+   * must not render that as a green "Fits" chip.
+   *
+   * Counts DISTINCT supplied stats, not raw checks: references_max and
+   * references_min both derive from referenceCount and can both fire, which
+   * would otherwise let checkedCount exceed suppliedCount ("checked 2 of 1").
+   */
+  checkedCount: number
+  /** How many numbers the author supplied at all (same for every journal). */
+  suppliedCount: number
   scopeMatch: boolean
+  /**
+   * true when the author named a subspecialty, the journal publishes scope
+   * tags, and this journal is not tagged for that subspecialty nor 'general'.
+   * Ordering already demotes these; the UI adds a marker. Never changes the
+   * bucket — scope is editorial judgement, not a hard constraint.
+   */
+  scopeMismatch: boolean
   scopeScore: number
   fitScore: number
   meta: JournalMeta
@@ -166,9 +186,25 @@ export interface JournalScore {
   explanation?: string | null
 }
 
+/**
+ * One stat the author left blank, and how many ELIGIBLE journals publish a
+ * limit for it. Powers the sparse-input warning: "you left word count blank —
+ * 51 journals state a word limit we couldn't check." Computed server-side,
+ * because the client cannot know limits for stats it never sent.
+ */
+export interface UncheckedStat {
+  /** ManuscriptStats key, e.g. 'wordCount'. */
+  stat: string
+  /** Human label for the warning line, e.g. 'word count'. */
+  label: string
+  journalsWithLimit: number
+}
+
 export interface FinderResult {
   results: JournalScore[]
   counts: Record<Bucket, number>
   /** Slug of the single best result (top of the sorted list), or null if none. */
   topResult: string | null
+  /** Blank stats that eligible journals do publish limits for; may be empty. */
+  uncheckedStats?: UncheckedStat[]
 }

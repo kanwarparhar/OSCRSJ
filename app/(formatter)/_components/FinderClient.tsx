@@ -66,6 +66,35 @@ const CHECK_COLOR: Record<ConstraintCheck['status'], string> = {
   over: 'text-fmt-bad',
 }
 
+/** Neutral chip: eligible, but no stated limit was actually verified. */
+const NEUTRAL_CHIP = 'border-fmt-hairline bg-fmt-surface text-fmt-ink-2'
+
+/**
+ * A green "Fits" chip must mean at least one real constraint was verified.
+ * A journal that publishes no limits for the numbers the author gave lands in
+ * the 'fits' bucket by default (nothing there to fail) — that is eligibility,
+ * not fit, and it gets a neutral chip instead.
+ */
+function bucketChip(score: JournalScore): { label: string; chip: string } | null {
+  if (score.bucket === 'not_eligible') return null
+  if (score.bucket === 'fits' && score.checkedCount === 0) {
+    return { label: 'Eligible, limits not stated', chip: NEUTRAL_CHIP }
+  }
+  const bm = BUCKET_META[score.bucket]
+  return { label: bm.label, chip: bm.chip }
+}
+
+/** How much of this journal's verdict is evidence rather than silence. */
+function checkLine(score: JournalScore): string {
+  if (score.suppliedCount === 0) {
+    return 'You did not give any numbers, so nothing was checked against this journal.'
+  }
+  if (score.checkedCount === 0) {
+    return 'This journal does not publish limits for the numbers you gave. Check its Guide for Authors.'
+  }
+  return `Checked ${score.checkedCount} of ${score.suppliedCount} of your numbers.`
+}
+
 /* ------------------------------------------------------------------ */
 /*  Form field helpers                                                  */
 /* ------------------------------------------------------------------ */
@@ -108,7 +137,7 @@ function apcLabel(apc: number | null, oa: string | null): string {
 /* ------------------------------------------------------------------ */
 
 function ResultCard({ score, onFormat }: { score: JournalScore; onFormat: (s: JournalScore) => void }) {
-  const bm = score.bucket === 'not_eligible' ? null : BUCKET_META[score.bucket]
+  const bm = bucketChip(score)
   const m = score.meta
   const metaBits = [
     m.indexing.length ? m.indexing.join(' · ') : '—',
@@ -138,6 +167,11 @@ function ResultCard({ score, onFormat }: { score: JournalScore; onFormat: (s: Jo
                 Scope match
               </span>
             )}
+            {score.scopeMismatch && (
+              <span className="inline-block rounded-full border border-transparent bg-[#FBF3E4] px-2.5 py-0.5 text-[11px] font-medium text-fmt-warn">
+                Outside stated scope
+              </span>
+            )}
           </div>
           {score.publisher && <p className="mt-0.5 text-xs text-fmt-ink-3">{score.publisher}</p>}
         </div>
@@ -153,7 +187,7 @@ function ResultCard({ score, onFormat }: { score: JournalScore; onFormat: (s: Jo
       </div>
 
       {/* Constraint deltas */}
-      {score.checks.length > 0 ? (
+      {score.checks.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-fmt-mono text-xs">
           {score.checks.map((c) => (
             <span key={c.key} className={CHECK_COLOR[c.status]}>
@@ -161,9 +195,12 @@ function ResultCard({ score, onFormat }: { score: JournalScore; onFormat: (s: Jo
             </span>
           ))}
         </div>
-      ) : score.eligible ? (
-        <p className="mt-3 font-fmt-mono text-xs text-fmt-ok">Within every stated limit.</p>
-      ) : null}
+      )}
+
+      {/* How much of the verdict above is actually evidence. */}
+      {score.eligible && (
+        <p className="mt-2 font-fmt-mono text-xs text-fmt-ink-3">{checkLine(score)}</p>
+      )}
 
       {score.explanation && <p className="mt-3 text-sm italic text-fmt-ink-2">{score.explanation}</p>}
 
@@ -304,6 +341,24 @@ export default function FinderClient() {
           </div>
         </div>
 
+        {/* Sparse input: numbers left blank that journals do publish limits for. */}
+        {(sortedResults.uncheckedStats?.length ?? 0) > 0 && (
+          <div className="rounded-xl border border-fmt-hairline bg-fmt-surface p-4">
+            <p className="mb-1.5 text-sm font-medium text-fmt-ink">Some checks were skipped</p>
+            <ul className="space-y-1 text-sm text-fmt-ink-2">
+              {sortedResults.uncheckedStats?.map((u) => (
+                <li key={u.stat}>
+                  You left {u.label} blank.{' '}
+                  {u.journalsWithLimit === 1
+                    ? '1 eligible journal states a limit'
+                    : `${u.journalsWithLimit} eligible journals state a limit`}{' '}
+                  we could not check.
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {eligible.length === 0 && (
           <p className="rounded-xl border border-fmt-hairline bg-white p-5 text-sm text-fmt-ink-2">
             No journal in the registry accepts this article type. Try a different type, or check the eligibility list
@@ -365,8 +420,8 @@ export default function FinderClient() {
       <div className="rounded-xl border border-fmt-hairline bg-white p-6">
         <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">Describe your manuscript</h3>
         <p className="mb-5 text-sm text-fmt-ink-2">
-          Only the article type is required. The more numbers you add, the sharper the fit. Leave any you&apos;re
-          know blank and we&apos;ll skip that check.
+          Only the article type is required. The more numbers you add, the sharper the fit. Leave any you do not
+          know blank and we will skip that check, and say so in the results.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
