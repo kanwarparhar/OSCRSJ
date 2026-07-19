@@ -9,6 +9,7 @@ import type {
   ReportChange,
   ReportSuggestion,
   ReferenceAuditRow,
+  FormattedReference,
   ChecklistRow,
 } from './types'
 import { createDocx, paraXml } from './ooxml/docx'
@@ -27,6 +28,8 @@ export function buildReport(input: {
   changes: ReportChange[]
   suggestions: ReportSuggestion[]
   referenceAudit: ReferenceAuditRow[]
+  formattedReferences?: FormattedReference[] | null
+  styleCaveat?: boolean
   checklist: ChecklistRow[]
   cost?: { deepseekTokens: number; usd: number }
 }): ReportModel {
@@ -44,6 +47,8 @@ export function buildReport(input: {
     changesApplied: input.changes,
     suggestedChanges: input.suggestions,
     referenceAudit: input.referenceAudit,
+    formattedReferences: input.formattedReferences ?? null,
+    styleCaveat: input.styleCaveat ?? false,
     submissionChecklist: input.checklist,
     rulesVersion: input.rulesVersion,
     disclaimer: DISCLAIMER,
@@ -63,6 +68,32 @@ const STATUS_ICON: Record<ReferenceAuditRow['status'], string> = {
   corrected: '🔧',
   unverified: '⚠️',
   'possibly-retracted': '🚩',
+}
+
+// --- formatted reference list (Part A) ------------------------------------
+// Copy lives here as shared constants so the HTML and .docx renderers cannot
+// drift apart.
+
+const FORMATTED_REFS_INTRO =
+  'Paste this over your bibliography, then regenerate any citation-manager fields. ' +
+  'We never edit your manuscript directly — your uploaded reference text is unchanged.'
+
+const STYLE_CAVEAT =
+  'This journal uses its own citation variant — we rendered the closest standard ' +
+  '(Vancouver); check punctuation against the guide.'
+
+/**
+ * Prefix + trailing note for one formatted entry. `unparsed` takes precedence
+ * over verification status: if we could not structure the reference we did not
+ * render it at all, so its verification state is not the useful signal.
+ */
+function formattedRefParts(r: FormattedReference): { prefix: string; suffix: string } {
+  if (r.unparsed) return { prefix: '✳ ', suffix: ' (could not parse — original text kept)' }
+  if (r.status === 'possibly-retracted') {
+    return { prefix: '⚠ ', suffix: ' — POSSIBLY RETRACTED, verify before citing' }
+  }
+  if (r.status === 'unverified') return { prefix: '⚠ ', suffix: '' }
+  return { prefix: '', suffix: '' }
 }
 
 export function renderReportHtml(report: ReportModel): string {
@@ -88,18 +119,31 @@ export function renderReportHtml(report: ReportModel): string {
   const checklist = report.submissionChecklist
     .map((c) => `<tr><td>${esc(c.requirement)}</td><td>${c.status}</td></tr>`)
     .join('')
+  const formattedRefs = (report.formattedReferences ?? [])
+    .map((r) => {
+      const { prefix, suffix } = formattedRefParts(r)
+      return `<li>${esc(prefix)}${esc(r.text)}${esc(suffix)}</li>`
+    })
+    .join('')
+  const formattedRefsSection = report.formattedReferences
+    ? `<h2>Your reference list, formatted for ${esc(v.journal)}</h2>
+<p>${esc(FORMATTED_REFS_INTRO)}</p>${report.styleCaveat ? `<p><em>${esc(STYLE_CAVEAT)}</em></p>` : ''}
+<ol class="fmtrefs">${formattedRefs}</ol>`
+    : ''
 
   return `<!doctype html><html><head><meta charset="utf-8"><title>Analysis &amp; Suggestions — ${esc(v.journal)}</title>
 <style>body{font-family:Georgia,serif;color:#120D08;max-width:820px;margin:2rem auto;padding:0 1rem;line-height:1.5}
 h1,h2{color:#3d2a18}h2{border-bottom:1px solid rgba(153,126,103,.25);padding-bottom:.25rem;margin-top:2rem}
 table{width:100%;border-collapse:collapse;margin:.5rem 0}td,th{border:1px solid rgba(153,126,103,.25);padding:.4rem .6rem;text-align:left;vertical-align:top}
-.verdict{background:#F8F4ED;border-radius:8px;padding:1rem 1.25rem}.disc{font-size:.85rem;color:#664930;margin-top:2rem}</style></head><body>
+.verdict{background:#F8F4ED;border-radius:8px;padding:1rem 1.25rem}.disc{font-size:.85rem;color:#664930;margin-top:2rem}
+ol.fmtrefs li{margin:.45rem 0}</style></head><body>
 <h1>Analysis &amp; Suggestions Report</h1>
 <div class="verdict"><strong>Formatted for ${esc(v.journal)}.</strong> ${v.changesApplied} change(s) applied automatically. ${v.itemsNeedingAttention} item(s) need your attention before submission.<br>
 <small>Rules verified ${esc(v.verifiedDate)} · <a href="${esc(v.guidelinesUrl)}">Guide for Authors</a> · rules v${esc(report.rulesVersion)}</small></div>
 <h2>Changes applied</h2>${changeRows ? `<table><tr><th>Element</th><th>Before → After</th></tr>${changeRows}</table>` : '<p>No automatic changes were needed.</p>'}
 <h2>Suggested changes (author action required)</h2>${suggestions ? `<ul>${suggestions}</ul>` : '<p>Nothing flagged.</p>'}
 <h2>Reference audit</h2>${refRows ? `<table><tr><th>#</th><th>Status</th><th>What changed</th><th>DOI / PMID</th></tr>${refRows}</table>` : '<p>No references detected.</p>'}
+${formattedRefsSection}
 <h2>Submission checklist</h2>${checklist ? `<table><tr><th>Requirement</th><th>Status</th></tr>${checklist}</table>` : ''}
 <p class="disc">${esc(report.disclaimer)}</p></body></html>`
 }
@@ -136,6 +180,16 @@ export function renderReportDocx(report: ReportModel): Uint8Array {
   for (const r of report.referenceAudit) {
     const id = r.doi ? r.doi : r.pmid ? `PMID ${r.pmid}` : '—'
     p.push(paraXml(`${r.index}. ${STATUS_ICON[r.status]} ${r.status} — ${r.changed} — ${id}`))
+  }
+
+  if (report.formattedReferences) {
+    p.push(paraXml(`Your reference list, formatted for ${v.journal}`, { bold: true, sizePt: 13 }))
+    p.push(paraXml(FORMATTED_REFS_INTRO))
+    if (report.styleCaveat) p.push(paraXml(STYLE_CAVEAT, { italic: true }))
+    for (const r of report.formattedReferences) {
+      const { prefix, suffix } = formattedRefParts(r)
+      p.push(paraXml(`${prefix}${r.index}. ${r.text}${suffix}`))
+    }
   }
 
   p.push(paraXml('Submission checklist', { bold: true, sizePt: 13 }))

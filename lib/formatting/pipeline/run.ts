@@ -15,6 +15,7 @@ import { ingestDocx } from '../ooxml/ingest'
 import { applyLayout } from '../ooxml/layout'
 import { blindManuscript } from '../ooxml/blinding'
 import { renumberCitations } from '../references/renumber'
+import { buildFormattedReferences, hasStyleCaveat } from '../references/formattedList'
 import { emitDocxBuffer } from '../ooxml/emit'
 import { extractBodyText, PART } from '../ooxml/docx'
 import { assertBodyImmutable } from './immutability'
@@ -73,18 +74,30 @@ export interface AdvanceOutcome {
   error?: string
 }
 
+/** Display names for the verification sources (the raw values are lowercase). */
+const SOURCE_LABEL: Record<VerifiedReference['source'], string> = {
+  crossref: 'Crossref',
+  pubmed: 'PubMed',
+  none: 'no source',
+}
+
 function auditRow(v: VerifiedReference, index: number): ReferenceAuditRow {
   const r = v.reference
+  // "Corrected" overclaimed: nothing was corrected anywhere the author could
+  // use it, because the engine never edits the manuscript body. What actually
+  // happens is that the enriched record is rendered into the formatted list
+  // below the audit table — so the copy points there (Session 97, Part A).
   const changed =
     v.status === 'corrected'
-      ? 'Corrected + enriched against ' + v.source
+      ? `Verified against ${SOURCE_LABEL[v.source]} — formatted version below`
       : v.status === 'verified'
-        ? 'Verified against ' + v.source
+        ? `Verified against ${SOURCE_LABEL[v.source]}`
         : v.status === 'possibly-retracted'
           ? 'Possibly retracted — verify before citing'
           : 'Could not verify — check manually'
   return { index, status: v.status, changed, doi: r.doi, pmid: r.pmid }
 }
+
 
 /** Run the single stage appropriate to the job's current status. */
 export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
@@ -211,6 +224,8 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
           changes,
           suggestions: allSuggestions,
           referenceAudit,
+          formattedReferences: buildFormattedReferences(state.verifiedReferences, rules),
+          styleCaveat: hasStyleCaveat(rules),
           checklist,
           cost: state.cost,
         })

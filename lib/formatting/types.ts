@@ -152,6 +152,26 @@ export interface ChecklistRow {
   status: 'met' | 'fixed' | 'action-needed'
 }
 
+/**
+ * One entry of the journal-styled reference list the report hands back to the
+ * author (Session 97, Part A). This is an ADDITIVE report artifact — the
+ * author's manuscript body is never touched, so the rendered list is offered
+ * for them to paste over their own bibliography.
+ */
+export interface FormattedReference {
+  /** 1-based position, preserving the author's original order (we never renumber). */
+  index: number
+  /** The rendered citation, or the author's raw text verbatim when `unparsed`. */
+  text: string
+  status: ReferenceVerificationStatus
+  /**
+   * true when the reference never structured (parse.ts `fallbackRef` shape:
+   * no authors AND no year). Rendering such a ref would emit a mangled string,
+   * so the original text is preserved verbatim and flagged instead.
+   */
+  unparsed: boolean
+}
+
 export interface ReportModel {
   summaryVerdict: {
     journal: string
@@ -163,6 +183,18 @@ export interface ReportModel {
   changesApplied: ReportChange[]
   suggestedChanges: ReportSuggestion[]
   referenceAudit: ReferenceAuditRow[]
+  /**
+   * The journal-styled reference list (Session 97, Part A). null when the
+   * manuscript carried no references at all. Additive field — the `report`
+   * JSONB column stores whatever buildReport returns, so no migration.
+   */
+  formattedReferences: FormattedReference[] | null
+  /**
+   * true when the journal's citation style is 'custom' (29/75 rule files):
+   * we rendered the closest standard (Vancouver) and say so in the section
+   * header rather than silently implying an exact match.
+   */
+  styleCaveat: boolean
   submissionChecklist: ChecklistRow[]
   rulesVersion: string
   disclaimer: string
