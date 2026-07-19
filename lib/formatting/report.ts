@@ -13,6 +13,7 @@ import type {
   ChecklistRow,
 } from './types'
 import { createDocx, paraXml } from './ooxml/docx'
+import { layoutNotPrescribedLine } from './reportCopy'
 
 const DISCLAIMER =
   'This is an automated formatting aid, not a guarantee of acceptance. Always verify the ' +
@@ -30,6 +31,7 @@ export function buildReport(input: {
   referenceAudit: ReferenceAuditRow[]
   formattedReferences?: FormattedReference[] | null
   styleCaveat?: boolean
+  layoutNotPrescribed?: boolean
   checklist: ChecklistRow[]
   cost?: { deepseekTokens: number; usd: number }
 }): ReportModel {
@@ -49,6 +51,7 @@ export function buildReport(input: {
     referenceAudit: input.referenceAudit,
     formattedReferences: input.formattedReferences ?? null,
     styleCaveat: input.styleCaveat ?? false,
+    layoutNotPrescribed: input.layoutNotPrescribed ?? false,
     submissionChecklist: input.checklist,
     rulesVersion: input.rulesVersion,
     disclaimer: DISCLAIMER,
@@ -139,6 +142,7 @@ table{width:100%;border-collapse:collapse;margin:.5rem 0}td,th{border:1px solid 
 ol.fmtrefs li{margin:.45rem 0}</style></head><body>
 <h1>Analysis &amp; Suggestions Report</h1>
 <div class="verdict"><strong>Formatted for ${esc(v.journal)}.</strong> ${v.changesApplied} change(s) applied automatically. ${v.itemsNeedingAttention} item(s) need your attention before submission.<br>
+${report.layoutNotPrescribed ? `<br>${esc(layoutNotPrescribedLine(v.journal))}` : ''}
 <small>Rules verified ${esc(v.verifiedDate)} · <a href="${esc(v.guidelinesUrl)}">Guide for Authors</a> · rules v${esc(report.rulesVersion)}</small></div>
 <h2>Changes applied</h2>${changeRows ? `<table><tr><th>Element</th><th>Before → After</th></tr>${changeRows}</table>` : '<p>No automatic changes were needed.</p>'}
 <h2>Suggested changes (author action required)</h2>${suggestions ? `<ul>${suggestions}</ul>` : '<p>Nothing flagged.</p>'}
@@ -161,6 +165,7 @@ export function renderReportDocx(report: ReportModel): Uint8Array {
       `Formatted for ${v.journal}. ${v.changesApplied} change(s) applied automatically. ${v.itemsNeedingAttention} item(s) need your attention before submission.`,
     ),
   )
+  if (report.layoutNotPrescribed) p.push(paraXml(layoutNotPrescribedLine(v.journal)))
   p.push(paraXml(`Rules verified ${v.verifiedDate} · ${v.guidelinesUrl} · rules v${report.rulesVersion}`, { italic: true }))
 
   p.push(paraXml('Changes applied', { bold: true, sizePt: 13 }))

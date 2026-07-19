@@ -195,6 +195,13 @@ export interface ReportModel {
    * header rather than silently implying an exact match.
    */
   styleCaveat: boolean
+  /**
+   * true when the journal prescribes NO manuscript layout at all (page size,
+   * font family, font size, margins and line spacing are all null) — 26 of 75
+   * journals. The layout transform is then a deliberate no-op, and the author
+   * is told so rather than left wondering why "formatting" changed nothing.
+   */
+  layoutNotPrescribed: boolean
   submissionChecklist: ChecklistRow[]
   rulesVersion: string
   disclaimer: string

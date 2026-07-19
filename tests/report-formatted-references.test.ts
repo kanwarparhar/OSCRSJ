@@ -10,6 +10,7 @@ import assert from 'node:assert'
 
 import { buildFormattedReferences, hasStyleCaveat, isUnparsedReference } from '../lib/formatting/references/formattedList'
 import { buildReport, renderReportHtml, renderReportDocx } from '../lib/formatting/report'
+import { layoutNotPrescribedLine } from '../lib/formatting/reportCopy'
 import type { CslReference, VerifiedReference } from '../lib/formatting/types'
 import type { JournalRules } from '../lib/formatting/rulesSchema'
 
@@ -255,4 +256,22 @@ test('docx report renders without throwing and produces bytes', () => {
   })
   const bytes = renderReportDocx(r)
   assert.ok(bytes.byteLength > 0)
+})
+
+// --- Part G: audit-mode expectation copy -----------------------------------
+
+test('audit-mode line appears in HTML and docx only when flagged', () => {
+  const off = report()
+  assert.equal(off.layoutNotPrescribed, false, 'defaults off for existing callers')
+  assert.doesNotMatch(renderReportHtml(off), /does not prescribe manuscript layout/)
+
+  const on = report({ layoutNotPrescribed: true })
+  const html = renderReportHtml(on)
+  assert.match(html, /American Journal of Sports Medicine does not prescribe manuscript layout/)
+  assert.match(html, /your formatting was preserved/i)
+  assert.ok(renderReportDocx(on).byteLength > 0)
+})
+
+test('audit-mode copy carries no em-dash (it renders in the Studio UI)', () => {
+  assert.doesNotMatch(layoutNotPrescribedLine('Test Journal'), /—/)
 })

@@ -237,6 +237,15 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
           referenceAudit,
           formattedReferences: buildFormattedReferences(state.verifiedReferences, rules),
           styleCaveat: hasStyleCaveat(rules),
+          // 26 of 75 journals prescribe no manuscript layout at all. The layout
+          // transform is then a deliberate no-op, and saying so beats leaving
+          // the author to wonder why "formatting" changed nothing.
+          layoutNotPrescribed:
+            rules.layout.page_size === null &&
+            rules.layout.font.family === null &&
+            rules.layout.font.size_pt === null &&
+            rules.layout.margins_mm === null &&
+            rules.layout.line_spacing === null,
           checklist,
           cost: state.cost,
         })

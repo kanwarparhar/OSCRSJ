@@ -13,6 +13,7 @@ import {
   type JobOutputs,
 } from '@/lib/formatting/pipeline/api'
 import type { ReportModel, Severity, ReferenceVerificationStatus } from '@/lib/formatting/types'
+import { layoutNotPrescribedLine } from '@/lib/formatting/reportCopy'
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import { publishFormatHandoff, subscribeJournalRequest } from '@/lib/finder/handoff'
 
@@ -111,6 +112,11 @@ function ReportView({ report }: { report: ReportModel }) {
           {v.itemsNeedingAttention === 1 ? 'item needs' : 'items need'} your attention
           {clean ? '. Nothing is blocking your submission.' : '.'}
         </p>
+        {report.layoutNotPrescribed && (
+          <p className="mt-3 text-sm leading-relaxed text-fmt-ink-2">
+            {layoutNotPrescribedLine(v.journal)}
+          </p>
+        )}
         <p className="mt-3 text-xs text-fmt-ink-2">
           Rules verified {friendlyDate(v.verifiedDate)} ·{' '}
           <a
@@ -243,6 +249,45 @@ function ReportView({ report }: { report: ReportModel }) {
               </tbody>
             </table>
           </div>
+        </section>
+      )}
+
+      {/* Journal-styled reference list — the thing the author came for.
+          Placed between the audit and the checklist, matching the .docx. */}
+      {report.formattedReferences && report.formattedReferences.length > 0 && (
+        <section>
+          <h4 className="mb-1 font-fmt-display text-lg text-fmt-ink">
+            Your reference list, formatted for {v.journal}
+          </h4>
+          <p className="mb-3 text-xs text-fmt-ink-2">
+            Paste this over your bibliography, then regenerate any citation-manager fields. We never edit your
+            manuscript directly, so your uploaded reference text is unchanged.
+          </p>
+          {report.styleCaveat && (
+            <p className="mb-3 rounded-lg border border-fmt-hairline bg-fmt-surface px-3 py-2 text-xs text-fmt-ink-2">
+              This journal uses its own citation variant, so we rendered the closest standard (Vancouver). Check
+              punctuation against the guide.
+            </p>
+          )}
+          <ol className="space-y-2 rounded-xl border border-fmt-hairline bg-fmt-surface p-4">
+            {report.formattedReferences.map((r) => (
+              <li key={r.index} className="flex gap-2 font-fmt-mono text-xs leading-relaxed text-fmt-ink">
+                <span className="flex-shrink-0 text-fmt-ink-3">{r.index}.</span>
+                <span>
+                  {r.text}
+                  {r.unparsed && (
+                    <span className="text-fmt-warn"> (could not parse, original text kept)</span>
+                  )}
+                  {!r.unparsed && r.status === 'possibly-retracted' && (
+                    <span className="text-fmt-bad"> (possibly retracted, verify before citing)</span>
+                  )}
+                  {!r.unparsed && r.status === 'unverified' && (
+                    <span className="text-fmt-warn"> (unverified)</span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ol>
         </section>
       )}
 
