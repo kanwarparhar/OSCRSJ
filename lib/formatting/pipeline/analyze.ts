@@ -18,6 +18,96 @@ export function manuscriptWordCount(model: ContentModel): number {
     .reduce((n, s) => n + s.wordCount, 0)
 }
 
+/**
+ * Report-only figure checks (Session 97, Part C). Figure uploads were accepted,
+ * stored, and then read by nothing — a silent no-op.
+ *
+ * CHECKS ONLY. Nothing here decodes, converts, resizes or renames an image; the
+ * author's files are passed through untouched. DPI / resolution checking is
+ * deliberately DEFERRED: it requires image decoding (sharp), which is not in
+ * this brief. Do not add it here without that dependency and a size budget.
+ *
+ * Null doctrine applies: a journal that states no figure cap and no accepted
+ * formats produces no figure flags at all, rather than a guessed default.
+ */
+export function analyzeFigures(input: {
+  rules: JournalRules
+  articleType: ArticleType
+  /** How many figures the author attached (0 when none). */
+  figureCount: number
+  /** The author's figure filenames, when known. */
+  figureFilenames: string[]
+}): ReportSuggestion[] {
+  const { rules, articleType, figureCount, figureFilenames } = input
+  const out: ReportSuggestion[] = []
+  // Same accessor the Finder scores figure limits through, so the two tools
+  // cannot drift on what a journal's figure cap is.
+  const cap = rules.word_limits[articleType]?.figures_max ?? null
+
+  if (cap != null && figureCount > cap) {
+    out.push({
+      title: `Too many figures (${figureCount} / max ${cap})`,
+      location: null,
+      detail: `${rules.identity.name} allows at most ${cap} figure${cap === 1 ? '' : 's'} for this article type. Remove ${figureCount - cap}, or combine panels into a single composite figure.`,
+      suggestedWording: null,
+      severity: 'action-required',
+    })
+  }
+
+  // Format check. rules.figures.formats is a closed enum list; an empty list
+  // means the journal states nothing, so nothing is checked.
+  const accepted = rules.figures.formats
+  if (accepted.length > 0 && figureFilenames.length > 0) {
+    const acceptedSet = new Set<string>(accepted)
+    // tif/tiff and jpg/jpeg are the same format under two spellings; a journal
+    // naming one accepts the other.
+    if (acceptedSet.has('tif') || acceptedSet.has('tiff')) {
+      acceptedSet.add('tif')
+      acceptedSet.add('tiff')
+    }
+    if (acceptedSet.has('jpg') || acceptedSet.has('jpeg')) {
+      acceptedSet.add('jpg')
+      acceptedSet.add('jpeg')
+    }
+    const bad = figureFilenames.filter((n) => {
+      const ext = n.toLowerCase().split('.').pop()
+      // No extension at all tells us nothing — do not flag on a guess.
+      return ext && ext !== n.toLowerCase() && !acceptedSet.has(ext)
+    })
+    if (bad.length > 0) {
+      out.push({
+        title: `Figure format not accepted (${bad.length} file${bad.length === 1 ? '' : 's'})`,
+        location: bad.join(', '),
+        detail: `${rules.identity.name} accepts ${accepted.join(', ').toUpperCase()} figure files. Re-export the listed file${bad.length === 1 ? '' : 's'} in an accepted format before submitting.`,
+        suggestedWording: null,
+        severity: 'action-required',
+      })
+    }
+  }
+
+  if (figureCount > 0 && figureFilenames.length === 0) {
+    out.push({
+      title: 'Attach your figures as separate files',
+      location: null,
+      detail: `Your manuscript refers to ${figureCount} figure${figureCount === 1 ? '' : 's'}, but none were attached here. Most journals, ${rules.identity.name} included, require figures as separate high-resolution files rather than embedded in the Word document.`,
+      suggestedWording: null,
+      severity: 'info',
+    })
+  }
+
+  if (figureCount > 0 && cap != null && figureCount <= cap) {
+    out.push({
+      title: `Figure count within the limit (${figureCount} / max ${cap})`,
+      location: null,
+      detail: `${rules.identity.name} allows up to ${cap} figure${cap === 1 ? '' : 's'} for this article type. Resolution and file-format requirements still apply; we check formats but not DPI.`,
+      suggestedWording: null,
+      severity: 'info',
+    })
+  }
+
+  return out
+}
+
 export function analyze(input: {
   model: ContentModel
   rules: JournalRules

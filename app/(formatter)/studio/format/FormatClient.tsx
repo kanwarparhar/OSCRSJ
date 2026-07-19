@@ -429,6 +429,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         journalId,
         articleType,
         figureCount: figures.length,
+        figureFilenames: figures.map((f) => f.name),
         manuscriptFilename: manuscript.name,
       }
       const createRes = await fetch('/api/format/jobs', {

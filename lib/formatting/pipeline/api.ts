@@ -64,6 +64,8 @@ export interface CreateJobRequest {
   articleType: string
   turnstileToken?: string
   figureCount?: number
+  /** Author's figure filenames, in attach order — drives the format check. */
+  figureFilenames?: string[]
   /** Original filename of the uploaded manuscript (used to name outputs). */
   manuscriptFilename?: string
 }

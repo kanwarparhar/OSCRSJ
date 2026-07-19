@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
   if (!body || typeof body !== 'object') {
     return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
   }
-  const { email, journalId, articleType, figureCount, manuscriptFilename } = body as Record<string, unknown>
+  const { email, journalId, articleType, figureCount, figureFilenames, manuscriptFilename } =
+    body as Record<string, unknown>
 
   if (typeof email !== 'string' || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'A valid email is required.' }, { status: 400 })
@@ -67,14 +68,26 @@ export async function POST(req: NextRequest) {
     typeof manuscriptFilename === 'string' && manuscriptFilename.trim()
       ? manuscriptFilename.trim().slice(0, 255)
       : null
-  await writeJobMeta(job.id, { originalFilename })
+  const nFigs = Math.min(Math.max(0, Number(figureCount) || 0), MAX_FIGURES)
+  // The author's own figure filenames drive the report-only format check; the
+  // storage path hardcodes a `.img` extension so it cannot tell us the format.
+  const figureNames = Array.isArray(figureFilenames)
+    ? figureFilenames
+        .filter((n): n is string => typeof n === 'string' && n.trim() !== '')
+        .slice(0, MAX_FIGURES)
+        .map((n) => n.trim().slice(0, 255))
+    : []
+  await writeJobMeta(job.id, {
+    originalFilename,
+    figureCount: nFigs,
+    figureFilenames: figureNames,
+  })
 
   const manuscriptUpload = await createSignedUpload(storagePaths.input(job.id))
   if (!manuscriptUpload) {
     return NextResponse.json({ error: 'Could not prepare the upload. Try again.' }, { status: 500 })
   }
 
-  const nFigs = Math.min(Math.max(0, Number(figureCount) || 0), MAX_FIGURES)
   const figureUploads = []
   for (let i = 0; i < nFigs; i++) {
     const u = await createSignedUpload(storagePaths.figure(job.id, i, 'img'))

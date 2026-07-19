@@ -140,6 +140,15 @@ export async function uploadObject(
 export interface JobMeta {
   /** Original filename of the uploaded manuscript, used to name outputs. */
   originalFilename: string | null
+  /** How many figures the author attached. Absent on jobs created before 2026-07-18. */
+  figureCount?: number
+  /**
+   * The author's own figure filenames, in attach order. Carried here rather
+   * than derived from `figure_paths` because the storage path hardcodes a
+   * `.img` extension, so it cannot tell us the real format. Used for the
+   * report-only figure checks; never used to rename or touch the files.
+   */
+  figureFilenames?: string[]
 }
 
 export async function writeJobMeta(jobId: string, meta: JobMeta): Promise<void> {

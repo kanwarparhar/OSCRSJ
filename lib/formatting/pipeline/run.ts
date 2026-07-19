@@ -22,7 +22,7 @@ import { assertBodyImmutable } from './immutability'
 import { parseReferences } from '../references/parse'
 import { verifyReferences } from '../references/verify'
 import { extractTitlePage } from './extract'
-import { analyze } from './analyze'
+import { analyze, analyzeFigures } from './analyze'
 import { buildReport, renderReportDocx } from '../report'
 import type { JobStatus, JobOutputPaths } from './stages'
 import type {
@@ -193,6 +193,17 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         // outputs — user-facing names are the original filename + _<journal abbrev>
         const meta = await readJobMeta(jobId)
         const baseName = outputBaseName(meta?.originalFilename, job.journal_id)
+
+        // Report-only figure checks. Jobs created before 2026-07-18 have no
+        // figure fields in their meta sidecar; they simply produce no flags.
+        allSuggestions.push(
+          ...analyzeFigures({
+            rules,
+            articleType,
+            figureCount: meta?.figureCount ?? 0,
+            figureFilenames: meta?.figureFilenames ?? [],
+          }),
+        )
         const manuscript = emitDocxBuffer(docx)
         const outputs: JobOutputPaths = {
           manuscript: storagePaths.outputManuscript(jobId),
