@@ -520,6 +520,68 @@ export async function getFileDownloadUrl(storagePath: string) {
   return { url: data.signedUrl }
 }
 
+// ---- Author-scoped signed download URL (by file id) ----
+
+/**
+ * Signed download URL for a file on a manuscript the caller participates in.
+ *
+ * Deliberately takes a FILE ID, not a storage path. The `submissions` bucket's
+ * storage.objects policies gate only on `bucket_id = 'submissions'` for the
+ * `authenticated` role (migration 015 + the original INSERT/SELECT/DELETE
+ * policies), so any authenticated user can sign any path they can name. The
+ * authorization that matters therefore has to happen on the ROW, not the path:
+ * the lookup below runs through the caller's own RLS session, where
+ * "Authors can read files on own manuscripts" (migration 002) resolves
+ * `is_manuscript_participant(manuscript_id)`. A file belonging to someone
+ * else's manuscript returns no row and this returns notFound.
+ *
+ * Only the final signing step uses the admin client, and only for a
+ * storage_path already proven to belong to the caller — that's what lets us
+ * attach the original filename to the download without widening access.
+ */
+export async function getAuthorFileSignedUrl(
+  fileId: string
+): Promise<{ signedUrl?: string; fileName?: string; error?: string }> {
+  if (!fileId || typeof fileId !== 'string') {
+    return { error: 'File id is required.' }
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated.' }
+
+  // RLS-scoped read — this is the authorization check.
+  const { data: fData, error: fErr } = await supabase
+    .from('manuscript_files')
+    .select('id, storage_path, original_filename, file_name')
+    .eq('id', fileId)
+    .maybeSingle()
+
+  if (fErr || !fData) return { error: 'File not found.' }
+  const file = fData as Pick<
+    ManuscriptFileRow,
+    'id' | 'storage_path' | 'original_filename' | 'file_name'
+  >
+
+  const admin = createAdminClient()
+  const { data: signed, error: signErr } = await admin.storage
+    .from('submissions')
+    .createSignedUrl(file.storage_path, 60 * 5, {
+      download: file.original_filename || file.file_name,
+    })
+
+  if (signErr || !signed) {
+    return { error: 'Failed to generate download link.' }
+  }
+
+  return {
+    signedUrl: signed.signedUrl,
+    fileName: file.original_filename || file.file_name,
+  }
+}
+
 // ---- Save authors (Step 4) ----
 
 export async function saveAuthors(params: {
