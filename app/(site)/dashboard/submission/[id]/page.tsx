@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import type {
   ManuscriptRow,
   ManuscriptAuthorRow,
@@ -49,8 +49,8 @@ const STATUS_EXPLAINER: Record<ManuscriptStatus, string> = {
   rejected: 'Following peer review, this manuscript was not accepted. See the decision letter below.',
   withdrawn: 'This submission has been withdrawn.',
   under_review: 'Currently with peer reviewers. You will be notified by email when a decision is made.',
-  revision_requested: 'The editors have requested revisions. Use the "Submit revision" button to respond.',
-  revision_received: 'Your revision has been received and is being reviewed.',
+  revision_requested: 'The editors have requested revisions. The decision letter and the reviewers’ comments are shown below. Use the "Submit revision" button to respond.',
+  revision_received: 'Your revision has been received and is being reviewed. The previous decision letter and reviewer comments remain below for reference.',
   accepted: 'Congratulations — this manuscript has been accepted for publication.',
   awaiting_payment: 'Accepted. Awaiting the article processing charge before production.',
   in_production: 'Accepted and being prepared for publication.',
@@ -84,14 +84,32 @@ const FILE_TYPE_LABELS: Record<string, string> = {
   response_to_reviewers: 'Response to Reviewers',
 }
 
-// Decisions whose letter is appropriate to surface to the author. Revision
-// requests carry their own dedicated flow (the "Submit revision" button +
-// the emailed letter), so they are intentionally not duplicated here.
+// Final decisions whose letter renders in the "Editorial Decision" section.
+// Revision decisions get their own dedicated "Revision Request" section
+// below (with deadline + reviewer comments), so they are handled separately.
 const AUTHOR_VISIBLE_DECISIONS: ReadonlySet<string> = new Set([
   'accept',
   'reject',
   'post_review_reject',
   'desk_reject',
+])
+
+// Revision decisions — the editor's cover letter for a revision request.
+const REVISION_DECISIONS: ReadonlySet<string> = new Set([
+  'major_revisions',
+  'minor_revisions',
+])
+
+// Decisions that release the reviewers' author-facing comments to the author.
+// Mirrors the reviewer-feedback .docx that ships attached to these decision
+// emails (see lib/reviewer-feedback/build.ts). Comments are never surfaced
+// before one of these decisions is issued, so nothing leaks while a
+// manuscript is still under review.
+const REVIEW_RELEASING_DECISIONS: ReadonlySet<string> = new Set([
+  'major_revisions',
+  'minor_revisions',
+  'post_review_reject',
+  'reject',
 ])
 
 function formatFileSize(bytes: number): string {
@@ -171,7 +189,9 @@ export default async function SubmissionDetailPage({
         .order('file_order', { ascending: true }),
       supabase
         .from('editorial_decisions')
-        .select('id, decision, decision_letter, decision_date, rescinded_at')
+        .select(
+          'id, decision, decision_letter, decision_date, revision_deadline, rescinded_at'
+        )
         .eq('manuscript_id', ms.id)
         .is('rescinded_at', null)
         .order('decision_date', { ascending: false }),
@@ -192,12 +212,58 @@ export default async function SubmissionDetailPage({
     | 'version'
     | 'upload_date'
   >[]
-  const decisions = ((decisionData ?? []) as Pick<
+  const allDecisions = (decisionData ?? []) as Pick<
     EditorialDecisionRow,
-    'id' | 'decision' | 'decision_letter' | 'decision_date' | 'rescinded_at'
-  >[]).filter(
+    | 'id'
+    | 'decision'
+    | 'decision_letter'
+    | 'decision_date'
+    | 'revision_deadline'
+    | 'rescinded_at'
+  >[]
+
+  // Final decisions (accept / reject / desk reject) — "Editorial Decision" section.
+  const decisions = allDecisions.filter(
     (d) => AUTHOR_VISIBLE_DECISIONS.has(d.decision) && d.decision_letter
   )
+
+  // Most recent revision decision (allDecisions is ordered decision_date DESC).
+  // Its cover letter + deadline drive the "Revision Request" section, shown
+  // only while the manuscript is actually in a revision state.
+  const latestRevisionDecision =
+    allDecisions.find(
+      (d) => REVISION_DECISIONS.has(d.decision) && d.decision_letter
+    ) ?? null
+  const showRevisionRequest =
+    latestRevisionDecision !== null &&
+    (ms.status === 'revision_requested' || ms.status === 'revision_received')
+
+  // Reviewer comments become author-visible only once a decision that
+  // releases them has been issued. Reviews are not readable by authors under
+  // RLS, so we read them with the admin client — this is safe because the
+  // RLS-scoped manuscript query above already confirmed the caller is a
+  // participant on this manuscript. Selection + ordering mirror
+  // lib/reviewer-feedback/build.ts exactly, so what shows here matches the
+  // reviewer-feedback document emailed with the decision.
+  const reviewerFeedbackReleased = allDecisions.some((d) =>
+    REVIEW_RELEASING_DECISIONS.has(d.decision)
+  )
+  let reviewerComments: string[] = []
+  if (reviewerFeedbackReleased) {
+    const admin = createAdminClient()
+    const { data: reviewData } = await admin
+      .from('reviews')
+      .select('comments_to_author, submitted_date, created_at')
+      .eq('manuscript_id', ms.id)
+      .eq('is_draft', false)
+      .order('submitted_date', { ascending: true })
+      .order('created_at', { ascending: true })
+    reviewerComments = ((reviewData ?? []) as {
+      comments_to_author: string | null
+    }[])
+      .map((r) => (r.comments_to_author || '').trim())
+      .filter((c) => c.length > 0)
+  }
 
   const badge = STATUS_BADGES[ms.status] || {
     label: ms.status,
@@ -368,6 +434,58 @@ export default async function SubmissionDetailPage({
           </div>
         )}
       </section>
+
+      {/* Revision request — editor's cover letter + deadline */}
+      {showRevisionRequest && latestRevisionDecision && (
+        <section className="bg-white border border-border rounded-xl p-6 mb-6">
+          <h2 className="section-heading text-lg mb-4">Revision Request</h2>
+          <div className="text-xs text-brown mb-2">
+            {formatDate(latestRevisionDecision.decision_date)}
+            {latestRevisionDecision.revision_deadline && (
+              <>
+                {' · '}Revision due by{' '}
+                {formatDate(latestRevisionDecision.revision_deadline)}
+              </>
+            )}
+          </div>
+          <div className="bg-cream-alt rounded-lg p-4 text-sm text-ink leading-relaxed whitespace-pre-line">
+            {latestRevisionDecision.decision_letter}
+          </div>
+        </section>
+      )}
+
+      {/* Reviewer comments — the reviewers' author-facing feedback */}
+      {reviewerComments.length > 0 && (
+        <section className="bg-white border border-border rounded-xl p-6 mb-6">
+          <h2 className="section-heading text-lg mb-4">Reviewer Comments</h2>
+          <p className="text-xs text-brown mb-4 leading-relaxed">
+            The following comments were provided by the peer reviewers of your
+            manuscript. Reviewer identities are kept confidential as part of
+            OSCRSJ&rsquo;s double-blind review process. Please address each
+            comment point-by-point in your Response to Reviewers letter using
+            the template at{' '}
+            <Link
+              href="/templates#revision-resources"
+              className="underline hover:text-ink"
+            >
+              oscrsj.com/templates
+            </Link>
+            .
+          </p>
+          <div className="space-y-5">
+            {reviewerComments.map((comments, i) => (
+              <div key={i}>
+                <h3 className="text-xs uppercase tracking-wider text-brown font-semibold border-b border-border pb-1.5 mb-2">
+                  Reviewer {i + 1}
+                </h3>
+                <div className="text-sm text-ink leading-relaxed whitespace-pre-line">
+                  {comments}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Decision letters */}
       {decisions.length > 0 && (
