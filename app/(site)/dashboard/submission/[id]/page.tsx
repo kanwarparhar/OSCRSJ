@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import type { Metadata } from 'next'
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import type {
   ManuscriptRow,
   ManuscriptAuthorRow,
@@ -10,6 +10,7 @@ import type {
   EditorialDecisionRow,
 } from '@/lib/types/database'
 import FileDownloadButton from './FileDownloadButton'
+import ReviewerFeedbackDownloadButton from './ReviewerFeedbackDownloadButton'
 import WithdrawButton from '../../WithdrawButton'
 
 export const dynamic = 'force-dynamic'
@@ -49,8 +50,8 @@ const STATUS_EXPLAINER: Record<ManuscriptStatus, string> = {
   rejected: 'Following peer review, this manuscript was not accepted. See the decision letter below.',
   withdrawn: 'This submission has been withdrawn.',
   under_review: 'Currently with peer reviewers. You will be notified by email when a decision is made.',
-  revision_requested: 'The editors have requested revisions. The decision letter and the reviewers’ comments are shown below. Use the "Submit revision" button to respond.',
-  revision_received: 'Your revision has been received and is being reviewed. The previous decision letter and reviewer comments remain below for reference.',
+  revision_requested: 'The editors have requested revisions. The decision letter and the reviewer feedback document are below. Use the "Submit revision" button to respond.',
+  revision_received: 'Your revision has been received and is being reviewed. The previous decision letter and reviewer feedback remain below for reference.',
   accepted: 'Congratulations — this manuscript has been accepted for publication.',
   awaiting_payment: 'Accepted. Awaiting the article processing charge before production.',
   in_production: 'Accepted and being prepared for publication.',
@@ -86,7 +87,7 @@ const FILE_TYPE_LABELS: Record<string, string> = {
 
 // Final decisions whose letter renders in the "Editorial Decision" section.
 // Revision decisions get their own dedicated "Revision Request" section
-// below (with deadline + reviewer comments), so they are handled separately.
+// below, so they are handled separately.
 const AUTHOR_VISIBLE_DECISIONS: ReadonlySet<string> = new Set([
   'accept',
   'reject',
@@ -98,18 +99,6 @@ const AUTHOR_VISIBLE_DECISIONS: ReadonlySet<string> = new Set([
 const REVISION_DECISIONS: ReadonlySet<string> = new Set([
   'major_revisions',
   'minor_revisions',
-])
-
-// Decisions that release the reviewers' author-facing comments to the author.
-// Mirrors the reviewer-feedback .docx that ships attached to these decision
-// emails (see lib/reviewer-feedback/build.ts). Comments are never surfaced
-// before one of these decisions is issued, so nothing leaks while a
-// manuscript is still under review.
-const REVIEW_RELEASING_DECISIONS: ReadonlySet<string> = new Set([
-  'major_revisions',
-  'minor_revisions',
-  'post_review_reject',
-  'reject',
 ])
 
 function formatFileSize(bytes: number): string {
@@ -187,11 +176,13 @@ export default async function SubmissionDetailPage({
         .eq('manuscript_id', ms.id)
         .order('version', { ascending: true })
         .order('file_order', { ascending: true }),
+      // select('*') rather than naming columns so the query does not break if
+      // this deploys before migration 028 adds reviewer_feedback_path /
+      // reviewer_feedback_filename — the new fields simply read as undefined
+      // until the migration is applied.
       supabase
         .from('editorial_decisions')
-        .select(
-          'id, decision, decision_letter, decision_date, revision_deadline, rescinded_at'
-        )
+        .select('*')
         .eq('manuscript_id', ms.id)
         .is('rescinded_at', null)
         .order('decision_date', { ascending: false }),
@@ -212,15 +203,7 @@ export default async function SubmissionDetailPage({
     | 'version'
     | 'upload_date'
   >[]
-  const allDecisions = (decisionData ?? []) as Pick<
-    EditorialDecisionRow,
-    | 'id'
-    | 'decision'
-    | 'decision_letter'
-    | 'decision_date'
-    | 'revision_deadline'
-    | 'rescinded_at'
-  >[]
+  const allDecisions = (decisionData ?? []) as EditorialDecisionRow[]
 
   // Final decisions (accept / reject / desk reject) — "Editorial Decision" section.
   const decisions = allDecisions.filter(
@@ -238,32 +221,12 @@ export default async function SubmissionDetailPage({
     latestRevisionDecision !== null &&
     (ms.status === 'revision_requested' || ms.status === 'revision_received')
 
-  // Reviewer comments become author-visible only once a decision that
-  // releases them has been issued. Reviews are not readable by authors under
-  // RLS, so we read them with the admin client — this is safe because the
-  // RLS-scoped manuscript query above already confirmed the caller is a
-  // participant on this manuscript. Selection + ordering mirror
-  // lib/reviewer-feedback/build.ts exactly, so what shows here matches the
-  // reviewer-feedback document emailed with the decision.
-  const reviewerFeedbackReleased = allDecisions.some((d) =>
-    REVIEW_RELEASING_DECISIONS.has(d.decision)
-  )
-  let reviewerComments: string[] = []
-  if (reviewerFeedbackReleased) {
-    const admin = createAdminClient()
-    const { data: reviewData } = await admin
-      .from('reviews')
-      .select('comments_to_author, submitted_date, created_at')
-      .eq('manuscript_id', ms.id)
-      .eq('is_draft', false)
-      .order('submitted_date', { ascending: true })
-      .order('created_at', { ascending: true })
-    reviewerComments = ((reviewData ?? []) as {
-      comments_to_author: string | null
-    }[])
-      .map((r) => (r.comments_to_author || '').trim())
-      .filter((c) => c.length > 0)
-  }
+  // The persisted reviewer-feedback document — the exact .docx that was sent
+  // with the decision email, whether it was the editor's uploaded combined
+  // document or the auto-generated per-reviewer file. Persisted at decision
+  // time by submitEditorialDecision (migration 028). Most recent one wins.
+  const feedbackDoc =
+    allDecisions.find((d) => d.reviewer_feedback_path) ?? null
 
   const badge = STATUS_BADGES[ms.status] || {
     label: ms.status,
@@ -454,35 +417,33 @@ export default async function SubmissionDetailPage({
         </section>
       )}
 
-      {/* Reviewer comments — the reviewers' author-facing feedback */}
-      {reviewerComments.length > 0 && (
+      {/* Reviewer feedback — the reviewers' report as a downloadable document */}
+      {feedbackDoc && (
         <section className="bg-white border border-border rounded-xl p-6 mb-6">
-          <h2 className="section-heading text-lg mb-4">Reviewer Comments</h2>
+          <h2 className="section-heading text-lg mb-4">Reviewer Feedback</h2>
           <p className="text-xs text-brown mb-4 leading-relaxed">
-            The following comments were provided by the peer reviewers of your
-            manuscript. Reviewer identities are kept confidential as part of
-            OSCRSJ&rsquo;s double-blind review process. Please address each
-            comment point-by-point in your Response to Reviewers letter using
-            the template at{' '}
-            <Link
-              href="/templates#revision-resources"
-              className="underline hover:text-ink"
-            >
+            The reviewers&rsquo; feedback for your manuscript is available as a
+            document below. Please download it and address each point in your
+            Response to Reviewers letter, using the template at{' '}
+            <Link href="/templates#revision-resources" className="underline hover:text-ink">
               oscrsj.com/templates
             </Link>
-            .
+            . Reviewer identities are kept confidential as part of OSCRSJ&rsquo;s
+            double-blind review process.
           </p>
-          <div className="space-y-5">
-            {reviewerComments.map((comments, i) => (
-              <div key={i}>
-                <h3 className="text-xs uppercase tracking-wider text-brown font-semibold border-b border-border pb-1.5 mb-2">
-                  Reviewer {i + 1}
-                </h3>
-                <div className="text-sm text-ink leading-relaxed whitespace-pre-line">
-                  {comments}
-                </div>
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-cream-alt/60 px-4 py-3">
+            <div className="min-w-0">
+              <div className="text-sm text-ink truncate">
+                {feedbackDoc.reviewer_feedback_filename || 'Reviewer feedback.docx'}
               </div>
-            ))}
+              <div className="text-[11px] text-brown mt-0.5">
+                Reviewer Feedback · issued {formatDate(feedbackDoc.decision_date)}
+              </div>
+            </div>
+            <ReviewerFeedbackDownloadButton
+              decisionId={feedbackDoc.id}
+              fileName={feedbackDoc.reviewer_feedback_filename}
+            />
           </div>
         </section>
       )}

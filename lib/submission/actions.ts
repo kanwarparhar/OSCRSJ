@@ -582,6 +582,70 @@ export async function getAuthorFileSignedUrl(
   }
 }
 
+/**
+ * Author-facing signed URL for the reviewer-feedback document attached to an
+ * editorial decision (persisted by submitEditorialDecision — the editor's
+ * uploaded combined document or the auto-generated per-reviewer file).
+ *
+ * Authorization mirrors getAuthorFileSignedUrl: the decision row is read
+ * through the caller's own RLS session, where "Authors can read decisions on
+ * own manuscripts" (migration 002) resolves is_manuscript_participant. A
+ * decision on someone else's manuscript returns no row and this returns an
+ * error. Only the final signing step uses the admin client, and only for a
+ * storage path already proven to belong to the caller.
+ */
+export async function getReviewerFeedbackSignedUrl(
+  decisionId: string
+): Promise<{ signedUrl?: string; fileName?: string; error?: string }> {
+  if (!decisionId || typeof decisionId !== 'string') {
+    return { error: 'Decision id is required.' }
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated.' }
+
+  // RLS-scoped read — this is the authorization check.
+  const { data: dData, error: dErr } = await supabase
+    .from('editorial_decisions')
+    .select('id, reviewer_feedback_path, reviewer_feedback_filename, rescinded_at')
+    .eq('id', decisionId)
+    .maybeSingle()
+
+  if (dErr || !dData) return { error: 'Reviewer feedback not found.' }
+  const decision = dData as {
+    id: string
+    reviewer_feedback_path: string | null
+    reviewer_feedback_filename: string | null
+    rescinded_at: string | null
+  }
+
+  if (decision.rescinded_at) {
+    return { error: 'This decision has been withdrawn.' }
+  }
+  if (!decision.reviewer_feedback_path) {
+    return { error: 'No reviewer feedback document is attached to this decision.' }
+  }
+
+  const downloadName =
+    decision.reviewer_feedback_filename || 'reviewer-feedback.docx'
+
+  const admin = createAdminClient()
+  const { data: signed, error: signErr } = await admin.storage
+    .from('submissions')
+    .createSignedUrl(decision.reviewer_feedback_path, 60 * 5, {
+      download: downloadName,
+    })
+
+  if (signErr || !signed) {
+    return { error: 'Failed to generate download link.' }
+  }
+
+  return { signedUrl: signed.signedUrl, fileName: downloadName }
+}
+
 // ---- Save authors (Step 4) ----
 
 export async function saveAuthors(params: {
