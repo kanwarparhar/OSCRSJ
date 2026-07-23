@@ -8,8 +8,9 @@
 
 import PizZip from 'pizzip'
 import { getJob, updateJob, claimStage, downloadObject, uploadObject, readJobMeta } from './jobs'
-import { isTerminal } from './stages'
-import { storagePaths, outputBaseName } from './api'
+import { isTerminal, stripLock } from './stages'
+import type { StageCursor } from './stages'
+import { storagePaths, outputBaseName, capReferences } from './api'
 import { getJournal } from '../journalList'
 import { SCHEMA_VERSION, type ArticleType } from '../rulesSchema'
 import { ingestDocx } from '../ooxml/ingest'
@@ -41,16 +42,36 @@ interface PipelineState {
   verifiedReferences: VerifiedReference[]
   titlePageData: ExtractedTitlePageData
   cost: { deepseekTokens: number; usd: number }
+  /**
+   * User-facing degradation notes (2026-07-22, Part D). Anything the pipeline
+   * could not do this run — a DeepSeek outage, a capped reference list — is
+   * recorded here and rendered into the report, instead of being discarded and
+   * leaving the author to wonder why a section is silently thin.
+   */
+  degradedNotes?: string[]
 }
 
 const STATE_PATH = (jobId: string) => `${jobId}/state.json`
+
+/** Parse-stage self-budget (mirrors verify.ts BUDGET_MS): stop starting new
+ *  DeepSeek batches past this and hand back a cursor. */
+const PARSE_BUDGET_MS = 40_000
+
+/** Minimum budget left to attempt the title-page extraction in the same call. */
+const TITLE_PAGE_RESERVE_MS = 15_000
 
 const emptyState = (): PipelineState => ({
   cslReferences: [],
   verifiedReferences: [],
   titlePageData: { title: null, runningTitle: null, authors: [], affiliations: [], correspondingAuthor: null, keywords: [] },
   cost: { deepseekTokens: 0, usd: 0 },
+  degradedNotes: [],
 })
+
+const addDegradedNote = (state: PipelineState, note: string): void => {
+  state.degradedNotes = state.degradedNotes ?? []
+  if (!state.degradedNotes.includes(note)) state.degradedNotes.push(note)
+}
 
 async function loadState(jobId: string): Promise<PipelineState> {
   const buf = await downloadObject(STATE_PATH(jobId))
@@ -62,8 +83,24 @@ async function loadState(jobId: string): Promise<PipelineState> {
   }
 }
 
-async function saveState(jobId: string, state: PipelineState): Promise<void> {
-  await uploadObject(STATE_PATH(jobId), Buffer.from(JSON.stringify(state)), 'application/json')
+/**
+ * Persist pipeline state. Returns false on a failed write (2026-07-22, Part
+ * D — the boolean was previously discarded): the caller must NOT advance the
+ * status over lost state, because the next stage would then run against stale
+ * or missing data after real LLM spend.
+ */
+async function saveState(jobId: string, state: PipelineState): Promise<boolean> {
+  return uploadObject(STATE_PATH(jobId), Buffer.from(JSON.stringify(state)), 'application/json')
+}
+
+/**
+ * A retryable (non-terminal) advance failure: status is left untouched so the
+ * client can try again, and the stage lock is released best-effort so the
+ * retry is not stalled behind our own claim.
+ */
+async function retryable(job: { id: string; status: JobStatus; stage_cursor: StageCursor | null }, message: string): Promise<AdvanceOutcome> {
+  await updateJob(job.id, { stage_cursor: stripLock(job.stage_cursor) })
+  return { status: job.status, error: message }
 }
 
 async function fail(jobId: string, stage: JobStatus, message: string): Promise<AdvanceOutcome> {
@@ -141,22 +178,64 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
       }
 
       // ---- extract: parse references + title-page metadata (DeepSeek) ----
+      // Resumable with a self-budget (2026-07-22, Part D — the verify-stage
+      // pattern): a long reference list is parsed across multiple advance
+      // calls via stage_cursor.references_parsed, so a Vercel-killed function
+      // never causes a full re-parse (re-spend) from batch 1.
       case 'parsed': {
+        const t0 = Date.now()
         const input = await downloadObject(storagePaths.input(jobId))
         if (!input) return fail(jobId, 'parsed', 'Uploaded file not found.')
         const { model } = await ingestDocx(new Uint8Array(input))
-        const parsed = await parseReferences(model.rawReferences)
-        const front = model.bodyText.slice(0, 6000)
-        const meta = await extractTitlePage(front)
-        const state = emptyState()
-        state.cslReferences = parsed.references
-        state.titlePageData = meta.data
-        state.cost = {
-          deepseekTokens:
-            parsed.usage.promptTokens + parsed.usage.completionTokens + meta.usage.promptTokens + meta.usage.completionTokens,
-          usd: parsed.usage.estCostUsd + meta.usage.estCostUsd,
+        const state = await loadState(jobId) // partial results from a prior call
+        const { refs: rawRefs, note: capNote } = capReferences(model.rawReferences)
+        if (capNote) addDegradedNote(state, capNote)
+
+        const cursor = job.stage_cursor?.references_parsed ?? 0
+        if (cursor < rawRefs.length) {
+          const parsed = await parseReferences(rawRefs, {
+            startIndex: cursor,
+            budgetMs: PARSE_BUDGET_MS,
+          })
+          state.cslReferences = [...state.cslReferences.slice(0, cursor), ...parsed.references]
+          state.cost.deepseekTokens += parsed.usage.promptTokens + parsed.usage.completionTokens
+          state.cost.usd += parsed.usage.estCostUsd
+          if (parsed.degraded) {
+            addDegradedNote(
+              state,
+              'Some references could not be read by the reference parser this run; they appear verbatim in the reference list and were not verified.',
+            )
+          }
+          if (!(await saveState(jobId, state))) {
+            return retryable(job, 'Could not persist parsing progress. Please retry.')
+          }
+          if (parsed.nextCursor != null) {
+            // more to do — stay on 'parsed'; the wholesale cursor write also
+            // releases the stage lock
+            await updateJob(jobId, {
+              stage_cursor: { references_parsed: parsed.nextCursor, parse_total: rawRefs.length },
+            })
+            return { status: 'parsed' }
+          }
         }
-        await saveState(jobId, state)
+
+        // All references parsed. Run the title-page extraction only if enough
+        // budget remains for its call; otherwise hand the cursor back and do
+        // it as the sole work of the next advance call.
+        if (Date.now() - t0 > PARSE_BUDGET_MS - TITLE_PAGE_RESERVE_MS) {
+          await updateJob(jobId, {
+            stage_cursor: { references_parsed: rawRefs.length, parse_total: rawRefs.length },
+          })
+          return { status: 'parsed' }
+        }
+        const front = model.bodyText.slice(0, 6000)
+        const meta = await extractTitlePage(front, { timeoutMs: 40_000 })
+        state.titlePageData = meta.data
+        state.cost.deepseekTokens += meta.usage.promptTokens + meta.usage.completionTokens
+        state.cost.usd += meta.usage.estCostUsd
+        if (!(await saveState(jobId, state))) {
+          return retryable(job, 'Could not persist parsing progress. Please retry.')
+        }
         await updateJob(jobId, { status: 'extracted', stage_cursor: null }) // null also releases the lock
         return { status: 'extracted' }
       }
@@ -167,7 +246,9 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         const cursor = job.stage_cursor?.references_verified ?? 0
         const batch = await verifyReferences(state.cslReferences, cursor)
         state.verifiedReferences = [...state.verifiedReferences.slice(0, cursor), ...batch.verified]
-        await saveState(jobId, state)
+        if (!(await saveState(jobId, state))) {
+          return retryable(job, 'Could not persist verification progress. Please retry.')
+        }
         if (batch.nextCursor != null) {
           // more to do — stay on 'extracted', advance() will resume from the
           // cursor. Wholesale cursor replacement also releases the stage lock.
@@ -209,6 +290,18 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
           keywordCount: state.titlePageData.keywords.length || null,
         })
         const allSuggestions = [...flags, ...suggestions]
+        // Degradation honesty (2026-07-22, Part D): notes recorded by earlier
+        // stages (capped reference list, parser outage) surface in the report
+        // instead of leaving a silently thin reference section.
+        for (const note of state.degradedNotes ?? []) {
+          allSuggestions.push({
+            title: 'Processing limitation',
+            location: null,
+            detail: note,
+            suggestedWording: null,
+            severity: 'info',
+          })
+        }
         const referenceAudit = state.verifiedReferences.map((v, i) => auditRow(v, i + 1))
 
         // outputs — user-facing names are the original filename + _<journal abbrev>

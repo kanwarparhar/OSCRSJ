@@ -46,10 +46,17 @@ export interface ParseUsage {
 
 export interface ParseResult {
   ok: boolean
+  /** Newly parsed references, starting at `startIndex` (NOT the full list on a resume). */
   references: CslReference[]
   usage: ParseUsage
   /** true when one or more batches fell back to the deterministic parser. */
   degraded: boolean
+  /**
+   * Resume position (2026-07-22, Part D): the absolute count of references
+   * parsed so far when the wall-clock budget ran out mid-list, or null when
+   * the list is done. Mirrors verify.ts's cursor contract.
+   */
+  nextCursor: number | null
   error?: string
 }
 
@@ -155,14 +162,43 @@ export interface ParseOptions {
   model?: string
   baseUrl?: string
   timeoutMs?: number
+  /**
+   * Resume support (2026-07-22, Part D): number of references already parsed
+   * by a previous invocation — parsing starts after them. Indices in the
+   * output stay global (1-based over the FULL list).
+   */
+  startIndex?: number
+  /**
+   * Wall-clock self-budget for this invocation. When exhausted before the
+   * list is done, the result carries `nextCursor` instead of degrading the
+   * remaining references to fallbacks. Omit for no budget (parse everything —
+   * the pre-Part-D behavior, kept for tests and non-Vercel callers).
+   */
+  budgetMs?: number
 }
+
+/**
+ * Headroom past the self-budget for one in-flight call: a batch may START
+ * any time before the budget expires, so its timeout is clamped to
+ * (budget + headroom - elapsed). With a 40s budget this bounds the whole
+ * invocation at ~55s, inside the advance route's 60s maxDuration.
+ */
+const OVERRUN_HEADROOM_MS = 15_000
+
+/** Below this remaining time a DeepSeek call is pointless — save the cursor. */
+const MIN_CALL_MS = 3_000
 
 /** Parse raw reference strings into CSL-JSON, batched ≤20 per DeepSeek call. */
 export async function parseReferences(raw: string[], opts: ParseOptions = {}): Promise<ParseResult> {
   const apiKey = opts.apiKey ?? process.env.DEEPSEEK_API_KEY ?? ''
   const model = opts.model ?? DEFAULT_MODEL
   const baseUrl = opts.baseUrl ?? DEEPSEEK_URL
-  const timeoutMs = opts.timeoutMs ?? 120_000
+  // 40s ceiling (was 120s): a 120s per-call timeout cannot coexist with the
+  // advance route's 60s wall (2026-07-22, Part D).
+  const timeoutMs = opts.timeoutMs ?? 40_000
+  const startIndex = Math.max(0, opts.startIndex ?? 0)
+  const budgetMs = opts.budgetMs ?? Number.POSITIVE_INFINITY
+  const t0 = Date.now()
 
   const indexed = raw.map((text, i) => ({ index: i + 1, text: text.trim() })).filter((r) => r.text)
   const usage: ParseUsage = { promptTokens: 0, completionTokens: 0, estCostUsd: 0 }
@@ -170,9 +206,10 @@ export async function parseReferences(raw: string[], opts: ParseOptions = {}): P
   if (!apiKey) {
     return {
       ok: false,
-      references: indexed.map((r) => fallbackRef(r.index, r.text)),
+      references: indexed.slice(startIndex).map((r) => fallbackRef(r.index, r.text)),
       usage,
       degraded: true,
+      nextCursor: null,
       error: 'Missing DEEPSEEK_API_KEY',
     }
   }
@@ -180,13 +217,24 @@ export async function parseReferences(raw: string[], opts: ParseOptions = {}): P
   const out: CslReference[] = []
   let degraded = false
   let firstError: string | undefined
+  let nextCursor: number | null = null
 
-  for (let start = 0; start < indexed.length; start += BATCH_SIZE) {
+  for (let start = startIndex; start < indexed.length; start += BATCH_SIZE) {
+    // Budget check BEFORE spending: an exhausted budget saves a cursor and
+    // returns — it never degrades the un-attempted tail to fallbacks.
+    const elapsed = Date.now() - t0
+    const remaining = budgetMs + OVERRUN_HEADROOM_MS - elapsed
+    if (elapsed >= budgetMs || remaining < MIN_CALL_MS) {
+      nextCursor = start
+      break
+    }
+    const callTimeout = Math.min(timeoutMs, remaining)
+
     const batch = indexed.slice(start, start + BATCH_SIZE)
     let parsed: CslReference[] | null = null
 
     for (let attempt = 0; attempt < 2 && !parsed; attempt++) {
-      const r = await callDeepSeek(batch, apiKey, model, baseUrl, timeoutMs)
+      const r = await callDeepSeek(batch, apiKey, model, baseUrl, callTimeout)
       if ('error' in r) {
         firstError ??= r.error
         continue
@@ -217,5 +265,5 @@ export async function parseReferences(raw: string[], opts: ParseOptions = {}): P
     (usage.promptTokens / 1e6) * PRICE_INPUT_PER_M +
     (usage.completionTokens / 1e6) * PRICE_OUTPUT_PER_M
 
-  return { ok: !degraded, references: out, usage, degraded, error: firstError }
+  return { ok: !degraded, references: out, usage, degraded, nextCursor, error: firstError }
 }

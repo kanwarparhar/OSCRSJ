@@ -16,6 +16,25 @@ export const MAX_FIGURES = 10
 export const RATE_LIMIT_PER_EMAIL_PER_DAY = 3
 export const RATE_LIMIT_PER_IP_PER_DAY = 10
 
+/**
+ * Cap on raw references entering the parse stage (2026-07-22, Part D). A
+ * 300-reference systematic review (or a deliberate abuse loop) otherwise
+ * drives unbounded DeepSeek spend through the batched parser. Over the cap,
+ * the first MAX_RAW_REFERENCES are processed and the report says so — no
+ * silent truncation (repo convention: no silent caps).
+ */
+export const MAX_RAW_REFERENCES = 150
+
+/** Apply the reference cap. Returns the (possibly trimmed) list plus the
+ *  user-facing note when trimming happened, null otherwise. */
+export function capReferences(raw: string[]): { refs: string[]; note: string | null } {
+  if (raw.length <= MAX_RAW_REFERENCES) return { refs: raw, note: null }
+  return {
+    refs: raw.slice(0, MAX_RAW_REFERENCES),
+    note: `Reference list exceeds ${MAX_RAW_REFERENCES} entries (${raw.length} found); the first ${MAX_RAW_REFERENCES} were processed. The rest were not parsed or verified.`,
+  }
+}
+
 /** Signed-URL TTLs. */
 export const UPLOAD_URL_TTL_SECONDS = 60 * 30 // 30 min to finish uploading
 export const DOWNLOAD_URL_TTL_SECONDS = 60 * 60 // 1 h on the results page
@@ -129,6 +148,20 @@ const STAGE_META: Record<JobStatus, { progress: number; label: string }> = {
  */
 export const progressFor = (status: JobStatus, cursor?: StageCursor | null) => {
   const meta = STAGE_META[status]
+  if (
+    status === 'parsed' &&
+    cursor &&
+    typeof cursor.references_parsed === 'number' &&
+    typeof cursor.parse_total === 'number' &&
+    cursor.parse_total > 0
+  ) {
+    // Parse-stage resume (2026-07-22, Part D): interpolate the 0.25 → 0.4 band.
+    const frac = Math.min(cursor.references_parsed / cursor.parse_total, 1)
+    return {
+      progress: 0.25 + 0.15 * frac,
+      label: `Extracting metadata and references (${Math.min(cursor.references_parsed, cursor.parse_total)} of ${cursor.parse_total})…`,
+    }
+  }
   if (
     status === 'extracted' &&
     cursor &&

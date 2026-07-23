@@ -78,6 +78,10 @@ export interface JobError {
 export interface StageCursor {
   references_verified?: number
   references_total?: number
+  /** Parse-stage resume position (2026-07-22, Part D): refs parsed so far. */
+  references_parsed?: number
+  /** Total refs entering the parse stage (after the MAX_RAW_REFERENCES cap). */
+  parse_total?: number
   /**
    * Stage lock (2026-07-22, Part C): ISO timestamp until which a caller holds
    * the stage. Lives in the jsonb cursor so no migration touches the status
