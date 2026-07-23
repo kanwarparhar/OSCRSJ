@@ -265,25 +265,30 @@ export function applyLayout(
     if (sect) {
       const before = sect
       if (L.page_size) sect = setPageSize(sect, L.page_size)
-      if (L.margins_mm) sect = setMargins(sect, L.margins_mm)
+      // Report a change only when the sectPr actually changed (2026-07-22,
+      // Part F): a manuscript already at the journal's margins previously got
+      // an unconditional "Margins: document default → Xmm" row, padding the
+      // change list beyond what the diff justifies.
+      if (L.margins_mm) {
+        const beforeMargins = sect
+        sect = setMargins(sect, L.margins_mm)
+        if (sect !== beforeMargins) {
+          change(changes, 'Margins', 'document default', `${L.margins_mm.top_mm}mm all sides`)
+        }
+      }
       // null = the guide is silent on line numbering, so we leave the author's
       // setting alone. Only an explicit "no line numbers" statement in the
       // guide ('none') licenses stripping line numbering the author added.
+      // Same actually-changed rule (closes the §11 no-op "Line numbering:
+      // present → continuous" item): a manuscript that ALREADY carries the
+      // required numbering reports nothing.
       if (L.line_numbers !== null) {
-        const beforeLn = /<w:lnNumType/.test(before)
+        const beforeLnSect = sect
+        const beforeLn = /<w:lnNumType/.test(sect)
         sect = setLineNumbers(sect, L.line_numbers)
-        const afterLn = /<w:lnNumType/.test(sect)
-        if (beforeLn !== afterLn || L.line_numbers !== 'none') {
+        if (sect !== beforeLnSect) {
           change(changes, 'Line numbering', beforeLn ? 'present' : 'none', L.line_numbers)
         }
-      }
-      if (L.margins_mm) {
-        change(
-          changes,
-          'Margins',
-          'document default',
-          `${L.margins_mm.top_mm}mm all sides`,
-        )
       }
       if (L.page_numbers.show && !/<w:pgNumType/.test(before) && L.page_numbers.position) {
         sect = addPageNumberFooter(docx, sect, L.page_numbers.position, changes)

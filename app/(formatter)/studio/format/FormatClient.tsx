@@ -15,7 +15,7 @@ import {
 import type { ReportModel, Severity, ReferenceVerificationStatus } from '@/lib/formatting/types'
 import { layoutNotPrescribedLine } from '@/lib/formatting/reportCopy'
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
-import { publishFormatHandoff, subscribeJournalRequest } from '@/lib/finder/handoff'
+import { publishFormatHandoff, subscribeJournalRequest, clearJournalRequest } from '@/lib/finder/handoff'
 
 /* ------------------------------------------------------------------ */
 /*  Constants + helpers                                                 */
@@ -274,7 +274,9 @@ function ReportView({ report }: { report: ReportModel }) {
             {report.formattedReferences.map((r) => (
               <li key={r.index} className="flex gap-2 font-fmt-mono text-xs leading-relaxed text-fmt-ink">
                 <span className="flex-shrink-0 text-fmt-ink-3">{r.index}.</span>
-                <span>
+                {/* min-w-0 + overflow-wrap:anywhere: long DOIs otherwise
+                    overflow the card at 375px (2026-07-22, Part F). */}
+                <span className="min-w-0 break-words [overflow-wrap:anywhere]">
                   {r.text}
                   {r.unparsed && (
                     <span className="text-fmt-warn"> (could not parse, original text kept)</span>
@@ -361,17 +363,40 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   const manuscriptInputRef = useRef<HTMLInputElement>(null)
   const figureInputRef = useRef<HTMLInputElement>(null)
 
+  // Poll-loop lifecycle (2026-07-22, Part F): navigating away aborts the loop
+  // instead of leaving it fetching against an unmounted component.
+  const abortRef = useRef<AbortController | null>(null)
+  useEffect(() => () => abortRef.current?.abort(), [])
+
+  // The running-phase copy asks users to keep the tab open — enforce it
+  // honestly with a native leave warning while a job is actually running.
+  useEffect(() => {
+    if (phase !== 'running') return
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [phase])
+
   const selectedJournal = useMemo(
     () => journals.find((j) => j.slug === journalId) ?? null,
     [journalId],
   )
 
   // "Format for this journal →" from the Journal Finder pre-selects here.
+  // The request is cleared once consumed (2026-07-22, Part F): it is a
+  // one-shot navigation payload, and leaving it in sessionStorage silently
+  // preselected the OLD journal against a NEW manuscript on any later direct
+  // visit. (The format→find handoff stays persistent by design — reload
+  // survival on /studio/find is the point there.)
   useEffect(() => {
     return subscribeJournalRequest((req) => {
       setJournalId(req.slug)
       setArticleType(req.articleType)
       setPhase('form')
+      clearJournalRequest()
     })
   }, [])
 
@@ -500,21 +525,60 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       setDisplayProgress(0.05)
       setStageLabel('Uploaded, starting…')
 
+      const controller = new AbortController()
+      abortRef.current?.abort()
+      abortRef.current = controller
+
       // Advance the pipeline one stage at a time, polling status after each nudge.
+      let statusFailures = 0
       for (let iteration = 0; iteration < 150; iteration++) {
-        await fetch(`/api/format/jobs/${job.jobId}/advance`, {
+        if (controller.signal.aborted) return
+        // Read the advance outcome (2026-07-22, Part F — it was previously
+        // discarded): a stage failure surfaces immediately instead of waiting
+        // for a status poll to notice.
+        const advRes = await fetch(`/api/format/jobs/${job.jobId}/advance`, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ email }),
-        }).catch(() => undefined)
+          signal: controller.signal,
+        }).catch(() => null)
+        if (advRes?.ok) {
+          const adv = (await advRes.json().catch(() => null)) as {
+            status?: string
+            error?: string | null
+          } | null
+          if (adv?.status === 'failed') {
+            setRunError(
+              adv.error ||
+                'Formatting could not be completed. Please review your manuscript and try again.',
+            )
+            setPhase('error')
+            return
+          }
+        }
 
-        const statusRes = await fetch(
-          `/api/format/jobs/${job.jobId}?email=${encodeURIComponent(email)}`,
-        )
-        if (!statusRes.ok) {
+        // Email rides a header, not the query string (Part F — personal data
+        // does not belong in URLs, which land in logs and proxies).
+        const statusRes = await fetch(`/api/format/jobs/${job.jobId}`, {
+          headers: { 'x-job-email': email },
+          signal: controller.signal,
+        }).catch(() => null)
+        if (controller.signal.aborted) return
+        if (!statusRes || !statusRes.ok) {
+          // Failure honesty (Part F): five consecutive dead polls means the
+          // author should not sit watching a frozen percentage for minutes.
+          statusFailures++
+          if (statusFailures >= 5) {
+            setRunError(
+              'We lost contact with the server while checking on your job. It may still be processing. Please wait a minute, then reload this page or submit again.',
+            )
+            setPhase('error')
+            return
+          }
           await sleep(1500)
           continue
         }
+        statusFailures = 0
         const status = (await statusRes.json()) as JobStatusResponse
         setProgress(status.progress)
         setStageLabel(status.stageLabel)
@@ -523,8 +587,10 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           setReport(status.report)
           setDownloads(status.downloads)
           setPhase('complete')
-          // Hand the numbers we already know to the Journal Finder below, so the
-          // author can find fitting journals without retyping (in-memory only).
+          // Hand the numbers we already know to the Journal Finder, so the
+          // author can find fitting journals without retyping. The channel is
+          // sessionStorage-backed (per-tab, cleared on tab close) so it
+          // survives the navigation to /studio/find.
           publishFormatHandoff({
             filename: manuscript?.name ?? null,
             articleType: (articleType || null) as ArticleType | null,
@@ -550,6 +616,8 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       )
       setPhase('error')
     } catch (err) {
+      // An unmount-triggered abort is not an error the (gone) user needs.
+      if (abortRef.current?.signal.aborted) return
       setRunError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setPhase('error')
     } finally {

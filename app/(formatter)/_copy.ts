@@ -65,7 +65,11 @@ export const NEVER_DOES = [
  */
 export const DATA_HANDLING = [
   {
-    title: 'Encrypted end to end',
+    // "End to end" is a term of art (endpoint-to-endpoint, provider can't
+    // read) that does not describe this pipeline; the body copy was already
+    // accurate. Trivially-disprovable overclaims are exactly what this file's
+    // top comment polices (2026-07-22, Part F).
+    title: 'Encrypted in transit and at rest',
     // The 7-day deletion claim became true on the same deploy that added it:
     // the cleanup cron's formatting phase (Part E, 2026-07-22) purges every
     // job's uploads and outputs after FORMATTING_RETENTION_DAYS = 7.

@@ -1,6 +1,10 @@
-// GET /api/format/jobs/[id]?email=… — job status + signed download URLs
+// GET /api/format/jobs/[id] — job status + signed download URLs
 // (Sushant, Session C). Access is the unguessable job id + a matching email;
-// a mismatch returns 404 so job existence never leaks.
+// a mismatch returns 404 so job existence never leaks. The email rides the
+// x-job-email header (2026-07-22, Part F — personal data does not belong in
+// URL query strings, which land in logs and proxies); the ?email= query param
+// is still accepted for ONE release as a fallback for in-flight clients, then
+// should be dropped.
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getJob, createSignedDownload, readJobMeta } from '@/lib/formatting/pipeline/jobs'
@@ -10,7 +14,9 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const email = req.nextUrl.searchParams.get('email')?.toLowerCase().trim()
+  const email = (req.headers.get('x-job-email') ?? req.nextUrl.searchParams.get('email'))
+    ?.toLowerCase()
+    .trim()
   const job = await getJob(params.id)
   if (!job || !email || job.email.toLowerCase().trim() !== email) {
     return NextResponse.json({ error: 'Not found.' }, { status: 404 })
@@ -35,12 +41,20 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 
   const meta = progressFor(job.status, job.stage_cursor)
+  // ReportModel.cost is internal-only (documented: never rendered) — strip it
+  // from the wire instead of shipping our DeepSeek spend to every status poll
+  // (2026-07-22, Part F). The DB row keeps it.
+  let report = job.report ?? null
+  if (report && 'cost' in report) {
+    const { cost: _cost, ...rest } = report
+    report = rest
+  }
   const res: JobStatusResponse = {
     jobId: job.id,
     status: job.status,
     progress: meta.progress,
     stageLabel: meta.label,
-    report: job.report ?? null,
+    report,
     downloads,
     error: job.error ? { stage: job.error.stage, message: job.error.message } : null,
   }

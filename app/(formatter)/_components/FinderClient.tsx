@@ -310,9 +310,24 @@ export default function FinderClient() {
     const eligible = sortedResults.results.filter((r) => r.bucket !== 'not_eligible')
     const ineligible = sortedResults.results.filter((r) => r.bucket === 'not_eligible')
     const c = sortedResults.counts
+    // A re-submit keeps the previous scorecard on screen while loading
+    // (2026-07-22, Part F): dim it and say so, so old numbers never read as
+    // the answer to the new query.
+    const updating = phase === 'loading'
 
     return (
-      <div className="space-y-6">
+      <div
+        aria-busy={updating}
+        className={`space-y-6${updating ? ' pointer-events-none opacity-50 transition-opacity' : ''}`}
+      >
+        {updating && (
+          <p
+            role="status"
+            className="rounded-xl border border-fmt-hairline bg-fmt-surface px-4 py-3 text-sm font-medium text-fmt-ink"
+          >
+            Updating results for your new numbers…
+          </p>
+        )}
         {/* Summary + controls */}
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-fmt-hairline bg-fmt-surface p-4">
           <p className="text-sm text-fmt-ink">

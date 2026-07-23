@@ -463,7 +463,10 @@ export default function WordDemo({ specs }: { specs: DemoSpec[] }) {
         </div>
 
         {/* ---------- WHAT CHANGED ---------- */}
-        <aside className="wd-changes" aria-live="polite">
+        {/* aria-live only after the visitor takes over (2026-07-22, Part F):
+            the 4.2s autoplay otherwise has screen readers announcing a fresh
+            change list every rotation, indefinitely, unprompted. */}
+        <aside className="wd-changes" aria-live={touched ? 'polite' : 'off'}>
           <div className="wd-changes-head">
             {entry.isDraft ? 'Your draft' : `Applied · ${entry.label}`}
           </div>
