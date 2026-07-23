@@ -58,7 +58,7 @@ interface Entry {
     style: string
     inText: CiteKind
     inTextPunctuation: 'before' | 'after' | null
-    etAlThreshold: number | null
+    etAlThreshold: number | 'all' | null
     maxCount: number | null
   }
 }
@@ -452,7 +452,11 @@ export default function WordDemo({ specs }: { specs: DemoSpec[] }) {
               {entry.isDraft ? 'No journal applied' : entry.label} ·{' '}
               {layout.lineSpacing ? SPACING_LABEL[layout.lineSpacing].toLowerCase() : 'spacing kept'} ·{' '}
               {entry.isDraft ? 'unformatted refs' : references.style.toUpperCase()}
-              {references.etAlThreshold ? ` · et al. past ${references.etAlThreshold}` : ''}
+              {references.etAlThreshold === 'all'
+                ? ' · all authors listed'
+                : references.etAlThreshold
+                  ? ` · et al. past ${references.etAlThreshold}`
+                  : ''}
               {references.maxCount ? ` · max ${references.maxCount} refs` : ''}
             </span>
           </div>

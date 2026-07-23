@@ -138,7 +138,7 @@
     "order": "cited",
     "journal_abbrev": "nlm",
     "include_doi": false,
-    "et_al_threshold": null,
+    "et_al_threshold": "all",
     "max_count": null
   },
   "tables": {
@@ -182,6 +182,7 @@
     "Figures: TIFF or EPS only ('No JPG, no figures inserted into Word'); files named by figure number (e.g. Figure1.tif, Figure2.eps) -> naming_pattern 'Figure{n}'; legends placed at end of the manuscript after References -> figure_legends_section. min_dpi 300 is the base (color/halftone at 300 ppi); line art requires up to 1200 ppi, not representable here.",
     "Tables are uploaded as individual Word/Excel files (not embedded), numbered arabic with a descriptive title -> placement separate_file; title above/below not explicitly stated (caption_position null).",
     "misc.orcid_required true: every author must register with ORCID and include the identifier; submission is impossible without an ORCID per author. cover_letter_required false: a cover letter is only conditionally requested (e.g. to note previously reported methodology). Manuscript word count 'includes the abstract but excludes references and figure legends' (New Submission Checklist).",
-    "keywords not required: the JBJS Instructions for Authors do not specify manuscript keywords (they may be entered as Editorial Manager metadata). issn and title_case not stated (null)."
+    "keywords not required: the JBJS Instructions for Authors do not specify manuscript keywords (they may be entered as Editorial Manager metadata). issn and title_case not stated (null).",
+    "2026-07-22 et-al doctrine audit: et_al_threshold null -> 'all' — this guide EXPLICITLY requires every author to be listed (statement quoted in the notes above); null now means guide-silent and falls back to the citation style's default."
   ]
 }

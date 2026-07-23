@@ -126,7 +126,7 @@
     "order": "cited",
     "journal_abbrev": "nlm",
     "include_doi": false,
-    "et_al_threshold": null,
+    "et_al_threshold": "all",
     "max_count": null
   },
   "tables": {
@@ -182,6 +182,7 @@
     "Declarations: required set = ethics_approval (IRB approval letter for clinical studies / animal committee approval for animal studies), conflict_of_interest (ICMJE Conflict of Interest form), author_contributions (each author must indicate CRediT contributor roles in Editorial Manager). trial_registration is required for RCTs only (public trials registry prior to enrollment) and acknowledgments is used for non-author/one-section contributors -> both in order but not in required. Most declarations are collected via Editorial Manager forms/screens rather than a prescribed in-manuscript declaration-section order.",
     "misc: 'it will not be possible to submit an article without such an identifier for each author' -> orcid_required true. No cover letter is mentioned -> cover_letter_required false (unstated). Bulleted Take-Home Points are required for JBJS Review / Critical Analysis Review abstracts but that is an abstract format, not a separate highlights block -> highlights_required null. title_case not stated -> null.",
     "ISSN not stated on the guide page -> null. APC (not schema-encoded): $2,400 USD on acceptance; Research4Life waivers for LMIC authors; CC BY-NC-ND 4.0 or CC BY 4.0 license, authors retain copyright.",
-    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting.",
+    "2026-07-22 et-al doctrine audit: et_al_threshold null -> 'all' — this guide EXPLICITLY requires every author to be listed (statement quoted in the notes above); null now means guide-silent and falls back to the citation style's default."
   ]
 }

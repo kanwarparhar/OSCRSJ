@@ -263,8 +263,15 @@ const referencesSchema = z
     order: z.enum(['cited', 'alphabetical']),
     journal_abbrev: z.enum(['nlm', 'full']),
     include_doi: z.boolean(),
-    /** List all authors up to N, then "et al." null = journal does not specify. */
-    et_al_threshold: z.number().int().nullable(),
+    /**
+     * Three states (2026-07-22 doctrine fix — silence is not an instruction):
+     *   number N = the guide states "list up to N authors, then et al."
+     *   'all'    = the guide EXPLICITLY requires every author (JBJS family).
+     *   null     = the guide is silent; the engine falls back to the citation
+     *              style's own default (see STYLE_DEFAULT_ET_AL in
+     *              references/render.ts) and raises NO author-list flag.
+     */
+    et_al_threshold: z.union([z.number().int(), z.literal('all')]).nullable(),
     max_count: z.number().int().nullable(),
   })
   .strict()

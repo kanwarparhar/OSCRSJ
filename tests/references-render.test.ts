@@ -117,10 +117,33 @@ test('nlm: et_al_threshold 6 truncates an 8-author list to "et al."', () => {
   )
 })
 
-test('nlm: null et_al_threshold lists all eight authors', () => {
+test('nlm: null et_al_threshold falls back to the style default (6, then et al.)', () => {
+  // 2026-07-22 doctrine fix: null = guide silent → the style's own default,
+  // never full-list-by-default (which fabricated a rule out of silence).
   assert.strictEqual(
     renderReference(eightAuthors, rules({ style: 'nlm', et_al_threshold: null })),
+    'Kim DH, Smith JA, Johnson R, Lee SH, Park JW, Nguyen A, et al. Long-term survivorship of cementless total hip arthroplasty. Clin Orthop Relat Res. 2020;478(9):2011-2020. doi:10.1097/CORR.0000000000001234',
+  )
+})
+
+test("'all' et_al_threshold lists all eight authors (explicit journal requirement)", () => {
+  assert.strictEqual(
+    renderReference(eightAuthors, rules({ style: 'nlm', et_al_threshold: 'all' })),
     'Kim DH, Smith JA, Johnson R, Lee SH, Park JW, Nguyen A, Garcia ME, Brown TR. Long-term survivorship of cementless total hip arthroplasty. Clin Orthop Relat Res. 2020;478(9):2011-2020. doi:10.1097/CORR.0000000000001234',
+  )
+})
+
+test('custom: null et_al_threshold lists every author (no manual to consult)', () => {
+  assert.strictEqual(
+    renderReference(eightAuthors, rules({ style: 'custom', et_al_threshold: null })),
+    'Kim DH, Smith JA, Johnson R, Lee SH, Park JW, Nguyen A, Garcia ME, Brown TR. Long-term survivorship of cementless total hip arthroplasty. Clin Orthop Relat Res. 2020;478(9):2011-2020. doi:10.1097/CORR.0000000000001234',
+  )
+})
+
+test('vancouver: null et_al_threshold truncates at the Vancouver default of 6', () => {
+  assert.match(
+    renderReference(eightAuthors, rules({ style: 'vancouver', et_al_threshold: null })),
+    /Nguyen A, et al\./,
   )
 })
 

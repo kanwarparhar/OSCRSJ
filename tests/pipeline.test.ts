@@ -49,6 +49,27 @@ test('analyze: flags over-word-limit, over-reference-count, and missing sections
   assert.ok(checklist.some((c) => c.status === 'action-needed'), 'checklist reflects issues')
 })
 
+test('analyze: all-authors flag fires only on the explicit \'all\' state, never on null', () => {
+  // 2026-07-22 doctrine fix. oscrsj carries et_al_threshold null (guide
+  // silent); jbjs carries 'all' ("journal citations must include all authors
+  // (not et al.)"). An author correctly using "et al." must be flagged for
+  // jbjs and left alone for oscrsj.
+  const model = {
+    ...fakeModel(),
+    rawReferences: ['Kim DH, Smith JA, et al. Some article. J Example. 2020;1:1-5.'],
+  }
+  const oscrsj = analyze({ model, rules: getJournal('oscrsj')!, articleType: 'case_report', keywordCount: 4 })
+  assert.ok(
+    !oscrsj.suggestions.some((s) => /all authors/i.test(s.title)),
+    'null threshold (guide silent) raises no all-authors flag',
+  )
+  const jbjs = analyze({ model, rules: getJournal('jbjs')!, articleType: 'case_report', keywordCount: 4 })
+  assert.ok(
+    jbjs.suggestions.some((s) => /all authors/i.test(s.title)),
+    "'all' threshold still flags et al. usage",
+  )
+})
+
 test('report: builds a model and renders HTML + a valid .docx', () => {
   const report = buildReport({
     journalName: 'OSCRSJ',

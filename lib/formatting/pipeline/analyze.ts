@@ -213,11 +213,15 @@ export function analyze(input: {
   }
 
   // --- references: some journals require ALL authors (no "et al.") ---
-  // et_al_threshold === null encodes "list every author". The engine never
-  // rewrites the author's reference list (content immutability), so a
-  // truncated list is flagged for the author instead. JBJS is the canonical
-  // case: "journal citations must include all authors (not et al.)".
-  if (rules.references.et_al_threshold === null && model.rawReferences.some((r) => /\bet al\b/i.test(r))) {
+  // Fires ONLY on the explicit 'all' state (2026-07-22 doctrine fix). null
+  // means the guide is silent — 47 of 75 rule files carried null, and the old
+  // `=== null` predicate fabricated an action-required violation out of guide
+  // silence for every one of them (the line_numbers bug class, one field
+  // over). The engine never rewrites the author's reference list (content
+  // immutability), so a truncated list is flagged for the author instead.
+  // JBJS is the canonical 'all' case: "journal citations must include all
+  // authors (not et al.)".
+  if (rules.references.et_al_threshold === 'all' && model.rawReferences.some((r) => /\bet al\b/i.test(r))) {
     suggestions.push({
       title: 'References must list all authors — no “et al.”',
       location: 'References',

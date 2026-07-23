@@ -40,7 +40,7 @@ export interface DemoSpec {
     style: string
     inText: 'superscript' | 'bracket' | 'paren'
     inTextPunctuation: 'before' | 'after' | null
-    etAlThreshold: number | null
+    etAlThreshold: number | 'all' | null
     maxCount: number | null
   }
 }

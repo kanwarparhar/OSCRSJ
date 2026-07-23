@@ -175,15 +175,43 @@ function formatAuthor(author: { family: string; given: string }): string {
 }
 
 /**
- * Author-list segment ending in a period. Applies the et-al threshold: when
- * non-null and the list is longer than the threshold, the first `threshold`
- * authors are listed followed by "et al."; when null, every author is listed.
+ * Per-style author-list default, applied when the journal's guide is silent
+ * (et_al_threshold === null). 2026-07-22 doctrine fix: null used to mean
+ * "list every author", which fabricated a rule out of guide silence.
+ *
+ * Style-manual grounding for 6:
+ *  - Vancouver / ICMJE Recommendations (Citing Medicine sample citations):
+ *    "list the first six authors followed by et al."
+ *  - NLM Citing Medicine, Ch. 1: all authors, or first six + "et al." as the
+ *    accepted space-saving form — 6 is the standard truncation point.
+ *  - AMA Manual of Style 11th ed. §3.7 technically truncates >6 lists to the
+ *    first THREE + "et al."; the single-N schema field cannot express
+ *    "3-of->6", and the build brief prescribes 6 — the conservative direction
+ *    (listing more authors than AMA's floor is never a violation an editor
+ *    rejects over; listing three when the journal wanted six could be).
+ *  - 'custom': no manual to consult, so no truncation — every author is
+ *    listed, which is never wrong and preserves prior behavior for the 29
+ *    custom-style journals.
+ */
+const STYLE_DEFAULT_ET_AL: Record<JournalRules['references']['style'], number | null> = {
+  nlm: 6,
+  vancouver: 6,
+  ama: 6,
+  custom: null,
+}
+
+/**
+ * Author-list segment ending in a period. Three-state et-al threshold:
+ * number N → first N authors then "et al."; 'all' → every author (the guide
+ * explicitly requires it); null → the citation style's own default above.
  */
 function authorsSegment(ref: CslReference, rules: JournalRules): string {
   const authors = ref.authors ?? []
   if (authors.length === 0) return ''
 
-  const threshold = rules.references.et_al_threshold
+  const declared = rules.references.et_al_threshold
+  const threshold =
+    declared === 'all' ? null : declared ?? STYLE_DEFAULT_ET_AL[rules.references.style]
   const truncate = threshold !== null && authors.length > threshold
   const listed = truncate ? authors.slice(0, threshold) : authors
 

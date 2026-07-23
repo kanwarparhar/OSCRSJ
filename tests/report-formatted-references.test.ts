@@ -145,12 +145,14 @@ const sevenAuthors = ref({
 })
 
 test('a journal requiring every author produces the full list from the enriched record', () => {
-  // et_al_threshold === null encodes "list every author" (AJSM, JBJS). This is
-  // the exact case the live run flagged as action-required while the pipeline
-  // held the full author list in memory.
+  // et_al_threshold === 'all' is the explicit all-authors requirement (the
+  // JBJS family). This is the exact case the live run flagged as
+  // action-required while the pipeline held the full author list in memory.
+  // (2026-07-22: was null — null now means "guide silent" and falls back to
+  // the style default.)
   const out = buildFormattedReferences(
     [verified({ reference: sevenAuthors })],
-    rules({ et_al_threshold: null }),
+    rules({ et_al_threshold: 'all' }),
   )
   assert.doesNotMatch(out![0].text, /et al/)
   for (const family of ['Kim', 'Smith', 'Patel', 'Nguyen', 'Garcia', 'Okafor', 'Lee']) {
