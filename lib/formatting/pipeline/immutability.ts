@@ -6,11 +6,20 @@
 // in-text citation-marker renumber/restyle, supplied as an ordered list of
 // {from,to} edits produced by renumber.ts.
 //
-// Algorithm: normalise whitespace, then segment both strings around the ordered
-// marker strings (the `from` markers in the before-text, the `to` markers in
-// the after-text) and require every inter-marker prose segment to match exactly.
-// With no marker edits the two texts must be identical. Any other divergence —
-// a changed word, number, dosage, or p-value — fails the job.
+// Algorithm: normalise whitespace, segment the BEFORE-text around the ordered
+// `from` markers (bracketed markers are collision-resistant), then rebuild the
+// expected after-text as seg[0] + to[0] + seg[1] + … + seg[n] and require it to
+// equal the actual after-text exactly. With no marker edits the two texts must
+// be identical. Any other divergence — a changed word, number, dosage, or
+// p-value — fails the job.
+//
+// Why expected-after construction and not dual segmentation (2026-07-22): for
+// superscript journals the `to` marker is a BARE DIGIT ("3"), and re-searching
+// the after-text for it collides with any earlier prose occurrence of that
+// digit ("a cohort of 3 patients…") — mis-segmenting the after-text and
+// hard-failing manuscripts that were formatted perfectly. Paren markers had a
+// milder version of the same collision. Building the expected after-text from
+// the before-segments eliminates the collision class for every style.
 
 export interface MarkerEdit {
   /** The marker text as it appeared before renumber (e.g. "12" or "[12]"). */
@@ -40,8 +49,14 @@ function firstDivergence(a: string, b: string): string {
 /**
  * Split `text` into the prose segments between the ordered `markers`. Each
  * marker is located from the running cursor (so repeated marker strings match
- * in document order). Returns null if a marker can't be found in order — which
- * itself signals the body was altered.
+ * in document order, and an edit list produced by a single left-to-right regex
+ * pass — renumber.ts — stays consistent even when one marker string is a
+ * prefix of another, e.g. "[1]" vs "[1,2]"). Returns null if a marker can't be
+ * found in order — which itself signals the body was altered.
+ *
+ * Only ever called on the BEFORE-text with the `from` markers: those are
+ * always bracketed and therefore collision-resistant. Never re-search the
+ * after-text — bare-digit `to` markers collide with prose digits.
  */
 function segmentByMarkers(text: string, markers: string[]): string[] | null {
   const segments: string[] = []
@@ -74,17 +89,16 @@ export function assertBodyImmutable(
   }
 
   const segB = segmentByMarkers(nb, edits.map((e) => e.from))
-  const segA = segmentByMarkers(na, edits.map((e) => e.to))
-  if (!segB || !segA) {
+  if (!segB) {
     return { ok: false, diffExcerpt: 'citation markers not found in the expected order' }
   }
-  if (segB.length !== segA.length) {
-    return { ok: false, diffExcerpt: 'citation-marker count mismatch' }
+  // Rebuild what the after-text MUST be if the only delta is the marker edits.
+  let expected = segB[0]
+  for (let i = 0; i < edits.length; i++) {
+    expected += edits[i].to + segB[i + 1]
   }
-  for (let i = 0; i < segB.length; i++) {
-    if (segB[i] !== segA[i]) {
-      return { ok: false, diffExcerpt: firstDivergence(segB[i], segA[i]) }
-    }
+  if (expected !== na) {
+    return { ok: false, diffExcerpt: firstDivergence(expected, na) }
   }
   return { ok: true }
 }

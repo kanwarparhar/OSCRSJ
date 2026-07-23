@@ -83,12 +83,20 @@ test('renumber: bracket markers renumber to a bracket-style journal + report edi
   assert.equal(assertBodyImmutable(before, after, markerEdits).ok, true)
 })
 
-test('renumber: restyle bracket → superscript strips the brackets', () => {
+test('renumber: restyle bracket → superscript splits the run and carries vertAlign', () => {
+  // Was asserting the old wrong behavior (bare prose digit, indistinguishable
+  // from a quantity). The marker must land in its own run with real
+  // <w:vertAlign w:val="superscript"/> (2026-07-22 integrity fix, Part A).
   const rules = loadRules('oscrsj') // in_text = superscript
   const docx = createDocx([paraXml('Prior reports [3] agree.')])
+  const before = extractBodyText(docx.part(PART.document)!)
   const { markerEdits } = renumberCitations(docx, rules)
-  assert.match(docx.part(PART.document)!, /Prior reports 3 agree\./)
+  const doc = docx.part(PART.document)!
+  assert.match(doc, /<w:rPr><w:vertAlign w:val="superscript"\/><\/w:rPr><w:t xml:space="preserve">3<\/w:t>/)
+  const after = extractBodyText(doc)
+  assert.equal(after, 'Prior reports 3 agree.')
   assert.deepEqual(markerEdits, [{ from: '[3]', to: '3' }])
+  assert.equal(assertBodyImmutable(before, after, markerEdits).ok, true)
 })
 
 test('blinding: scrubs author metadata (AUTO) and flags body self-identification (FLAG)', async () => {
