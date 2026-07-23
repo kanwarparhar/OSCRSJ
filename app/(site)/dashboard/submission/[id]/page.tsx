@@ -10,6 +10,7 @@ import type {
   EditorialDecisionRow,
 } from '@/lib/types/database'
 import FileDownloadButton from './FileDownloadButton'
+import ReviewerFeedbackDownloadButton from './ReviewerFeedbackDownloadButton'
 import WithdrawButton from '../../WithdrawButton'
 
 export const dynamic = 'force-dynamic'
@@ -49,8 +50,8 @@ const STATUS_EXPLAINER: Record<ManuscriptStatus, string> = {
   rejected: 'Following peer review, this manuscript was not accepted. See the decision letter below.',
   withdrawn: 'This submission has been withdrawn.',
   under_review: 'Currently with peer reviewers. You will be notified by email when a decision is made.',
-  revision_requested: 'The editors have requested revisions. Use the "Submit revision" button to respond.',
-  revision_received: 'Your revision has been received and is being reviewed.',
+  revision_requested: 'The editors have requested revisions. The decision letter and the reviewer feedback document are below. Use the "Submit revision" button to respond.',
+  revision_received: 'Your revision has been received and is being reviewed. The previous decision letter and reviewer feedback remain below for reference.',
   accepted: 'Congratulations — this manuscript has been accepted for publication.',
   awaiting_payment: 'Accepted. Awaiting the article processing charge before production.',
   in_production: 'Accepted and being prepared for publication.',
@@ -84,14 +85,20 @@ const FILE_TYPE_LABELS: Record<string, string> = {
   response_to_reviewers: 'Response to Reviewers',
 }
 
-// Decisions whose letter is appropriate to surface to the author. Revision
-// requests carry their own dedicated flow (the "Submit revision" button +
-// the emailed letter), so they are intentionally not duplicated here.
+// Final decisions whose letter renders in the "Editorial Decision" section.
+// Revision decisions get their own dedicated "Revision Request" section
+// below, so they are handled separately.
 const AUTHOR_VISIBLE_DECISIONS: ReadonlySet<string> = new Set([
   'accept',
   'reject',
   'post_review_reject',
   'desk_reject',
+])
+
+// Revision decisions — the editor's cover letter for a revision request.
+const REVISION_DECISIONS: ReadonlySet<string> = new Set([
+  'major_revisions',
+  'minor_revisions',
 ])
 
 function formatFileSize(bytes: number): string {
@@ -169,9 +176,13 @@ export default async function SubmissionDetailPage({
         .eq('manuscript_id', ms.id)
         .order('version', { ascending: true })
         .order('file_order', { ascending: true }),
+      // select('*') rather than naming columns so the query does not break if
+      // this deploys before migration 028 adds reviewer_feedback_path /
+      // reviewer_feedback_filename — the new fields simply read as undefined
+      // until the migration is applied.
       supabase
         .from('editorial_decisions')
-        .select('id, decision, decision_letter, decision_date, rescinded_at')
+        .select('*')
         .eq('manuscript_id', ms.id)
         .is('rescinded_at', null)
         .order('decision_date', { ascending: false }),
@@ -192,12 +203,30 @@ export default async function SubmissionDetailPage({
     | 'version'
     | 'upload_date'
   >[]
-  const decisions = ((decisionData ?? []) as Pick<
-    EditorialDecisionRow,
-    'id' | 'decision' | 'decision_letter' | 'decision_date' | 'rescinded_at'
-  >[]).filter(
+  const allDecisions = (decisionData ?? []) as EditorialDecisionRow[]
+
+  // Final decisions (accept / reject / desk reject) — "Editorial Decision" section.
+  const decisions = allDecisions.filter(
     (d) => AUTHOR_VISIBLE_DECISIONS.has(d.decision) && d.decision_letter
   )
+
+  // Most recent revision decision (allDecisions is ordered decision_date DESC).
+  // Its cover letter + deadline drive the "Revision Request" section, shown
+  // only while the manuscript is actually in a revision state.
+  const latestRevisionDecision =
+    allDecisions.find(
+      (d) => REVISION_DECISIONS.has(d.decision) && d.decision_letter
+    ) ?? null
+  const showRevisionRequest =
+    latestRevisionDecision !== null &&
+    (ms.status === 'revision_requested' || ms.status === 'revision_received')
+
+  // The persisted reviewer-feedback document — the exact .docx that was sent
+  // with the decision email, whether it was the editor's uploaded combined
+  // document or the auto-generated per-reviewer file. Persisted at decision
+  // time by submitEditorialDecision (migration 028). Most recent one wins.
+  const feedbackDoc =
+    allDecisions.find((d) => d.reviewer_feedback_path) ?? null
 
   const badge = STATUS_BADGES[ms.status] || {
     label: ms.status,
@@ -368,6 +397,56 @@ export default async function SubmissionDetailPage({
           </div>
         )}
       </section>
+
+      {/* Revision request — editor's cover letter + deadline */}
+      {showRevisionRequest && latestRevisionDecision && (
+        <section className="bg-white border border-border rounded-xl p-6 mb-6">
+          <h2 className="section-heading text-lg mb-4">Revision Request</h2>
+          <div className="text-xs text-brown mb-2">
+            {formatDate(latestRevisionDecision.decision_date)}
+            {latestRevisionDecision.revision_deadline && (
+              <>
+                {' · '}Revision due by{' '}
+                {formatDate(latestRevisionDecision.revision_deadline)}
+              </>
+            )}
+          </div>
+          <div className="bg-cream-alt rounded-lg p-4 text-sm text-ink leading-relaxed whitespace-pre-line">
+            {latestRevisionDecision.decision_letter}
+          </div>
+        </section>
+      )}
+
+      {/* Reviewer feedback — the reviewers' report as a downloadable document */}
+      {feedbackDoc && (
+        <section className="bg-white border border-border rounded-xl p-6 mb-6">
+          <h2 className="section-heading text-lg mb-4">Reviewer Feedback</h2>
+          <p className="text-xs text-brown mb-4 leading-relaxed">
+            The reviewers&rsquo; feedback for your manuscript is available as a
+            document below. Please download it and address each point in your
+            Response to Reviewers letter, using the template at{' '}
+            <Link href="/templates#revision-resources" className="underline hover:text-ink">
+              oscrsj.com/templates
+            </Link>
+            . Reviewer identities are kept confidential as part of OSCRSJ&rsquo;s
+            double-blind review process.
+          </p>
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-cream-alt/60 px-4 py-3">
+            <div className="min-w-0">
+              <div className="text-sm text-ink truncate">
+                {feedbackDoc.reviewer_feedback_filename || 'Reviewer feedback.docx'}
+              </div>
+              <div className="text-[11px] text-brown mt-0.5">
+                Reviewer Feedback · issued {formatDate(feedbackDoc.decision_date)}
+              </div>
+            </div>
+            <ReviewerFeedbackDownloadButton
+              decisionId={feedbackDoc.id}
+              fileName={feedbackDoc.reviewer_feedback_filename}
+            />
+          </div>
+        </section>
+      )}
 
       {/* Decision letters */}
       {decisions.length > 0 && (

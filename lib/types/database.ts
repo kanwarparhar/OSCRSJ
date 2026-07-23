@@ -430,6 +430,12 @@ export interface EditorialDecisionRow {
   rescinded_at: string | null
   rescinded_reason: string | null
   pre_revision_snapshot: PreRevisionSnapshot | null
+  // Persisted reviewer-feedback document (migration 028). Storage object path
+  // in the `submissions` bucket + its download filename. Populated when a
+  // Minor/Major Revisions decision ships a reviewer-feedback .docx (editor's
+  // uploaded combined document OR the auto-generated per-reviewer file).
+  reviewer_feedback_path: string | null
+  reviewer_feedback_filename: string | null
   created_at: string
 }
 
@@ -664,6 +670,8 @@ export interface EditorialDecisionInsert {
   decision_letter?: string | null
   revision_deadline?: string | null
   decision_date?: string
+  reviewer_feedback_path?: string | null
+  reviewer_feedback_filename?: string | null
 }
 
 export interface ManuscriptRevisionInsert {

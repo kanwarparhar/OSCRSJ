@@ -893,6 +893,48 @@ export async function submitEditorialDecision(
     // swallow
   }
 
+  // 3b. Persist the reviewer-feedback document so the author can download it
+  // from their dashboard (migration 028). Resolved once here — the editor's
+  // uploaded combined document OR the auto-generated per-reviewer file — and
+  // reused for the decision email below so the stored copy is byte-identical
+  // to what was emailed. Best-effort: a storage/update failure must not block
+  // the decision, which is already durably recorded above.
+  let resolvedFeedback: ResolvedReviewerFeedbackAttachment | null = null
+  if (REVISION_DECISIONS.has(args.decision)) {
+    resolvedFeedback = await resolveReviewerFeedbackAttachment(
+      args.manuscriptId,
+      args.reviewerFeedbackOverride || null,
+    )
+    if (resolvedFeedback.attachment) {
+      try {
+        const storagePath = `reviewer-feedback/${args.manuscriptId}/${decisionId}.docx`
+        const { error: upErr } = await admin.storage
+          .from('submissions')
+          .upload(storagePath, resolvedFeedback.attachment.content, {
+            contentType:
+              resolvedFeedback.attachment.contentType ||
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            upsert: true,
+          })
+        if (upErr) {
+          console.error(
+            'reviewer feedback storage upload failed',
+            upErr.message,
+          )
+        } else {
+          await (admin.from('editorial_decisions') as any)
+            .update({
+              reviewer_feedback_path: storagePath,
+              reviewer_feedback_filename: resolvedFeedback.attachment.filename,
+            })
+            .eq('id', decisionId)
+        }
+      } catch (err) {
+        console.error('reviewer feedback persist failed', err)
+      }
+    }
+  }
+
   // 4. Fire-and-forget decision-letter email.
   try {
     // Load corresponding author identity + email. Prefer
@@ -944,13 +986,15 @@ export async function submitEditorialDecision(
           manuscriptId: args.manuscriptId,
         })
       } else if (args.decision === 'minor_revisions') {
-        // Resolve reviewer-feedback .docx attachment (override OR
-        // auto-build). Failure to build is non-fatal — the email
-        // still sends with the default no-attachment copy.
-        const resolved = await resolveReviewerFeedbackAttachment(
-          args.manuscriptId,
-          args.reviewerFeedbackOverride || null,
-        )
+        // Reuse the attachment resolved + persisted in step 3b (falls back to
+        // resolving here if that step was skipped). Failure to build is
+        // non-fatal — the email still sends with the default no-attachment copy.
+        const resolved =
+          resolvedFeedback ??
+          (await resolveReviewerFeedbackAttachment(
+            args.manuscriptId,
+            args.reviewerFeedbackOverride || null,
+          ))
         const { html, text } = renderEditorialDecisionMinorRevisions({
           authorName,
           submissionId,
@@ -988,10 +1032,12 @@ export async function submitEditorialDecision(
           // swallow — audit failure must not break the send
         }
       } else if (args.decision === 'major_revisions') {
-        const resolved = await resolveReviewerFeedbackAttachment(
-          args.manuscriptId,
-          args.reviewerFeedbackOverride || null,
-        )
+        const resolved =
+          resolvedFeedback ??
+          (await resolveReviewerFeedbackAttachment(
+            args.manuscriptId,
+            args.reviewerFeedbackOverride || null,
+          ))
         const { html, text } = renderEditorialDecisionMajorRevisions({
           authorName,
           submissionId,
