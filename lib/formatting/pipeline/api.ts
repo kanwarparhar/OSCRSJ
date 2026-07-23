@@ -7,7 +7,13 @@ import { journalAbbrev } from '../registry-meta'
 
 export const FORMATTING_BUCKET = 'formatting'
 
-/** Per-file input limits (bytes). Enforced in the create route + client. */
+/**
+ * Per-file input limits (bytes). Enforced client-side and re-checked
+ * server-side on the first advance call (run.ts 'uploaded' stage), which is
+ * the first place the server actually sees the bytes — the create route only
+ * mints signed upload URLs and never sees the file. (Comment corrected
+ * 2026-07-22, Part G2: it previously claimed the create route enforced this.)
+ */
 export const MAX_MANUSCRIPT_BYTES = 15 * 1024 * 1024
 export const MAX_FIGURE_BYTES = 10 * 1024 * 1024
 export const MAX_FIGURES = 10

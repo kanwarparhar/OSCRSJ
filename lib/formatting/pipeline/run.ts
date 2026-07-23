@@ -10,7 +10,7 @@ import PizZip from 'pizzip'
 import { getJob, updateJob, claimStage, downloadObject, uploadObject, readJobMeta } from './jobs'
 import { isTerminal, stripLock } from './stages'
 import type { StageCursor } from './stages'
-import { storagePaths, outputBaseName, capReferences } from './api'
+import { storagePaths, outputBaseName, capReferences, MAX_MANUSCRIPT_BYTES } from './api'
 import { getJournal } from '../journalList'
 import { SCHEMA_VERSION, type ArticleType } from '../rulesSchema'
 import { ingestDocx } from '../ooxml/ingest'
@@ -170,6 +170,30 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
       case 'uploaded': {
         const input = await downloadObject(storagePaths.input(jobId))
         if (!input) return fail(jobId, 'uploaded', 'Uploaded file not found. Please re-upload.')
+        // Server-side upload verification (2026-07-22, Part G2): the signed
+        // upload URL bypasses every route, so this is the first place the
+        // server sees the bytes. Size cap + zip magic before spending any
+        // work on them.
+        if (input.length > MAX_MANUSCRIPT_BYTES) {
+          return fail(
+            jobId,
+            'uploaded',
+            `The uploaded file is larger than the ${Math.round(MAX_MANUSCRIPT_BYTES / (1024 * 1024))} MB limit. Please upload a smaller .docx.`,
+          )
+        }
+        if (
+          input.length < 4 ||
+          input[0] !== 0x50 || // P
+          input[1] !== 0x4b || // K
+          input[2] !== 0x03 ||
+          input[3] !== 0x04
+        ) {
+          return fail(
+            jobId,
+            'uploaded',
+            'The uploaded file is not a Word .docx (it does not have a Word file signature). Please export your manuscript as .docx and re-upload.',
+          )
+        }
         const { model } = await ingestDocx(new Uint8Array(input))
         const fatal = model.hazards.find((h) => h.fatal)
         if (fatal) return fail(jobId, 'parsed', fatal.message)

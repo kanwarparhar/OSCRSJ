@@ -33,6 +33,22 @@ export class Docx {
     return f ? f.asText() : null
   }
 
+  /**
+   * The entry's DECLARED uncompressed size from the zip headers, before any
+   * inflation happens (2026-07-22, Part G3). Lets ingest reject a
+   * high-ratio deflate stream ("zip bomb") without first inflating it into
+   * memory. pizzip keeps the CompressedObject on `_data` until first access.
+   * Returns null when unavailable (already-inflated string parts, absent
+   * entries) — callers must then fall back to a post-inflate length check.
+   */
+  declaredPartSize(path: string): number | null {
+    const f = this.zip.file(path) as unknown as {
+      _data?: { uncompressedSize?: number }
+    } | null
+    const size = f?._data?.uncompressedSize
+    return typeof size === 'number' && Number.isFinite(size) ? size : null
+  }
+
   setPart(path: string, text: string): void {
     this.zip.file(path, text)
   }

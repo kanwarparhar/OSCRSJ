@@ -18,13 +18,24 @@ export interface IngestResult {
 /** Thrown when the file cannot be opened at all (caller → job 'failed'). */
 export class IngestError extends Error {
   constructor(
-    public code: 'not_docx' | 'password_protected' | 'empty',
+    public code: 'not_docx' | 'password_protected' | 'empty' | 'too_large',
     message: string,
   ) {
     super(message)
     this.name = 'IngestError'
   }
 }
+
+/**
+ * Inflation ceiling for word/document.xml (2026-07-22, Part G3). A
+ * high-ratio deflate stream inside an under-limit upload could otherwise
+ * inflate to gigabytes and OOM the function. 100 MB of document XML is far
+ * beyond any real manuscript. Checked against the zip header's declared size
+ * BEFORE inflating, and re-checked against the actual string after (headers
+ * can lie; the post-check fails the job even though the memory was briefly
+ * spent).
+ */
+export const MAX_DOCUMENT_XML_BYTES = 100 * 1024 * 1024
 
 // Normalised heading → canonical section key, for structure + type detection.
 const HEADING_ALIASES: Record<string, string> = {
@@ -180,9 +191,20 @@ export function ingestDocx(bytes: Uint8Array): Promise<IngestResult> {
       new IngestError('not_docx', 'File is not a valid .docx (could not open as a Word package).'),
     )
   }
+  const declared = docx.declaredPartSize(PART.document)
+  if (declared !== null && declared > MAX_DOCUMENT_XML_BYTES) {
+    return Promise.reject(
+      new IngestError('too_large', 'The document is too large to process. Please simplify the file and re-upload.'),
+    )
+  }
   const docXml = docx.part(PART.document)
   if (!docXml) {
     return Promise.reject(new IngestError('not_docx', 'Missing word/document.xml — not a Word manuscript.'))
+  }
+  if (docXml.length > MAX_DOCUMENT_XML_BYTES) {
+    return Promise.reject(
+      new IngestError('too_large', 'The document is too large to process. Please simplify the file and re-upload.'),
+    )
   }
 
   const paras = readParagraphs(docXml)

@@ -16,6 +16,7 @@ import {
   ptToHalfPt,
   lineSpacingTwips,
   escapeXmlAttr,
+  escapeXmlText,
 } from './docx'
 
 export interface LayoutResult {
@@ -221,6 +222,7 @@ function applyRunningHead(
   docx: Docx,
   running: FormattingContext['rules']['layout']['running_head'],
   runningTitle: string | undefined,
+  runningTitleMaxChars: number | null,
   changes: ReportChange[],
 ): void {
   if (!running.show) return
@@ -233,7 +235,8 @@ function applyRunningHead(
       : 'left'
   if (headerPart) {
     let h = docx.part(headerPart)!
-    // set alignment on the first paragraph's pPr
+    // set alignment on the first paragraph's pPr — the author's own header
+    // text is left alone.
     h = h.replace(
       /<w:p\b([^>]*)>(?:<w:pPr>([\s\S]*?)<\/w:pPr>)?/,
       (_full, attrs, pprInner) => {
@@ -243,7 +246,68 @@ function applyRunningHead(
     )
     docx.setPart(headerPart, h)
     change(changes, 'Running head', 'present', `aligned ${jc}`)
+    return
   }
+
+  // No header part (2026-07-22, Part G1 — previously this silently did
+  // nothing and runningTitle was never used): create a minimal default
+  // header carrying the extracted running title. Without an extracted title
+  // there is nothing truthful to write — the title-page draft's bracketed
+  // prompt already covers that case — so we skip rather than invent.
+  const title = runningTitle?.trim()
+  if (!title) return
+  let text = title.toUpperCase()
+  if (runningTitleMaxChars != null && text.length > runningTitleMaxChars) {
+    text = text.slice(0, runningTitleMaxChars).trimEnd()
+  }
+
+  // Part + relationship + content type, mirroring addPageNumberFooter.
+  let n = 1
+  while (docx.hasPart(`word/header${n}.xml`)) n++
+  const partName = `header${n}.xml`
+  const partXml =
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n` +
+    `<w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">` +
+    `<w:p><w:pPr><w:jc w:val="${jc}"/></w:pPr>` +
+    `<w:r><w:t xml:space="preserve">${escapeXmlText(text)}</w:t></w:r>` +
+    `</w:p></w:hdr>`
+  docx.addPart(`word/${partName}`, partXml)
+
+  const relsXml =
+    docx.part(PART.documentRels) ??
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>`
+  const rid = computeNextRid(relsXml)
+  docx.setPart(
+    PART.documentRels,
+    relsXml.replace(
+      '</Relationships>',
+      `<Relationship Id="${rid}" Type="${R_NS}/header" Target="${partName}"/></Relationships>`,
+    ),
+  )
+
+  const ctXml = docx.part(PART.contentTypes)
+  if (ctXml && !ctXml.includes(`/word/${partName}`)) {
+    docx.setPart(
+      PART.contentTypes,
+      ctXml.replace(
+        '</Types>',
+        `<Override PartName="/word/${partName}" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/></Types>`,
+      ),
+    )
+  }
+
+  // Wire the headerReference into the body sectPr (refs precede pgSz).
+  let docXml = docx.part(PART.document)
+  if (!docXml) return
+  const sect = getSectPr(docXml)
+  if (!sect) return
+  const ref = `<w:headerReference w:type="default" r:id="${rid}"/>`
+  const nextSect = /<w:pgSz\b/.test(sect)
+    ? sect.replace(/(<w:pgSz\b)/, `${ref}$1`)
+    : sect.replace(/^(<w:sectPr\b[^>]*>)/, `$1${ref}`)
+  docXml = replaceSectPr(docXml, nextSect)
+  docx.setPart(PART.document, docXml)
+  change(changes, 'Running head', 'none', `added "${text}", aligned ${jc}`)
 }
 
 // ---------------------------------------------------------------------------
@@ -301,7 +365,13 @@ export function applyLayout(
   const styles = docx.part(PART.styles)
   if (styles) docx.setPart(PART.styles, setDocDefaults(styles, ctx, changes))
 
-  applyRunningHead(docx, L.running_head, opts?.runningTitle, changes)
+  applyRunningHead(
+    docx,
+    L.running_head,
+    opts?.runningTitle,
+    ctx.rules.title_page.running_title_max_chars,
+    changes,
+  )
 
   return { changes }
 }
