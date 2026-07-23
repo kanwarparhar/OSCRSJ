@@ -7,7 +7,8 @@
 // in 'failed' with an actionable message rather than throwing to the route.
 
 import PizZip from 'pizzip'
-import { getJob, updateJob, downloadObject, uploadObject, readJobMeta } from './jobs'
+import { getJob, updateJob, claimStage, downloadObject, uploadObject, readJobMeta } from './jobs'
+import { isTerminal } from './stages'
 import { storagePaths, outputBaseName } from './api'
 import { getJournal } from '../journalList'
 import { SCHEMA_VERSION, type ArticleType } from '../rulesSchema'
@@ -66,13 +67,20 @@ async function saveState(jobId: string, state: PipelineState): Promise<void> {
 }
 
 async function fail(jobId: string, stage: JobStatus, message: string): Promise<AdvanceOutcome> {
-  await updateJob(jobId, { status: 'failed', error: { stage, code: 'stage_failed', message } })
+  // stage_cursor: null also releases the stage lock (terminal state).
+  await updateJob(jobId, {
+    status: 'failed',
+    error: { stage, code: 'stage_failed', message },
+    stage_cursor: null,
+  })
   return { status: 'failed', error: message }
 }
 
 export interface AdvanceOutcome {
   status: JobStatus
   error?: string
+  /** True when another caller holds the stage lock — nothing was run. */
+  inProgress?: boolean
 }
 
 /** Display names for the verification sources (the raw values are lowercase). */
@@ -102,11 +110,22 @@ function auditRow(v: VerifiedReference, index: number): ReferenceAuditRow {
 
 /** Run the single stage appropriate to the job's current status. */
 export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
-  const job = await getJob(jobId)
+  let job = await getJob(jobId)
   if (!job) return { status: 'failed', error: 'Job not found' }
   const rules = getJournal(job.journal_id)
   if (!rules) return fail(jobId, job.status, 'Unknown target journal.')
   const articleType = (job.article_type ?? 'case_report') as ArticleType
+
+  // Stage lock (2026-07-22, Part C): exactly one caller runs the stage. A
+  // parallel advance (second tab, refresh, retry after a 504) loses the CAS
+  // and reports in-progress; the client loop polls again. Every stage-end
+  // write below replaces or nulls stage_cursor, which releases the lock; a
+  // function killed mid-stage leaves a lock that expires on its own.
+  if (!isTerminal(job.status)) {
+    const claim = await claimStage(job)
+    if (!claim.claimed || !claim.job) return { status: job.status, inProgress: true }
+    job = claim.job
+  }
 
   try {
     switch (job.status) {
@@ -117,7 +136,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         const { model } = await ingestDocx(new Uint8Array(input))
         const fatal = model.hazards.find((h) => h.fatal)
         if (fatal) return fail(jobId, 'parsed', fatal.message)
-        await updateJob(jobId, { status: 'parsed' })
+        await updateJob(jobId, { status: 'parsed', stage_cursor: null }) // null also releases the lock
         return { status: 'parsed' }
       }
 
@@ -138,7 +157,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
           usd: parsed.usage.estCostUsd + meta.usage.estCostUsd,
         }
         await saveState(jobId, state)
-        await updateJob(jobId, { status: 'extracted' })
+        await updateJob(jobId, { status: 'extracted', stage_cursor: null }) // null also releases the lock
         return { status: 'extracted' }
       }
 
@@ -150,7 +169,8 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         state.verifiedReferences = [...state.verifiedReferences.slice(0, cursor), ...batch.verified]
         await saveState(jobId, state)
         if (batch.nextCursor != null) {
-          // more to do — stay on 'extracted', advance() will resume from the cursor
+          // more to do — stay on 'extracted', advance() will resume from the
+          // cursor. Wholesale cursor replacement also releases the stage lock.
           await updateJob(jobId, {
             stage_cursor: { references_verified: batch.nextCursor, references_total: state.cslReferences.length },
           })
@@ -285,7 +305,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         outputs.zip = storagePaths.outputZip(jobId)
         await uploadObject(storagePaths.outputZip(jobId), zipBytes, 'application/zip')
 
-        await updateJob(jobId, { status: 'rendered', report, output_paths: outputs })
+        await updateJob(jobId, { status: 'rendered', report, output_paths: outputs, stage_cursor: null })
         return { status: 'rendered' }
       }
 
@@ -293,7 +313,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
       // directive 2026-07-11 — the email address is collected for the usage
       // log only) ----
       case 'rendered': {
-        await updateJob(jobId, { status: 'complete' })
+        await updateJob(jobId, { status: 'complete', stage_cursor: null })
         return { status: 'complete' }
       }
 

@@ -13,7 +13,8 @@ import {
   storagePaths,
   type SignedUpload,
 } from './api'
-import type { FormattingJob, JobStatus } from './stages'
+import { STAGE_LOCK_SECONDS, isLockActive } from './stages'
+import type { FormattingJob } from './stages'
 
 type Admin = ReturnType<typeof createAdminClient>
 
@@ -59,18 +60,37 @@ export async function updateJob(id: string, patch: Partial<FormattingJob>): Prom
     .eq('id', id)
 }
 
+export interface ClaimResult {
+  claimed: boolean
+  /** The freshly-claimed row (carries the lock in stage_cursor) when claimed. */
+  job?: FormattingJob
+}
+
 /**
- * Compare-and-set the status: flip `from` → `to` only if the row is still at
- * `from`. Returns true if this caller won the transition (the stage lock).
+ * The stage lock (2026-07-22, Part C — replaces the never-called casStatus).
+ * Claim = compare-and-set on (id, status, updated_at): only the caller whose
+ * read is still current wins; everyone else sees zero rows and reports
+ * in-progress without running the stage. The claim stamps
+ * stage_cursor.lock_until = now + STAGE_LOCK_SECONDS; a future lock_until
+ * short-circuits before even attempting the CAS, and a PAST one is claimable
+ * again (the escape for a function killed mid-stage). No migration: the lock
+ * lives in the jsonb cursor, not in the CHECK-constrained status column.
  */
-export async function casStatus(id: string, from: JobStatus, to: JobStatus): Promise<boolean> {
+export async function claimStage(job: FormattingJob): Promise<ClaimResult> {
+  if (isLockActive(job.stage_cursor?.lock_until, Date.now())) return { claimed: false }
+  const now = new Date()
+  const lockUntil = new Date(now.getTime() + STAGE_LOCK_SECONDS * 1000).toISOString()
   const { data, error } = await jobs(admin())
-    .update({ status: to, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .eq('status', from)
-    .select('id')
-  if (error) return false
-  return Array.isArray(data) && data.length === 1
+    .update({
+      updated_at: now.toISOString(),
+      stage_cursor: { ...(job.stage_cursor ?? {}), lock_until: lockUntil },
+    })
+    .eq('id', job.id)
+    .eq('status', job.status)
+    .eq('updated_at', job.updated_at)
+    .select('*')
+  if (error || !Array.isArray(data) || data.length !== 1) return { claimed: false }
+  return { claimed: true, job: data[0] as FormattingJob }
 }
 
 /** Jobs created by this email / IP within the last 24h — for rate limiting. */

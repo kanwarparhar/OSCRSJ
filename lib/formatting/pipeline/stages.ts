@@ -78,6 +78,34 @@ export interface JobError {
 export interface StageCursor {
   references_verified?: number
   references_total?: number
+  /**
+   * Stage lock (2026-07-22, Part C): ISO timestamp until which a caller holds
+   * the stage. Lives in the jsonb cursor so no migration touches the status
+   * CHECK constraint. Set by claimStage, cleared (or wholesale-replaced) by
+   * every stage-end write; a PAST lock_until is claimable again — the escape
+   * hatch for a function killed mid-stage.
+   */
+  lock_until?: string
+}
+
+/** How long one advance call may hold a stage before it is claimable again.
+ *  Must exceed the advance route's maxDuration (60s) so a live function never
+ *  loses its own lock. */
+export const STAGE_LOCK_SECONDS = 120
+
+/** Pure claim-vs-skip decision: true while another caller's lock is live. */
+export function isLockActive(lockUntil: string | null | undefined, nowMs: number): boolean {
+  if (!lockUntil) return false
+  const t = Date.parse(lockUntil)
+  return Number.isFinite(t) && t > nowMs
+}
+
+/** The cursor minus its lock — what a stage-end write persists when it wants
+ *  to keep resume progress but release the stage. */
+export function stripLock(cursor: StageCursor | null): StageCursor | null {
+  if (!cursor) return null
+  const { lock_until: _lock, ...rest } = cursor
+  return Object.keys(rest).length > 0 ? rest : null
 }
 
 export interface FormattingJob {

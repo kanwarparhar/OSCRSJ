@@ -39,5 +39,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     progress: meta.progress,
     stageLabel: meta.label,
     error: outcome.error ?? null,
+    // True when another caller holds the stage lock (Part C, 2026-07-22) —
+    // nothing ran; the client just polls again.
+    inProgress: outcome.inProgress ?? false,
   })
 }
