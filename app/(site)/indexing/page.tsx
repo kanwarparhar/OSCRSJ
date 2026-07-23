@@ -36,7 +36,7 @@ export default function IndexingPage() {
             {[
               { title: 'Crossref DOI Registration', status: 'Active', desc: 'Every article receives a unique Crossref DOI upon publication, ensuring permanent citability and linking.', done: true },
               { title: 'Google Scholar', status: 'In Progress', desc: 'Automatic indexing once articles are published with proper metadata and DOIs. Typically occurs within weeks of first publication.', done: false },
-              { title: 'DOAJ (Directory of Open Access Journals)', status: 'Planned — Year 1', desc: 'Application requires demonstrated commitment to open access, peer review, and editorial standards. We will apply after publishing our first issues.', done: false },
+              { title: 'DOAJ (Directory of Open Access Journals)', status: 'Planned — Year 1', desc: 'Application requires demonstrated commitment to open access, peer review, and editorial standards, plus an initial body of published research. We will apply once we have built up our first volume of articles.', done: false },
               { title: 'PMC / PubMed', status: 'Planned — Year 2', desc: 'PubMed Central and PubMed indexing require a track record of consistent, high-quality publication (typically 12–24 months). This is our primary indexing goal.', done: false },
               { title: 'Scopus', status: 'Planned — Year 2–3', desc: 'Scopus evaluates journals based on editorial quality, citedness, regularity of publication, and online availability. Application follows PubMed.', done: false },
             ].map((item) => (
@@ -71,7 +71,7 @@ export default function IndexingPage() {
             {[
               { label: 'DOI Provider', value: 'Crossref' },
               { label: 'License', value: 'CC BY 4.0 (Open Access)' },
-              { label: 'Publication Frequency', value: 'Monthly' },
+              { label: 'Publication Model', value: 'Continuous — one annual volume' },
               { label: 'Impact Factor', value: 'Not yet eligible (requires 2+ years of indexing)' },
               { label: 'Acceptance Rate', value: 'To be reported after first year' },
               { label: 'Average Review Time', value: 'Target: 10 days to initial editorial response · 30–35 days to full peer-reviewed decision · 35 days from acceptance to publication' },

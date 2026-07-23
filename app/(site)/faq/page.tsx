@@ -142,7 +142,7 @@ const faqSections = [
     questions: [
       {
         q: 'How quickly are accepted articles published?',
-        a: 'Accepted articles are typically published online within 14 days of final acceptance. Articles are published online first and then included in the next monthly issue.',
+        a: 'Accepted articles are typically published online within 14 days of final acceptance. OSCRSJ uses continuous publication: each article goes online as soon as it is ready — there is no wait for a scheduled issue — and is collected into the current annual volume.',
       },
       {
         q: 'Is OSCRSJ indexed in PubMed?',
