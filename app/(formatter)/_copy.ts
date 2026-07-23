@@ -66,7 +66,10 @@ export const NEVER_DOES = [
 export const DATA_HANDLING = [
   {
     title: 'Encrypted end to end',
-    body: 'Your upload travels over TLS and is stored encrypted at rest. Your download links are signed and expire about an hour after your job finishes.',
+    // The 7-day deletion claim became true on the same deploy that added it:
+    // the cleanup cron's formatting phase (Part E, 2026-07-22) purges every
+    // job's uploads and outputs after FORMATTING_RETENTION_DAYS = 7.
+    body: 'Your upload travels over TLS and is stored encrypted at rest. Your download links are signed and expire about an hour after your job finishes, and your uploads and outputs are deleted from our storage after 7 days.',
   },
   {
     title: 'Never published, never indexed',
