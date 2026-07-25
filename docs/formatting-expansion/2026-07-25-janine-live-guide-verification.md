@@ -340,7 +340,10 @@ without being blocked themselves. Worth a pass over any other flag set the same 
 - All **75** journal JSON files parse; structural diff confirms **only `encoding_notes` changed** in
   the five files noted, plus the intended `word_limits` / `abstract.max_words` change on
   `sports-medicine`.
-- `npm run validate:rules` and `npm test` **could not run.** `node_modules` carries
-  `@esbuild/darwin-arm64` against a linux-arm64 execution environment — the same platform mismatch
-  already logged in CLAUDE.md §11 from Session 96. Both must be run on the Mac before push. I did
-  not run them and am not claiming they pass.
+- **`npm run validate:rules` and `npm test` BOTH RUN AND GREEN** — schema validation **75/75
+  valid (v1.0.0)**, full suite **172 pass / 0 fail / 1 skipped**, matching Session 98's baseline
+  exactly. I first reported these as unrunnable (the `@esbuild/darwin-arm64` vs linux-arm64 wall that
+  has blocked sandbox sessions since Session 96) and that was **premature** — `tsx` needs esbuild, but
+  `tsc` is pure JS, so compiling to plain ESM and running Node's own test runner clears it with no
+  `node_modules` mutation. Recipe recorded in CLAUDE.md §11 for every future session. `next build`
+  still needs the Mac.
