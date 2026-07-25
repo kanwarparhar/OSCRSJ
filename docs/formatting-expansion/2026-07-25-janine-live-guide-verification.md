@@ -264,6 +264,45 @@ Compliance and positioning judgement on announcing at all is in the vault note:
 
 ---
 
+## 5b. Low-confidence re-encodes — 2 of 9 cleared, and the flag was partly wrong
+
+`manifest.low_confidence_reencode` listed nine journals whose live guides were "fully bot-blocked"
+at encoding time, leaving journal-specific caps null. **Two of the nine were never actually blocked.**
+`calcified-tissue-international` and `ejap` are Springer titles, and Springer journal pages open
+cleanly — the same route that yielded fifteen `review_speed` values in §3. Both are now re-encoded
+from their **primary** guides (commit `2d0c627`):
+
+- **`calcified-tissue-international`** — Original Articles 5,000 words / 45 refs; Reviews 10,000
+  words / 100 refs / 10 figures (a figures-*only* cap, so exact); Letters 500; Editorials 1,000;
+  abstract 250. Combined figure+table caps left null (no schema slot). "Reports" and "Perspectives"
+  omitted for lack of an enum slot. **Case reports are not an accepted type.**
+- **`ejap`** — Invited Reviews 4,000 words; Letters 1,000; structured abstract
+  Purpose / Methods / Results / Conclusion at 250. Original Articles and Editorials state no limit →
+  null. "Comments" and "Perspectives" omitted. **Case reports confirmed not accepted**, which the
+  existing `article_types` already had right.
+
+**One deliberate non-change worth reading before anyone "fixes" it.**
+`calcified-tissue-international.et_al_threshold` stays **null** even though the guide names a number:
+
+> *"the names of all authors should be provided. For references with **more than 7 authors** the usage
+> of 'et al' after the first 7 authors have been named will **also be accepted**."*
+
+That 7 is a **permission, not an instruction** — the primary instruction is to provide all authors.
+Encoding 7 would truncate reference lists the journal actually prefers in full. The style is
+`custom`, so null renders every author: it satisfies the stated preference and never flags an author
+who used et al. Same family as `aots` / `european-spine-journal` / `kssta` in Session 98. Noted in
+the file so it survives the next reader.
+
+**Remaining 7, re-confirmed unreachable this session** (WebFetch *and* a logged-in browser):
+`global-spine-journal` · `science-medicine-football` · `ejss` · `journal-of-sports-sciences` ·
+`bmjosem` · `jeo` · `jor-spine`.
+
+**Lesson: check the publisher per journal, not per estate.** The low-confidence flag was applied
+wholesale during a session where the dominant publishers were blocked, and two titles inherited it
+without being blocked themselves. Worth a pass over any other flag set the same way.
+
+---
+
 ## 6. Verification run this session
 
 - `npx tsc --noEmit -p tsconfig.json` → **exit 0** (after every edit).
