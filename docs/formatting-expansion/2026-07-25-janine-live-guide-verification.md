@@ -28,10 +28,15 @@ Every conclusion below is bounded by what could actually be fetched. Attempts we
 | **Wolters Kluwer / LWW** (`journals.lww.com`) | ❌ Cloudflare interstitial, never cleared |
 | **Taylor & Francis**, **Wiley** (`onlinelibrary.wiley.com`) | ❌ 403 |
 
-**Consequence, stated plainly: `jbjs` and `ajsm` could not be verified this session.** They are the
-two journals the original pre-launch gate named, both were encoded from archived sources, and both
-sit behind Wolters Kluwer and Sage respectively. A CAPTCHA was presented and was not solved. This
-is the single most important limitation in this document and it shapes the verdict in §5.
+**UPDATE, later the same session — `jbjs` and `ajsm` were both reached after all, and both audit
+clean.** Kanwar supplied two working URLs. `jbjs.org/jbjs-ifa.php` serves its instructions from an
+in-page JavaScript blob, so `WebFetch` returns only the page shell — a browser session reads it
+fine. And `journals.sagepub.com/author-instructions/**ajs**` (lowercase slug) resolved through
+`WebFetch` where the uppercase `/AJS` path had been Cloudflare-blocked an hour earlier. **Two
+reusable lessons: try the browser when a page returns a suspiciously empty shell, and try the
+lowercase slug before declaring a SAGE journal unreachable.** Both files were archive-sourced and
+are now live-verified. `essr` (Wolters Kluwer) and `journal-of-orthopaedic-translation` (Elsevier
+CAPTCHA) remain unreached.
 
 ---
 
@@ -178,8 +183,9 @@ accepted, line spacing — were compared against the journal's **own** live Guid
 counts as *confirmed* only where the guide states the value; cells the guide is silent on are
 reported separately as *unverified*, never scored as correct.
 
-**Sample: 10 journals.** `oscrsj` · `acta-orthopaedica` · `asian-spine-journal` · `biology-of-sport` ·
-`journal-of-bone-metabolism` · `jssm` · `tamd` · `european-spine-journal` · `josr` · `sports-medicine`.
+**Sample: 12 journals.** `oscrsj` · `jbjs` · `ajsm` · `acta-orthopaedica` · `asian-spine-journal` ·
+`biology-of-sport` · `journal-of-bone-metabolism` · `jssm` · `tamd` · `european-spine-journal` ·
+`josr` · `sports-medicine`.
 
 | journal | cells confirmed | confirmed wrong | unverified |
 |---|---:|---:|---:|
@@ -193,9 +199,20 @@ reported separately as *unverified*, never scored as correct.
 | `sports-medicine` | 4 | 0 | 0 |
 | `josr` | 3 | 0 | 1 |
 | `oscrsj` | 9 | **2** | 0 |
-| **total** | **68** | **3** | **6** |
+| `jbjs` *(live-verified, was archive-sourced)* | 10 | 0 | 0 |
+| `ajsm` *(live-verified, was archive-sourced)* | 9 | 0 | 0 |
+| **total** | **87** | **3** | **6** |
 
-### **Accuracy: 95.8% (68 of 71 decidable cells), across 10 journals, 3 named misses.**
+### **Accuracy: 96.7% (87 of 90 decidable cells), across 12 journals, 3 named misses.**
+
+**The two highest-stakes files in the registry came back clean.** `jbjs` and `ajsm` were both
+encoded from archived / JS-blob sources and were the two the original pre-launch gate named. Live
+verification produced **zero corrections** on either: JBJS's 2500/1500/3000-word tiers, the
+325-word five-heading structured abstract, cited-not-alphabetical reference ordering, TIFF/EPS
+figures, and the `et_al_threshold: 'all'` flip from Session 98 are all confirmed verbatim — as is
+JBJS **not** accepting case reports. AJSM's 6000-word cap, 350-word seven-heading abstract, AMA 11th
+style, the unusual **alphabetical** reference ordering, and case-report/case-series acceptance are
+all confirmed. Both files gained a dated live-verification note.
 
 ### 4.1 The three misses, named
 
@@ -233,19 +250,31 @@ states *"There is no limit on the number of tables, figures or references."* Quo
 
 ### 4.4 What this rate does and does not license
 
-It says: on the journals we can reach, the encoding is good, the failure mode is *schema
-expressiveness*, not carelessness, and the encoders' own notes are trustworthy — twice this session
-a note correctly told me a value was unverified.
+**The Session-87 pre-launch gate is now discharged.** It named OSCRSJ, JBJS and AJSM; all three were
+audited against their live guides. JBJS and AJSM required **no corrections**. OSCRSJ did — the two
+misses in §4.1 — which is its own kind of finding: the journal we got wrong is our own.
 
-It does **not** discharge the pre-launch gate. **JBJS and AJSM remain unaudited**, both were encoded
-from archived sources, and AJSM is exactly the AMA-style journal affected by §2.1. The two journals
-the gate named are the two the sample could not include.
+The rate also says the failure mode across the registry is **schema expressiveness, not
+carelessness**. Every gap I found was already named in the file's own `encoding_notes` before I got
+there — JBJS's combined figure/table cap, AJSM's 3-journal-page cap, the forced-enum defaults. Three
+separate times this session a note correctly warned me a value was unverified. That is an encoding
+discipline I would defend publicly.
+
+**One registry-wide inconsistency worth naming.** JBJS and AJSM hit the *same* combined-figure+table
+schema gap and resolve it **differently** — JBJS encodes per-field upper bounds (5 and 5, permitting
+a 10-item manuscript it would reject), AJSM nulls both (checking nothing). Both are documented; only
+one can be right. I deliberately did **not** flip the registry's highest-profile file on my own
+judgement mid-audit. The real fix is a `figures_tables_combined_max` field, specced to Sushant, with
+at least six known instances: `jbjs`, `ajsm`, `asian-spine-journal`, `biology-of-sport`,
+`calcified-tissue-international`, `european-spine-journal`.
+
+Still unreached: `essr` (Wolters Kluwer) and `journal-of-orthopaedic-translation` (Elsevier CAPTCHA).
 
 ---
 
 ## 5. Verdict on the announcement gate (data side)
 
-**Not yet — one 15-minute fix short.**
+**Clear on everything except our own file — one fix short.**
 
 - The two `oscrsj` misses in §4.1 must be fixed before we announce. Getting *our own journal* wrong
   in a tool that advertises 75 journals is the one error a reader will actually find and screenshot,
@@ -256,8 +285,10 @@ the gate named are the two the sample could not include.
 - The `asian-spine-journal` / AMA et-al gap is a real formatting error but a *defensible* one — it
   is documented, bounded, and the fix is specced. It does not have to block an announcement; it
   does have to be on a dated queue before AJSM traffic arrives.
-- Everything Elsevier / Sage / LWW / Wiley / T&F stays null and honest. Nulls are not a launch
-  blocker. Wrong values are.
+- Everything still unreachable stays null and honest. Nulls are not a launch blocker. Wrong values
+  are.
+- **The Session-87 gate is discharged** (OSCRSJ + JBJS + AJSM all live-audited; the latter two with
+  zero corrections). What remains blocking is entirely self-inflicted: the two `oscrsj.json` defects.
 
 Compliance and positioning judgement on announcing at all is in the vault note:
 `02 - OSCRSJ/Notes/Compliance & Indexing/2026-07-25 Submission Studio Data Audit & Announcement Readiness (Janine).md`.
