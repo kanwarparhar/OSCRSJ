@@ -13,6 +13,7 @@
 //   - OSCRSJ is scored by the same math as every other journal. No self-boost.
 
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
+import type { SjrStanding } from './sjrData'
 
 /** Controlled subspecialty vocabulary (build brief §8.3 `scope_tags`). */
 export const SCOPE_TAGS = [
@@ -69,6 +70,12 @@ export interface JournalMeta {
   source_urls: string[]
   /** ISO date the cells above were verified; null while unenriched. */
   verified_date: string | null
+  /**
+   * Scimago standing, merged in by getJournalMeta() from the generated
+   * lib/finder/sjrData.ts. All-null for journals the Scimago pull does not rank
+   * (jocr, oscrsj) — render those as "Not SJR-ranked", never as rank-last.
+   */
+  sjr: SjrStanding
 }
 
 /** The numbers that describe a manuscript — the Finder's input. */

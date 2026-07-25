@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "validate:rules": "tsx scripts/validate-journal-rules.ts",
+    "generate:sjr": "node scripts/generate-sjr-data.mjs",
     "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {

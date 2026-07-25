@@ -7,6 +7,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
 import { scoreJournals, NEAR_FIT_RATIO, parseReviewWeeks } from '../lib/finder/match'
+import { NULL_SJR_STANDING } from '../lib/finder/sjrData'
 import type {
   JournalMeta,
   JournalLimits,
@@ -39,6 +40,10 @@ function meta(over: Partial<JournalMeta> = {}): JournalMeta {
     accepts_case_reports: null,
     source_urls: [],
     verified_date: null,
+    // v1 scoring never reads SJR; the field exists because Finder v2 added the
+    // channel to JournalMeta. Default to an all-null standing so these fixtures
+    // keep testing v1 behaviour unchanged.
+    sjr: NULL_SJR_STANDING,
     ...over,
   }
 }
