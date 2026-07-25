@@ -164,6 +164,7 @@
     "Cover letter required: 'A cover letter (authors' statement) must be signed by all authors.'",
     "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
     "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting.",
-    "2026-07-22 et-al doctrine audit: et_al_threshold null -> 'all' — this guide EXPLICITLY requires every author to be listed (statement quoted in the notes above); null now means guide-silent and falls back to the citation style's default."
+    "2026-07-22 et-al doctrine audit: et_al_threshold null -> 'all' — this guide EXPLICITLY requires every author to be listed (statement quoted in the notes above); null now means guide-silent and falls back to the citation style's default.",
+    "2026-07-25 Janine live-guide verification (termedia.pl/Journal/Biology_of_Sport-78/For-authors): line_spacing 'double' CONFIRMED - \"Articles should be submitted as text files, prepared in Microsoft Word with Times New Roman font, 12-point type, double-spaced with 2.5 cm margins.\" Same page CONFIRMS et_al_threshold='all' - \"List all authors\" - validating the Session 98 flip."
   ]
 }

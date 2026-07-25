@@ -181,6 +181,7 @@
     "Data sharing statement required for clinical-trial reports (ICMJE, since 1 Jul 2018); ethics/IRB stated in Methods; patient image consent via JBM Authorization and Release Form -> conditional declarations, not placed in the fixed end sequence.",
     "Manuscript title case not prescribed; table and figure titles use sentence case ('only the first letter of the first word ... capital').",
     "Reference style: numbered/bracket in cited order, MEDLINE journal abbreviations, DOIs shown in every journal-article example; other types follow NLM 'Citing Medicine' -> style nlm.",
-    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting.",
+    "2026-07-25 Janine live-guide verification (e-jbm.org/authors/authors.php): line_spacing 'double' CONFIRMED - \"The manuscript should be written in 12-point font with double line spacing on A4 sized (21.0x29.7 cm) paper with 2.5 cm margins on the top, bottom, right, and left.\" Same page CONFIRMS et_al_threshold=3 - \"If there are three or fewer authors in a reference, then all the names of the authors should be listed. If the number of authors is greater than three, list the initial three authors, and then abbreviate the rest ... with 'et al.'\""
   ]
 }

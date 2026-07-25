@@ -83,7 +83,7 @@
   "abstract": {
     "structured": false,
     "sections": null,
-    "max_words": null,
+    "max_words": 250,
     "keywords": {
       "required": false,
       "min": null,
@@ -93,7 +93,40 @@
     }
   },
   "sections": {},
-  "word_limits": {},
+  "word_limits": {
+    "review": {
+      "manuscript_max_words": 8000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "systematic_review": {
+      "manuscript_max_words": 10000,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "original_research": {
+      "manuscript_max_words": null,
+      "abstract_max_words": 250,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    },
+    "letter": {
+      "manuscript_max_words": 1000,
+      "abstract_max_words": null,
+      "references_min": null,
+      "references_max": null,
+      "figures_max": null,
+      "tables_max": null
+    }
+  },
   "references": {
     "style": "vancouver",
     "in_text": "bracket",
@@ -160,6 +193,7 @@
     "[schema-required default] references.journal_abbrev defaulted to 'nlm' (guide silent; NLM/Index Medicus abbreviations assumed).",
     "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
     "[schema-required default] tables.placement defaulted to 'in_text' (guide silent).",
-    "[schema-required default] layout.headings level styling (case/bold/italic) defaulted where the guide stated only numbering; 'as_is'/false used for unspecified attributes."
+    "[schema-required default] layout.headings level styling (case/bold/italic) defaulted where the guide stated only numbering; 'as_is'/false used for unspecified attributes.",
+    "2026-07-25 Janine primary-source verification (link.springer.com/journal/40279/submission-guidelines): the previously-null word limits are now guide-verified and encoded, discharging this file's own note \"Verify against the live guide before enforcing.\" Guide states: Review Article \"Word count up to 8000\"; Systematic Review \"Word count up to 10,000\"; Letter to the Editor \"Word count up to 1000\"; Original Research Article states NO word limit -> manuscript_max_words left null. Also encoded: \"Current Opinion approximately up to 3000\" and \"Leading Article up to 4000\" have no schema enum slot and are OMITTED. Abstract cap 250 from \"150 to 250 words\"; the guide adds that systematic reviews and original research may extend \"to up to 450 words\", so 250 is the stated norm and a 250-450 abstract is a soft, not hard, overage. Figures/tables/references deliberately left null: the guide states \"There is no limit on the number of tables, figures or references\". The guide's own caveat \"The word counts given below are to be treated as guides only\" applies to all of the above."
   ]
 }

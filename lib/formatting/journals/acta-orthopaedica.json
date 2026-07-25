@@ -212,6 +212,7 @@
     "line_numbers set to 'continuous' from 'line numbered' (guide does not specify continuous vs per-page). page_size, body font/size, margins, alignment, page numbers, running head, heading styles all UNSTATED -> null/false.",
     "Case/Technical report abstract is required at submission but NOT included in the published version.",
     "Declarations grouped in a single required manuscript section 'Ethics, registration, data sharing plan, funding, and conflicts of interest' placed after the Statistics subheading; author contributions and acknowledgments follow before References. Ethics approval/trial registration/data-sharing are conditionally required (e.g., data-sharing plan for trials enrolling from 1 Jan 2019); funding/conflict-of-interest/author-contributions treated as always-required.",
-    "American English spelling required; reporting-guideline checklist (CONSORT/STROBE/PRISMA etc.) uploaded as supplementary file."
+    "American English spelling required; reporting-guideline checklist (CONSORT/STROBE/PRISMA etc.) uploaded as supplementary file.",
+    "2026-07-25 Janine live-guide verification (actaorthop.org/actao/instructionsforauthors): line_spacing 'double' CONFIRMED against the guide's own sentence - \"It should be double line spaced (also the reference list), line numbered and include tables and figures at the end of the manuscript.\" The same sentence also confirms layout.line_numbers='continuous'. NOTE for future encoders: the OJS 'Submission Preparation Checklist' on actaorthop.org/actao/about/submissions says \"The text is single-spaced\" - that is platform boilerplate, NOT this journal's instruction, and it contradicts the actual guide. Do not encode from the checklist."
   ]
 }

@@ -208,6 +208,8 @@
     "abstract_max_words 300 stated for the structured abstract (original articles); left null for review/technical/letter where not separately stated.",
     "Case reports and editorials are accepted but the guide states no type-specific word/reference/figure limits or abstract structure -> nulls.",
     "[schema-required default] layout.margins_mm nulled — guide stated only {'top_mm': 30, 'bottom_mm': 30, 'left_mm': 30} but the schema requires all four edges; a partial margin can't be applied.",
-    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting.",
+    "2026-07-25 Janine live-guide verification (asianspinejournal.org/authors/authors.php): line_spacing 'double' CONFIRMED - \"The text should be typed in 10-point Arial, Times New Roman, or Courier font and double-spaced.\"",
+    "2026-07-25 Janine: SCHEMA GAP on references.et_al_threshold=6. The guide states a TWO-TIER rule - \"List names of all authors when six or fewer. When seven or more, list only the first three names, followed by 'et al.'\" A single N cannot express it: our engine renders a 7-author reference as 6 + et al., where the journal wants 3 + et al. Value left at 6 (the closer of the two available encodings) pending the richer { list_up_to, then_first } shape specced to Sushant 2026-07-25."
   ]
 }

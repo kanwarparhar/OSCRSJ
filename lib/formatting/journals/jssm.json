@@ -207,6 +207,8 @@
     "Conflict of interest must always be stated ('none declared' if none) -> required; funding acknowledged in Acknowledgment section; ethics (Declaration of Helsinki + legal-compliance declaration at end of acknowledgments) and patient consent/anonymity required for human/animal or identifiable-patient work (conditional).",
     "AI-use disclosure required in Acknowledgment or Methods section; copyright transfer statement required at submission; author royalty fee USD 3300 / EUR 2900 / GBP 2500 (not a formatting field).",
     "A signed 'letter of submission' from the corresponding author is referenced but not listed as a required cover-letter deliverable -> cover_letter_required false (uncertain).",
-    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting.",
+    "2026-07-25 Janine live-guide verification (jssm.org/dosya/Submisson2026.pdf): line_spacing 'double' CONFIRMED - \"The manuscripts should be submitted in Times New Roman font, 12-point type, double-spaced with 3 cm margins on all sides\", restated in the guide's own checklist. (A second double-spacing sentence in the same document is scoped to tables only; the manuscript-wide statement above is the operative one.)",
+    "2026-07-25 Janine: references.et_al_threshold=null CONFIRMED CORRECT. The guide's reference section shows full-author EXAMPLES but states no author-count rule either way; the only 'et al.' rule stated is for IN-TEXT citations (Harvard, 3+ authors). Session 98's decision to leave this null stands - an example is not a statement."
   ]
 }
