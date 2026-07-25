@@ -420,7 +420,7 @@ export default function WordDemo({ specs }: { specs: DemoSpec[] }) {
                 <p className="wd-h1">
                   Bilateral exertional compartment syndrome of the forearms: a case report
                 </p>
-                <p className="wd-auth">K. Parhar, MD; M. Kaur, MD; S. Lal, MS</p>
+                <p className="wd-auth">David R. Whitaker, MD; Sarah L. Bennett, MD; Arjun S. Iyer, MS</p>
                 <p className="wd-p">
                   A 24-year-old competitive sport climber presented with bilateral forearm pain and paresthesia after
                   sustained gripping. Symptoms resolved at rest and recurred reproducibly on exertion, having been

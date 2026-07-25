@@ -13,7 +13,7 @@ export const metadata: Metadata = studioMetadata({
   title: 'Find a journal | Submission Studio by OSCRSJ',
   description: `Score your manuscript against ${JOURNAL_COUNT} orthopedic journals on the numbers that decide eligibility: article type, word count, abstract length, figures, tables, and references. See what fits and exactly how far over you are where it does not. Free to use.`,
   path: '/studio/find',
-  social: `Which orthopedic journals is your manuscript actually eligible for? Score it against ${JOURNAL_COUNT} journals on real numbers, not topic vibes. Free to use.`,
+  social: `Which orthopedic journals is your manuscript eligible for? Score it against ${JOURNAL_COUNT} journals on the counts that decide eligibility, not on topical impression. Free to use.`,
 })
 
 // Tool-level schema. Deliberately describes a constraint checker, not a
@@ -76,10 +76,11 @@ export default function FindToolPage() {
           </div>
           <h1 className="reveal">Find where your manuscript fits</h1>
           <p className="sub reveal" style={{ marginTop: '16px', maxWidth: '70ch' }}>
-            Not topic vibes. Your real numbers. Enter your article type, word count, figures, and references, and we
-            check them against every journal&apos;s published limits: what you are eligible for, what fits, and exactly
-            how far over you are where you are not. Just finished a formatting job? We carry those numbers straight
-            over. We read only the numbers you enter, never your manuscript text.
+            Journal selection is a question of stated constraints, not topical impression. Enter your article type,
+            word count, figure count, and reference count, and each value is checked against every journal&apos;s
+            published limits: which journals your manuscript is eligible for, which of your counts fall within their
+            limits, and the exact margin by which any limit is exceeded. Counts from a completed formatting job are
+            carried over automatically. Only the values you enter are read; your manuscript text is never processed.
           </p>
           <div className="reveal" style={{ marginTop: '40px' }}>
             <FinderClient />
