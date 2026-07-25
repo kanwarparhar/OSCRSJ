@@ -54,7 +54,7 @@
   "abstract": {
     "structured": false,
     "sections": null,
-    "max_words": null,
+    "max_words": 250,
     "keywords": {
       "required": false,
       "min": null,
@@ -66,23 +66,23 @@
   "sections": {},
   "word_limits": {
     "original_research": {
-      "manuscript_max_words": null,
-      "abstract_max_words": null,
+      "manuscript_max_words": 5000,
+      "abstract_max_words": 250,
       "references_min": null,
-      "references_max": null,
+      "references_max": 45,
       "figures_max": null,
       "tables_max": null
     },
     "review": {
-      "manuscript_max_words": null,
-      "abstract_max_words": null,
+      "manuscript_max_words": 10000,
+      "abstract_max_words": 250,
       "references_min": null,
-      "references_max": null,
-      "figures_max": null,
+      "references_max": 100,
+      "figures_max": 10,
       "tables_max": null
     },
     "letter": {
-      "manuscript_max_words": null,
+      "manuscript_max_words": 500,
       "abstract_max_words": null,
       "references_min": null,
       "references_max": null,
@@ -90,7 +90,7 @@
       "tables_max": null
     },
     "editorial": {
-      "manuscript_max_words": null,
+      "manuscript_max_words": 1000,
       "abstract_max_words": null,
       "references_min": null,
       "references_max": null,
@@ -148,6 +148,8 @@
     "[schema-required default] references.order defaulted to 'cited' (guide silent).",
     "[schema-required default] figures.legends_location defaulted to 'in_text' (guide silent; legends left where authored).",
     "[schema-required default] tables.placement defaulted to 'in_text' (guide silent).",
-    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting."
+    "2026-07-18 doctrine audit: line_numbers 'none' was a default, not a guide statement — nulled so the engine preserves the author's setting.",
+    "2026-07-25 Janine re-encode from the PRIMARY guide (link.springer.com/journal/223/submission-guidelines), clearing this file's low_confidence_reencode flag. The Springer journal page is reachable even though the publisher's other surfaces are not. Guide states: Original Articles \"5,000 words, 45 references, no more than 8 figures/tables\"; Reviews \"10,000 words, 100 references, no more than 10 figures\"; Letters to Editor \"500 words\"; Editorials \"1,000 words and a maximum of 1 figure / table\" (invitation only). Abstract \"150 to 250 words\" -> max 250; abstract.structured left false (the guide sets a length, not a required section structure). COMBINED figure+table caps (8 for originals, 1 for editorials) cannot be expressed as separate figures_max/tables_max -> both left null; Reviews' cap is figures-ONLY (\"no more than 10 figures\") so figures_max=10 is exact. OMITTED for lack of a schema enum slot: \"Reports\" (1,500 words / 20 refs / 3 figures-tables) and \"Perspectives\" (2,500 words / 3 figure-tables, unsolicited not accepted). Case reports are NOT listed as an accepted type.",
+    "2026-07-25 Janine: references.et_al_threshold deliberately LEFT NULL despite the guide naming a number. The guide states: \"the names of all authors should be provided. For references with more than 7 authors the usage of 'et al' after the first 7 authors have been named will also be accepted.\" That 7 is a PERMISSION, not an instruction - the guide's primary instruction is to provide all authors. Encoding 7 would truncate lists the journal actually prefers in full; style is 'custom', so null renders every author, which satisfies the primary instruction and never raises a flag against an author who used et al. Same family as aots / european-spine-journal / kssta (Session 98). Do not 'fix' this to 7."
   ]
 }
