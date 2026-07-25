@@ -43,8 +43,27 @@ export default function FormatterMotion() {
       return
     }
 
+    // Every .reveal starts at opacity 0 and is only shown by this observer, so
+    // if the observer never delivers a callback the page stays blank below the
+    // fold with no error anywhere. IntersectionObserver is tied to the rendering
+    // lifecycle, so anything that stops it (a throw before this runs, an engine
+    // without IO) is an invisible-content bug rather than a missing animation.
+    // The observer always fires at least once for the hero, so "zero callbacks
+    // after 2.5s" is a reliable signal that the system is dead. Show everything
+    // and stop. Franklin, 2026-07-25.
+    let delivered = 0
+    const watchdog = window.setTimeout(() => {
+      if (delivered > 0) return
+      io.disconnect()
+      reveals.forEach((el) => el.classList.add('in'))
+      document
+        .querySelectorAll<HTMLElement>('.fmt-root [data-count]')
+        .forEach((el) => renderCount(el, false))
+    }, 2500)
+
     const io = new IntersectionObserver(
       (entries) => {
+        delivered += 1
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return
           const el = entry.target as HTMLElement
@@ -64,7 +83,10 @@ export default function FormatterMotion() {
     )
 
     reveals.forEach((el) => io.observe(el))
-    return () => io.disconnect()
+    return () => {
+      window.clearTimeout(watchdog)
+      io.disconnect()
+    }
   }, [])
 
   return null

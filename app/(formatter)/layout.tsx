@@ -45,6 +45,17 @@ export default function FormatterLayout({ children }: { children: React.ReactNod
     <div
       className={`fmt-root flex-1 ${interBody.variable} ${interTight.variable} ${jetBrainsMono.variable} ${dmSerif.variable}`}
     >
+      {/* Scroll reveals are JS-driven, so without JS every .reveal would stay at
+          opacity 0 and the Studio would render as chrome around empty space.
+          The content is server-rendered and crawlable; this makes it visible
+          too. Franklin, 2026-07-25. */}
+      <noscript>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: '.fmt-root .reveal{opacity:1 !important;transform:none !important}',
+          }}
+        />
+      </noscript>
       <IntroTransition />
       {children}
     </div>
