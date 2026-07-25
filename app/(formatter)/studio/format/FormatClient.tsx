@@ -26,6 +26,9 @@ const ACCEPTED_FIGURE_EXTS = ['jpg', 'jpeg', 'png', 'tif', 'tiff'] as const
 type Phase = 'form' | 'running' | 'complete' | 'error'
 
 function formatBytes(n: number): string {
+  // Sub-megabyte uploads rendered as "0.0 MB", which reads like an empty file
+  // next to a green check. Franklin, 2026-07-25.
+  if (n < 1024 * 1024) return `${Math.max(1, Math.round(n / 1024))} KB`
   return `${(n / (1024 * 1024)).toFixed(1)} MB`
 }
 

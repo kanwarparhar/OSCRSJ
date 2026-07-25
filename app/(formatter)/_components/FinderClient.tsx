@@ -149,7 +149,10 @@ function ResultCard({ score, onFormat }: { score: JournalScore; onFormat: (s: Jo
   return (
     <div className="rounded-xl border border-fmt-hairline bg-white p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
+        {/* flex-1 so a long journal name shrinks this column instead of forcing
+            the action button to wrap, where justify-between left-aligns it and
+            it no longer lines up with the other cards. Franklin, 2026-07-25. */}
+        <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h4 className="font-fmt-display text-lg text-fmt-ink">{score.name}</h4>
             {bm && (
