@@ -48,7 +48,10 @@ export function StudioNav() {
             </Link>
           ))}
           <Link className="btn btn-primary" href="/studio/format">
-            Format a manuscript
+            {/* Two labels, one link: the full call below 520px would wrap the
+                CTA onto two lines. CSS swaps them; screen readers read one. */}
+            <span className="lbl-long">Format a manuscript</span>
+            <span className="lbl-short">Format</span>
           </Link>
         </span>
       </div>
