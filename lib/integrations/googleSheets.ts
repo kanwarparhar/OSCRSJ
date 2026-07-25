@@ -23,6 +23,13 @@
 // the submission flow keeps working.
 // ============================================================
 
+interface ReplaceRowsArgs {
+  /** Tab name inside the target Google Sheet. */
+  sheetName: string
+  /** Full body of the tab, header row EXCLUDED. Replaces whatever is there. */
+  rows: Array<Array<string | number | boolean | null>>
+}
+
 interface AppendRowArgs {
   /** Tab name inside the target Google Sheet. */
   sheetName: string
@@ -96,6 +103,64 @@ export async function appendRowToSheet(
       '[appendRowToSheet] fetch failed:',
       isAbort ? 'timeout' : err
     )
+    return { ok: false, error: isAbort ? 'timeout' : 'fetch_failed' }
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
+/**
+ * Overwrite a tab's body with `rows` (the header row is preserved by the Apps
+ * Script side). Used for derived tabs that must be deduplicated -- the
+ * marketing list is rebuilt from the database every morning rather than
+ * appended to, because an append-only log cannot dedupe an address that
+ * formatted three manuscripts, and a list with triplicate rows is a list
+ * nobody trusts.
+ *
+ * Requires the Apps Script deployment that understands `mode: 'replace'`
+ * (docs/google-sheets-apps-script.gs, 2026-07-25 or later). An older
+ * deployment ignores the mode and would append instead, so re-deploy the
+ * script before relying on this.
+ *
+ * Never throws; same contract as appendRowToSheet.
+ */
+export async function replaceSheetRows(
+  args: ReplaceRowsArgs
+): Promise<AppendRowResult> {
+  const url = process.env.GOOGLE_SHEETS_WEBHOOK_URL
+  const secret = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET
+  if (!url || !secret) return { ok: false, error: 'not_configured' }
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), WEBHOOK_TIMEOUT_MS * 3)
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret,
+        mode: 'replace',
+        sheetName: args.sheetName,
+        rows: args.rows,
+      }),
+      signal: controller.signal,
+    })
+    if (!res.ok) {
+      const body = await res.text().catch(() => '<unreadable>')
+      console.error(
+        '[replaceSheetRows] non-2xx response:',
+        res.status,
+        body.slice(0, 500)
+      )
+      return { ok: false, error: `status_${res.status}` }
+    }
+    return { ok: true }
+  } catch (err) {
+    const isAbort =
+      err instanceof Error &&
+      (err.name === 'AbortError' || err.message.includes('aborted'))
+    console.error('[replaceSheetRows] fetch failed:', isAbort ? 'timeout' : err)
     return { ok: false, error: isAbort ? 'timeout' : 'fetch_failed' }
   } finally {
     clearTimeout(timeout)

@@ -44,6 +44,7 @@ export default function PrivacyPage() {
               {[
                 { title: 'Contact Information', desc: 'Name, email address, institutional affiliation, and professional role — provided when you submit a manuscript, register for an account, subscribe to our mailing list, or contact us.' },
                 { title: 'Submission Data', desc: 'Manuscript files, cover letters, reviewer comments, and correspondence related to the peer review process.' },
+                { title: 'Submission Studio Data', desc: 'When you use Submission Studio (our free manuscript formatting tool and Journal Finder), we collect your email address, your target journal and article type, and your uploaded files. Uploaded manuscripts and generated outputs are deleted from our storage after 7 days. Providing an email address, and agreeing to receive email from us, is required to use the Studio; we record the date and the exact wording you agreed to.' },
                 { title: 'Usage Data', desc: 'Anonymous analytics including pages visited, time on site, referral source, and device type. We use this data to improve the website experience.' },
                 { title: 'Cookies', desc: 'We use essential cookies for site functionality. We do not use advertising cookies or third-party tracking cookies.' },
               ].map((item) => (
@@ -62,7 +63,8 @@ export default function PrivacyPage() {
               {[
                 'To process and manage manuscript submissions and peer review',
                 'To communicate with authors, reviewers, and editorial board members',
-                'To send journal updates and newsletters to subscribers (opt-in only)',
+                'To send journal updates and newsletters to subscribers',
+                'To send email about Submission Studio and about the journal to people who have used the Studio, which requires agreeing to receive it',
                 'To improve website functionality and user experience',
                 'To comply with legal obligations and protect against misuse',
               ].map((item) => (
@@ -99,7 +101,7 @@ export default function PrivacyPage() {
                 'Access the personal data we hold about you',
                 'Request correction of inaccurate data',
                 'Request deletion of your personal data (subject to legal retention requirements)',
-                'Opt out of marketing communications at any time',
+                'Opt out of marketing communications at any time, including email from Submission Studio, using the unsubscribe link in any message or by contacting us',
                 'Lodge a complaint with a data protection authority',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">

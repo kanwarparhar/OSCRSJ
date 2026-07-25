@@ -94,6 +94,10 @@ export interface CreateJobRequest {
   figureFilenames?: string[]
   /** Original filename of the uploaded manuscript (used to name outputs). */
   manuscriptFilename?: string
+  /** Required (2026-07-25). The submitter ticked the consent box; the API
+   *  rejects the job without it. The consent VERSION is stamped server-side
+   *  from lib/studio/consent.ts, never accepted from the client. */
+  marketingConsent?: boolean
 }
 
 export interface SignedUpload {

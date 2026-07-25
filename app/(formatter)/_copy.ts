@@ -80,8 +80,14 @@ export const DATA_HANDLING = [
     body: 'Your manuscript exists to produce your output and nothing else. It is never published, never indexed, and never shown to another author or to any journal.',
   },
   {
-    title: 'We never sell it, and we never train on it',
-    body: 'OSCRSJ does not sell your work and does not train models on your manuscript. We ask for your email only to prevent abuse of a free tool, and we do not share your address.',
+    // REWRITTEN 2026-07-25. The previous body said the address was used "only
+    // to prevent abuse" and was not shared. That stopped being true the moment
+    // consent to marketing became a condition of using the Studio, and a
+    // data-handling card that has quietly gone false is worse than no card at
+    // all. It now says plainly what the address is for. Do not soften this
+    // back toward the old wording while the consent box is on the form.
+    title: 'We never sell your work, and we never train on it',
+    body: 'OSCRSJ does not sell your manuscript and does not train models on it. Your email address is a different thing and we are direct about it: using the Studio adds you to the OSCRSJ mailing list, covering the Studio and the journal. We do not sell or share your address, and every email carries a one-click unsubscribe.',
   },
   {
     title: 'Using the Studio is not submitting to us',

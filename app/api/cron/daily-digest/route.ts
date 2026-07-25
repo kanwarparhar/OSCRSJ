@@ -29,6 +29,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { runStudioDaily } from '@/app/api/cron/studio-daily/route'
 import { sendEmail } from '@/lib/email/resend'
 import {
   renderDailyDigest,
@@ -112,6 +113,15 @@ export async function GET(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  // Submission Studio morning brief rides this tick (13:00 UTC = 06:00
+  // America/Los_Angeles) rather than claiming a sixth cron slot, following the
+  // Session 98 precedent. It runs FIRST and unconditionally: this digest skips
+  // its own send on an empty editorial window, but a zero-activity Studio day
+  // is itself a number Kanwar wants to see, and a silently-skipped brief is
+  // indistinguishable from a broken cron. runStudioDaily never throws, so a
+  // Studio-side failure cannot take the editorial digest down with it.
+  const studio = await runStudioDaily()
 
   const admin = createAdminClient()
   const now = new Date()
@@ -369,6 +379,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       sent: false,
       reason: 'no_activity',
+      studio,
       counts,
       window: { start: windowStartIso, end: windowEndIso },
     })
@@ -418,6 +429,7 @@ export async function GET(req: NextRequest) {
       {
         sent: false,
         error: sendErr,
+        studio,
         counts,
         window: { start: windowStartIso, end: windowEndIso },
       },
@@ -427,6 +439,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     sent: true,
+    studio,
     recipient: digestRecipient(),
     subject,
     counts,

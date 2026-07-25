@@ -1,7 +1,14 @@
 // POST /api/finder/match — score the journal registry against a manuscript's
-// numbers (Sushant, Session 2). Stateless: nothing is written to the DB. A row
-// is logged to the "Finder Submissions" tab of the shared Google Sheet, and the
-// scoring is fully deterministic (lib/finder/match.ts). Rate-limited 20/IP/day.
+// numbers (Sushant, Session 2). A row is logged to the "Finder Submissions" tab
+// of the shared Google Sheet, and the scoring is fully deterministic
+// (lib/finder/match.ts). Rate-limited 20/IP/day.
+//
+// 2026-07-25: no longer strictly stateless. One envelope row per query is now
+// written to finder_queries (migration 029) so Studio metrics can report Finder
+// demand at all — an append-only Sheet cannot be counted from the cron, and the
+// Finder is half the product. NO email is collected here and none is stored;
+// the row holds article type, word count, subspecialty, the top result and the
+// bucket counts. Fire-and-forget: a DB failure must never fail a match.
 // Runs on Node because journalList pulls in the rule registry at import time.
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -14,6 +21,7 @@ import { checkFinderRateLimit } from '@/lib/finder/rateLimit'
 import { SCOPE_TAGS, type ManuscriptStats, type MatchableJournal, type ScopeTag, type SortKey } from '@/lib/finder/types'
 import { appendRowToSheet } from '@/lib/integrations/googleSheets'
 import { ARTICLE_TYPE_LABELS } from '@/lib/formatting/registry-meta'
+import { createAdminClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -103,6 +111,30 @@ export async function POST(req: NextRequest) {
   const topName = result.topResult
     ? result.results.find((r) => r.slug === result.topResult)?.name ?? result.topResult
     : '(no fit)'
+  // Countable demand signal (migration 029). Envelope only, never content.
+  void (async () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (createAdminClient().from('finder_queries') as any).insert({
+        article_type: stats.articleType,
+        word_count: stats.wordCount,
+        subspecialty,
+        top_journal: topName,
+        counts: result.counts,
+        supplied: [
+          stats.wordCount,
+          stats.abstractWordCount,
+          stats.figureCount,
+          stats.tableCount,
+          stats.referenceCount,
+        ].filter((v) => v !== null && v !== undefined).length,
+        ip,
+      })
+    } catch (err) {
+      console.error('[finder] query log failed:', err)
+    }
+  })()
+
   void appendRowToSheet({
     sheetName: FINDER_SHEET_TAB,
     row: [

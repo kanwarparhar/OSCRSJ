@@ -31,6 +31,9 @@ export async function createJob(fields: {
   articleType: string
   ip: string | null
   rulesVersion: string
+  /** Recorded verbatim so we can prove which wording this address agreed to.
+   *  Omitted only by callers predating migration 029 (none in the app). */
+  consent?: { version: string; scope: string }
 }): Promise<FormattingJob | null> {
   const a = admin()
   const { data, error } = await jobs(a)
@@ -41,6 +44,14 @@ export async function createJob(fields: {
       status: 'uploaded',
       ip: fields.ip,
       rules_version: fields.rulesVersion,
+      ...(fields.consent
+        ? {
+            marketing_consent: true,
+            consent_version: fields.consent.version,
+            consent_scope: fields.consent.scope,
+            consent_at: new Date().toISOString(),
+          }
+        : {}),
     })
     .select('*')
     .single()

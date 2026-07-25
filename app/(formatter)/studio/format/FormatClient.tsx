@@ -16,6 +16,7 @@ import type { ReportModel, Severity, ReferenceVerificationStatus } from '@/lib/f
 import { layoutNotPrescribedLine } from '@/lib/formatting/reportCopy'
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import { publishFormatHandoff, subscribeJournalRequest, clearJournalRequest } from '@/lib/finder/handoff'
+import { CONSENT_LABEL, CONSENT_DETAIL } from '@/lib/studio/consent'
 
 /* ------------------------------------------------------------------ */
 /*  Constants + helpers                                                 */
@@ -349,6 +350,11 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   const [journalId, setJournalId] = useState('')
   const [articleType, setArticleType] = useState('')
   const [email, setEmail] = useState('')
+  // Required to submit (Kanwar directive, 2026-07-25). Starts false and is
+  // never pre-ticked: a pre-ticked box is not a recorded affirmative act, and
+  // the whole point of storing a consent version is being able to say what the
+  // person actually did.
+  const [consent, setConsent] = useState(false)
 
   // Run state
   const [phase, setPhase] = useState<Phase>('form')
@@ -422,7 +428,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
 
   const emailValid = EMAIL_RE.test(email)
   const canSubmit =
-    !!manuscript && !!journalId && !!articleType && emailValid && !submitting
+    !!manuscript && !!journalId && !!articleType && emailValid && consent && !submitting
 
   /* ---- File handling ---- */
 
@@ -505,6 +511,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         figureCount: figures.length,
         figureFilenames: figures.map((f) => f.name),
         manuscriptFilename: manuscript.name,
+        marketingConsent: consent,
       }
       const createRes = await fetch('/api/format/jobs', {
         method: 'POST',
@@ -641,6 +648,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
     setJournalId('')
     setArticleType('')
     setEmail('')
+    setConsent(false)
     setReport(null)
     setDownloads({})
     setProgress(0)
@@ -931,8 +939,8 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
       <div className="rounded-xl border border-fmt-hairline bg-white p-6">
         <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">3. Your email</h3>
         <p className="mb-4 text-sm text-fmt-ink-2">
-          Your results appear right here on this page and nothing is emailed. We ask for your email only to prevent
-          abuse of a free tool, and we do not share your address.
+          Your results appear right here on this page and your formatted files are not emailed to you. We ask for your
+          address to prevent abuse of a free tool and to keep you posted on the Studio and the journal.
         </p>
 
         <div className="max-w-md">
@@ -953,6 +961,28 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           )}
         </div>
 
+        {/* Required consent. Gated again server-side in /api/format/jobs so a
+            hand-rolled POST cannot slip an address in without it. */}
+        <div className="mt-5 rounded-lg border border-fmt-hairline bg-fmt-surface p-4">
+          <label htmlFor="marketing-consent" className="flex cursor-pointer items-start gap-3">
+            <input
+              id="marketing-consent"
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer accent-fmt-accent"
+            />
+            <span className="text-sm font-medium leading-snug text-fmt-ink">{CONSENT_LABEL}</span>
+          </label>
+          <p className="mt-2 pl-7 text-xs leading-relaxed text-fmt-ink-2">{CONSENT_DETAIL}</p>
+          <p className="mt-2 pl-7 text-xs text-fmt-ink-2">
+            See our{' '}
+            <a href="/privacy" className="underline hover:text-fmt-accent" target="_blank" rel="noopener">
+              privacy policy
+            </a>
+            .
+          </p>
+        </div>
       </div>
 
       {/* Submit */}
