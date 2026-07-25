@@ -5,20 +5,16 @@ import JournalWall from '../../_components/JournalWall'
 import FormatterMotion from '../../_components/FormatterMotion'
 import { StudioNav, StudioFooter } from '../../_components/StudioChrome'
 import { DISCLAIMER } from '../../_copy'
+import { studioBreadcrumb, studioMetadata } from '../../_seo'
 
 const JOURNAL_COUNT = JOURNAL_SUMMARIES.length
 
-export const metadata: Metadata = {
-  title: { absolute: `Supported journals: ${JOURNAL_COUNT} orthopedic journals | Submission Studio by OSCRSJ` },
+export const metadata: Metadata = studioMetadata({
+  title: `Supported journals: ${JOURNAL_COUNT} orthopedic journals | Submission Studio by OSCRSJ`,
   description: `Every one of the ${JOURNAL_COUNT} orthopedic journals Submission Studio supports, each encoded directly from its own published Guide for Authors, re-checked monthly, with the last-verified date and a link to the source guide so you can check our work.`,
-  alternates: { canonical: 'https://www.oscrsj.com/studio/journals' },
-  openGraph: {
-    title: `Supported journals: ${JOURNAL_COUNT} orthopedic journals | Submission Studio by OSCRSJ`,
-    description: `Every supported orthopedic journal, encoded from its own published Guide for Authors, re-checked monthly, with a link to the source guide for every one.`,
-    url: 'https://www.oscrsj.com/studio/journals',
-    type: 'website',
-  },
-}
+  path: '/studio/journals',
+  social: `Every supported orthopedic journal, encoded from its own published Guide for Authors, re-checked monthly, with a link to the source guide for every one.`,
+})
 
 function verifiedLabel(iso: string): string {
   const d = new Date(`${iso}T00:00:00`)
@@ -34,6 +30,45 @@ const wallJournals = JOURNAL_SUMMARIES.map((j) => ({
   verified: verifiedLabel(j.verifiedDate),
   typeCount: j.articleTypes.length,
 }))
+
+// Machine-readable index of the wall (John, 2026-07-25). This page is the
+// Studio's only genuinely list-shaped surface and its highest-intent one:
+// "does <journal> take case reports / what are its limits" is the query it
+// answers. Emitting the roster as an ItemList lets a crawler or an LLM read all
+// ${JOURNAL_COUNT} entries without executing the client-side search component,
+// which is otherwise the only way to see past the first screenful.
+//
+// Each entry links to the JOURNAL'S OWN guide, which is exactly what the visible
+// card does — the schema makes no claim to host or own that content, and no
+// per-journal OSCRSJ URL is asserted because none exists. If per-journal routes
+// ever ship, `url` moves to ours and `sameAs` keeps the guide link.
+const journalListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Orthopedic journals supported by Submission Studio`,
+  url: 'https://www.oscrsj.com/studio/journals',
+  description: `${JOURNAL_COUNT} orthopedic journals, each encoded from its own published Guide for Authors and re-checked monthly.`,
+  isPartOf: {
+    '@type': 'SoftwareApplication',
+    name: 'Submission Studio',
+    url: 'https://www.oscrsj.com/studio',
+  },
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: wallJournals.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: wallJournals.map((j, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Periodical',
+        name: j.name,
+        publisher: { '@type': 'Organization', name: j.publisher },
+        url: j.guidelinesUrl,
+      },
+    })),
+  },
+}
 
 // Item 8 (Kanwar directive 2026-07-15): authors care that we are following the
 // journal's CURRENT guideline, and want to be able to check. This section leads
@@ -59,6 +94,15 @@ const provenance = [
 export default function JournalsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            journalListLd,
+            studioBreadcrumb([{ name: 'Supported journals', path: '/studio/journals' }]),
+          ]),
+        }}
+      />
       <FormatterMotion />
       <StudioNav />
 

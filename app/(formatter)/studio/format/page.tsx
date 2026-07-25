@@ -7,6 +7,7 @@ import WordDemo from '../../_components/WordDemo'
 import FormatterMotion from '../../_components/FormatterMotion'
 import { StudioNav, StudioFooter } from '../../_components/StudioChrome'
 import { DISCLAIMER, HOW_IT_WORKS, NEVER_DOES } from '../../_copy'
+import { studioBreadcrumb, studioMetadata, studioToolSchema } from '../../_seo'
 
 const JOURNAL_COUNT = JOURNAL_SUMMARIES.length
 
@@ -15,21 +16,42 @@ const JOURNAL_COUNT = JOURNAL_SUMMARIES.length
 // so no rule JSON reaches the client bundle.
 const DEMO_SPECS = getDemoSpecs()
 
-export const metadata: Metadata = {
-  title: { absolute: 'Format a manuscript | Submission Studio by OSCRSJ' },
+export const metadata: Metadata = studioMetadata({
+  title: 'Format a manuscript | Submission Studio by OSCRSJ',
   description: `Upload your Word manuscript, pick one of ${JOURNAL_COUNT} orthopedic journals, and download a submission-ready .docx with verified references and a transparent compliance report. Free to use. OSCRSJ never rewrites your science.`,
-  alternates: { canonical: 'https://www.oscrsj.com/studio/format' },
-  openGraph: {
-    title: 'Format a manuscript | Submission Studio by OSCRSJ',
-    description: `Format your orthopedic manuscript to any of ${JOURNAL_COUNT} target journals in minutes. Deterministic formatting, verified references, and a transparent compliance report. Free to use.`,
-    url: 'https://www.oscrsj.com/studio/format',
-    type: 'website',
-  },
-}
+  path: '/studio/format',
+  social: `Format your orthopedic manuscript to any of ${JOURNAL_COUNT} target journals in minutes. Deterministic formatting, verified references, and a transparent compliance report. Free to use.`,
+})
+
+// Tool-level schema. A crawler or an LLM can land on this URL directly without
+// ever seeing the hub, so the page states what it is on its own terms and ties
+// back to the hub entity via isPartOf. Claims here are limited to what the
+// pipeline actually does (see lib/formatting/**) — nothing aspirational.
+const toolLd = studioToolSchema({
+  name: 'Format a manuscript — Submission Studio',
+  path: '/studio/format',
+  description: `Formats an orthopedic manuscript to a target journal's published house style across ${JOURNAL_COUNT} journals, verifies references against Crossref and PubMed, and returns a transparent compliance report. Body prose is never rewritten.`,
+  featureList: [
+    'Deterministic formatting to a journal\u2019s published Guide for Authors',
+    'Reference verification and renumbering against Crossref and PubMed',
+    'Journal-styled reference list for the target journal',
+    'Transparent per-rule compliance report',
+    'Immutability guarantee: body prose is not altered',
+  ],
+})
 
 export default function FormatToolPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            toolLd,
+            studioBreadcrumb([{ name: 'Format a manuscript', path: '/studio/format' }]),
+          ]),
+        }}
+      />
       <FormatterMotion />
       <StudioNav />
 

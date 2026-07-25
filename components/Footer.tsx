@@ -37,6 +37,13 @@ export default function Footer() {
                 { label: 'Current Issue', href: '/articles/current-issue' },
                 { label: 'Submit a Manuscript', href: '/submit' },
                 { label: 'Guide for Authors', href: '/guide-for-authors' },
+                // Sitewide link to the Studio (John, 2026-07-25). The Tools nav
+                // was the ONLY thing on the whole site linking to /studio/*, and
+                // nothing linked the hub in body copy at all. On a DA~0 domain
+                // internal links are most of the authority these four URLs will
+                // ever get, and /studio was sitting "Discovered - currently not
+                // indexed, last crawl N/A" in GSC.
+                { label: 'Submission Studio', href: '/studio' },
                 { label: 'Editorial Board', href: '/editorial-board' },
                 { label: 'Aims & Scope', href: '/aims-scope' },
                 { label: 'Contact', href: '/contact' },

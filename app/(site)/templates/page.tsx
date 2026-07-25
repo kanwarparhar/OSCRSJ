@@ -194,6 +194,9 @@ export default function TemplatesPage() {
             <p className="text-ink leading-relaxed">
               Every submission needs a <strong>Title Page</strong> (with author info), a <strong>blinded manuscript</strong> (using the template that matches your article type), a <strong>Tables.docx</strong> if you have tables, and <strong>each figure as a separate image file</strong>. No author info appears in the manuscript file itself — that is the standard for blinded peer review.
             </p>
+            <p className="text-ink leading-relaxed mt-4">
+              Already have a finished draft? <Link href="/studio/format" className="text-brown-dark underline hover:text-brown">Submission Studio</Link> will apply these formatting rules to your existing .docx and verify your reference list against Crossref, so you do not have to move your text into a template by hand. It works for other journals&apos; requirements too, not just ours.
+            </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="#article-types" className="btn-primary-light">Jump to templates →</a>
               <a href="#consent" className="text-brown-dark underline hover:text-brown self-center">Patient consent statements</a>

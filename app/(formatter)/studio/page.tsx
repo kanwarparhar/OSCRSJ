@@ -5,20 +5,16 @@ import BeforeAfterDemo from '../_components/BeforeAfterDemo'
 import FormatterMotion from '../_components/FormatterMotion'
 import { StudioNav, StudioFooter } from '../_components/StudioChrome'
 import { BUILT_WITH, DATA_HANDLING, DISCLAIMER, HOW_IT_WORKS, NEVER_DOES, SOURCES_LINE } from '../_copy'
+import { studioBreadcrumb, studioMetadata } from '../_seo'
 
 const JOURNAL_COUNT = JOURNAL_SUMMARIES.length
 
-export const metadata: Metadata = {
-  title: { absolute: 'Submission Studio by OSCRSJ: free orthopedic manuscript tools' },
+export const metadata: Metadata = studioMetadata({
+  title: 'Submission Studio by OSCRSJ: free orthopedic manuscript tools',
   description: `Free tools for orthopedic authors. Find which of ${JOURNAL_COUNT} journals your manuscript is eligible for, then format it to that journal's published requirements in minutes. OSCRSJ never rewrites your science.`,
-  alternates: { canonical: 'https://www.oscrsj.com/studio' },
-  openGraph: {
-    title: 'Submission Studio by OSCRSJ: free orthopedic manuscript tools',
-    description: `Find where your manuscript fits across ${JOURNAL_COUNT} orthopedic journals, then format it to that journal's requirements. Free, with verified references and a transparent compliance report.`,
-    url: 'https://www.oscrsj.com/studio',
-    type: 'website',
-  },
-}
+  path: '/studio',
+  social: `Find where your manuscript fits across ${JOURNAL_COUNT} orthopedic journals, then format it to that journal's requirements. Free, with verified references and a transparent compliance report.`,
+})
 
 const faqs = [
   {
@@ -94,7 +90,7 @@ export default function StudioHubPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([softwareLd, faqLd]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([softwareLd, faqLd, studioBreadcrumb([])]) }}
       />
       <FormatterMotion />
       <StudioNav />

@@ -28,6 +28,11 @@ const resourceLinks = [
     href: '/templates',
   },
   {
+    title: 'Submission Studio (free)',
+    desc: 'Format your manuscript to any of 75 orthopedic journals\u2019 published requirements, and check which journals your word count, figures and references actually qualify for. Free, and it works for any target journal, not just OSCRSJ.',
+    href: '/studio',
+  },
+  {
     title: 'Peer Review Process',
     desc: 'How OSCRSJ evaluates manuscripts: double-blind review, two independent reviewers, decision categories, and turnaround targets.',
     href: '/peer-review',

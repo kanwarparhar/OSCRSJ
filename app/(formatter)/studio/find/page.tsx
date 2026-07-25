@@ -5,20 +5,32 @@ import FinderClient from '../../_components/FinderClient'
 import FormatterMotion from '../../_components/FormatterMotion'
 import { StudioNav, StudioFooter } from '../../_components/StudioChrome'
 import { DISCLAIMER } from '../../_copy'
+import { studioBreadcrumb, studioMetadata, studioToolSchema } from '../../_seo'
 
 const JOURNAL_COUNT = JOURNAL_SUMMARIES.length
 
-export const metadata: Metadata = {
-  title: { absolute: 'Find a journal | Submission Studio by OSCRSJ' },
+export const metadata: Metadata = studioMetadata({
+  title: 'Find a journal | Submission Studio by OSCRSJ',
   description: `Score your manuscript against ${JOURNAL_COUNT} orthopedic journals on the numbers that decide eligibility: article type, word count, abstract length, figures, tables, and references. See what fits and exactly how far over you are where it does not. Free to use.`,
-  alternates: { canonical: 'https://www.oscrsj.com/studio/find' },
-  openGraph: {
-    title: 'Find a journal | Submission Studio by OSCRSJ',
-    description: `Which orthopedic journals is your manuscript actually eligible for? Score it against ${JOURNAL_COUNT} journals on real numbers, not topic vibes. Free to use.`,
-    url: 'https://www.oscrsj.com/studio/find',
-    type: 'website',
-  },
-}
+  path: '/studio/find',
+  social: `Which orthopedic journals is your manuscript actually eligible for? Score it against ${JOURNAL_COUNT} journals on real numbers, not topic vibes. Free to use.`,
+})
+
+// Tool-level schema. Deliberately describes a constraint checker, not a
+// recommender — the Finder scores published limits and does not model
+// acceptance odds or topical fit, and the schema should not imply otherwise.
+const toolLd = studioToolSchema({
+  name: 'Find a journal — Submission Studio',
+  path: '/studio/find',
+  description: `Scores a manuscript against ${JOURNAL_COUNT} orthopedic journals on published constraints: article-type eligibility, word count, abstract length, figures, tables, and references. Reports which journals fit, which are near misses, and the exact delta where a limit is exceeded.`,
+  featureList: [
+    'Article-type eligibility gating',
+    'Word count, abstract, figure, table and reference limit checks',
+    'Exact over-limit deltas rather than pass/fail',
+    'Explicit count of how many of your numbers were actually checked',
+    'No self-preference: OSCRSJ is scored by the same rules as every other journal',
+  ],
+})
 
 const howScored = [
   {
@@ -41,6 +53,15 @@ const howScored = [
 export default function FindToolPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            toolLd,
+            studioBreadcrumb([{ name: 'Find a journal', path: '/studio/find' }]),
+          ]),
+        }}
+      />
       <FormatterMotion />
       <StudioNav />
 

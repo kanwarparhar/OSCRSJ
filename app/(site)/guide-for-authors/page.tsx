@@ -531,6 +531,19 @@ export default function GuideForAuthorsPage() {
           <span className="section-label">All Article Types</span>
           <h2 className="section-heading mb-8">General Requirements</h2>
 
+          {/* Contextual link to the Studio (John, 2026-07-25). This is the exact
+              point in the author journey the tool exists for — the requirements
+              below are what it applies automatically. Placed once, in the
+              relevant section, rather than repeated across the page. */}
+          <p className="text-ink leading-relaxed max-w-3xl mb-8">
+            You can apply the requirements below to an existing draft automatically with{' '}
+            <Link href="/studio/format" className="text-brown-dark underline hover:text-brown">
+              Submission Studio
+            </Link>
+            , our free formatting tool. It also covers 74 other orthopedic journals, so it is
+            useful even if you submit elsewhere.
+          </p>
+
           {/* Jump links */}
           <div className="bg-cream-alt border border-border rounded-xl p-5 mb-10">
             <div className="flex flex-wrap gap-2">
