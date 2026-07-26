@@ -21,6 +21,30 @@
 //      manuscript's verifiable characteristics sit against journals' standing —
 //      and says plainly that no honest tool can predict an editorial decision.
 //      Do not add a score, a percentage, or a "likelihood" field to these types.
+//
+//      ONE NARROW EXCEPTION, added 2026-07-26: a `methodologyScore` from
+//      lib/quality/. The prohibition above was written against an INVENTED,
+//      UNVERIFIABLE acceptance-likelihood number, and it still forbids exactly
+//      that. A published instrument's score is a different kind of object, and
+//      it is permitted only while ALL FIVE of these hold:
+//
+//        1. It is the score of a NAMED, PUBLISHED, EXTERNALLY VALIDATED
+//           instrument (MINORS, Newcastle-Ottawa, Cochrane RoB 2, CARE,
+//           AMSTAR-2), carried together with its citation string.
+//        2. Every scored item carries a VERBATIM QUOTE that code has verified is
+//           a substring of the manuscript — the same `verifyQuote` gate as
+//           doctrine 1 above, applied per item.
+//        3. Items the text cannot answer are `not_assessable` and are EXCLUDED
+//           FROM THE DENOMINATOR. They never lower the score.
+//        4. It is reported as `obtained / applicableMax` beside the instrument
+//           name ("MINORS 18/24") — never as a percentage, never as a
+//           probability, never as a bare "quality: 7/10".
+//        5. It carries no editorial-decision language anywhere.
+//
+//      Fail any one of the five and the original prohibition applies again and
+//      the field comes out. What is being measured is METHODOLOGICAL
+//      COMPLETENESS of what the manuscript states about itself. It is not, and
+//      may never be described as, a prediction of what an editor will do.
 
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import type { ConstraintCheck, JournalMeta, JournalScore } from './types'
