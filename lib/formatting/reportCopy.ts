@@ -92,3 +92,33 @@ export const IMPROVEMENTS_INTRO =
 /** Nothing to improve: every item the text could answer, it answered. */
 export const NO_GAPS_LINE =
   'Every item this instrument could be judged on was reported.'
+
+/**
+ * Where the study design came from, said out loud, every single time.
+ *
+ * THIS LINE IS NOT OPTIONAL AND IS NOT DECORATION. Every other number in this
+ * product is anchored to a sentence from the manuscript that code has verified
+ * as a substring. The study design is the one input that is not: it comes from a
+ * dropdown the author filled in, and the instrument is chosen entirely from it.
+ * A wrong answer there does not degrade the score, it invalidates it -- a chart
+ * review appraised as a prospective cohort produces a Newcastle-Ottawa number
+ * that means nothing, and the author may quote it to an editor.
+ *
+ * So the report says what the appraisal rests on and what happens if it is
+ * wrong. Any future version that hides this to make the section read more
+ * confidently has broken the only promise the feature makes.
+ */
+export const designBasisLine = (designLabel: string): string =>
+  `Appraised as a ${designLabel.toLowerCase()}, because that is what you told us. ` +
+  'We did not read the study design from your manuscript. If it is wrong, the ' +
+  'instrument below is the wrong instrument and its score does not apply.'
+
+/** The picker's own copy, on the formatter form. */
+export const DESIGN_PICKER_LABEL = 'Study design'
+
+export const DESIGN_PICKER_HELP =
+  'We use this to choose the published appraisal instrument for your study. ' +
+  'Leave it blank if you are not sure: we would rather show you nothing than ' +
+  'appraise your work with the wrong instrument.'
+
+export const DESIGN_PICKER_UNSET = 'Not specified — skip the quality appraisal'

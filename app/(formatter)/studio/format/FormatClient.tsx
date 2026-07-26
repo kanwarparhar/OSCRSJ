@@ -14,7 +14,17 @@ import {
   type JobOutputs,
 } from '@/lib/formatting/pipeline/api'
 import type { ReportModel, Severity, ReferenceVerificationStatus } from '@/lib/formatting/types'
-import { layoutNotPrescribedLine } from '@/lib/formatting/reportCopy'
+import {
+  DESIGN_PICKER_HELP,
+  DESIGN_PICKER_LABEL,
+  DESIGN_PICKER_UNSET,
+  layoutNotPrescribedLine,
+} from '@/lib/formatting/reportCopy'
+import { DESIGN_CHOICES_BY_ARTICLE_TYPE } from '@/lib/formatting/studyDesign'
+// Imported from lib/quality/types directly, never the '@/lib/quality' barrel:
+// the barrel re-exports cache.ts and its node:crypto import, which breaks the
+// client build (d571fed).
+import { STUDY_DESIGN_HINTS, STUDY_DESIGN_LABELS } from '@/lib/quality/types'
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import { publishFormatHandoff, subscribeJournalRequest, clearJournalRequest } from '@/lib/finder/handoff'
 import {
@@ -645,6 +655,10 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   const [figureError, setFigureError] = useState<string | null>(null)
   const [journalId, setJournalId] = useState('')
   const [articleType, setArticleType] = useState('')
+  // The author's declared study design, for article types whose type does not
+  // determine it. Deliberately OPTIONAL: blank means no quality appraisal, and
+  // that is a better outcome than an appraisal built on a guess.
+  const [studyDesign, setStudyDesign] = useState('')
   const [email, setEmail] = useState('')
   // Two boxes, and only the first one gates the run.
   //
@@ -701,6 +715,15 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   const selectedJournal = useMemo(
     () => journals.find((j) => j.slug === journalId) ?? null,
     [journalId],
+  )
+
+  /** The designs to offer, or null when the article type already fixes it. */
+  const designChoices = useMemo(
+    () =>
+      articleType
+        ? DESIGN_CHOICES_BY_ARTICLE_TYPE[articleType as ArticleType] ?? null
+        : null,
+    [articleType],
   )
 
   // "Format for this journal →" from the Journal Finder pre-selects here.
@@ -830,6 +853,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         email,
         journalId,
         articleType,
+        studyDesign: studyDesign || null,
         figureCount: figures.length,
         figureFilenames: figures.map((f) => f.name),
         manuscriptFilename: manuscript.name,
@@ -1000,6 +1024,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
     setFigureError(null)
     setJournalId('')
     setArticleType('')
+    setStudyDesign('')
     setEmail('')
     // Both cleared deliberately. startOver() also clears the email, so the
     // next run may be a different address and a different person; a box left
@@ -1356,7 +1381,13 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
             <select
               id="articleType"
               value={articleType}
-              onChange={(e) => setArticleType(e.target.value)}
+              onChange={(e) => {
+                setArticleType(e.target.value)
+                // A design chosen for the previous article type is meaningless
+                // for the new one, and carrying it over would silently appraise
+                // the manuscript with an instrument the author never picked.
+                setStudyDesign('')
+              }}
               disabled={!selectedJournal}
               className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink transition-colors focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40 disabled:cursor-not-allowed disabled:bg-fmt-surface disabled:text-fmt-ink-3"
             >
@@ -1369,6 +1400,46 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
             </select>
           </div>
         </div>
+
+        {/* The study-design question, asked ONLY for article types whose type
+            does not already determine the design -- "Original research" above
+            all, which may be a trial, a cohort, a comparison or a chart review.
+            Those take four different appraisal instruments, so the choice
+            cannot be inferred and is not guessed.
+
+            Optional on purpose. Blank means no appraisal, which is a better
+            answer than one built on a shrug. The help text says so plainly
+            rather than pushing for a selection we would then have to trust. */}
+        {designChoices && (
+          <div className="mt-4 border-t border-fmt-hairline pt-4">
+            <label htmlFor="studyDesign" className="mb-1 block text-sm font-medium text-fmt-ink">
+              {DESIGN_PICKER_LABEL}{' '}
+              <span className="font-normal text-fmt-ink-2">(optional)</span>
+            </label>
+            <select
+              id="studyDesign"
+              value={studyDesign}
+              onChange={(e) => setStudyDesign(e.target.value)}
+              className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink transition-colors focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40 sm:max-w-md"
+            >
+              <option value="">{DESIGN_PICKER_UNSET}</option>
+              {designChoices.map((d) => (
+                <option key={d} value={d}>
+                  {STUDY_DESIGN_LABELS[d]}
+                </option>
+              ))}
+            </select>
+            {/* The hint for the CHOSEN design, shown after choosing rather than
+                as twelve lines of prose before. The distinctions people get
+                wrong (prospective vs retrospective, series vs comparative) are
+                the ones worth confirming at the moment of choice. */}
+            <p className="mt-1.5 text-xs leading-relaxed text-fmt-ink-2">
+              {studyDesign
+                ? STUDY_DESIGN_HINTS[studyDesign as keyof typeof STUDY_DESIGN_HINTS]
+                : DESIGN_PICKER_HELP}
+            </p>
+          </div>
+        )}
 
         {selectedJournal && (
           <p className="mt-3 text-xs text-fmt-ink-2">

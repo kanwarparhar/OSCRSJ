@@ -26,9 +26,10 @@ import { parseReferences } from '../references/parse'
 import { verifyReferences } from '../references/verify'
 import { extractTitlePage } from './extract'
 import { analyze, analyzeFigures } from './analyze'
-import { buildReport, renderReportDocx, studyDesignForArticleType } from '../report'
+import { buildReport, renderReportDocx } from '../report'
+import { resolveStudyDesign } from '../studyDesign'
 import { extractMethodology } from '@/lib/quality/extract'
-import type { MethodologyScore } from '@/lib/quality/types'
+import type { MethodologyScore, StudyDesign } from '@/lib/quality/types'
 import type { JobStatus, JobOutputPaths } from './stages'
 import type {
   CslReference,
@@ -89,12 +90,12 @@ const RENDER_GRADING_MAX_START_MS = 12_000
  */
 async function gradeQuietly(
   bodyText: string,
-  articleType: ArticleType,
+  design: StudyDesign | null,
   elapsedMs: number,
 ): Promise<MethodologyScore | undefined> {
-  const design = studyDesignForArticleType(articleType)
-  // No design we can honestly claim from the article type. Not an error, and not
-  // worth a network call: see DESIGN_BY_ARTICLE_TYPE in report.ts.
+  // No design: either the article type does not determine one and the author
+  // left the picker blank, or they chose a design with no validated instrument.
+  // Not an error, and not worth a network call. See lib/formatting/studyDesign.ts.
   if (design === null) return undefined
   if (elapsedMs > RENDER_GRADING_MAX_START_MS) {
     console.warn('[formatting] skipped methodology grading: render stage near budget')
@@ -352,6 +353,11 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         const before = model.bodyText
         const ctx = { rules, articleType }
 
+        // Read the meta sidecar up front: the render stage needs it later for
+        // output names and figure checks, and the grading call below needs the
+        // author's declared study design out of it now.
+        const meta = await readJobMeta(jobId)
+
         // Methodological grading runs HERE, at the top of the stage, off the
         // body text we have just ingested -- never by re-parsing the .docx, and
         // never after the uploads. Running it early means a slow grading call
@@ -359,7 +365,12 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         // late would risk the function being killed after the manuscript and
         // report were already written but before the status advanced, which
         // turns a missing section into a duplicated run.
-        const methodology = await gradeQuietly(before, articleType, Date.now() - t0)
+        //
+        // The design is the article type's when the type determines it, and
+        // otherwise the one the author declared on the form. Null means no
+        // section: we never fall back to a guessed design.
+        const methodologyDesign = resolveStudyDesign(articleType, meta?.studyDesign)
+        const methodology = await gradeQuietly(before, methodologyDesign, Date.now() - t0)
 
         const layout = applyLayout(docx, model, ctx, { runningTitle: state.titlePageData.runningTitle ?? undefined })
         const blinding = blindManuscript(docx, model, ctx)
@@ -396,7 +407,6 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
         const referenceAudit = state.verifiedReferences.map((v, i) => auditRow(v, i + 1))
 
         // outputs — user-facing names are the original filename + _<journal abbrev>
-        const meta = await readJobMeta(jobId)
         const baseName = outputBaseName(meta?.originalFilename, job.journal_id)
         let titlePageBytes: Uint8Array | null = null
 
@@ -475,6 +485,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
             rules.layout.line_spacing === null,
           checklist,
           methodology,
+          methodologyDesign,
           cost: state.cost,
         })
         const reportDocx = renderReportDocx(report)

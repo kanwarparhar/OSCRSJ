@@ -192,6 +192,12 @@ export interface FormattedReference {
  * percentage and no editorial opinion, and nothing added here ever may.
  */
 export interface MethodologyReportSection {
+  /**
+   * The design the appraisal rests on, in the author's words ("Retrospective
+   * comparative"). Always populated for a scored section, because the report
+   * must state what the instrument choice was based on -- see designBasisLine.
+   */
+  designLabel: string | null
   /** e.g. "MINORS (comparative)". Shown verbatim -- the citability is the product. */
   instrumentName: string
   /** Full published citation, verbatim. */

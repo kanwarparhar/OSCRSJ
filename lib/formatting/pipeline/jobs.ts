@@ -14,6 +14,7 @@ import {
 } from './api'
 import { STAGE_LOCK_SECONDS, isLockActive } from './stages'
 import type { FormattingJob } from './stages'
+import type { StudyDesign } from '@/lib/quality/types'
 
 type Admin = ReturnType<typeof createAdminClient>
 
@@ -208,6 +209,17 @@ export interface JobMeta {
    * report-only figure checks; never used to rename or touch the files.
    */
   figureFilenames?: string[]
+  /**
+   * The study design the author declared, when their article type did not
+   * already determine it (2026-07-26). Absent on jobs created before that, and
+   * absent whenever the author left the picker blank -- both mean "no quality
+   * appraisal", never a fallback design.
+   *
+   * Stored in the meta sidecar rather than on the job row on purpose: it is an
+   * input to the report, it is reaped with the upload on the same 7-day clock,
+   * and it needs no migration.
+   */
+  studyDesign?: StudyDesign | null
 }
 
 export async function writeJobMeta(jobId: string, meta: JobMeta): Promise<void> {

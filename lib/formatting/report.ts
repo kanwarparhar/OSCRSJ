@@ -16,9 +16,10 @@ import type {
 // Direct module imports, never the '@/lib/quality' barrel: it re-exports
 // cache.ts, which imports node:crypto (see the note in types.ts).
 import type { MethodologyScore, ScoredItem, StudyDesign } from '@/lib/quality/types'
-import type { ArticleType } from './rulesSchema'
+import { STUDY_DESIGN_LABELS } from '@/lib/quality/types'
 import { createDocx, paraXml } from './ooxml/docx'
 import {
+  designBasisLine,
   layoutNotPrescribedLine,
   IMPROVEMENTS_HEADING,
   IMPROVEMENTS_INTRO,
@@ -39,41 +40,6 @@ const DISCLAIMER =
 // ---------------------------------------------------------------------------
 // Methodological quality (2026-07-26)
 // ---------------------------------------------------------------------------
-
-/**
- * What study design, if any, the formatter is entitled to claim from the
- * author's chosen article type.
- *
- * READ THIS BEFORE ADDING A LINE. The formatter, unlike the Finder, never
- * extracts a study design -- it knows only which article type the author picked
- * from a dropdown. So this map may contain ONLY the pairs where the article type
- * IS the design. Everything else returns null, which selects no instrument and
- * omits the score.
- *
- * `original_research` is the expensive one and the deliberate one. It is the
- * commonest submission there is, and it is also the one whose design is
- * genuinely unknown: an original-research upload may be a randomised trial, a
- * prospective cohort, a retrospective comparison or a chart review, and those
- * four take four different instruments with different item sets and different
- * maxima. Guessing would produce a citable-looking MINORS or Newcastle-Ottawa
- * score that the manuscript's actual design never earned -- a fabricated number
- * wearing a published instrument's name, which is worse than no number by a wide
- * margin. The honest consequence, which is real and should not be quietly
- * engineered around: most original-research uploads get no quality section in
- * the formatter. The fix is to extract the design (as lib/finder/assess.ts
- * already does) and pass it in, NOT to add a line to this map.
- */
-const DESIGN_BY_ARTICLE_TYPE: Partial<Record<ArticleType, StudyDesign>> = {
-  case_report: 'case_report',
-  case_series: 'case_series',
-  systematic_review: 'systematic_review',
-  narrative_review: 'narrative_review',
-  technical_note: 'technical_note',
-}
-
-export function studyDesignForArticleType(articleType: ArticleType): StudyDesign | null {
-  return DESIGN_BY_ARTICLE_TYPE[articleType] ?? null
-}
 
 /**
  * The headline result, in the instrument's own scale.
@@ -118,11 +84,15 @@ function improvementLine(item: ScoredItem): string {
  */
 export function buildMethodologySection(
   score: MethodologyScore | null | undefined,
+  /** The design the appraisal rests on. Rendered as the basis disclosure. */
+  design?: StudyDesign | null,
 ): MethodologyReportSection | null {
   if (!score || score.gradingError !== null) return null
+  const designLabel = design ? STUDY_DESIGN_LABELS[design] : null
 
   if (score.noInstrument) {
     return {
+      designLabel,
       instrumentName: score.instrumentName,
       citation: score.citation,
       scoreLine: null,
@@ -143,6 +113,7 @@ export function buildMethodologySection(
   if (score.normalized === null) return null
 
   return {
+    designLabel,
     instrumentName: score.instrumentName,
     citation: score.citation,
     scoreLine: scoreLineFor(score),
@@ -170,6 +141,8 @@ export function buildReport(input: {
    * (and every test) keeps compiling and keeps producing today's report exactly.
    */
   methodology?: MethodologyScore | null
+  /** The design the grade rests on, disclosed in the section. */
+  methodologyDesign?: StudyDesign | null
   cost?: { deepseekTokens: number; usd: number }
 }): ReportModel {
   // Deliberately counts ONLY suggestions. A methodological gap must never
@@ -195,7 +168,7 @@ export function buildReport(input: {
     styleCaveat: input.styleCaveat ?? false,
     layoutNotPrescribed: input.layoutNotPrescribed ?? false,
     submissionChecklist: input.checklist,
-    methodology: buildMethodologySection(input.methodology),
+    methodology: buildMethodologySection(input.methodology, input.methodologyDesign),
     rulesVersion: input.rulesVersion,
     disclaimer: DISCLAIMER,
     ...(input.cost ? { cost: input.cost } : {}),
@@ -282,7 +255,12 @@ function methodologyHtml(m: MethodologyReportSection | null): string {
     ? `<p>${esc(IMPROVEMENTS_INTRO)}</p><ul>${m.improvements.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`
     : `<p>${esc(NO_GAPS_LINE)}</p>`
 
+  // The basis disclosure sits ABOVE the score, not in a footnote. A reader who
+  // stops after the number must already have been told what it rests on.
+  const basis = m.designLabel ? `<p><em>${esc(designBasisLine(m.designLabel))}</em></p>` : ''
+
   return `${head}
+${basis}
 <div class="verdict"><strong>${esc(m.instrumentName)}${m.scoreLine ? `: ${esc(m.scoreLine)}` : ''}</strong>${excluded}<br>
 <small>${esc(m.citation)}</small></div>
 <table><tr><th>Item</th><th>Result</th><th>Evidence from your manuscript</th></tr>${rows}</table>
@@ -394,6 +372,7 @@ export function renderReportDocx(report: ReportModel): Uint8Array {
   const m = report.methodology
   if (m) {
     p.push(paraXml(METHODOLOGY_HEADING, { bold: true, sizePt: 13 }))
+    if (m.designLabel) p.push(paraXml(designBasisLine(m.designLabel), { italic: true }))
     if (m.noInstrument) {
       p.push(paraXml(NO_INSTRUMENT_LINE))
     } else {

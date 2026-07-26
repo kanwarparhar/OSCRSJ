@@ -22,8 +22,14 @@ import {
   buildReport,
   renderReportDocx,
   renderReportHtml,
-  studyDesignForArticleType,
 } from '../lib/formatting/report'
+import {
+  DESIGN_CHOICES_BY_ARTICLE_TYPE,
+  needsDeclaredDesign,
+  parseDeclaredDesign,
+  resolveStudyDesign,
+  studyDesignForArticleType,
+} from '../lib/formatting/studyDesign'
 import {
   IMPROVEMENTS_HEADING,
   INSTRUMENT_TRUST_LINE,
@@ -31,14 +37,16 @@ import {
   NO_GAPS_LINE,
   NO_INSTRUMENT_LINE,
 } from '../lib/formatting/reportCopy'
+import { designBasisLine } from '../lib/formatting/reportCopy'
 import { INSTRUMENTS } from '../lib/quality/instruments'
 import { scoreInstrument, scoreNone, gradingErrorScore } from '../lib/quality/score'
-import type { MethodologyScore, RawGradedItem } from '../lib/quality/types'
+import type { MethodologyScore, RawGradedItem, StudyDesign } from '../lib/quality/types'
+import { STUDY_DESIGN_LABELS, STUDY_DESIGNS } from '../lib/quality/types'
 import type { ArticleType } from '../lib/formatting/rulesSchema'
 
 // --- Fixtures --------------------------------------------------------------
 
-function report(methodology?: MethodologyScore | null) {
+function report(methodology?: MethodologyScore | null, design?: StudyDesign | null) {
   return buildReport({
     journalName: 'Orthopedic Surgery Case Reports & Series Journal (OSCRSJ)',
     verifiedDate: '2026-07-01',
@@ -49,6 +57,7 @@ function report(methodology?: MethodologyScore | null) {
     referenceAudit: [],
     checklist: [{ requirement: 'Structured abstract', status: 'met' }],
     ...(methodology === undefined ? {} : { methodology }),
+    ...(design === undefined ? {} : { methodologyDesign: design }),
   })
 }
 
@@ -230,12 +239,118 @@ test('original_research maps to NO design, and this is the point of the map', ()
   // retrospective comparison or a chart review. Those take four different
   // instruments with four different item sets. Anyone reaching for a one-line
   // "fix" here is about to print a published instrument's name over a score that
-  // manuscript never earned. Extract the design instead.
+  // manuscript never earned. Ask the author instead -- which is what the picker
+  // below does.
   assert.equal(studyDesignForArticleType('original_research'), null)
 
   for (const t of ['review', 'letter', 'editorial'] as ArticleType[]) {
     assert.equal(studyDesignForArticleType(t), null, `${t} must not claim a design`)
   }
+})
+
+// --- 4. The author declares the design -------------------------------------
+
+test('the picker is offered exactly where the article type leaves the design open', () => {
+  assert.equal(needsDeclaredDesign('original_research'), true)
+  assert.equal(needsDeclaredDesign('review'), true)
+
+  // Already determined: asking would be asking a question we know the answer to.
+  for (const t of ['case_report', 'case_series', 'systematic_review', 'narrative_review', 'technical_note'] as ArticleType[]) {
+    assert.equal(needsDeclaredDesign(t), false, `${t} is already determined`)
+  }
+  // No design a letter or editorial could carry has a validated instrument, so
+  // the question would be asked for nothing.
+  assert.equal(needsDeclaredDesign('letter'), false)
+  assert.equal(needsDeclaredDesign('editorial'), false)
+})
+
+test('every offered design is a real design with a label and a hint', () => {
+  for (const [type, choices] of Object.entries(DESIGN_CHOICES_BY_ARTICLE_TYPE)) {
+    for (const d of choices ?? []) {
+      assert.ok(STUDY_DESIGNS.includes(d), `${type} offers unknown design ${d}`)
+      assert.ok(STUDY_DESIGN_LABELS[d], `${d} has no label`)
+    }
+  }
+})
+
+test('a declared design is validated against ITS OWN article type', () => {
+  assert.equal(parseDeclaredDesign('rct', 'original_research'), 'rct')
+  assert.equal(parseDeclaredDesign('retrospective_comparative', 'original_research'), 'retrospective_comparative')
+  assert.equal(parseDeclaredDesign('systematic_review', 'review'), 'systematic_review')
+
+  // The attack this closes: a hand-rolled POST pairing "original research" with
+  // "case report" would otherwise get CARE applied to a study that is not a case
+  // report, and CARE's thirteen completeness items would score it generously.
+  assert.equal(parseDeclaredDesign('case_report', 'original_research'), null)
+  assert.equal(parseDeclaredDesign('rct', 'review'), null)
+
+  // Anything unrecognised is null -- never a fallback design.
+  assert.equal(parseDeclaredDesign('', 'original_research'), null)
+  assert.equal(parseDeclaredDesign(null, 'original_research'), null)
+  assert.equal(parseDeclaredDesign(42, 'original_research'), null)
+  assert.equal(parseDeclaredDesign('definitely_not_a_design', 'original_research'), null)
+  // An article type with no picker accepts nothing, however plausible.
+  assert.equal(parseDeclaredDesign('rct', 'case_report'), null)
+})
+
+test('a blank answer means no appraisal, never a guessed design', () => {
+  // The whole doctrine in one assertion. Leaving the picker blank must land on
+  // null, so gradeQuietly skips the call and the section is absent. If this ever
+  // returns a design, someone has added a fallback and the product is now
+  // printing instrument scores for studies whose design nobody stated.
+  assert.equal(resolveStudyDesign('original_research', null), null)
+  assert.equal(resolveStudyDesign('original_research', undefined), null)
+})
+
+test('the article type wins over a contradicting declared design', () => {
+  // Same author, narrower question. Someone who selected "Case report" and then
+  // supplied a conflicting design has contradicted themselves; honour the
+  // narrower answer rather than letting the looser one select the instrument.
+  assert.equal(resolveStudyDesign('case_report', 'rct'), 'case_report')
+  assert.equal(resolveStudyDesign('original_research', 'rct'), 'rct')
+})
+
+test('the report DISCLOSES that the design came from the author, not the manuscript', () => {
+  // This is the load-bearing test of the whole change. Every other number in the
+  // product is anchored to a verified quote; the design is not, and the
+  // instrument is chosen entirely from it. A wrong answer does not degrade the
+  // score, it invalidates it -- so the report must say what it rests on.
+  const r = report(careScore(), 'case_report')
+  const section = r.methodology
+  assert.equal(section!.designLabel, 'Case report')
+
+  const expected = designBasisLine('Case report')
+  assert.match(expected, /that is what you told us/)
+  assert.match(expected, /did not read the study design from your manuscript/)
+  assert.match(expected, /the wrong instrument/)
+
+  for (const surface of [renderReportHtml(r), docxPlainText(renderReportDocx(r))]) {
+    assert.match(surface, new RegExp(escapeRe(expected)), 'basis disclosure must appear')
+  }
+})
+
+test('the disclosure appears for a declared design too, not just a derived one', () => {
+  const minors = scoreInstrument(
+    INSTRUMENTS.MINORS_COMPARATIVE,
+    INSTRUMENTS.MINORS_COMPARATIVE.items.map((i) => ({
+      id: i.id,
+      verdict: 'met' as const,
+      quote: `quote for ${i.id}`,
+    })),
+  )
+  const r = report(minors, 'retrospective_comparative')
+  assert.equal(r.methodology!.designLabel, 'Retrospective comparative')
+  assert.match(renderReportHtml(r), /retrospective comparative, because that is what you told us/)
+  // 24/24 on the comparative instrument, which is the max in the brief's table.
+  assert.match(r.methodology!.scoreLine!, /^24 of 24 applicable points$/)
+})
+
+test('a section with no design still renders, without a false disclosure', () => {
+  // Reports written before this change carry no design. They must not grow a
+  // disclosure claiming the author told us something they never did.
+  const r = report(careScore())
+  assert.equal(r.methodology!.designLabel, null)
+  assert.doesNotMatch(renderReportHtml(r), /because that is what you told us/)
 })
 
 // --- helpers ---------------------------------------------------------------

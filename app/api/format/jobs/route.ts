@@ -5,9 +5,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getJournal, ARTICLE_TYPE_LABELS } from '@/lib/formatting/journalList'
-import { SCHEMA_VERSION } from '@/lib/formatting/rulesSchema'
+import { SCHEMA_VERSION, type ArticleType } from '@/lib/formatting/rulesSchema'
 import { createJob, checkRateLimit, createSignedUpload, writeJobMeta } from '@/lib/formatting/pipeline/jobs'
 import { storagePaths, MAX_FIGURES } from '@/lib/formatting/pipeline/api'
+import { parseDeclaredDesign } from '@/lib/formatting/studyDesign'
 import { appendRowToSheet } from '@/lib/integrations/googleSheets'
 import { CONSENT_SCOPE } from '@/lib/studio/consent'
 import { STUDIO_TERMS_VERSION, MARKETING_CONSENT_VERSION } from '@/lib/studio/terms'
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
     email,
     journalId,
     articleType,
+    studyDesign,
     figureCount,
     figureFilenames,
     manuscriptFilename,
@@ -156,6 +158,11 @@ export async function POST(req: NextRequest) {
     : []
   await writeJobMeta(job.id, {
     originalFilename,
+    // Validated against the choices for THIS article type, so a hand-rolled POST
+    // cannot pair "original research" with "case report" and get CARE applied to
+    // a study that is not a case report. Anything unrecognised becomes null,
+    // which means no appraisal -- never a fallback design.
+    studyDesign: parseDeclaredDesign(studyDesign, articleType as ArticleType),
     figureCount: nFigs,
     figureFilenames: figureNames,
   })

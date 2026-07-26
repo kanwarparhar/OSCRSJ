@@ -108,6 +108,13 @@ export interface CreateJobRequest {
   email: string
   journalId: string
   articleType: string
+  /**
+   * The author's declared study design, for article types whose type does not
+   * determine it (2026-07-26). Optional and nullable: blank means no quality
+   * appraisal, and the server validates it against the choices for this article
+   * type rather than trusting it.
+   */
+  studyDesign?: string | null
   turnstileToken?: string
   figureCount?: number
   /** Author's figure filenames, in attach order — drives the format check. */

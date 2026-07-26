@@ -70,6 +70,69 @@ export type StudyDesign =
   | 'basic_science'
   | 'other'
 
+/** Every design, strongest to weakest. Same order as the union above. */
+export const STUDY_DESIGNS: readonly StudyDesign[] = [
+  'rct',
+  'prospective_cohort',
+  'retrospective_comparative',
+  'case_control',
+  'case_series',
+  'case_report',
+  'systematic_review',
+  'meta_analysis',
+  'narrative_review',
+  'technical_note',
+  'basic_science',
+  'other',
+]
+
+/**
+ * Display names. Duplicated today by DESIGN_LABELS in
+ * app/(formatter)/_components/FinderProfileCard.tsx; these are canonical and
+ * that copy should re-export from here when the file is next opened.
+ */
+export const STUDY_DESIGN_LABELS: Record<StudyDesign, string> = {
+  rct: 'Randomized controlled trial',
+  prospective_cohort: 'Prospective cohort',
+  retrospective_comparative: 'Retrospective comparative',
+  case_control: 'Case control',
+  case_series: 'Case series',
+  case_report: 'Case report',
+  systematic_review: 'Systematic review',
+  meta_analysis: 'Meta-analysis',
+  narrative_review: 'Narrative review',
+  technical_note: 'Technical note',
+  basic_science: 'Basic science',
+  other: 'Other',
+}
+
+/**
+ * One clause telling an author how to recognise their own study.
+ *
+ * These exist because the label alone is not enough to choose correctly, and
+ * choosing incorrectly is the whole risk of asking: a retrospective chart review
+ * mislabelled as a prospective cohort gets appraised with the wrong instrument
+ * and handed a score its author will quote at an editor. The distinctions that
+ * matter most are the ones people actually confuse -- prospective versus
+ * retrospective (was the protocol written before the first patient?) and series
+ * versus comparative (is there a comparison group at all?) -- so those are the
+ * ones the hints spell out.
+ */
+export const STUDY_DESIGN_HINTS: Record<StudyDesign, string> = {
+  rct: 'Patients were randomly allocated between treatments.',
+  prospective_cohort: 'You decided what to measure before the first patient was enrolled, then followed them forward.',
+  retrospective_comparative: 'Two or more groups compared using data already in the records.',
+  case_control: 'You started from who had the outcome and looked back at what differed.',
+  case_series: 'One group of patients, described. No comparison group.',
+  case_report: 'One patient.',
+  systematic_review: 'A protocol-driven search and appraisal of the existing literature.',
+  meta_analysis: 'A systematic review that statistically pools the results.',
+  narrative_review: 'An expert synthesis of a topic, without a protocol-driven search.',
+  technical_note: 'A description of a technique or device, not a patient study.',
+  basic_science: 'Laboratory, cadaveric, biomechanical or animal work.',
+  other: 'None of these describes it.',
+}
+
 export interface InstrumentItem {
   id: string
   /** Plain-language statement of what a quote must show. Drives the prompt. */
