@@ -33,6 +33,16 @@ export interface ProfileField<T> {
   confidence: 'high' | 'low' | null
   /** True when the model supplied a quote that failed substring verification — the value was nulled. */
   quoteRejected?: boolean
+  /**
+   * True when the AUTHOR supplied or corrected this value.
+   *
+   * An edited field carries NO quote and NO confidence, ever: the card's promise
+   * is "here is what your text says", and an author's correction is a different
+   * kind of claim. It is used (it feeds the anchor like any other value) and it
+   * is LABELLED. What must never happen is an author-stated number rendered in
+   * the same visual language as a quote-verified one.
+   */
+  authorEdited?: boolean
 }
 
 export type StudyDesign =
@@ -84,10 +94,54 @@ export interface ManuscriptProfile {
   disagreements: string[]
   /** True in manual mode: nothing here was read from a manuscript. */
   selfReported: boolean
+  /**
+   * Names of the fields the author corrected by hand, derived in finalizeProfile
+   * from the fields themselves so it can never drift out of sync with them.
+   * Surfaced on the profile card and under the ladder.
+   */
+  authorEditedFields: EditableProfileField[]
   /** True when the body was truncated before extraction (disclosed in the UI). */
   truncated: boolean
   /** Set when extraction degraded (bad JSON twice, no API key). Disclosed, never fatal. */
   extractionError: string | null
+}
+
+/**
+ * The fields an author may correct on the profile card.
+ *
+ * `noveltyClaim` is deliberately ABSENT and must stay absent. That row reports
+ * whether the manuscript makes a novelty claim IN ITS OWN WORDS; letting an
+ * author type one in would manufacture a sentence their paper does not contain,
+ * and an editor reading the paper would find nothing there. When it is blank the
+ * fix belongs in the manuscript, and the card says so.
+ *
+ * `evidenceLevel` is absent because it is derived, not observed — correct the
+ * design and the level follows.
+ */
+export const EDITABLE_PROFILE_FIELDS = [
+  'design',
+  'sampleSize',
+  'comparative',
+  'multicenter',
+  'followUpMonths',
+  'statsReported',
+] as const
+export type EditableProfileField = (typeof EDITABLE_PROFILE_FIELDS)[number]
+
+/**
+ * An author's corrections, keyed by field. An explicit `null` means "the author
+ * cleared this back to unknown", which is different from the key being absent
+ * (leave whatever we extracted alone).
+ */
+export type ProfileEdits = Partial<Record<EditableProfileField, string | number | boolean | null>>
+
+export const EDITABLE_FIELD_LABELS: Record<EditableProfileField, string> = {
+  design: 'Study design',
+  sampleSize: 'Patients analyzed',
+  comparative: 'Comparison group',
+  multicenter: 'Multicenter',
+  followUpMonths: 'Follow-up',
+  statsReported: 'Statistics reported',
 }
 
 export interface SelfAssessment {

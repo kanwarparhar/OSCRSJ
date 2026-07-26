@@ -17,9 +17,12 @@
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import { deepseekModel } from '@/lib/deepseekModel'
 import {
+  EDITABLE_PROFILE_FIELDS,
   MANUAL_DESIGN_BY_ARTICLE_TYPE,
   STUDY_DESIGNS,
+  type EditableProfileField,
   type ManuscriptProfile,
+  type ProfileEdits,
   type ProfileField,
   type SelfAssessment,
   type StudyDesign,
@@ -273,8 +276,94 @@ export function finalizeProfile(
     anchor: round4(clamp(base + adjustment + authorShift, 0.1, 0.9)),
     authorShift: round4(authorShift),
     disagreements: deriveDisagreements(selfAssessment, fields.noveltyClaim.value, fields.statsReported.value),
+    // Derived from the fields themselves rather than threaded in as a parameter,
+    // so the list can never claim an edit the field does not carry.
+    authorEditedFields: EDITABLE_PROFILE_FIELDS.filter(
+      (k) => (fields as Record<string, ProfileField<unknown>>)[k]?.authorEdited === true,
+    ),
     ...extra,
   }
+}
+
+// ---------------------------------------------------------------------------
+// Author corrections
+// ---------------------------------------------------------------------------
+
+/** Per-field coercion for an author-supplied correction. Bad input ⇒ ignored. */
+const EDIT_COERCIONS: Record<EditableProfileField, (v: unknown) => unknown | null> = {
+  design: asDesign,
+  sampleSize: asPositiveInt,
+  comparative: asBool,
+  multicenter: asBool,
+  followUpMonths: asNonNegativeNumber,
+  statsReported: asBool,
+}
+
+/**
+ * Apply an author's corrections to an extracted profile and re-derive everything
+ * downstream (evidence level, anchor, disagreements).
+ *
+ * A corrected field loses its quote and its confidence and gains `authorEdited`.
+ * That is the whole point: we keep using the value, because the author knows
+ * their own study better than a language model reading 9,000 words of it, but we
+ * stop claiming we read it. An explicit null clears a field back to unknown —
+ * the author's way of saying "you invented that."
+ *
+ * Pure. The caller persists the result.
+ */
+export function applyProfileEdits(
+  profile: ManuscriptProfile,
+  edits: ProfileEdits,
+  selfAssessment: SelfAssessment | null,
+): ManuscriptProfile {
+  const fields = {
+    design: profile.design,
+    sampleSize: profile.sampleSize,
+    multicenter: profile.multicenter,
+    comparative: profile.comparative,
+    followUpMonths: profile.followUpMonths,
+    statsReported: profile.statsReported,
+    noveltyClaim: profile.noveltyClaim,
+  } as Record<string, ProfileField<unknown>>
+
+  for (const key of EDITABLE_PROFILE_FIELDS) {
+    if (!(key in edits)) continue
+    const raw = edits[key]
+    if (raw === null) {
+      // Cleared back to unknown. Not an "edit" that feeds the anchor — an erasure.
+      fields[key] = { value: null, quote: null, confidence: null, authorEdited: true }
+      continue
+    }
+    const coerced = EDIT_COERCIONS[key](raw)
+    if (coerced === null || coerced === undefined) continue // unparseable ⇒ leave as-is
+    fields[key] = { value: coerced, quote: null, confidence: null, authorEdited: true }
+  }
+
+  return finalizeProfile(
+    fields as unknown as Pick<
+      ManuscriptProfile,
+      'design' | 'sampleSize' | 'multicenter' | 'comparative' | 'followUpMonths' | 'statsReported' | 'noveltyClaim'
+    >,
+    selfAssessment,
+    { selfReported: profile.selfReported, truncated: profile.truncated, extractionError: profile.extractionError },
+  )
+}
+
+/** Coerce untrusted client JSON into a ProfileEdits. Unknown keys are dropped. */
+export function parseProfileEdits(raw: unknown): ProfileEdits {
+  if (!raw || typeof raw !== 'object') return {}
+  const o = raw as Record<string, unknown>
+  const out: ProfileEdits = {}
+  for (const key of EDITABLE_PROFILE_FIELDS) {
+    if (!(key in o)) continue
+    const v = o[key]
+    if (v === null) {
+      out[key] = null
+      continue
+    }
+    if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') out[key] = v
+  }
+  return out
 }
 
 /**

@@ -15,9 +15,15 @@ import { MAX_MANUSCRIPT_BYTES, storagePaths } from '@/lib/formatting/pipeline/ap
 import type { FormattingJob } from '@/lib/formatting/pipeline/stages'
 import { appendRowToSheet } from '@/lib/integrations/googleSheets'
 import { getJournalMeta } from './journalMeta'
-import { extractProfile, buildSelfReportedProfile, finalizeProfile } from './assess'
+import { extractProfile, buildSelfReportedProfile, finalizeProfile, applyProfileEdits } from './assess'
 import { buildLadder } from './ladder'
-import { AUTHOR_PRIORITIES, type LadderResult, type ManuscriptProfile, type SelfAssessment } from './profileTypes'
+import {
+  AUTHOR_PRIORITIES,
+  type LadderResult,
+  type ManuscriptProfile,
+  type ProfileEdits,
+  type SelfAssessment,
+} from './profileTypes'
 import { computeUncheckedStats } from './match'
 import {
   SCOPE_TAGS,
@@ -201,12 +207,13 @@ export function logAssessment(
 export async function rebuildLadder(
   job: FormattingJob,
   selfAssessment: SelfAssessment,
+  profileEdits: ProfileEdits = {},
 ): Promise<AssessReport | null> {
   const stored = job.report as unknown as AssessReport | null
   if (!stored?.profile) return null
 
   const p = stored.profile
-  const profile = finalizeProfile(
+  const base = finalizeProfile(
     {
       design: p.design,
       sampleSize: p.sampleSize,
@@ -219,6 +226,10 @@ export async function rebuildLadder(
     selfAssessment,
     { selfReported: p.selfReported, truncated: p.truncated, extractionError: p.extractionError },
   )
+  // Corrections are applied to the STORED extraction, never to a re-read of the
+  // manuscript: the author is correcting what we showed them, and a second
+  // DeepSeek pass could quietly change a field they never touched.
+  const profile = applyProfileEdits(base, profileEdits, selfAssessment)
 
   const input = await readAssessInput(job.id)
   const articleType = (
@@ -247,9 +258,22 @@ export async function rebuildLadder(
   return report
 }
 
-/** Manual (no-upload) mode: nothing is read, so nothing is presented as read. */
-export function manualAssessment(stats: ManuscriptStats, selfAssessment: SelfAssessment): AssessReport {
-  return ladderFor(buildSelfReportedProfile(stats.articleType, selfAssessment), selfAssessment, stats)
+/**
+ * Manual (no-upload) mode: nothing is read, so nothing is presented as read.
+ *
+ * Author-stated study characteristics are welcome here — in manual mode EVERY
+ * value is author-stated, and `selfReported` already labels the whole card. The
+ * edits path is what lets a manual user say "retrospective comparative, 124
+ * patients, 10 months" instead of getting an all-null profile and a ladder built
+ * on an article-type guess.
+ */
+export function manualAssessment(
+  stats: ManuscriptStats,
+  selfAssessment: SelfAssessment,
+  profileEdits: ProfileEdits = {},
+): AssessReport {
+  const base = buildSelfReportedProfile(stats.articleType, selfAssessment)
+  return ladderFor(applyProfileEdits(base, profileEdits, selfAssessment), selfAssessment, stats)
 }
 
 /**
@@ -257,6 +281,20 @@ export function manualAssessment(stats: ManuscriptStats, selfAssessment: SelfAss
  * extract a verified profile, build the ladder, persist. Terminal either way —
  * a failure writes a plain message the author can act on.
  */
+/**
+ * Advance the job's status purely so the waiting screen has something true to
+ * report. Best-effort: a failed status write must never fail an assessment that
+ * is otherwise fine, so this swallows its error and the client falls back to the
+ * elapsed-time view.
+ */
+async function setStage(jobId: string, status: FormattingJob['status']): Promise<void> {
+  try {
+    await updateJob(jobId, { status, updated_at: new Date().toISOString() } as Partial<FormattingJob>)
+  } catch (err) {
+    console.error('[finder/assess] stage write failed (non-fatal)', jobId, status, err)
+  }
+}
+
 export async function runAssessment(job: FormattingJob): Promise<{ status: 'complete' | 'failed'; message?: string }> {
   const fail = async (message: string) => {
     await updateJob(job.id, {
@@ -301,7 +339,15 @@ export async function runAssessment(job: FormattingJob): Promise<{ status: 'comp
   ) as ArticleType
 
   // Extraction degrades honestly: a null profile is disclosed, never fatal.
+  //
+  // The two stage writes bracketing this call exist ONLY so the waiting screen
+  // can show real progress instead of a spinner that means nothing: the client
+  // maps status → step (see FINDER_STAGES). Each write marks a step that is
+  // STARTING, and is best-effort — a failed write degrades the screen, never the
+  // assessment.
+  await setStage(job.id, 'extracted')
   const profile = await extractProfile(bodyText, selfAssessment)
+  await setStage(job.id, 'verified')
 
   const stats: ManuscriptStats = {
     articleType,

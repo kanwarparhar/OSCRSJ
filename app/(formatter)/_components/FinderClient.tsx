@@ -41,10 +41,17 @@ import {
   type ManuscriptStats,
   type ScopeTag,
 } from '@/lib/finder/types'
-import type { LadderResult, LadderSlot, ManuscriptProfile, SelfAssessment } from '@/lib/finder/profileTypes'
+import type {
+  LadderResult,
+  LadderSlot,
+  ManuscriptProfile,
+  ProfileEdits,
+  SelfAssessment,
+} from '@/lib/finder/profileTypes'
 import { subscribeFormatHandoff, requestFormatJournal } from '@/lib/finder/handoff'
 import { FINDER_V2, finderAllEligibleLabel } from '../_copy'
 import FinderProfileCard from './FinderProfileCard'
+import FinderProgress from './FinderProgress'
 import FinderSelfAssessmentForm from './FinderSelfAssessmentForm'
 import FinderLadderView from './FinderLadderView'
 import ResultCard from './FinderResultCard'
@@ -109,6 +116,15 @@ export default function FinderClient() {
   const [dragOver, setDragOver] = useState(false)
   const [jobId, setJobId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // The author's corrections to the extracted profile, held client-side until
+  // they build the ladder. Applying each keystroke server-side would mean a
+  // round trip per character for a value that only matters once.
+  const [profileEdits, setProfileEdits] = useState<ProfileEdits>({})
+
+  // Real job status, mapped to a step on the waiting screen. 'uploaded' is the
+  // honest starting point: nothing has been claimed yet.
+  const [jobStatus, setJobStatus] = useState<string>('uploaded')
 
   // Results
   const [profile, setProfile] = useState<ManuscriptProfile | null>(null)
@@ -234,11 +250,13 @@ export default function FinderClient() {
         if (!res.ok) throw new Error(String(res.status))
         const data = (await res.json()) as {
           done: boolean
+          status?: string
           profile: ManuscriptProfile | null
           ladder: LadderResult | null
           error: { message: string } | null
         }
         deadPolls = 0
+        if (data.status) setJobStatus(data.status)
         if (data.done) {
           forgetJob()
           if (data.error) {
@@ -314,19 +332,20 @@ export default function FinderClient() {
     }
   }
 
-  /** Second server call: rebuild the ladder with the author's answers. */
+  /**
+   * Second server call: rebuild the ladder with the author's answers AND any
+   * corrections they made to the profile. Both paths land here — the upload path
+   * rebuilds from the stored extraction, the manual path re-runs the (cheap,
+   * deterministic) match with the author's stated characteristics.
+   */
   async function buildLadderWithAnswers() {
-    if (!jobId) {
-      // Manual mode reaches results without a job.
-      setPhase('results')
-      return
-    }
+    if (!jobId) return runManualLadder()
     setError(null)
     try {
       const res = await fetch(`/api/finder/assess/${jobId}`, {
         method: 'POST',
         headers: { 'x-job-email': email, 'content-type': 'application/json' },
-        body: JSON.stringify({ selfAssessment }),
+        body: JSON.stringify({ selfAssessment, profileEdits }),
       })
       if (!res.ok) throw new Error('We could not build your ladder. Please try again.')
       const data = (await res.json()) as { profile: ManuscriptProfile | null; ladder: LadderResult | null }
@@ -341,8 +360,14 @@ export default function FinderClient() {
 
   /* ---- Manual path (no upload, synchronous) ---- */
 
-  async function runManual(e: React.FormEvent) {
-    e.preventDefault()
+  /**
+   * Run the deterministic match. Called twice on the manual path: once to get an
+   * (empty, self-reported) profile to put in front of the author, and again once
+   * they have filled it in and answered the questions. It is a pure local
+   * computation server-side — no model call, no job — so running it twice costs
+   * nothing and keeps the manual and upload paths on the same screens.
+   */
+  async function runMatch(nextPhase: Phase) {
     if (articleType === '') return
     setError(null)
     const stats: ManuscriptStats = {
@@ -358,7 +383,7 @@ export default function FinderClient() {
       const res = await fetch('/api/finder/match', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ stats, sortBy: 'fit', mode: 'ladder', selfAssessment }),
+        body: JSON.stringify({ stats, sortBy: 'fit', mode: 'ladder', selfAssessment, profileEdits }),
       })
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as { error?: string } | null
@@ -369,12 +394,22 @@ export default function FinderClient() {
       setProfile(data.profile)
       setLadder(data.ladder)
       setJobId(null)
-      setPhase('results')
+      setPhase(nextPhase)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setPhase('error')
     }
   }
+
+  async function runManual(e: React.FormEvent) {
+    e.preventDefault()
+    // Manual authors now see the same profile screen an uploader does — theirs
+    // just starts empty. Filling it in is the whole value of the manual path;
+    // before this, a manual run produced a ladder from the article type alone.
+    await runMatch('profile_review')
+  }
+
+  const runManualLadder = () => runMatch('results')
 
   /* ---- Handoff into the formatter ---- */
 
@@ -404,6 +439,8 @@ export default function FinderClient() {
     setMatchResult(null)
     setJobId(null)
     setManuscript(null)
+    setProfileEdits({})
+    setJobStatus('uploaded')
   }
 
   const errorBanner = error ? (
@@ -426,17 +463,7 @@ export default function FinderClient() {
 
   /* --------------------------- PROCESSING -------------------------- */
   if (phase === 'uploading' || phase === 'processing') {
-    return (
-      <div className="rounded-xl border border-fmt-hairline bg-white p-8 text-center" aria-busy="true">
-        <p role="status" className="font-fmt-display text-xl text-fmt-ink">
-          {phase === 'uploading' ? 'Uploading your manuscript…' : 'Reading your manuscript…'}
-        </p>
-        <p className="mx-auto mt-2 max-w-md text-sm text-fmt-ink-2">
-          We are pulling out the study characteristics we can verify against the text. This usually takes under a
-          minute. Please keep this tab open.
-        </p>
-      </div>
-    )
+    return <FinderProgress status={phase === 'uploading' ? 'uploaded' : jobStatus} />
   }
 
   /* ------------------------ PROFILE REVIEW ------------------------- */
@@ -444,7 +471,7 @@ export default function FinderClient() {
     return (
       <div className="space-y-6">
         {errorBanner}
-        <FinderProfileCard profile={profile} />
+        <FinderProfileCard profile={profile} edits={profileEdits} onEditsChange={setProfileEdits} />
         <FinderSelfAssessmentForm value={selfAssessment} onChange={setSelfAssessment} />
         <div className="flex flex-col items-center gap-3">
           <button
@@ -455,7 +482,7 @@ export default function FinderClient() {
             {FINDER_V2.buildLadderCta}
           </button>
           <button type="button" onClick={reset} className="text-xs text-fmt-ink-3 underline hover:text-fmt-ink-2">
-            Start over with a different manuscript
+            {jobId ? 'Start over with a different manuscript' : 'Start over'}
           </button>
         </div>
       </div>
@@ -510,7 +537,10 @@ export default function FinderClient() {
         {errorBanner}
         <div className="rounded-xl border border-fmt-hairline bg-white p-6">
           <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">Tell us about your manuscript</h3>
-          <p className="mb-5 text-sm text-fmt-ink-2">{FINDER_V2.selfReportedBanner}</p>
+          <p className="mb-5 text-sm text-fmt-ink-2">
+            {FINDER_V2.selfReportedBanner} On the next screen you can state your study design, sample size and
+            follow-up, which is what makes a no-upload ladder worth anything.
+          </p>
           <TypeAndScope
             articleType={articleType}
             setArticleType={setArticleType}
@@ -518,14 +548,13 @@ export default function FinderClient() {
             setSubspecialty={setSubspecialty}
           />
         </div>
-        <FinderSelfAssessmentForm value={selfAssessment} onChange={setSelfAssessment} />
         <div className="flex flex-col items-center gap-3">
           <button
             type="submit"
             disabled={articleType === ''}
             className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-[240px]"
           >
-            {FINDER_V2.buildLadderCta}
+            Continue →
           </button>
           <button type="button" onClick={reset} className="text-xs text-fmt-ink-3 underline hover:text-fmt-ink-2">
             Upload a manuscript instead

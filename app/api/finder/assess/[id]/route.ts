@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getJob, updateJob } from '@/lib/formatting/pipeline/jobs'
 import type { FormattingJob } from '@/lib/formatting/pipeline/stages'
 import { parseSelfAssessment, rebuildLadder, runAssessment, type AssessReport } from '@/lib/finder/assessJob'
+import { parseProfileEdits } from '@/lib/finder/assess'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -62,13 +63,16 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const job = await authorize(req, params.id)
   if (!job) return NextResponse.json({ error: 'Not found.' }, { status: 404 })
 
-  const body = (await req.json().catch(() => null)) as { selfAssessment?: unknown } | null
+  const body = (await req.json().catch(() => null)) as
+    | { selfAssessment?: unknown; profileEdits?: unknown }
+    | null
 
-  // Second call: the author has now seen the profile and answered the three
-  // questions. Rebuild the ladder from the STORED profile — same verified
-  // fields, new author shift, no second DeepSeek call.
+  // Second call: the author has now seen the profile, corrected anything we got
+  // wrong, and answered the three questions. Rebuild the ladder from the STORED
+  // profile — same verified fields, the author's corrections applied and
+  // labelled, new author shift, no second DeepSeek call.
   if (job.status === 'complete' && body && 'selfAssessment' in body) {
-    await rebuildLadder(job, parseSelfAssessment(body.selfAssessment))
+    await rebuildLadder(job, parseSelfAssessment(body.selfAssessment), parseProfileEdits(body.profileEdits))
     const updated = await getJob(params.id)
     return NextResponse.json(statusBody(updated ?? job))
   }
@@ -80,9 +84,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   // Claim the job before doing any work, so two racing advances cannot both run
   // the extraction. The status guard on the update is the compare-and-set.
+  //
+  // The claim writes 'parsed' rather than 'extracted' so the status column tracks
+  // the step actually underway (opening the .docx). runAssessment advances it to
+  // 'extracted' and 'verified' as it goes, and the waiting screen reads those.
   if (job.status === 'uploaded') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await updateJob(job.id, { status: 'extracted', updated_at: new Date().toISOString() } as any)
+    await updateJob(job.id, { status: 'parsed', updated_at: new Date().toISOString() } as any)
   }
 
   await runAssessment(job)

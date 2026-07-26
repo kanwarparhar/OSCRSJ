@@ -177,7 +177,54 @@ export const FINDER_V2 = {
 
   notRankedChip: 'Not SJR-ranked',
   buildLadderCta: 'Build my ladder',
+
+  /* ---- Waiting screen (staged progress) ---- */
+  waitTitle: 'Reading your manuscript',
+  waitSub: 'Please keep this tab open. Closing it will not lose your place — we can pick the job back up.',
+  waitSlowNote: 'This is taking longer than usual. We are still working; nothing has failed.',
+
+  /* ---- Profile card, editing ---- */
+  profileSub:
+    'Every value below is either quoted from your text or marked as unverified. Correct anything we got wrong — your correction is used and labelled as yours.',
+  editCta: 'Correct',
+  editSaveCta: 'Save',
+  editCancelCta: 'Cancel',
+  editClearCta: 'Clear to unknown',
+  authorEditedChip: 'you corrected this',
+  authorEditedNote: 'Your value. We are no longer claiming your text says this.',
+  noveltyReadOnlyNote:
+    'This row reports the manuscript’s own novelty sentence, so it cannot be typed in here. If it is blank and your work is genuinely first-of-its-kind, the fix is to say so in the paper — which is also what an editor will look for.',
+  verifiedCountLabel: (verified: number, total: number) => `${verified} of ${total} verified against your text`,
+
+  /* ---- Journal stat row ---- */
+  statSjr: 'SJR',
+  statQuartile: 'Quartile',
+  statApc: 'APC',
+  statSpeed: 'Decision time',
+  statIndexing: 'Indexed in',
+  statUnknown: '—',
+  statUnknownHint: 'Not verified from the journal’s own pages. Check its site before you rely on it.',
+  noImpactFactorNote:
+    'We show SJR rather than Journal Impact Factor: the Impact Factor is Clarivate-proprietary and cannot be republished here.',
 } as const
+
+/** Waiting-screen steps, mapped from the job status the API already reports. */
+export const FINDER_STAGES = [
+  { key: 'uploaded', label: 'Uploading your manuscript', detail: 'Sending the file over an encrypted link.' },
+  { key: 'parsed', label: 'Opening the document', detail: 'Reading the .docx structure and pulling out the text.' },
+  {
+    key: 'extracted',
+    label: 'Reading the study characteristics',
+    detail: 'The long step. We look for design, sample size, follow-up and reported statistics.',
+  },
+  {
+    key: 'verified',
+    label: 'Checking every value against your text',
+    detail: 'Anything we cannot quote from your manuscript is dropped, then the ladder is built.',
+  },
+] as const
+
+export type FinderStageKey = (typeof FINDER_STAGES)[number]['key']
 
 /** Disagreement line. {field} is the author's own word for what they rated. */
 export function finderDisagreementLine(field: string): string {

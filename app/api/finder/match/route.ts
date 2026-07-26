@@ -23,6 +23,7 @@ import { appendRowToSheet } from '@/lib/integrations/googleSheets'
 import { ARTICLE_TYPE_LABELS } from '@/lib/formatting/registry-meta'
 import { createAdminClient } from '@/lib/supabase/server'
 import { manualAssessment, parseSelfAssessment } from '@/lib/finder/assessJob'
+import { parseProfileEdits } from '@/lib/finder/assess'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -113,7 +114,10 @@ export async function POST(req: NextRequest) {
   let ladderPayload: { profile: unknown; ladder: unknown } | null = null
   if ((body as { mode?: unknown }).mode === 'ladder') {
     const selfAssessment = parseSelfAssessment((body as { selfAssessment?: unknown }).selfAssessment)
-    const assessed = manualAssessment(stats, selfAssessment)
+    // Manual-mode authors can state their own study characteristics. Everything
+    // they state is labelled author-stated, exactly as it is on the upload path.
+    const edits = parseProfileEdits((body as { profileEdits?: unknown }).profileEdits)
+    const assessed = manualAssessment(stats, selfAssessment, edits)
     ladderPayload = { profile: assessed.profile, ladder: assessed.ladder }
   }
 
