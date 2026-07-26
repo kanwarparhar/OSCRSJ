@@ -47,6 +47,7 @@
 //      may never be described as, a prediction of what an editor will do.
 
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
+import type { MethodologyScore, ReadinessChecklist } from '@/lib/quality'
 import type { ConstraintCheck, JournalMeta, JournalScore } from './types'
 
 /** One extracted fact plus the verbatim manuscript evidence behind it. */
@@ -128,6 +129,22 @@ export interface ManuscriptProfile {
   truncated: boolean
   /** Set when extraction degraded (bad JSON twice, no API key). Disclosed, never fatal. */
   extractionError: string | null
+  /**
+   * The published instrument's item-by-item grade, under the §1.3 carve-out at
+   * the top of this file. null when grading was not run at all (manual mode, or
+   * a caller that did not ask for it) — which is different from a score that ran
+   * and produced `noInstrument` or a `gradingError`, both of which are real
+   * results the card renders.
+   */
+  methodologyScore: MethodologyScore | null
+  /**
+   * Six desk-reject gates the manuscript either states or does not.
+   *
+   * DISPLAY ONLY. This never reaches the anchor: a missing funding statement is
+   * a paperwork problem, not a weak study, and letting it move the ladder would
+   * recommend a lesser journal for a fixable omission.
+   */
+  readiness: ReadinessChecklist
 }
 
 /**

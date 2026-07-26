@@ -17,6 +17,12 @@
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import { deepseekModel } from '@/lib/deepseekModel'
 import {
+  emptyReadiness,
+  selectInstrument,
+  type MethodologyScore,
+  type ReadinessChecklist,
+} from '@/lib/quality'
+import {
   EDITABLE_PROFILE_FIELDS,
   MANUAL_DESIGN_BY_ARTICLE_TYPE,
   STUDY_DESIGNS,
@@ -38,7 +44,8 @@ export const ASSESS_SYSTEM_PROMPT = `You extract verifiable study characteristic
 1. For every non-null value you MUST provide "quote": a verbatim, character-exact excerpt (5-40 words) copied from the manuscript that states the fact. Do not paraphrase, correct spelling, or merge sentences.
 2. If the manuscript does not explicitly state a fact, set value to null and quote to null. Never infer. Never estimate. A missing fact is the correct answer when the text is silent.
 3. "confidence" is "high" only when the quote states the fact directly; "low" when interpretation was required.
-4. sample_size is the number of patients/participants analyzed (not screened). follow_up_months converts stated follow-up to months. novelty_claim is the manuscript's OWN novelty sentence if one exists (e.g. "To our knowledge, this is the first reported case of...").`
+4. sample_size is the number of patients/participants analyzed (not screened). follow_up_months converts stated follow-up to months. novelty_claim is the manuscript's OWN novelty sentence if one exists (e.g. "To our knowledge, this is the first reported case of...").
+5. "stats_reported" is true ONLY when the manuscript reports an inferential RESULT: a P value attached to a specific comparison, a confidence interval, or an effect size with a measure of precision. A significance THRESHOLD ("statistical significance was set at p<0.05"), a list of the tests used, or the name of the statistics software is NOT a reported result. When the manuscript states only a threshold, a test list or software, set stats_reported to FALSE — not null — and quote the sentence you judged. false means "we looked and it does not report one"; null is only for when you genuinely cannot tell.`
 
 const SCHEMA_HINT = `Schema:
 {
@@ -96,6 +103,67 @@ export function acceptField<T>(
   }
   const confidence = raw.confidence === 'high' ? 'high' : 'low'
   return { value, quote, confidence }
+}
+
+// ---------------------------------------------------------------------------
+// stats_reported — the methods-boilerplate gate
+// ---------------------------------------------------------------------------
+//
+// THE DEFECT THIS CLOSES (found 2026-07-26 by a live run on a pilon-fracture
+// manuscript). `stats_reported` was documented as "primary outcome reported with
+// a P value and/or CI" but ASSESS_SYSTEM_PROMPT never defined it, so the model
+// returned `true` on:
+//
+//     "Statistical significance was set at a p-value of <0.05"
+//
+// which is an alpha threshold, not a result, and a sentence very nearly every
+// manuscript contains. That is not cosmetic. A spurious `true` SUPPRESSES
+// deriveTextAdjustment's -0.10 comparative-without-stats penalty AND silences
+// deriveDisagreements' strength warning — so the boilerplate in a manuscript's
+// own methods section muted the one line most worth reading, and did it on the
+// papers least likely to deserve the benefit of the doubt.
+//
+// The prompt now defines the field (rule 5), but a prompt is a request, not a
+// guarantee. This gate is the guarantee, and it lives beside verifyQuote for the
+// same reason: the model proposes, the code disposes.
+
+/**
+ * Sentences that describe HOW significance would be tested, rather than
+ * reporting a result. This is the veto half of the gate.
+ */
+export const METHODS_BOILERPLATE =
+  /\b(?:statistical\s+)?significance\s+(?:was\s+|is\s+)?(?:set|defined|established|accepted|taken)\b|\b(?:was|were)\s+(?:considered|deemed|regarded\s+as|taken\s+as)\s+(?:statistically\s+)?significant\b|\blevel\s+of\s+significance\b|\balpha\s+(?:level\s*)?(?:was\b|of\b|=)|\b(?:statistical\s+)?analys[ie]s\s+(?:were|was)\s+(?:performed|conducted|carried\s+out)\s+(?:using|with)\b|\b(?:SPSS|SAS|Stata|GraphPad|Prism)\b/i
+
+/**
+ * Tokens that appear only when an actual inferential RESULT is reported: a P
+ * value on a comparison, an interval, or an effect size with precision.
+ */
+export const REPORTED_RESULT =
+  /\bp[\s-]*(?:value)?\s*[<>=≤≥]\s*0?\.\d+|\b\d{1,2}\s*%\s*(?:CI|confidence\s+interval)\b|\bconfidence\s+interval\b|\b(?:odds|hazard|risk|rate)\s+ratio\b|\b(?:OR|HR|RR)\s*[=:]\s*\d|\bmean\s+difference\b|\beffect\s+size\b/i
+
+/**
+ * Accept `stats_reported: true` only from a quote that actually reports a result.
+ *
+ * A quote that is pure methods boilerplate flips the field to FALSE — not null —
+ * and KEEPS its quote. All three of those choices are deliberate:
+ *
+ *   false, not null, because null means "unknown" and would go on suppressing
+ *   the comparative-without-stats penalty and the strength disagreement, which
+ *   is the exact bug. We looked, and the sentence we found is not a result.
+ *
+ *   keep the quote, because the author should see WHICH sentence we read and
+ *   why we judged it. "You have a significance threshold but no reported
+ *   result" is actionable; a bare "no" is not.
+ *
+ *   veto beats match, so a quote containing both a threshold and a result reads
+ *   as false. That is conservative in the direction this product always leans:
+ *   toward telling an author their manuscript is missing something it may in
+ *   fact contain elsewhere, rather than toward telling them it is fine.
+ */
+export function gateStatsReported(field: ProfileField<boolean>): ProfileField<boolean> {
+  if (field.value !== true || field.quote === null) return field
+  if (REPORTED_RESULT.test(field.quote) && !METHODS_BOILERPLATE.test(field.quote)) return field
+  return { ...field, value: false }
 }
 
 /* ------------------------------ coercions --------------------------------- */
@@ -212,6 +280,51 @@ export function deriveTextAdjustment(p: {
   return clamp(adj, -MAX_TEXT_ADJUSTMENT, MAX_TEXT_ADJUSTMENT)
 }
 
+export const MAX_INSTRUMENT_ADJUSTMENT = 0.15
+
+/**
+ * Is the instrument grade allowed to move the ladder anchor?
+ *
+ * KILL SWITCH. Default ON. Setting FINDER_INSTRUMENT_ANCHOR=off in Vercel makes
+ * the methodology score display-only — the card, the item table and the gap list
+ * all still render, but the ladder reverts to exactly the pre-instrument anchor.
+ * That is a one-env-var rollback with no redeploy, and it exists because the
+ * grade's reproducibility across live runs has not yet been measured on real
+ * manuscripts at N. If it disappoints, the honest move is to stop steering
+ * recommendations with it while keeping the breakdown the author can check.
+ *
+ * Resolved per call, like deepseekModel(), so a change lands on the next cold
+ * start rather than at the next deploy.
+ */
+export function instrumentAnchorEnabled(): boolean {
+  return (process.env.FINDER_INSTRUMENT_ANCHOR ?? '').trim().toLowerCase() !== 'off'
+}
+
+/**
+ * Move the anchor by how completely the study reports its own methods.
+ *
+ * Centred at 0.6 rather than at 0.5: instruments are completeness checklists and
+ * a competent, well-reported study clears most items, so 0.6 is roughly "as
+ * expected for its design" and only a genuinely thorough paper is rewarded.
+ * The 0.25 slope keeps the whole span inside about one band — at a perfect grade
+ * this contributes +0.10, at a floor grade -0.15.
+ *
+ * NO DOUBLE COUNTING. Consecutive inclusion, prospective collection, power
+ * analysis, blinded assessment and loss to follow-up are all INSTRUMENT ITEMS
+ * now, so they must not also be added to deriveTextAdjustment. The five
+ * adjustments there stay exactly as they were; this function is the only new
+ * text-derived movement.
+ *
+ * `normalized === null` — no validated instrument, nothing assessable, or a
+ * grading failure — contributes exactly 0, so the profile behaves as it did
+ * before this feature existed.
+ */
+export function deriveInstrumentAdjustment(score: { normalized: number | null } | null): number {
+  if (!instrumentAnchorEnabled()) return 0
+  if (!score || score.normalized === null) return 0
+  return clamp((score.normalized - 0.6) * 0.25, -MAX_INSTRUMENT_ADJUSTMENT, MAX_INSTRUMENT_ADJUSTMENT)
+}
+
 /**
  * The author's own read, bounded hard at ±0.10 — about one band. The author can
  * nudge the ladder; they cannot overrule the manuscript.
@@ -251,7 +364,13 @@ export function finalizeProfile(
     'design' | 'sampleSize' | 'multicenter' | 'comparative' | 'followUpMonths' | 'statsReported' | 'noveltyClaim'
   >,
   selfAssessment: SelfAssessment | null,
-  extra: { selfReported: boolean; truncated: boolean; extractionError: string | null },
+  extra: {
+    selfReported: boolean
+    truncated: boolean
+    extractionError: string | null
+    methodologyScore?: MethodologyScore | null
+    readiness?: ReadinessChecklist
+  },
 ): ManuscriptProfile {
   const evidenceLevel = deriveEvidenceLevel(
     fields.design.value,
@@ -268,12 +387,18 @@ export function finalizeProfile(
     statsReported: fields.statsReported.value,
     noveltyQuote: fields.noveltyClaim.quote,
   })
+  const methodologyScore = extra.methodologyScore ?? null
+  const instrumentAdjustment = deriveInstrumentAdjustment(methodologyScore)
+  // Each half is individually bounded; the SUM is clamped again so that stacking
+  // the instrument grade on top of the five text signals can still never outrun
+  // the design itself. Two bounded movements are not a bounded movement.
+  const combinedAdjustment = clamp(adjustment + instrumentAdjustment, -MAX_TEXT_ADJUSTMENT, MAX_TEXT_ADJUSTMENT)
   const authorShift = deriveAuthorShift(selfAssessment)
 
   return {
     ...fields,
     evidenceLevel,
-    anchor: round4(clamp(base + adjustment + authorShift, 0.1, 0.9)),
+    anchor: round4(clamp(base + combinedAdjustment + authorShift, 0.1, 0.9)),
     authorShift: round4(authorShift),
     disagreements: deriveDisagreements(selfAssessment, fields.noveltyClaim.value, fields.statsReported.value),
     // Derived from the fields themselves rather than threaded in as a parameter,
@@ -281,7 +406,13 @@ export function finalizeProfile(
     authorEditedFields: EDITABLE_PROFILE_FIELDS.filter(
       (k) => (fields as Record<string, ProfileField<unknown>>)[k]?.authorEdited === true,
     ),
-    ...extra,
+    selfReported: extra.selfReported,
+    truncated: extra.truncated,
+    extractionError: extra.extractionError,
+    methodologyScore,
+    // Absent means grading was never run. Six honest "not stated" gates are the
+    // right default: a checklist that vanishes reads as "nothing to declare".
+    readiness: extra.readiness ?? emptyReadiness(),
   }
 }
 
@@ -339,13 +470,32 @@ export function applyProfileEdits(
     fields[key] = { value: coerced, quote: null, confidence: null, authorEdited: true }
   }
 
+  // An author who corrects the study design may have changed which instrument
+  // applies. Carrying the old grade forward would label a comparative study
+  // "MINORS (non-comparative) 14/16" — the wrong instrument, the wrong maximum,
+  // and a citation that does not match what was measured. Re-grading needs a
+  // network call and this function is pure, so the honest move is to drop the
+  // stale score and let the surface say grading must be re-run.
+  const design = (fields.design as ProfileField<StudyDesign>).value
+  const comparative = (fields.comparative as ProfileField<boolean>).value
+  const stillApplies =
+    profile.methodologyScore !== null &&
+    selectInstrument(design, comparative).id === profile.methodologyScore.instrumentId
+
   return finalizeProfile(
     fields as unknown as Pick<
       ManuscriptProfile,
       'design' | 'sampleSize' | 'multicenter' | 'comparative' | 'followUpMonths' | 'statsReported' | 'noveltyClaim'
     >,
     selfAssessment,
-    { selfReported: profile.selfReported, truncated: profile.truncated, extractionError: profile.extractionError },
+    {
+      selfReported: profile.selfReported,
+      truncated: profile.truncated,
+      extractionError: profile.extractionError,
+      methodologyScore: stillApplies ? profile.methodologyScore : null,
+      // Readiness is design-independent, so a correction never invalidates it.
+      readiness: profile.readiness,
+    },
   )
 }
 
@@ -492,7 +642,9 @@ export function fieldsFromRaw(raw: Record<string, unknown>, body: string) {
     multicenter: acceptField<boolean>(f('multicenter'), body, asBool),
     comparative: acceptField<boolean>(f('comparative'), body, asBool),
     followUpMonths: acceptField<number>(f('follow_up_months'), body, asNonNegativeNumber),
-    statsReported: acceptField<boolean>(f('stats_reported'), body, asBool),
+    // Quote-verified first, then gated: a verified quote can still be a
+    // significance threshold rather than a reported result.
+    statsReported: gateStatsReported(acceptField<boolean>(f('stats_reported'), body, asBool)),
     noveltyClaim: acceptField<string>(f('novelty_claim'), body, asNonEmptyString),
   }
 }

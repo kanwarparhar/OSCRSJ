@@ -144,3 +144,82 @@ export interface MethodologyScore {
   /** Set when grading degraded (bad JSON, no key, network). Disclosed, never fatal. */
   gradingError: string | null
 }
+
+/* -------------------------------------------------------------------------- */
+/* Submission readiness                                                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Six things a manuscript either states or does not, extracted in the same call
+ * as the instrument items.
+ *
+ * THESE MUST NEVER TOUCH THE ANCHOR. A missing COI statement says nothing about
+ * whether a study is strong enough for a given journal — it says an editor will
+ * bounce it back before anyone reads it. That makes this a desk-reject screen
+ * displayed as its own list, not a quality signal, and deriveInstrumentAdjustment
+ * deliberately never sees it. Feeding it into the ladder would conflate "your
+ * paperwork is incomplete" with "your study is weak", which are different
+ * problems with different fixes.
+ *
+ * They live in lib/quality/ rather than in the Finder because OSCRSJ's own
+ * intake wants exactly this checklist on receipt.
+ */
+export type ReadinessGate =
+  | 'ethicsApproval'
+  | 'registration'
+  | 'reportingGuideline'
+  | 'conflictOfInterest'
+  | 'funding'
+  | 'informedConsent'
+
+export const READINESS_GATES: readonly ReadinessGate[] = [
+  'ethicsApproval',
+  'registration',
+  'reportingGuideline',
+  'conflictOfInterest',
+  'funding',
+  'informedConsent',
+]
+
+export const READINESS_LABELS: Record<ReadinessGate, string> = {
+  ethicsApproval: 'IRB / ethics approval',
+  registration: 'Trial or protocol registration',
+  reportingGuideline: 'Reporting guideline named',
+  conflictOfInterest: 'Conflict-of-interest statement',
+  funding: 'Funding statement',
+  informedConsent: 'Informed-consent statement',
+}
+
+/** What the grading call is asked to look for, in the model's own terms. */
+export const READINESS_CRITERIA: Record<ReadinessGate, string> = {
+  ethicsApproval: 'A statement of institutional review board or research ethics committee approval (or an explicit exemption)',
+  registration: 'A trial or protocol registration statement, with or without a registry number',
+  reportingGuideline: 'An explicit statement that a reporting guideline was followed (STROBE, CONSORT, PRISMA, CARE)',
+  conflictOfInterest: 'A conflict-of-interest or competing-interests statement, including an explicit declaration of none',
+  funding: 'A funding or financial-support statement, including an explicit statement that none was received',
+  informedConsent: 'A statement that informed consent was obtained from the patient or participants',
+}
+
+/**
+ * One readiness gate. `present: false` means the manuscript is silent on it —
+ * which is the actionable finding — and carries no quote, because there is
+ * nothing to point at. A present gate always carries the sentence that states it.
+ */
+export interface ReadinessItem {
+  present: boolean
+  quote: string | null
+}
+
+export type ReadinessChecklist = Record<ReadinessGate, ReadinessItem>
+
+/** Every gate absent. The honest starting point, and the result when grading fails. */
+export function emptyReadiness(): ReadinessChecklist {
+  return {
+    ethicsApproval: { present: false, quote: null },
+    registration: { present: false, quote: null },
+    reportingGuideline: { present: false, quote: null },
+    conflictOfInterest: { present: false, quote: null },
+    funding: { present: false, quote: null },
+    informedConsent: { present: false, quote: null },
+  }
+}

@@ -16,8 +16,18 @@ export type {
   ItemVerdict,
   MethodologyScore,
   RawGradedItem,
+  ReadinessChecklist,
+  ReadinessGate,
+  ReadinessItem,
   ScoredItem,
   StudyDesign,
+} from './types'
+
+export {
+  READINESS_CRITERIA,
+  READINESS_GATES,
+  READINESS_LABELS,
+  emptyReadiness,
 } from './types'
 
 export { INSTRUMENTS, AMSTAR2_CRITICAL_IDS } from './instruments'
@@ -33,3 +43,15 @@ export {
   scoreRob2,
   selectInstrument,
 } from './score'
+
+export type { GradingOptions, GradingResult, ParsedGrading } from './extract'
+export {
+  GRADING_SYSTEM_PROMPT,
+  extractMethodology,
+  parseGradingResponse,
+  truncateForExtraction,
+  verifyQuote,
+} from './extract'
+
+export type { QualityCacheStore } from './cache'
+export { contentHash, createMemoryCacheStore, withQualityCache } from './cache'
