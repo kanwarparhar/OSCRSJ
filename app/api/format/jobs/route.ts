@@ -1,5 +1,5 @@
 // POST /api/format/jobs — create a formatting job (Sushant, Session C).
-// Unauthenticated: email only. Rate-limited per email + IP. Returns
+// Unauthenticated: email only. Per-email weekly allowance + per-IP backstop. Returns
 // signed upload URLs; the client PUTs the manuscript (+ figures) then calls
 // /advance. Runs on Node (the pipeline uses pizzip/@xmldom).
 
@@ -9,7 +9,9 @@ import { SCHEMA_VERSION } from '@/lib/formatting/rulesSchema'
 import { createJob, checkRateLimit, createSignedUpload, writeJobMeta } from '@/lib/formatting/pipeline/jobs'
 import { storagePaths, MAX_FIGURES } from '@/lib/formatting/pipeline/api'
 import { appendRowToSheet } from '@/lib/integrations/googleSheets'
-import { CONSENT_VERSION, CONSENT_SCOPE } from '@/lib/studio/consent'
+import { CONSENT_SCOPE } from '@/lib/studio/consent'
+import { STUDIO_TERMS_VERSION, MARKETING_CONSENT_VERSION } from '@/lib/studio/terms'
+import { checkStudioQuota, isFreeJournalRun } from '@/lib/studio/quota'
 
 /** Tab in the shared "OSCRSJ Form Submissions" Google Sheet. */
 const FORMATTER_SHEET_TAB = 'Formatter Submissions'
@@ -36,24 +38,31 @@ export async function POST(req: NextRequest) {
     figureCount,
     figureFilenames,
     manuscriptFilename,
+    termsAccepted,
     marketingConsent,
   } = body as Record<string, unknown>
 
   if (typeof email !== 'string' || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'A valid email is required.' }, { status: 400 })
   }
-  // Consent is REQUIRED to use the Studio (Kanwar directive, 2026-07-25) and is
-  // gated here as well as in the UI, so a hand-rolled POST cannot create a job
-  // carrying an address that never agreed to anything. The consent VERSION is
-  // stamped server-side from lib/studio/consent.ts rather than accepted from
-  // the client: a client-supplied version could claim agreement to wording the
-  // user never saw, which is precisely the thing the version exists to prove.
-  if (marketingConsent !== true) {
+  // Accepting the Studio Terms is REQUIRED and is gated here as well as in the
+  // UI, so a hand-rolled POST cannot create a job carrying an address that
+  // never agreed to anything. Versions are stamped server-side rather than
+  // accepted from the client: a client-supplied version could claim agreement
+  // to wording the user never saw, which is precisely the thing a version
+  // string exists to prove.
+  if (termsAccepted !== true) {
     return NextResponse.json(
-      { error: 'Please accept the email consent to use Submission Studio.' },
+      { error: 'Please accept the Submission Studio Terms and Conditions to continue.' },
       { status: 400 },
     )
   }
+  // Marketing consent is SEPARATE and OPTIONAL (Kanwar directive, 2026-07-26).
+  // Declining must cost the user nothing, so there is deliberately no gate
+  // here and no penalty anywhere downstream. Recording false is the point:
+  // a marketing_consent column where everyone is true carries no information
+  // and cannot be relied on when someone asks who agreed to what.
+  const wantsMarketing = marketingConsent === true
   const rules = typeof journalId === 'string' ? getJournal(journalId) : null
   if (!rules) {
     return NextResponse.json({ error: 'Unknown target journal.' }, { status: 400 })
@@ -73,6 +82,44 @@ export async function POST(req: NextRequest) {
     )
   }
   const ip = clientIp(req)
+
+  // Per-email lifetime allowance first, then the per-network daily cap.
+  // Order matters for the message the user sees: someone who has genuinely
+  // spent their three runs should be told about the survey, not told their
+  // office network is busy. The network cap is the backstop, so it speaks last.
+  // OSCRSJ runs bypass the gate outright (Kanwar directive, 2026-07-26). Not a
+  // larger allowance -- an actual bypass, so an address that has spent every run
+  // can still format a manuscript for us. The check is BEFORE checkStudioQuota
+  // rather than inside it because a locked-out address must not be refused on
+  // the way to reading its own status; countUsage separately skips these rows,
+  // so the run is invisible to the allowance in both directions.
+  const quota = isFreeJournalRun(rules.identity.slug)
+    ? ({ ok: true } as const)
+    : await checkStudioQuota(email)
+  if (!quota.ok) {
+    if (quota.code === 'quota_unavailable') {
+      return NextResponse.json({ error: quota.reason }, { status: 503 })
+    }
+    return NextResponse.json(
+      {
+        error: quota.reason,
+        code: quota.code,
+        // The client branches on `canUnlockWithSurvey` to decide between
+        // showing the unlock call to action and showing the "that was your
+        // reset" message, so it is returned rather than re-derived there.
+        quota: quota.status
+          ? {
+              used: quota.status.used,
+              limit: quota.status.limit,
+              remaining: quota.status.remaining,
+              canUnlockWithSurvey: quota.status.canUnlockWithSurvey,
+            }
+          : undefined,
+      },
+      { status: 429 },
+    )
+  }
+
   const rl = await checkRateLimit(email, ip)
   if (!rl.ok) {
     return NextResponse.json({ error: rl.reason }, { status: 429 })
@@ -84,7 +131,10 @@ export async function POST(req: NextRequest) {
     articleType,
     ip,
     rulesVersion: SCHEMA_VERSION,
-    consent: { version: CONSENT_VERSION, scope: CONSENT_SCOPE },
+    consent: wantsMarketing
+      ? { version: MARKETING_CONSENT_VERSION, scope: CONSENT_SCOPE }
+      : undefined,
+    terms: { version: STUDIO_TERMS_VERSION },
   })
   if (!job) {
     return NextResponse.json({ error: 'Could not create the job. Try again.' }, { status: 500 })
@@ -135,9 +185,9 @@ export async function POST(req: NextRequest) {
       typeLabel ?? articleType,
       nFigs,
       ip ?? '',
-      'yes',
-      CONSENT_VERSION,
-      CONSENT_SCOPE,
+      wantsMarketing ? 'yes' : 'no',
+      wantsMarketing ? MARKETING_CONSENT_VERSION : '',
+      wantsMarketing ? CONSENT_SCOPE : '',
     ],
   })
 

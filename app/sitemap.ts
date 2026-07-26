@@ -130,6 +130,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    // Added 2026-07-26 with the free-run allowance. /studio/unlock is a real
+    // landing target (people search for how to get more free runs) and
+    // /studio/terms is the document the mandatory tick box points at, so both
+    // need to be crawlable rather than orphaned behind a form.
+    {
+      url: `${baseUrl}/studio/unlock`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/studio/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.4,
+    },
     {
       url: `${baseUrl}/articles`,
       lastModified: new Date(),

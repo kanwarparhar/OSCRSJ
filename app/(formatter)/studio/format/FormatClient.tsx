@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
 import { ARTICLE_TYPE_LABELS, type JournalSummary } from '@/lib/formatting/registry-meta'
 import JournalCombobox from '@/components/JournalCombobox'
 import {
@@ -16,7 +17,23 @@ import type { ReportModel, Severity, ReferenceVerificationStatus } from '@/lib/f
 import { layoutNotPrescribedLine } from '@/lib/formatting/reportCopy'
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
 import { publishFormatHandoff, subscribeJournalRequest, clearJournalRequest } from '@/lib/finder/handoff'
-import { CONSENT_LABEL, CONSENT_DETAIL } from '@/lib/studio/consent'
+import {
+  STUDIO_FREE_RUNS,
+  STUDIO_FREE_UNTIL_LABEL,
+  STUDIO_QUOTA_WINDOW_LABEL,
+  isFreeJournalRun,
+  normalizeEmail,
+  type QuotaStatusPayload,
+} from '@/lib/studio/quotaConstants'
+import {
+  STUDIO_TERMS_PATH,
+  TERMS_CHECKBOX_BEFORE,
+  TERMS_CHECKBOX_LINK,
+  TERMS_CHECKBOX_AFTER,
+  TERMS_CHECKBOX_DETAIL,
+  MARKETING_CHECKBOX_LABEL,
+  MARKETING_CHECKBOX_DETAIL,
+} from '@/lib/studio/terms'
 
 /* ------------------------------------------------------------------ */
 /*  Constants + helpers                                                 */
@@ -41,6 +58,45 @@ function friendlyDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00`)
   if (Number.isNaN(d.getTime())) return iso
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+/**
+ * The zone every quota time is quoted in.
+ *
+ * Fixed rather than the reader's own zone on purpose. The server decides the
+ * instant a run frees up; if the page rendered it in whatever zone the browser
+ * claims, two people comparing the same address would read two different
+ * clocks and one of them would be wrong about when to come back. The copy
+ * names the zone, so a reader elsewhere can do the arithmetic knowingly.
+ */
+const QUOTA_TIME_ZONE = 'America/Los_Angeles'
+
+/**
+ * "Thursday at 9:14 AM" for the instant the next run frees itself.
+ *
+ * Returns null for a missing or unparseable value, and every caller has copy
+ * that does not name a time: `nextRunAvailableAt` is legitimately absent when
+ * nothing is waiting to age out, and a banner reading "opens up Invalid Date"
+ * is worse than one that just says runs come back after a week.
+ */
+function nextRunLabel(iso: string | null | undefined): string | null {
+  if (!iso) return null
+  const at = new Date(iso)
+  if (Number.isNaN(at.getTime())) return null
+  try {
+    const day = new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      timeZone: QUOTA_TIME_ZONE,
+    }).format(at)
+    const time = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: QUOTA_TIME_ZONE,
+    }).format(at)
+    return `${day} at ${time}`
+  } catch {
+    return null
+  }
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -77,14 +133,254 @@ const DOWNLOAD_LABELS: { key: keyof JobOutputs; label: string; primary?: boolean
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 
-async function readErrorMessage(res: Response): Promise<string | null> {
+/** Structured fields off a failed response. The message alone is not enough
+ *  any more: a 429 carries `code` and `quota`, and the difference between
+ *  "a survey gets you three more" and "that was the last of them" is the
+ *  difference between a call to action and a dead end. */
+interface ApiErrorPayload {
+  message: string | null
+  code: string | null
+  quota: {
+    used: number
+    limit: number
+    remaining: number
+    canUnlockWithSurvey: boolean
+    nextRunAvailableAt?: string | null
+  } | null
+}
+
+async function readErrorPayload(res: Response): Promise<ApiErrorPayload> {
   try {
-    const data = (await res.json()) as { error?: { message?: string } | string; message?: string }
-    if (typeof data.error === 'string') return data.error
-    return data.error?.message ?? data.message ?? null
+    const data = (await res.json()) as {
+      error?: { message?: string } | string
+      message?: string
+      code?: string
+      quota?: ApiErrorPayload['quota']
+    }
+    const message =
+      typeof data.error === 'string' ? data.error : data.error?.message ?? data.message ?? null
+    return { message, code: data.code ?? null, quota: data.quota ?? null }
   } catch {
-    return null
+    return { message: null, code: null, quota: null }
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Free-run allowance (advisory)                                       */
+/* ------------------------------------------------------------------ */
+
+const QUOTA_DEBOUNCE_MS = 600
+
+type QuotaBlock = {
+  code: 'quota_exhausted' | 'quota_exhausted_final' | 'quota_in_flight'
+  limit: number
+  /** When the oldest run ages out, if the server told us. */
+  nextRunAvailableAt: string | null
+}
+
+/**
+ * Ask /api/studio/quota how many free runs this address has left.
+ *
+ * Three rules, all of them load-bearing:
+ *   1. It is ADVISORY. The create route runs the same check and is the only
+ *      authority. If this lookup is slow, throttled, or dead, the form shows
+ *      nothing and stays exactly as usable as it was before this existed.
+ *   2. It is debounced and abortable, so typing an address is one request at
+ *      the end rather than one per keystroke, and an in-flight answer for a
+ *      half-typed address never lands on a finished one.
+ *   3. The reading is keyed to the address it was read for. The previous
+ *      answer is still in state while a new address is being typed, and
+ *      showing one address's count beside another's is worse than silence.
+ *
+ * Duplicated in app/(formatter)/_components/FinderClient.tsx on purpose: both
+ * are client components, the two forms share the allowance, and there is no
+ * shared client hook module yet. Change both together.
+ */
+function useStudioQuota(email: string) {
+  const [quota, setQuota] = useState<QuotaStatusPayload | null>(null)
+  const [quotaLoading, setQuotaLoading] = useState(false)
+  const [refreshCount, setRefreshCount] = useState(0)
+  const quotaAbortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    const address = email.trim()
+    if (!EMAIL_RE.test(address)) {
+      quotaAbortRef.current?.abort()
+      quotaAbortRef.current = null
+      setQuotaLoading(false)
+      return
+    }
+    setQuotaLoading(true)
+    const timer = setTimeout(() => {
+      const controller = new AbortController()
+      quotaAbortRef.current?.abort()
+      quotaAbortRef.current = controller
+      void (async () => {
+        try {
+          const res = await fetch(`/api/studio/quota?email=${encodeURIComponent(address)}`, {
+            signal: controller.signal,
+          })
+          if (controller.signal.aborted) return
+          // A 400, 429 or 503 here is not a lockout. We simply say nothing.
+          setQuota(res.ok ? ((await res.json()) as QuotaStatusPayload) : null)
+        } catch {
+          if (controller.signal.aborted) return
+          setQuota(null)
+        } finally {
+          if (!controller.signal.aborted) setQuotaLoading(false)
+        }
+      })()
+    }, QUOTA_DEBOUNCE_MS)
+    return () => {
+      clearTimeout(timer)
+      quotaAbortRef.current?.abort()
+    }
+  }, [email, refreshCount])
+
+  // Unmount: stop the last request rather than resolving into a dead component.
+  useEffect(() => () => quotaAbortRef.current?.abort(), [])
+
+  const refreshQuota = useCallback(() => setRefreshCount((n) => n + 1), [])
+
+  const quotaForEmail = quota && quota.email === normalizeEmail(email) ? quota : null
+
+  return { quota: quotaForEmail, quotaLoading, refreshQuota }
+}
+
+/**
+ * The runs-remaining line under the email field. Lives inside a reserved box
+ * so the form does not jump when the answer arrives a beat after typing.
+ *
+ * Five states, in this order of precedence:
+ *   admin        -- one quiet line, no count, no CTA, nothing to sell.
+ *   runs left    -- the count, plus how the allowance refills itself.
+ *   in flight    -- nothing spent, the slot releases on its own.
+ *   locked, refill available -- BOTH ways out, wait or survey, stated evenly.
+ *   locked, refill spent     -- when it comes back, and no ask.
+ *
+ * Duplicated verbatim in app/(formatter)/_components/FinderClient.tsx apart
+ * from the sibling tool's name. Change both together.
+ */
+/**
+ * The free-OSCRSJ badge. Factual, one sentence, no exclamation.
+ *
+ * Shown in two places on purpose: beside the journal picker, where the choice is
+ * made, and in place of the runs-remaining line, where the cost would otherwise
+ * be quoted. Leaving the count visible next to a run that costs nothing is the
+ * failure mode worth avoiding -- a user reading "1 of 3 free runs left" above a
+ * button that will not spend one has been told something false.
+ */
+function FreeForOscrsjBadge({ className = '' }: { className?: string }) {
+  return (
+    <p
+      className={`rounded-lg border border-fmt-hairline bg-fmt-surface px-3 py-2 text-xs font-medium text-fmt-ink ${className}`}
+    >
+      Free — formatting and assessment for OSCRSJ never use a run.
+    </p>
+  )
+}
+
+function QuotaNotice({
+  quota,
+  loading,
+  freeRun,
+}: {
+  quota: QuotaStatusPayload | null
+  loading: boolean
+  /** True when the selected journal is OSCRSJ, so no run will be spent. */
+  freeRun: boolean
+}) {
+  const nextRun = nextRunLabel(quota?.nextRunAvailableAt)
+  // Every state below is a statement about the allowance. None of them is true
+  // of a run that does not touch it, so the whole block is replaced rather than
+  // appended to.
+  if (freeRun) {
+    return (
+      <div className="mt-3 min-h-[3rem]" aria-live="polite">
+        <FreeForOscrsjBadge />
+      </div>
+    )
+  }
+  return (
+    <div className="mt-3 min-h-[3rem]" aria-live="polite">
+      {loading && !quota && (
+        <p className="font-fmt-mono text-xs text-fmt-ink-3">Checking your free runs…</p>
+      )}
+
+      {/* Admin. No count, no survey, no limit to explain. Anything louder than
+          one line is telling the operator about a rule that does not apply to
+          them. */}
+      {quota && quota.isAdmin && (
+        <p className="font-fmt-mono text-xs text-fmt-ink-3">Admin address. No run limit.</p>
+      )}
+
+      {quota && !quota.isAdmin && quota.remaining > 0 && (
+        <>
+          <p className="text-xs font-medium text-fmt-ink">
+            {quota.remaining} of {quota.limit} free runs left this {STUDIO_QUOTA_WINDOW_LABEL}.
+          </p>
+          <p className="mt-1 text-xs text-fmt-ink-2">
+            Runs are shared with the Journal Finder. Each one comes back {quota.windowDays} days
+            after you use it.
+          </p>
+        </>
+      )}
+
+      {quota && !quota.isAdmin && quota.remaining === 0 && quota.lockedByInFlightOnly && (
+        <div className="rounded-lg border border-fmt-hairline bg-fmt-surface px-3 py-2.5">
+          <p className="text-xs font-medium text-fmt-ink">
+            {quota.inFlightRuns} job{quota.inFlightRuns === 1 ? '' : 's'} still running on this
+            address.
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-fmt-ink-2">
+            Nothing has been used up yet. A job that fails does not count against your runs, and one
+            that is abandoned releases its slot on its own. Wait a moment and try again.
+          </p>
+        </div>
+      )}
+
+      {quota && !quota.isAdmin && quota.remaining === 0 && quota.canUnlockWithSurvey && (
+        <div className="rounded-lg border border-fmt-hairline bg-[#FBF3E4] px-3 py-2.5">
+          <p className="text-xs font-medium text-fmt-ink">
+            You have used all {quota.limit} free runs this {STUDIO_QUOTA_WINDOW_LABEL}.
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-fmt-ink-2">
+            {nextRun
+              ? `Your next run comes back on its own ${nextRun} Pacific. `
+              : `Each run comes back on its own ${quota.windowDays} days after you use it. `}
+            If you would rather not wait, a short survey refills all {quota.limit} now. It works once
+            per address, and your answers decide what we fix next.
+          </p>
+          <Link
+            href="/studio/unlock"
+            className="mt-2 inline-block text-xs font-medium text-fmt-accent underline hover:text-fmt-accent-deep"
+          >
+            Refill {quota.limit} runs now
+          </Link>
+        </div>
+      )}
+
+      {quota &&
+        !quota.isAdmin &&
+        quota.remaining === 0 &&
+        !quota.canUnlockWithSurvey &&
+        !quota.lockedByInFlightOnly && (
+        <div className="rounded-lg border border-fmt-hairline bg-fmt-surface px-3 py-2.5">
+          <p className="text-xs font-medium text-fmt-ink">
+            {nextRun
+              ? `Your next free run opens up ${nextRun} Pacific.`
+              : `Your free runs come back ${quota.windowDays} days after you use them.`}
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-fmt-ink-2">
+            You have used all {quota.limit} runs this {STUDIO_QUOTA_WINDOW_LABEL} and the one survey
+            refill this address gets, so waiting is the way back in. Thank you for putting the
+            Studio through its paces. It stays free through {STUDIO_FREE_UNTIL_LABEL}, and paid
+            plans follow.
+          </p>
+        </div>
+      )}
+    </div>
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -156,8 +452,8 @@ function ReportView({ report }: { report: ReportModel }) {
                 {report.changesApplied.map((c, i) => (
                   <tr key={i} className="border-t border-fmt-hairline align-top">
                     <td className="px-4 py-2.5 font-medium text-fmt-ink">{c.element}</td>
-                    <td className="px-4 py-2.5 text-fmt-ink-2">{c.before || '—'}</td>
-                    <td className="px-4 py-2.5 text-fmt-ink">{c.after || '—'}</td>
+                    <td className="px-4 py-2.5 text-fmt-ink-2">{c.before || 'None'}</td>
+                    <td className="px-4 py-2.5 text-fmt-ink">{c.after || 'None'}</td>
                     <td className="px-4 py-2.5">
                       <SeverityChip severity={c.severity} />
                     </td>
@@ -224,7 +520,7 @@ function ReportView({ report }: { report: ReportModel }) {
                       <td className={`whitespace-nowrap px-4 py-2.5 font-medium ${meta.text}`}>
                         <span aria-hidden="true">{meta.icon}</span> {meta.label}
                       </td>
-                      <td className="px-4 py-2.5 text-fmt-ink">{r.changed || '—'}</td>
+                      <td className="px-4 py-2.5 text-fmt-ink">{r.changed || 'None'}</td>
                       <td className="px-4 py-2.5 text-fmt-ink-2">
                         {r.doi ? (
                           <a
@@ -245,7 +541,7 @@ function ReportView({ report }: { report: ReportModel }) {
                             PMID {r.pmid}
                           </a>
                         ) : (
-                          '—'
+                          'None'
                         )}
                       </td>
                     </tr>
@@ -350,11 +646,19 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   const [journalId, setJournalId] = useState('')
   const [articleType, setArticleType] = useState('')
   const [email, setEmail] = useState('')
-  // Required to submit (Kanwar directive, 2026-07-25). Starts false and is
-  // never pre-ticked: a pre-ticked box is not a recorded affirmative act, and
-  // the whole point of storing a consent version is being able to say what the
-  // person actually did.
-  const [consent, setConsent] = useState(false)
+  // Two boxes, and only the first one gates the run.
+  //
+  // termsAccepted is required. marketingConsent is optional, and nothing in
+  // this component is allowed to make declining it cost anything: consent to
+  // marketing has to be freely given and separate from accepting terms, so a
+  // box that bundles the two is weaker consent than an unticked box beside it.
+  // The reasoning in full is at the top of lib/studio/terms.ts.
+  //
+  // Neither starts ticked. A pre-ticked box is not a recorded affirmative act,
+  // and the whole point of storing a version against the record is being able
+  // to say what this person actually agreed to.
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [marketingConsent, setMarketingConsent] = useState(false)
 
   // Run state
   const [phase, setPhase] = useState<Phase>('form')
@@ -368,6 +672,11 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   const [report, setReport] = useState<ReportModel | null>(null)
   const [downloads, setDownloads] = useState<JobOutputs>({})
   const [runError, setRunError] = useState<string | null>(null)
+  // A spent allowance is not a generic failure and must not read like one, so
+  // it carries its own state rather than being flattened into runError.
+  const [quotaBlock, setQuotaBlock] = useState<QuotaBlock | null>(null)
+
+  const { quota, quotaLoading, refreshQuota } = useStudioQuota(email)
 
   const manuscriptInputRef = useRef<HTMLInputElement>(null)
   const figureInputRef = useRef<HTMLInputElement>(null)
@@ -427,8 +736,17 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   }, [phase, progress])
 
   const emailValid = EMAIL_RE.test(email)
+  // Locked is only ever asserted from a reading that belongs to THIS address
+  // (see useStudioQuota). A failed or missing lookup leaves the form open.
+  const quotaLocked = quota?.locked === true
   const canSubmit =
-    !!manuscript && !!journalId && !!articleType && emailValid && consent && !submitting
+    !!manuscript &&
+    !!journalId &&
+    !!articleType &&
+    emailValid &&
+    termsAccepted &&
+    !submitting &&
+    !quotaLocked
 
   /* ---- File handling ---- */
 
@@ -502,16 +820,21 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
     if (!canSubmit || !manuscript) return
     setSubmitting(true)
     setRunError(null)
+    setQuotaBlock(null)
 
     try {
-      const body: CreateJobRequest = {
+      // Two independent booleans. The server records each against its own
+      // versioned wording, so deriving one from the other would store a
+      // marketing consent nobody gave.
+      const body: CreateJobRequest & { termsAccepted: boolean } = {
         email,
         journalId,
         articleType,
         figureCount: figures.length,
         figureFilenames: figures.map((f) => f.name),
         manuscriptFilename: manuscript.name,
-        marketingConsent: consent,
+        termsAccepted,
+        marketingConsent,
       }
       const createRes = await fetch('/api/format/jobs', {
         method: 'POST',
@@ -519,8 +842,33 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         body: JSON.stringify(body),
       })
       if (!createRes.ok) {
-        const msg = await readErrorMessage(createRes)
-        throw new Error(msg || 'We could not start your job. Please check your details and try again.')
+        const payload = await readErrorPayload(createRes)
+        const code = payload.code
+        // 429 + a quota code is a spent allowance, and gets the unlock path.
+        // A 503 from the same route means we could not READ the allowance;
+        // that is retryable and must never be dressed up as a lockout.
+        if (
+          createRes.status === 429 &&
+          (code === 'quota_exhausted' ||
+            code === 'quota_exhausted_final' ||
+            code === 'quota_in_flight')
+        ) {
+          setQuotaBlock({
+            code,
+            limit: payload.quota?.limit ?? STUDIO_FREE_RUNS,
+            nextRunAvailableAt: payload.quota?.nextRunAvailableAt ?? null,
+          })
+          refreshQuota()
+        }
+        if (createRes.status === 503) {
+          throw new Error(
+            payload.message ||
+              'We could not check your remaining free runs just now. Please try again in a moment.',
+          )
+        }
+        throw new Error(
+          payload.message || 'We could not start your job. Please check your details and try again.',
+        )
       }
       const job = (await createRes.json()) as CreateJobResponse
 
@@ -597,6 +945,10 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           setReport(status.report)
           setDownloads(status.downloads)
           setPhase('complete')
+          // The run they just finished is spent. Re-read so the complete screen
+          // (and the form behind it) shows the real number rather than the one
+          // we fetched before they submitted.
+          refreshQuota()
           // Hand the numbers we already know to the Journal Finder, so the
           // author can find fitting journals without retyping. The channel is
           // sessionStorage-backed (per-tab, cleared on tab close) so it
@@ -638,6 +990,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
   function backToForm() {
     setPhase('form')
     setRunError(null)
+    setQuotaBlock(null)
   }
 
   function startOver() {
@@ -648,13 +1001,21 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
     setJournalId('')
     setArticleType('')
     setEmail('')
-    setConsent(false)
+    // Both cleared deliberately. startOver() also clears the email, so the
+    // next run may be a different address and a different person; a box left
+    // ticked from the last run is not an affirmative act for the new record,
+    // and a stored acceptance is only worth anything if it is one. That goes
+    // double for the marketing box, where a carried-over tick would mail
+    // somebody who never agreed to be mailed.
+    setTermsAccepted(false)
+    setMarketingConsent(false)
     setReport(null)
     setDownloads({})
     setProgress(0)
     setDisplayProgress(0)
     setStageLabel('')
     setRunError(null)
+    setQuotaBlock(null)
     setPhase('form')
   }
 
@@ -691,6 +1052,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
 
   if (phase === 'complete') {
     const availableDownloads = DOWNLOAD_LABELS.filter((d) => downloads[d.key])
+    const nextRun = nextRunLabel(quota?.nextRunAvailableAt)
     return (
       <div className="space-y-8">
         <div className="rounded-xl border border-[#CDE9D8] bg-[#E8F5EE] p-6">
@@ -732,6 +1094,46 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
 
         {report && <ReportView report={report} />}
 
+        {/* They have their files and just spent their last run. This is the
+            moment to ask, and it is an invitation rather than a wall: the run
+            they came for already succeeded. */}
+        {quota && !quota.isAdmin && quota.remaining === 0 && quota.canUnlockWithSurvey && (
+          <div className="rounded-xl border border-fmt-hairline bg-fmt-surface p-6">
+            <p className="kicker mb-2">
+              That was your last free run this {STUDIO_QUOTA_WINDOW_LABEL}
+            </p>
+            <p className="text-sm leading-relaxed text-fmt-ink">
+              {nextRun
+                ? `Your next one comes back on its own ${nextRun} Pacific. `
+                : `Runs come back on their own ${quota.windowDays} days after you use them. `}
+              If you would rather not wait, tell us how the Studio did and we will refill all{' '}
+              {quota.limit} right now. It takes a few minutes, it works once per address, and your
+              answers are the only thing steering what we fix next.
+            </p>
+            <Link href="/studio/unlock" className="btn btn-secondary mt-4 inline-flex">
+              Answer the survey and refill {quota.limit} runs
+            </Link>
+          </div>
+        )}
+
+        {quota &&
+          !quota.isAdmin &&
+          quota.remaining === 0 &&
+          !quota.canUnlockWithSurvey &&
+          !quota.lockedByInFlightOnly && (
+          <div className="rounded-xl border border-fmt-hairline bg-fmt-surface p-6">
+            <p className="text-sm leading-relaxed text-fmt-ink">
+              That was your last free run this {STUDIO_QUOTA_WINDOW_LABEL}.{' '}
+              {nextRun
+                ? `The next one opens up ${nextRun} Pacific. `
+                : `Each one comes back ${quota.windowDays} days after you use it. `}
+              This address has already used its one survey refill, so waiting is the way back in.
+              Thank you for putting the Studio through its paces. It stays free through{' '}
+              {STUDIO_FREE_UNTIL_LABEL}, and paid plans follow.
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-wrap gap-3 border-t border-fmt-hairline pt-6">
           <button type="button" onClick={startOver} className="btn btn-primary">
             Format another manuscript
@@ -743,9 +1145,56 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
 
   /* ---- Render: form (also shown behind an error banner) ---- */
 
+  // Two different readings of "when does it come back": one from the refused
+  // POST, one from the advisory lookup. They usually agree, and when they do
+  // not the one attached to the refusal is the one that just happened.
+  const blockNextRun = nextRunLabel(quotaBlock?.nextRunAvailableAt)
+  const lockedNextRun = nextRunLabel(quota?.nextRunAvailableAt)
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {phase === 'error' && runError && (
+      {/* A spent allowance is not a failure, so it does not get the red
+          failure banner. Everything else, including the retryable 503 from the
+          quota read, still does. */}
+      {phase === 'error' && quotaBlock && (
+        <div role="alert" className="rounded-xl border border-fmt-hairline bg-[#FBF3E4] px-4 py-3">
+          <p className="text-sm font-medium text-fmt-ink">
+            {quotaBlock.code === 'quota_in_flight'
+              ? 'A job on this address is still running.'
+              : `You have used all ${quotaBlock.limit} free runs this ${STUDIO_QUOTA_WINDOW_LABEL}.`}
+          </p>
+          {quotaBlock.code === 'quota_in_flight' ? (
+            <p className="mt-1 text-sm leading-relaxed text-fmt-ink-2">
+              Nothing has been used up. A job that fails does not count against your runs, and one
+              that is abandoned releases its slot on its own. Wait a moment and try again. Nothing
+              was uploaded, so your manuscript never left your machine.
+            </p>
+          ) : quotaBlock.code === 'quota_exhausted' ? (
+            <>
+              <p className="mt-1 text-sm leading-relaxed text-fmt-ink-2">
+                {blockNextRun
+                  ? `The next one comes back on its own ${blockNextRun} Pacific. `
+                  : `Each one comes back on its own a ${STUDIO_QUOTA_WINDOW_LABEL} after you use it. `}
+                A short survey refills all {quotaBlock.limit} now instead. It works once per address.
+                Nothing was uploaded, so your manuscript never left your machine.
+              </p>
+              <Link href="/studio/unlock" className="btn btn-secondary mt-3 inline-flex">
+                Refill {quotaBlock.limit} runs now
+              </Link>
+            </>
+          ) : (
+            <p className="mt-1 text-sm leading-relaxed text-fmt-ink-2">
+              {blockNextRun
+                ? `The next one opens up ${blockNextRun} Pacific. `
+                : `Each one comes back a ${STUDIO_QUOTA_WINDOW_LABEL} after you use it. `}
+              This address has already used its one survey refill. Nothing was uploaded, so your
+              manuscript never left your machine.
+            </p>
+          )}
+        </div>
+      )}
+
+      {phase === 'error' && !quotaBlock && runError && (
         <div
           role="alert"
           className="flex items-start gap-3 rounded-xl border border-[#F0C7C4] bg-[#FBEAE9] px-4 py-3 text-sm text-fmt-bad"
@@ -897,6 +1346,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
               value={journalId}
               onChange={handleJournalChange}
             />
+            {isFreeJournalRun(journalId) && <FreeForOscrsjBadge className="mt-2" />}
           </div>
 
           <div>
@@ -940,7 +1390,7 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
         <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">3. Your email</h3>
         <p className="mb-4 text-sm text-fmt-ink-2">
           Your results appear right here on this page and your formatted files are not emailed to you. We ask for your
-          address to prevent abuse of a free tool and to keep you posted on the Studio and the journal.
+          address to prevent abuse of a free tool: your free runs are counted against it.
         </p>
 
         <div className="max-w-md">
@@ -959,23 +1409,75 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
           {email.length > 0 && !emailValid && (
             <p className="mt-1 text-xs text-fmt-bad">Please enter a valid email address.</p>
           )}
+          <QuotaNotice quota={quota} loading={quotaLoading} freeRun={isFreeJournalRun(journalId)} />
         </div>
 
-        {/* Required consent. Gated again server-side in /api/format/jobs so a
-            hand-rolled POST cannot slip an address in without it. */}
+        {/* Two boxes. The first is required and gates the run, again
+            server-side in /api/format/jobs so a hand-rolled POST cannot slip
+            an address in without it. The second is optional and gates nothing.
+
+            They are rendered identically: same weight, same colour, same
+            detail treatment, no "recommended", no pre-tick, nothing that reads
+            as a nudge. Marketing consent has to be freely given and separate
+            from accepting terms, and a design that makes the unticked state
+            look like a mistake is the UI version of bundling them.
+
+            Each input is a SIBLING of its label rather than a child, tied by
+            htmlFor. That keeps every word of the label a valid click target
+            for the box while letting the Terms link inside it be a real link.
+            HTML already says a label must not forward activation from an
+            interactive descendant, so the anchor is safe by spec; the
+            stopPropagation is belt and braces for anything that disagrees.
+            target="_blank" is deliberate: the author has a file selected and a
+            journal chosen, and a same-tab navigation would throw both away. */}
         <div className="mt-5 rounded-lg border border-fmt-hairline bg-fmt-surface p-4">
-          <label htmlFor="marketing-consent" className="flex cursor-pointer items-start gap-3">
+          <div className="flex items-start gap-3">
             <input
-              id="marketing-consent"
+              id="studio-terms"
               type="checkbox"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
               className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer accent-fmt-accent"
             />
-            <span className="text-sm font-medium leading-snug text-fmt-ink">{CONSENT_LABEL}</span>
-          </label>
-          <p className="mt-2 pl-7 text-xs leading-relaxed text-fmt-ink-2">{CONSENT_DETAIL}</p>
-          <p className="mt-2 pl-7 text-xs text-fmt-ink-2">
+            <label
+              htmlFor="studio-terms"
+              className="cursor-pointer text-sm font-medium leading-snug text-fmt-ink"
+            >
+              {TERMS_CHECKBOX_BEFORE}
+              <Link
+                href={STUDIO_TERMS_PATH}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="underline hover:text-fmt-accent-deep"
+              >
+                {TERMS_CHECKBOX_LINK}
+              </Link>
+              {TERMS_CHECKBOX_AFTER}
+            </label>
+          </div>
+          <p className="mt-2 pl-7 text-xs leading-relaxed text-fmt-ink-2">{TERMS_CHECKBOX_DETAIL}</p>
+
+          <div className="mt-4 flex items-start gap-3 border-t border-fmt-hairline pt-4">
+            <input
+              id="studio-marketing"
+              type="checkbox"
+              checked={marketingConsent}
+              onChange={(e) => setMarketingConsent(e.target.checked)}
+              className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer accent-fmt-accent"
+            />
+            <label
+              htmlFor="studio-marketing"
+              className="cursor-pointer text-sm font-medium leading-snug text-fmt-ink"
+            >
+              {MARKETING_CHECKBOX_LABEL}
+            </label>
+          </div>
+          <p className="mt-2 pl-7 text-xs leading-relaxed text-fmt-ink-2">
+            {MARKETING_CHECKBOX_DETAIL}
+          </p>
+
+          <p className="mt-3 pl-7 text-xs text-fmt-ink-2">
             See our{' '}
             <a href="/privacy" className="underline hover:text-fmt-accent" target="_blank" rel="noopener">
               privacy policy
@@ -1004,6 +1506,21 @@ export default function FormatClient({ journals }: { journals: JournalSummary[] 
             'Format my manuscript'
           )}
         </button>
+        {quotaLocked && (
+          <p className="max-w-md text-center text-xs text-fmt-ink-2">
+            {quota?.lockedByInFlightOnly
+              ? 'Waiting on a job that is still running. Nothing has been used up, and the slot frees itself once it finishes or fails.'
+              : quota?.canUnlockWithSurvey
+                ? `No free runs left this ${STUDIO_QUOTA_WINDOW_LABEL}. ${
+                    lockedNextRun
+                      ? `The next one opens up ${lockedNextRun} Pacific.`
+                      : 'They come back on their own.'
+                  } The survey linked beside your email address refills all ${quota.limit} now.`
+                : lockedNextRun
+                  ? `No free runs left this ${STUDIO_QUOTA_WINDOW_LABEL}. The next one opens up ${lockedNextRun} Pacific.`
+                  : `No free runs left this ${STUDIO_QUOTA_WINDOW_LABEL}.`}
+          </p>
+        )}
         {phase === 'error' && (
           <button type="button" onClick={backToForm} className="text-sm text-fmt-ink-2 hover:underline">
             Reset the form

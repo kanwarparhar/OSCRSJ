@@ -16,7 +16,9 @@ import { ARTICLE_TYPES } from '@/lib/formatting/rulesSchema'
 import { SCHEMA_VERSION } from '@/lib/formatting/rulesSchema'
 import { createJob, checkRateLimit, createSignedUpload, writeJobMeta } from '@/lib/formatting/pipeline/jobs'
 import { storagePaths } from '@/lib/formatting/pipeline/api'
-import { CONSENT_VERSION, CONSENT_SCOPE } from '@/lib/studio/consent'
+import { CONSENT_SCOPE } from '@/lib/studio/consent'
+import { STUDIO_TERMS_VERSION, MARKETING_CONSENT_VERSION } from '@/lib/studio/terms'
+import { checkStudioQuota } from '@/lib/studio/quota'
 import {
   markJobKind,
   deleteJobRow,
@@ -40,27 +42,61 @@ export async function POST(req: NextRequest) {
   if (!body || typeof body !== 'object') {
     return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
   }
-  const { email, articleType, subspecialty, selfAssessment, manuscriptFilename, marketingConsent } =
-    body as Record<string, unknown>
+  const {
+    email,
+    articleType,
+    subspecialty,
+    selfAssessment,
+    manuscriptFilename,
+    termsAccepted,
+    marketingConsent,
+  } = body as Record<string, unknown>
 
   if (typeof email !== 'string' || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'A valid email is required.' }, { status: 400 })
   }
-  // Same consent gate as the formatter (Kanwar directive, 2026-07-25). This path
-  // collects an address, so it collects it under exactly the same disclosed
-  // terms; leaving it ungated would make the Studio's data-handling copy false
-  // again and would put addresses on the list with no recorded agreement.
-  if (marketingConsent !== true) {
+  // Same two-box arrangement as the formatter: Terms required, marketing
+  // optional. This path collects an address, so it collects it under exactly
+  // the same disclosed terms.
+  if (termsAccepted !== true) {
     return NextResponse.json(
-      { error: 'Please accept the email consent to use Submission Studio.' },
+      { error: 'Please accept the Submission Studio Terms and Conditions to continue.' },
       { status: 400 },
     )
   }
+  const wantsMarketing = marketingConsent === true
   if (typeof articleType !== 'string' || !(ARTICLE_TYPES as readonly string[]).includes(articleType)) {
     return NextResponse.json({ error: 'Select a valid article type.' }, { status: 400 })
   }
 
   const ip = clientIp(req)
+
+  // The Finder assessment draws on the SAME per-email allowance as the
+  // formatter (Kanwar directive: 3 total, shared). Both paths write to
+  // formatting_jobs and both cost a DeepSeek run, so a shared pool is the
+  // honest accounting; separate pools would let one address take six runs.
+  const quota = await checkStudioQuota(email)
+  if (!quota.ok) {
+    if (quota.code === 'quota_unavailable') {
+      return NextResponse.json({ error: quota.reason }, { status: 503 })
+    }
+    return NextResponse.json(
+      {
+        error: quota.reason,
+        code: quota.code,
+        quota: quota.status
+          ? {
+              used: quota.status.used,
+              limit: quota.status.limit,
+              remaining: quota.status.remaining,
+              canUnlockWithSurvey: quota.status.canUnlockWithSurvey,
+            }
+          : undefined,
+      },
+      { status: 429 },
+    )
+  }
+
   const rl = await checkRateLimit(email, ip)
   if (!rl.ok) return NextResponse.json({ error: rl.reason }, { status: 429 })
 
@@ -73,7 +109,10 @@ export async function POST(req: NextRequest) {
     articleType,
     ip,
     rulesVersion: SCHEMA_VERSION,
-    consent: { version: CONSENT_VERSION, scope: CONSENT_SCOPE },
+    consent: wantsMarketing
+      ? { version: MARKETING_CONSENT_VERSION, scope: CONSENT_SCOPE }
+      : undefined,
+    terms: { version: STUDIO_TERMS_VERSION },
   })
   if (!job) {
     return NextResponse.json({ error: 'Could not create the job. Try again.' }, { status: 500 })

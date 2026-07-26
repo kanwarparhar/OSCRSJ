@@ -22,7 +22,7 @@ export default function PrivacyPage() {
       <PageHeader
         label="Legal"
         title="Privacy Policy"
-        subtitle="Last updated: April 2026"
+        subtitle="Last updated: July 2026"
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -41,16 +41,23 @@ export default function PrivacyPage() {
             <h2 className="section-heading mb-3">Information We Collect</h2>
             <p className="text-ink mb-3">We may collect the following types of information:</p>
             <div className="space-y-3">
-              {[
+              {(
+                [
                 { title: 'Contact Information', desc: 'Name, email address, institutional affiliation, and professional role — provided when you submit a manuscript, register for an account, subscribe to our mailing list, or contact us.' },
                 { title: 'Submission Data', desc: 'Manuscript files, cover letters, reviewer comments, and correspondence related to the peer review process.' },
-                { title: 'Submission Studio Data', desc: 'When you use Submission Studio (our free manuscript formatting tool and Journal Finder), we collect your email address, your target journal and article type, and your uploaded files. Uploaded manuscripts and generated outputs are deleted from our storage after 7 days. Providing an email address, and agreeing to receive email from us, is required to use the Studio; we record the date and the exact wording you agreed to.' },
+                { title: 'Submission Studio Data', desc: 'When you use Submission Studio (our free manuscript formatting tool and Journal Finder), we collect your email address, your target journal and article type, and your uploaded files. Uploaded manuscripts and generated outputs are deleted from our storage after 7 days. Providing an email address and agreeing to the Submission Studio Terms and Conditions are required to use the Studio. Marketing consent is separate and optional: there is a second tick box, unticked by default, and ticking it is the only thing that adds your address to the OSCRSJ mailing list. Ticking it means occasional email about the Studio (new journals, new features, and pricing when it arrives) and about the journal (new issues and calls for papers). We do not sell your address, every email has one-click unsubscribe, and leaving this box unticked does not affect your access to the Studio in any way. We record which version of the Terms you accepted and, separately, which version of the marketing wording you consented to, each with the time you did it. Formatting a manuscript here still gives OSCRSJ no claim over your work. If you complete the optional feedback survey that refills your free runs early, we also collect and store your survey answers alongside your email address.', link: { href: '/studio/terms', label: 'Read the Submission Studio Terms and Conditions' } },
                 { title: 'Usage Data', desc: 'Anonymous analytics including pages visited, time on site, referral source, and device type. We use this data to improve the website experience.' },
                 { title: 'Cookies', desc: 'We use essential cookies for site functionality. We do not use advertising cookies or third-party tracking cookies.' },
-              ].map((item) => (
+                ] as { title: string; desc: string; link?: { href: string; label: string } }[]
+              ).map((item) => (
                 <div key={item.title} className="bg-white border border-border rounded-xl p-6">
                   <p className="font-semibold text-ink text-sm">{item.title}</p>
                   <p className="text-sm text-ink mt-0.5">{item.desc}</p>
+                  {item.link && (
+                    <Link href={item.link.href} className="text-brown hover:text-brown transition-colors font-medium text-sm mt-2 inline-block">
+                      {item.link.label} &rarr;
+                    </Link>
+                  )}
                 </div>
               ))}
             </div>
@@ -64,7 +71,7 @@ export default function PrivacyPage() {
                 'To process and manage manuscript submissions and peer review',
                 'To communicate with authors, reviewers, and editorial board members',
                 'To send journal updates and newsletters to subscribers',
-                'To send email about Submission Studio and about the journal to people who have used the Studio, which requires agreeing to receive it',
+                'To send email about Submission Studio and about the journal to people who have used the Studio and separately opted in to receive it',
                 'To improve website functionality and user experience',
                 'To comply with legal obligations and protect against misuse',
               ].map((item) => (

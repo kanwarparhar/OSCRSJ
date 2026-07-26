@@ -73,11 +73,49 @@ const HEADERS = {
     'Bucket Summary',
     'IP',
   ],
-  // Submission Studio daily metrics (2026-07-25). One row per LOCAL day
-  // (America/Los_Angeles), written each morning by /api/cron/studio-daily.
-  // Order MUST match metricsRow() in app/api/cron/studio-daily/route.ts.
-  // Re-running the job for a day OVERWRITES that day's row (see UPSERT_BY_DATE
-  // below) rather than appending a duplicate.
+  // NO SURVEY TAB HERE, DELIBERATELY. 'Studio Survey Responses' was declared in
+  // this map for part of 2026-07-26 and was removed the same day. Kanwar
+  // directive: survey data and its analytics live in the SAME spreadsheet as
+  // the Admin Manuscript Hub, which is pull-based. docs/admin-manuscript-hub.gs
+  // reads studio_survey_responses from Supabase directly and writes both
+  // 'Studio Survey Responses' and 'Studio Survey Analytics' into that workbook.
+  //
+  // Nothing in the app posts survey rows to this script. Re-adding a header
+  // here would not merely be dead config: it would invite someone to point the
+  // submit path at this webhook and create a second, diverging copy of the
+  // responses in the wrong workbook, which is worse than having none. If you
+  // want to change the survey columns, the only mirror of surveySheetHeaders()
+  // that still exists is SURVEY_FIXED_HEADERS + SURVEY_QUESTIONS in
+  // docs/admin-manuscript-hub.gs.
+  // ---------------------------------------------------------------------
+  // SUPERSEDED (2026-07-26). The two tabs below have NO writer in this
+  // webhook and never did: nothing in the app posts to them. The live
+  // versions of both are PULL-based and are built by
+  // docs/admin-manuscript-hub.gs, which reads Supabase directly on an
+  // hourly trigger and writes them into the "OSCRSJ - Admin Manuscript Hub"
+  // spreadsheet, not into this one.
+  //
+  // They are kept rather than deleted for two reasons. First, UPSERT_BY_KEY
+  // below still names 'Studio Daily Metrics', and the deployed webhook's
+  // replace/upsert paths read HEADERS[sheetName] for the tab width -- so if
+  // the push path is ever revived (a backfill, a one-off export), these
+  // definitions are what make it land correctly instead of guessing the
+  // width from the first row. Second, they document the column contract the
+  // Hub script's STUDIO_DAILY_HEADERS / STUDIO_MARKETING_HEADERS still
+  // follow, so the two sheets stay comparable.
+  //
+  // Do NOT add writers for these here. Change the Hub script instead, and
+  // mirror the change down here if you want the two to keep matching.
+  // ---------------------------------------------------------------------
+  // One row per LOCAL day (America/Los_Angeles). Order matches
+  // STUDIO_DAILY_HEADERS in docs/admin-manuscript-hub.gs.
+  // (An earlier version of this comment pointed at a metricsRow() helper in
+  // app/api/cron/studio-daily/route.ts. No such function exists -- the cron
+  // writes its snapshot to the studio_daily_metrics TABLE and the Hub script
+  // renders it. The reference is removed rather than corrected because there
+  // is nothing on the push side left to point at.)
+  // Re-posting a day OVERWRITES that day's row (see UPSERT_BY_KEY below)
+  // rather than appending a duplicate.
   'Studio Daily Metrics': [
     'Date',
     'Jobs Started',
@@ -107,9 +145,11 @@ const HEADERS = {
     'Marketing List Size',
     'Generated At (UTC)',
   ],
-  // Deduplicated marketing list, REBUILT from the database every morning
-  // (mode: 'replace'). Do not hand-edit: your edits are overwritten on the next
-  // run. Unsubscribes belong in your email tool, not here.
+  // SUPERSEDED, see the block above. Deduplicated marketing list, rebuilt from
+  // the database on every Hub refresh (the Hub script's
+  // writeStudioMarketingSheet_). Order matches STUDIO_MARKETING_HEADERS in
+  // docs/admin-manuscript-hub.gs. Do not hand-edit either copy: the Hub's is
+  // overwritten hourly. Unsubscribes belong in your email tool, not here.
   'Studio Marketing List': [
     'Email',
     'First Seen (UTC)',
@@ -126,6 +166,11 @@ const HEADERS = {
 // Tabs whose first column is a unique key: a posted row with a key already
 // present overwrites that row instead of appending a second one. Keeps the
 // daily-metrics tab honest when the morning job is re-run or backfilled.
+//
+// 'Studio Daily Metrics' is SUPERSEDED (see HEADERS above) and has no writer
+// today, so this list is currently inert. It stays because the entry costs
+// nothing and because deleting it is how a revived backfill quietly starts
+// appending one duplicate row per re-run.
 const UPSERT_BY_KEY = ['Studio Daily Metrics']
 
 function doPost(e) {

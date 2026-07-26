@@ -11,7 +11,22 @@
 // acceptable abuse-prevention floor for a free beta; tighten to a shared store
 // only if abuse actually materialises.
 
-/** Requests allowed per IP per rolling 24h. */
+/**
+ * Requests allowed per IP per rolling 24h.
+ *
+ * This governs the DETERMINISTIC Journal Finder match only (the manual ladder
+ * form), which collects no email address and costs no DeepSeek call. It is
+ * deliberately NOT part of the per-email free-run allowance in
+ * lib/studio/quotaConstants.ts: that allowance rations the expensive,
+ * identified operations (formatting a manuscript, assessing an upload), and
+ * charging someone a lifetime run for a free deterministic lookup would push
+ * people away from the cheapest, most useful thing the Studio does.
+ *
+ * Wording note (2026-07-26): the message used to say "free-beta limit", which
+ * broke the no-beta-framing house rule in app/(formatter)/_copy.ts. "Per day"
+ * and "tomorrow" are accurate HERE, unlike in the formatter, because this
+ * genuinely is a rolling daily cap.
+ */
 export const FINDER_RATE_LIMIT_PER_IP_PER_DAY = 20
 
 const WINDOW_MS = 24 * 60 * 60 * 1000
@@ -42,7 +57,7 @@ export function checkFinderRateLimit(ip: string | null, now: number = Date.now()
     return {
       ok: false,
       remaining: 0,
-      reason: `You've reached the free-beta limit of ${FINDER_RATE_LIMIT_PER_IP_PER_DAY} Journal Finder checks per day. Please try again tomorrow.`,
+      reason: `You've reached the limit of ${FINDER_RATE_LIMIT_PER_IP_PER_DAY} Journal Finder checks per day from this network. Please try again tomorrow.`,
     }
   }
 

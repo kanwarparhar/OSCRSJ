@@ -113,6 +113,21 @@ const base = (over: Partial<StudioDailyMetrics> = {}): StudioDailyMetrics => ({
   cumulativeCompleted: 0,
   cumulativeCostUsdEst: 0,
   cumulativeMarketingContacts: 0,
+  // Added 2026-07-26 with the free-run allowance and the unlock survey.
+  // All zero/null so the existing assertions keep describing a quiet day:
+  // every feedback flag is written to stay silent on no-data.
+  finderAssessJobs: 0,
+  surveysCompleted: 0,
+  resetsGranted: 0,
+  emailsExhaustedApprox: 0,
+  meanUsefulness: null,
+  cumulativeSurveys: 0,
+  cumulativeResetsGranted: 0,
+  cumulativeEmailsExhausted: 0,
+  cumulativeMeanUsefulness: null,
+  surveyConversionPct: null,
+  topSurveyProblem: null,
+  topSurveyProblemCount: 0,
   ...over,
 })
 

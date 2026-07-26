@@ -18,9 +18,29 @@ export const MAX_MANUSCRIPT_BYTES = 15 * 1024 * 1024
 export const MAX_FIGURE_BYTES = 10 * 1024 * 1024
 export const MAX_FIGURES = 10
 
-/** Rate limits (checked in the create route). */
-export const RATE_LIMIT_PER_EMAIL_PER_DAY = 3
-export const RATE_LIMIT_PER_IP_PER_DAY = 10
+/**
+ * Per-network daily cap on jobs STARTED (checked in the create routes).
+ *
+ * This is a RUNAWAY-COST CIRCUIT BREAKER, not a policy about who may use the
+ * Studio. Kanwar directive, 2026-07-26: a user who wants another allowance is
+ * welcome to use another email address, because a second address is a second
+ * contact and that is a trade worth making. So this number is set high enough
+ * that no plausible human, or household, or hospital NAT gateway, or shared
+ * university network ever touches it, and low enough that a script hammering
+ * us in a loop still hits a wall before the DeepSeek bill does.
+ *
+ * Raised from 10 the same day. At 10 it was silently doing policy work: a
+ * genuine second address from the same hospital wifi would have been refused,
+ * which is the exact behaviour the directive rules out. Do not lower it back
+ * without re-reading that directive.
+ *
+ * The per-email allowance lives in lib/studio/quotaConstants.ts
+ * (STUDIO_FREE_RUNS per STUDIO_QUOTA_WINDOW_DAYS) and is enforced by
+ * lib/studio/quota.ts. Do not reintroduce a per-email value here: two files
+ * owning "how many runs does this person get" is how the UI ends up promising
+ * a number the API does not honour.
+ */
+export const RATE_LIMIT_PER_IP_PER_DAY = 60
 
 /**
  * Cap on raw references entering the parse stage (2026-07-22, Part D). A

@@ -6,7 +6,6 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import {
   FORMATTING_BUCKET,
-  RATE_LIMIT_PER_EMAIL_PER_DAY,
   RATE_LIMIT_PER_IP_PER_DAY,
   UPLOAD_URL_TTL_SECONDS,
   DOWNLOAD_URL_TTL_SECONDS,
@@ -34,8 +33,15 @@ export async function createJob(fields: {
   /** Recorded verbatim so we can prove which wording this address agreed to.
    *  Omitted only by callers predating migration 029 (none in the app). */
   consent?: { version: string; scope: string }
+  /** Version of the Submission Studio Terms accepted (migration 031). From
+   *  2026-07-26 the Terms are the document that discloses the email use, so
+   *  BOTH versions are recorded: consent_version says which permission wording
+   *  applied, terms_version says which document carried it. Reconstructing what
+   *  someone actually saw needs both. */
+  terms?: { version: string }
 }): Promise<FormattingJob | null> {
   const a = admin()
+  const nowIso = new Date().toISOString()
   const { data, error } = await jobs(a)
     .insert({
       email: fields.email.toLowerCase().trim(),
@@ -49,7 +55,13 @@ export async function createJob(fields: {
             marketing_consent: true,
             consent_version: fields.consent.version,
             consent_scope: fields.consent.scope,
-            consent_at: new Date().toISOString(),
+            consent_at: nowIso,
+          }
+        : {}),
+      ...(fields.terms
+        ? {
+            terms_version: fields.terms.version,
+            terms_accepted_at: nowIso,
           }
         : {}),
     })
@@ -119,10 +131,26 @@ export interface RateLimitResult {
   reason?: string
 }
 
-export async function checkRateLimit(email: string, ip: string | null): Promise<RateLimitResult> {
-  if ((await recentJobCount('email', email)) >= RATE_LIMIT_PER_EMAIL_PER_DAY) {
-    return { ok: false, reason: `Daily limit reached (${RATE_LIMIT_PER_EMAIL_PER_DAY} per email). Try again tomorrow.` }
-  }
+/**
+ * Per-NETWORK daily cap. The per-EMAIL limit used to live here too and no
+ * longer does: from 2026-07-26 an address gets a lifetime allowance of
+ * STUDIO_FREE_RUNS completed runs, enforced by lib/studio/quota.ts, and the
+ * routes call that first.
+ *
+ * This survived the change deliberately rather than being folded into the
+ * allowance. The two limits answer different questions:
+ *
+ *   * The per-email allowance asks "how much is one person entitled to".
+ *   * This asks "how fast can one machine cycle through throwaway addresses".
+ *
+ * A lifetime per-email cap with no network cap is trivially defeated by
+ * plus-addressing or a disposable-mail domain, and defeating it costs the
+ * attacker nothing while costing us a DeepSeek run each time. Note this one
+ * still counts jobs STARTED, not completed: for abuse control, the attempt is
+ * the thing worth rationing, and an attacker who reliably fails is still
+ * burning our compute.
+ */
+export async function checkRateLimit(_email: string, ip: string | null): Promise<RateLimitResult> {
   if (ip && (await recentJobCount('ip', ip)) >= RATE_LIMIT_PER_IP_PER_DAY) {
     return { ok: false, reason: 'Daily limit reached for this network. Try again tomorrow.' }
   }
