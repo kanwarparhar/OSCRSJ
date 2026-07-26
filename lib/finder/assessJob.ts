@@ -14,6 +14,16 @@ import { admin, downloadObject, updateJob, uploadObject } from '@/lib/formatting
 import { MAX_MANUSCRIPT_BYTES, storagePaths } from '@/lib/formatting/pipeline/api'
 import type { FormattingJob } from '@/lib/formatting/pipeline/stages'
 import { appendRowToSheet } from '@/lib/integrations/googleSheets'
+import {
+  contentHash,
+  extractMethodology,
+  selectInstrument,
+  truncateForExtraction,
+  withQualityCache,
+  type MethodologyScore,
+  type QualityCacheStore,
+  type ReadinessChecklist,
+} from '@/lib/quality'
 import { getJournalMeta } from './journalMeta'
 import { extractProfile, buildSelfReportedProfile, finalizeProfile, applyProfileEdits } from './assess'
 import { buildLadder } from './ladder'
@@ -35,6 +45,107 @@ import {
 
 /** Value written to formatting_jobs.kind, and the journal_id sentinel. */
 export const FINDER_ASSESS_KIND = 'finder_assess'
+
+// ---------------------------------------------------------------------------
+// Methodological quality grading
+// ---------------------------------------------------------------------------
+
+/**
+ * Supabase-backed grade cache (migration 032).
+ *
+ * lib/quality/ cannot reach Supabase without forfeiting the portability that
+ * lets OSCRSJ's own submission intake import it, so the store is built here and
+ * injected. When the Formatter wires grading in too (Phase 4) this should move
+ * somewhere both can import rather than being duplicated.
+ *
+ * Every path swallows its own errors: withQualityCache treats a throwing store
+ * as a miss, and a cache that can fail a user's run is worse than no cache.
+ */
+function qualityCacheStore(): QualityCacheStore {
+  // `quality_cache` is not in the generated types in lib/types/database.ts,
+  // which are regenerated only after a migration is applied to the live
+  // database — and 032 is Kanwar's to run. The same escape hatch is used for
+  // formatting_jobs in lib/formatting/pipeline/jobs.ts. Narrowed to this table.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const table = () => (admin() as any).from('quality_cache')
+
+  return {
+    async get(hash) {
+      const { data, error } = await table().select('score').eq('content_hash', hash).maybeSingle()
+      if (error || !data) return null
+      return (data as { score: MethodologyScore }).score ?? null
+    },
+    async set(hash, instrumentId, score) {
+      await table().upsert({ content_hash: hash, instrument_id: instrumentId, score }, { onConflict: 'content_hash' })
+    },
+  }
+}
+
+/**
+ * Grade a manuscript against the instrument its extracted design selects.
+ *
+ * FAILURE-ISOLATED BY CONSTRUCTION. Grading is strictly additive to an
+ * assessment that already works, so nothing it does may fail the job. Anything
+ * that escapes extractMethodology's own degradation path is caught here and the
+ * run continues with no score at all — which the profile already models as
+ * `methodologyScore: null` and the anchor already treats as zero movement.
+ *
+ * The cache key is the TRUNCATED text, because that is what the model actually
+ * saw; hashing the full body would collide two manuscripts that differ only in
+ * the omitted middle.
+ */
+async function gradeManuscript(
+  bodyText: string,
+  profile: ManuscriptProfile,
+): Promise<{ score: MethodologyScore | null; readiness: ReadinessChecklist | undefined }> {
+  try {
+    const design = profile.design.value
+    const comparative = profile.comparative.value
+    const def = selectInstrument(design, comparative)
+    const { text } = truncateForExtraction(bodyText)
+    const hash = contentHash(text, def.id)
+
+    // Readiness is never cached: it is cheap, it rides the same call, and it is
+    // the half an author is most likely to fix and immediately re-check.
+    let readiness: ReadinessChecklist | undefined
+    const { score } = await withQualityCache(qualityCacheStore(), hash, def.id, async () => {
+      const result = await extractMethodology(bodyText, design, comparative)
+      readiness = result.readiness
+      return result.score
+    })
+    return { score, readiness }
+  } catch {
+    return { score: null, readiness: undefined }
+  }
+}
+
+/** Re-derive a profile carrying its instrument grade and readiness checklist. */
+function withMethodology(
+  profile: ManuscriptProfile,
+  selfAssessment: SelfAssessment | null,
+  methodologyScore: MethodologyScore | null,
+  readiness: ReadinessChecklist | undefined,
+): ManuscriptProfile {
+  return finalizeProfile(
+    {
+      design: profile.design,
+      sampleSize: profile.sampleSize,
+      multicenter: profile.multicenter,
+      comparative: profile.comparative,
+      followUpMonths: profile.followUpMonths,
+      statsReported: profile.statsReported,
+      noveltyClaim: profile.noveltyClaim,
+    },
+    selfAssessment,
+    {
+      selfReported: profile.selfReported,
+      truncated: profile.truncated,
+      extractionError: profile.extractionError,
+      methodologyScore,
+      readiness: readiness ?? profile.readiness,
+    },
+  )
+}
 
 /** Sidecar holding the author's answers. Reaped with the rest of the job. */
 const assessInputPath = (jobId: string) => `${jobId}/assess-input.json`
@@ -224,7 +335,18 @@ export async function rebuildLadder(
       noveltyClaim: p.noveltyClaim,
     },
     selfAssessment,
-    { selfReported: p.selfReported, truncated: p.truncated, extractionError: p.extractionError },
+    {
+      selfReported: p.selfReported,
+      truncated: p.truncated,
+      extractionError: p.extractionError,
+      // Carried through from the stored assessment. Re-grading here would mean a
+      // second DeepSeek call to answer three radio buttons, and dropping it
+      // would make the instrument card vanish the moment the author engages with
+      // the page. applyProfileEdits below discards the score by itself if a
+      // corrected design selects a different instrument.
+      methodologyScore: p.methodologyScore ?? null,
+      readiness: p.readiness,
+    },
   )
   // Corrections are applied to the STORED extraction, never to a re-read of the
   // manuscript: the author is correcting what we showed them, and a second
@@ -346,8 +468,14 @@ export async function runAssessment(job: FormattingJob): Promise<{ status: 'comp
   // STARTING, and is best-effort — a failed write degrades the screen, never the
   // assessment.
   await setStage(job.id, 'extracted')
-  const profile = await extractProfile(bodyText, selfAssessment)
+  const extracted = await extractProfile(bodyText, selfAssessment)
   await setStage(job.id, 'verified')
+
+  // Grading runs after extraction because the extracted DESIGN selects the
+  // instrument. It is strictly additive: on any failure the score is null, the
+  // anchor moves by exactly zero, and the run is the run we shipped yesterday.
+  const graded = await gradeManuscript(bodyText, extracted)
+  const profile = withMethodology(extracted, selfAssessment, graded.score, graded.readiness)
 
   const stats: ManuscriptStats = {
     articleType,

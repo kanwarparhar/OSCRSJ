@@ -24,6 +24,7 @@
 // property and must never appear here.
 
 import { FINDER_V2, FINDER_OSCRSJ_CARD } from '../_copy'
+import { INSTRUMENT_TRUST_LINE } from './FinderProfileCard'
 import { describeCheck } from '@/lib/finder/match'
 import { SJR_CATEGORY, SJR_CATEGORY_SIZE } from '@/lib/finder/sjrData'
 import type { LadderBand, LadderResult, LadderSlot } from '@/lib/finder/profileTypes'
@@ -326,6 +327,13 @@ export default function FinderLadderView({
 
       <p className="rounded-xl border border-fmt-hairline bg-fmt-surface px-4 py-3 text-xs leading-relaxed text-fmt-ink-2">
         {FINDER_V2.ladderDisclaimer}
+        {/* The one additive line this phase adds to the disclaimer. It names the
+            instruments, says what they are for, and closes on "not a prediction"
+            — because a page that ranks journals by a manuscript's quality score
+            will be read as a forecast unless it says otherwise, in the same
+            breath. Local rather than in _copy.ts: see the note in
+            FinderProfileCard.tsx. */}{' '}
+        {INSTRUMENT_TRUST_LINE}
       </p>
 
       {ladder.showOscrsjCard && <OscrsjCard articleTypePhrase={articleTypePhrase} onFormat={onFormatOscrsj} />}

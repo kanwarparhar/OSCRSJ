@@ -27,6 +27,13 @@
 import { useState } from 'react'
 import { FINDER_V2, finderDisagreementLine } from '../_copy'
 import {
+  READINESS_GATES,
+  READINESS_LABELS,
+  type MethodologyScore,
+  type ReadinessChecklist,
+  type ScoredItem,
+} from '@/lib/quality'
+import {
   EDITABLE_FIELD_LABELS,
   STUDY_DESIGNS,
   type EditableProfileField,
@@ -261,6 +268,247 @@ function FactCard({
 }
 
 /* ------------------------------------------------------------------ */
+/*  Methodological quality                                              */
+/* ------------------------------------------------------------------ */
+//
+// WHAT THIS BLOCK MAY AND MAY NOT SAY. It reports the score of a named,
+// published instrument, item by item, each item carrying the sentence it was
+// read from. It renders `obtained/applicableMax` beside the instrument's name.
+//
+// It must NEVER render a percentage, and it must never carry a word about what
+// an editor will decide. "MINORS 18/24" is a statement about how completely this
+// manuscript reports its own methods. Turning that into "75%" invites exactly
+// the reading the whole feature exists to avoid, which is why the denominator is
+// always shown.
+//
+// The copy below is local rather than in _copy.ts on purpose: this phase's
+// permitted surfaces do not include that file, and it is a high-collision file
+// with another session in flight. Move it there when that file is next opened.
+
+export const INSTRUMENT_TRUST_LINE =
+  'Study quality is scored with published, validated instruments (MINORS, Newcastle-Ottawa, Cochrane RoB 2, CARE, AMSTAR-2) applied item by item to what your manuscript states — as an aid to strengthen your study and to gauge which journals’ standing it aligns with. It is not a prediction of acceptance.'
+
+const VERDICT_STYLES: Record<string, { label: string; dot: string; text: string }> = {
+  met: { label: 'Reported', dot: 'bg-fmt-ok', text: 'text-fmt-ok' },
+  partial: { label: 'Partly reported', dot: 'bg-fmt-warn', text: 'text-fmt-warn' },
+  not_met: { label: 'Not reported', dot: 'bg-fmt-bad', text: 'text-fmt-bad' },
+  not_assessable: { label: 'Could not tell', dot: 'bg-fmt-ink-3', text: 'text-fmt-ink-3' },
+}
+
+/** RoB 2 and AMSTAR-2 publish judgements, not totals. Render their own words. */
+const RATING_LABELS: Record<string, string> = {
+  low: 'Low risk of bias',
+  some_concerns: 'Some concerns',
+  high: 'High risk of bias',
+  moderate: 'Moderate confidence',
+  critically_low: 'Critically low confidence',
+}
+
+function InstrumentItemRow({ item }: { item: ScoredItem }) {
+  const style = VERDICT_STYLES[item.verdict] ?? VERDICT_STYLES.not_assessable
+  return (
+    <li className="border-t border-fmt-hairline py-2.5 first:border-t-0">
+      <div className="flex items-start gap-2.5">
+        <span className={`mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full ${style.dot}`} aria-hidden />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm leading-relaxed text-fmt-ink">{item.criterion}</p>
+          <p className={`mt-0.5 font-fmt-mono text-[11px] ${style.text}`}>
+            {style.label}
+            {item.points !== null && <span className="text-fmt-ink-3"> · {item.points} pt</span>}
+          </p>
+          {item.quote ? (
+            <p className="mt-1 border-l-2 border-fmt-hairline pl-2.5 font-fmt-mono text-[11px] leading-relaxed text-fmt-ink-2">
+              {item.quote}
+            </p>
+          ) : (
+            <p className="mt-1 font-fmt-mono text-[11px] text-fmt-ink-3">
+              {item.verdict === 'not_met'
+                ? 'Not stated in the text we read.'
+                : 'Not determinable from the text we read.'}
+            </p>
+          )}
+        </div>
+      </div>
+    </li>
+  )
+}
+
+export function FinderMethodologyCard({ score }: { score: MethodologyScore | null | undefined }) {
+  const [open, setOpen] = useState(false)
+  // Also absent on reports stored before this deploy — see FinderReadinessCard.
+  if (!score) return null
+
+  const shell = 'mt-5 border-t border-fmt-hairline pt-5'
+
+  // No validated instrument exists for this design. Saying so plainly is the
+  // correct answer; inventing a checklist to avoid an empty card would be the
+  // single worst thing this feature could do.
+  if (score.noInstrument) {
+    return (
+      <div className={shell}>
+        <h4 className="font-fmt-display text-lg text-fmt-ink">Methodological quality</h4>
+        <p className="mt-1.5 text-sm leading-relaxed text-fmt-ink-2">
+          No validated quality instrument applies to this design, so we did not score it.
+        </p>
+      </div>
+    )
+  }
+
+  if (score.gradingError) {
+    return (
+      <div className={shell}>
+        <h4 className="font-fmt-display text-lg text-fmt-ink">Methodological quality</h4>
+        <p className="mt-1.5 text-sm leading-relaxed text-fmt-ink-2">
+          We could not grade this manuscript on this run, so no score is shown. Everything else on this page is
+          unaffected, and your ladder was built without it.
+        </p>
+      </div>
+    )
+  }
+
+  const numeric = score.obtained !== null && score.applicableMax !== null && score.applicableMax > 0
+  const ratingLabel = score.overallRating ? (RATING_LABELS[score.overallRating] ?? score.overallRating) : null
+  const assessed = score.items.filter((i) => i.verdict !== 'not_assessable').length
+
+  return (
+    <div className={shell}>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <h4 className="font-fmt-display text-lg text-fmt-ink">Methodological quality</h4>
+          <p className="mt-0.5 text-sm text-fmt-ink-2">{score.instrumentName}</p>
+        </div>
+
+        <div className="flex-shrink-0 rounded-lg border border-fmt-hairline bg-fmt-surface px-4 py-2.5 text-right">
+          {numeric ? (
+            <>
+              {/* The denominator is always shown. A bare number, or a
+                  percentage, is the thing this feature must never become. */}
+              <p className="font-fmt-display text-2xl leading-tight text-fmt-ink">
+                {score.obtained}
+                <span className="text-fmt-ink-3">/{score.applicableMax}</span>
+              </p>
+              <p className="font-fmt-mono text-[10px] text-fmt-ink-3">on {assessed} scored items</p>
+            </>
+          ) : (
+            <>
+              <p className="font-fmt-display text-base leading-tight text-fmt-ink">{ratingLabel ?? '—'}</p>
+              <p className="font-fmt-mono text-[10px] text-fmt-ink-3">overall judgement</p>
+            </>
+          )}
+        </div>
+      </div>
+
+      {numeric && score.applicableMax !== null && score.items.length > assessed && (
+        <p className="mt-2 font-fmt-mono text-[11px] leading-relaxed text-fmt-ink-3">
+          {score.items.length - assessed} of {score.items.length} items could not be judged from your text, so they were
+          left out of the total rather than counted against you.
+        </p>
+      )}
+
+      <p className="mt-2 font-fmt-mono text-[11px] leading-relaxed text-fmt-ink-3">{score.citation}</p>
+
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="mt-3 font-fmt-mono text-[11px] text-fmt-accent underline underline-offset-2 hover:text-fmt-accent-deep"
+      >
+        {open ? 'Hide the item-by-item breakdown' : `Show the item-by-item breakdown (${score.items.length} items)`}
+      </button>
+
+      {open && (
+        <ul className="mt-2 rounded-lg border border-fmt-hairline bg-fmt-surface px-3.5 py-1">
+          {score.items.map((item) => (
+            <InstrumentItemRow key={item.id} item={item} />
+          ))}
+        </ul>
+      )}
+
+      {score.gaps.length > 0 && (
+        <div className="mt-4 rounded-lg border border-fmt-hairline bg-fmt-accent-wash px-4 py-3">
+          <p className="text-sm font-medium text-fmt-ink">What would strengthen this study</p>
+          <ul className="mt-1.5 space-y-1">
+            {score.gaps.map((gap) => (
+              <li key={gap.id} className="text-sm leading-relaxed text-fmt-ink-2">
+                {gap.verdict === 'not_met'
+                  ? `Report ${lowerFirst(gap.criterion)} — not currently stated.`
+                  : `Clarify ${lowerFirst(gap.criterion)} — it could not be determined from the manuscript.`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <p className="mt-3 text-[11px] leading-relaxed text-fmt-ink-3">{INSTRUMENT_TRUST_LINE}</p>
+    </div>
+  )
+}
+
+/** "A clearly stated aim" → "a clearly stated aim", for mid-sentence use. */
+function lowerFirst(s: string): string {
+  if (s.length === 0) return s
+  // Leave acronyms alone: "PICO components" must not become "pICO components".
+  if (s.length > 1 && s[1] === s[1].toUpperCase() && /[A-Z]/.test(s[1])) return s
+  return s[0].toLowerCase() + s.slice(1)
+}
+
+/* ------------------------------------------------------------------ */
+/*  Submission readiness                                                */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Six desk-reject gates, shown as their own list and NEVER folded into the
+ * score or the ladder. A missing funding statement is a paperwork problem, not
+ * a weak study — mixing the two would recommend a lesser journal for something
+ * the author could fix in a minute.
+ */
+export function FinderReadinessCard({ readiness }: { readiness: ReadinessChecklist | null | undefined }) {
+  // Reports assessed BEFORE this deploy are stored as JSON in formatting_jobs
+  // and carry no `readiness` key at all. They are rendered straight from
+  // storage, so without this guard every pre-existing results page would throw
+  // on reload. Absent is rendered as absent — nothing, not six false gates.
+  if (!readiness) return null
+  const missing = READINESS_GATES.filter((g) => !readiness[g]?.present)
+
+  return (
+    <div className="mt-5 border-t border-fmt-hairline pt-5">
+      <h4 className="font-fmt-display text-lg text-fmt-ink">Submission readiness</h4>
+      <p className="mt-0.5 text-sm leading-relaxed text-fmt-ink-2">
+        Statements most journals require before a manuscript reaches a reviewer. These do not affect your score or your
+        ladder.
+      </p>
+
+      <ul className="mt-3 grid gap-x-5 gap-y-2 sm:grid-cols-2">
+        {READINESS_GATES.map((gate) => {
+          const item = readiness[gate] ?? { present: false, quote: null }
+          return (
+            <li key={gate} className="flex items-start gap-2">
+              <span
+                className={`mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full ${item.present ? 'bg-fmt-ok' : 'bg-fmt-ink-3'}`}
+                aria-hidden
+              />
+              <div className="min-w-0">
+                <p className="text-sm text-fmt-ink">{READINESS_LABELS[gate]}</p>
+                <p className={`font-fmt-mono text-[11px] ${item.present ? 'text-fmt-ok' : 'text-fmt-ink-3'}`}>
+                  {item.present ? 'Stated' : 'Not found in the text we read'}
+                </p>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+
+      {missing.length > 0 && (
+        <p className="mt-3 font-fmt-mono text-[11px] leading-relaxed text-fmt-ink-3">
+          We only report what we could find in the text we read. If any of these live in a separate title page or
+          submission form, they are already handled.
+        </p>
+      )}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /*  The card                                                            */
 /* ------------------------------------------------------------------ */
 
@@ -380,6 +628,11 @@ export default function FinderProfileCard({
           {finderDisagreementLine(field)}
         </p>
       ))}
+
+      {/* Both blocks report on the same manuscript read, so they live in the
+          same card rather than floating off as separate panels. */}
+      <FinderMethodologyCard score={profile.methodologyScore} />
+      <FinderReadinessCard readiness={profile.readiness} />
     </div>
   )
 }
