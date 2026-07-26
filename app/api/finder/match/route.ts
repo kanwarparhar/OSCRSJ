@@ -22,6 +22,7 @@ import { SCOPE_TAGS, type ManuscriptStats, type MatchableJournal, type ScopeTag,
 import { appendRowToSheet } from '@/lib/integrations/googleSheets'
 import { ARTICLE_TYPE_LABELS } from '@/lib/formatting/registry-meta'
 import { createAdminClient } from '@/lib/supabase/server'
+import { manualAssessment, parseSelfAssessment } from '@/lib/finder/assessJob'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -106,6 +107,16 @@ export async function POST(req: NextRequest) {
   // Optional "why this fits" lines — off unless explicitly enabled; never blocks.
   await attachExplanations(stats, result.results).catch(() => undefined)
 
+  // Finder v2 manual (no-upload) mode. Additive and OPT-IN: without mode:'ladder'
+  // the response shape is byte-for-byte what v1 returned, so an in-flight tab
+  // from the previous deploy keeps working.
+  let ladderPayload: { profile: unknown; ladder: unknown } | null = null
+  if ((body as { mode?: unknown }).mode === 'ladder') {
+    const selfAssessment = parseSelfAssessment((body as { selfAssessment?: unknown }).selfAssessment)
+    const assessed = manualAssessment(stats, selfAssessment)
+    ladderPayload = { profile: assessed.profile, ladder: assessed.ladder }
+  }
+
   // Running log → "Finder Submissions" tab. Fire-and-forget; never blocks or
   // throws. Column order must match docs/google-sheets-apps-script.gs.
   const topName = result.topResult
@@ -148,5 +159,5 @@ export async function POST(req: NextRequest) {
     ],
   })
 
-  return NextResponse.json(result)
+  return NextResponse.json(ladderPayload ? { ...result, ...ladderPayload } : result)
 }

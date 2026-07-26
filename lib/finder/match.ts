@@ -111,7 +111,7 @@ function classify(spec: CheckSpec): ConstraintCheck | null {
 }
 
 /** Rank of the best index a journal holds (lower = more prestigious). */
-function bestIndexRank(indexing: IndexingService[]): number {
+export function bestIndexRank(indexing: IndexingService[]): number {
   let best: number = INDEXING_SERVICES.length // "unindexed" sorts last
   for (const svc of indexing) {
     const r = INDEXING_SERVICES.indexOf(svc)
@@ -228,7 +228,7 @@ function scoreOne(stats: ManuscriptStats, j: MatchableJournal): JournalScore {
 }
 
 /** Article-type phrase used in the ineligibility reason ("does not accept …"). */
-function articleTypePhrase(t: ManuscriptStats['articleType']): string {
+export function articleTypePhrase(t: ManuscriptStats['articleType']): string {
   const map: Record<string, string> = {
     case_report: 'case reports',
     case_series: 'case series',
