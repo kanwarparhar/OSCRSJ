@@ -8,10 +8,18 @@
 //   2. Reads the DeepSeek account balance, so actual spend can be differenced
 //      against yesterday's snapshot (DeepSeek publishes no usage-history API;
 //      see lib/studio/deepseekBalance.ts).
-//   3. Upserts a snapshot row, appends the day to the "Studio Daily Metrics"
-//      sheet tab, and REBUILDS the "Studio Marketing List" tab from the
-//      database (a replace, not an append, so the list is deduplicated).
+//   3. Upserts a snapshot row.
 //   4. Emails the brief.
+//
+// It does NOT write to Google Sheets. The two Studio tabs live in the "OSCRSJ
+// — Admin Manuscript Hub" spreadsheet (Kanwar's call, 2026-07-25), whose Apps
+// Script already pulls straight from Supabase on an hourly trigger and now
+// builds "Studio Daily Metrics" and "Studio Marketing List" the same way it
+// builds the manuscript tabs. That is strictly better than pushing rows from
+// here: the numbers stay live between cron runs, the marketing list dedupes
+// from a query instead of needing a whole-tab replace, and a cron outage shows
+// as a stale history table rather than as a tab that quietly stops updating.
+// This job owns the daily snapshot and the email; the sheet owns presentation.
 //
 // NOT registered in vercel.json. It is invoked from the daily-digest cron tick
 // (13:00 UTC = 06:00 America/Los_Angeles), deliberately: vercel.json already
@@ -36,7 +44,6 @@ import { sendEmail } from '@/lib/email/resend'
 import { getDeepSeekBalance } from '@/lib/studio/deepseekBalance'
 import {
   computeStudioDailyMetrics,
-  buildMarketingList,
   yesterdayLocal,
   STUDIO_TZ,
   type StudioDailyMetrics,
@@ -45,14 +52,9 @@ import {
   renderStudioDailyBrief,
   getStudioDailyBriefSubject,
 } from '@/lib/email/templates/studioDailyBrief'
-import { appendRowToSheet, replaceSheetRows } from '@/lib/integrations/googleSheets'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-
-/** Tabs in the shared "OSCRSJ Form Submissions" Google Sheet. */
-const METRICS_TAB = 'Studio Daily Metrics'
-const MARKETING_TAB = 'Studio Marketing List'
 
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -65,45 +67,13 @@ function briefRecipient(): string {
   )
 }
 
-/** Column order MUST match HEADERS['Studio Daily Metrics'] in
- *  docs/google-sheets-apps-script.gs. */
-function metricsRow(m: StudioDailyMetrics): Array<string | number | boolean | null> {
-  return [
-    m.day,
-    m.jobsStarted,
-    m.jobsCompleted,
-    m.jobsFailed,
-    m.jobsUnfinished,
-    m.completionRatePct ?? '',
-    m.medianCompletionSeconds ?? '',
-    m.finderQueries,
-    m.uniqueEmails,
-    m.newEmails,
-    m.returningEmails,
-    m.topJournal ?? '',
-    m.topJournalCount,
-    m.distinctJournals,
-    m.topArticleType ?? '',
-    m.figuresUploaded,
-    m.topFailureReason ?? '',
-    m.deepseekTokens,
-    m.deepseekCostUsdEst,
-    m.balanceDeltaUsd ?? '',
-    m.costPerCompletedJobUsd ?? '',
-    m.balanceUsd ?? '',
-    m.cumulativeCostUsdEst,
-    m.cumulativeJobs,
-    m.cumulativeCompleted,
-    m.cumulativeMarketingContacts,
-    new Date().toISOString(),
-  ]
-}
-
 export interface StudioDailyResult {
   ok: boolean
   day: string
   metrics?: StudioDailyMetrics
-  sheets: { metrics: string; marketing: string }
+  /** Deduplicated consenting addresses at snapshot time. The list itself is
+   *  rendered by the Admin Manuscript Hub sheet, not written from here. */
+  marketingContacts?: number
   emailed: boolean
   emailError?: string | null
   error?: string
@@ -120,12 +90,7 @@ export async function runStudioDaily(opts?: {
 }): Promise<StudioDailyResult> {
   const day = opts?.day && DAY_RE.test(opts.day) ? opts.day : yesterdayLocal()
   const sendBrief = opts?.sendBrief !== false
-  const result: StudioDailyResult = {
-    ok: false,
-    day,
-    sheets: { metrics: 'skipped', marketing: 'skipped' },
-    emailed: false,
-  }
+  const result: StudioDailyResult = { ok: false, day, emailed: false }
 
   try {
     const admin = createAdminClient()
@@ -149,26 +114,7 @@ export async function runStudioDaily(opts?: {
       console.error('[studio-daily] snapshot upsert failed:', err)
     }
 
-    // ---- Sheets ----
-    const appended = await appendRowToSheet({ sheetName: METRICS_TAB, row: metricsRow(metrics) })
-    result.sheets.metrics = appended.ok ? 'ok' : (appended.error ?? 'failed')
-
-    const contacts = await buildMarketingList(admin)
-    const replaced = await replaceSheetRows({
-      sheetName: MARKETING_TAB,
-      rows: contacts.map((c) => [
-        c.email,
-        c.firstSeenIso,
-        c.lastSeenIso,
-        c.jobs,
-        c.journals,
-        c.lastArticleType,
-        c.consentVersion,
-        c.consentScope,
-        c.source,
-      ]),
-    })
-    result.sheets.marketing = replaced.ok ? `ok (${contacts.length})` : (replaced.error ?? 'failed')
+    result.marketingContacts = metrics.cumulativeMarketingContacts
 
     // ---- Email ----
     if (sendBrief) {
@@ -199,7 +145,6 @@ export async function runStudioDaily(opts?: {
           cost_usd_est: metrics.deepseekCostUsdEst,
           balance_usd: metrics.balanceUsd,
           marketing_contacts: metrics.cumulativeMarketingContacts,
-          sheets: result.sheets,
           emailed: result.emailed,
         },
       })

@@ -111,11 +111,16 @@ export async function appendRowToSheet(
 
 /**
  * Overwrite a tab's body with `rows` (the header row is preserved by the Apps
- * Script side). Used for derived tabs that must be deduplicated -- the
- * marketing list is rebuilt from the database every morning rather than
- * appended to, because an append-only log cannot dedupe an address that
- * formatted three manuscripts, and a list with triplicate rows is a list
- * nobody trusts.
+ * Script side), for derived tabs that must be deduplicated -- an append-only
+ * log cannot dedupe an address that formatted three manuscripts, and a list
+ * with triplicate rows is a list nobody trusts.
+ *
+ * NO CALLER TODAY (2026-07-25). This was built for the Studio marketing list,
+ * which now lives in the Admin Manuscript Hub sheet instead, whose Apps Script
+ * pulls from Supabase directly and so rebuilds the list without being pushed
+ * anything. Kept rather than deleted because the deployed webhook still
+ * understands `mode: 'replace'`, so this is a working capability, not a stub --
+ * but do not assume anything is exercising it.
  *
  * Requires the Apps Script deployment that understands `mode: 'replace'`
  * (docs/google-sheets-apps-script.gs, 2026-07-25 or later). An older

@@ -13,6 +13,12 @@ Nothing below works until the four setup steps in §1 are done.
 
 ## 1. Setup — DONE 2026-07-25 (same session, via Chrome)
 
+> **SUPERSEDED IN PART, 2026-07-25.** Kanwar moved the two Studio tabs to the
+> **OSCRSJ — Admin Manuscript Hub** spreadsheet, which changed the architecture
+> for the better — see **§9**. The Sheets-webhook push described below no longer
+> applies to the Studio tabs; the Hub's own Apps Script reads Supabase directly.
+> Migration 029 (§1.1) is unaffected and remains required.
+>
 > **Both steps below were executed and verified.** Migration 029 is applied to
 > production (all six checks pass, §1.1) and the Apps Script is redeployed as
 > **Version 2 on Jul 25, 2026, 4:54 PM**, deployment ID and web-app URL
@@ -323,3 +329,76 @@ same rows. It needs a judgment call about which era of the form each row
 belongs to — Kanwar's or Manvir's, not a mechanical fix. The freshly deployed
 script now carries the correct 16-column header, so any tab created from here
 is right.
+
+---
+
+## 9. Where the Studio tabs actually live (2026-07-25, superseding §1.2 and §3)
+
+Kanwar asked for the Studio tabs in the **OSCRSJ — Admin Manuscript Hub**
+spreadsheet rather than the form-submissions sheet. That is a better home than
+it first appears, and it changed the design.
+
+### Why this is pull, not push
+
+The Hub's Apps Script does not receive webhooks. It **reads Supabase directly**
+(PostgREST + the service-role key) on an hourly trigger and builds its tabs from
+query results. Adding two more builders to it beat routing the webhook across
+spreadsheets on every count:
+
+- **No cross-spreadsheet permission problem.** A container-bound script reaching
+  a second spreadsheet needs a wider OAuth scope and a re-authorisation.
+- **No second webhook URL, secret, or Vercel env var.**
+- **The numbers are live between cron runs**, not stale until tomorrow morning.
+- **The marketing list dedupes from a query**, so the whole `mode: 'replace'`
+  whole-tab-rewrite mechanism became unnecessary.
+- **A cron outage is visible** as a stale "Daily history" table next to a live
+  "At a glance" block, rather than as a tab that quietly stops updating.
+
+### What each side owns now
+
+| | Owns |
+|---|---|
+| `/api/cron/studio-daily` | the daily snapshot row in `studio_daily_metrics`, and the morning email |
+| Admin Hub Apps Script | both tabs, rebuilt hourly from `formatting_jobs`, `finder_queries`, `studio_daily_metrics` |
+
+The cron **no longer writes to Google Sheets at all**. `replaceSheetRows()` in
+`lib/integrations/googleSheets.ts` consequently has no caller; it is kept and
+labelled, because the deployed webhook still understands `mode: 'replace'`.
+The `Studio Daily Metrics` / `Studio Marketing List` entries in
+`docs/google-sheets-apps-script.gs` are likewise now vestigial — harmless, and
+left in place so that file continues to match what is deployed.
+
+### The two tabs
+
+**Studio Daily Metrics** — an "At a glance (live)" block computed from the
+database on every refresh (jobs to date, last 7 days, completed, failed,
+completion rate, unique users, repeat users, Finder queries, marketing list
+size, estimated spend, DeepSeek balance, last snapshot date), with **completion
+rate** and **repeat users** shaded because they are the two worth reading first.
+Below it, the daily history table from the snapshots.
+
+**Studio Marketing List** — deduplicated consenting addresses, rebuilt every
+refresh. Hand-edits are overwritten hourly; unsubscribes belong in the ESP.
+
+### First run
+
+`refreshHub` ran clean at 5:09 PM on 2026-07-25 and built both tabs. First real
+numbers: **14 jobs, 8 completed, 6 failed, 57% completion, 8 unique users,
+4 repeat users, 6 Finder queries, 0 consenting addresses** (correct — the
+consent gate is not deployed yet).
+
+**Do not read 57% as a product-health signal.** Those 14 jobs are mostly QA runs
+from Sessions 97-100, several of them deliberately built to fail. The completion
+rate becomes meaningful once real traffic arrives; the 85% alert threshold in
+the morning brief already ignores samples under 3 jobs for the same reason.
+
+### A trap worth recording
+
+Applying this patch through the browser silently duplicated the entire file the
+first time. The cause: the replacement text contained `'$' + Number(...)`, and
+a `$` followed by a quote is an **expansion directive** in a JavaScript
+replacement string — `$'` inserts everything after the match. It typechecks, it
+runs, and it produces a file with three copies of `doGet`. The fix in the
+deployed build is to construct the `$` from `String.fromCharCode(36)`. Use a
+replacer **function** rather than a replacement string when the text is not
+under your control.
