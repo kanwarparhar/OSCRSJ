@@ -26,13 +26,18 @@
 
 import { useState } from 'react'
 import { FINDER_V2, finderDisagreementLine } from '../_copy'
+// Imported from lib/quality/types DIRECTLY, not from the lib/quality barrel.
+// The barrel re-exports cache.ts, which imports node:crypto — pulling that into
+// a 'use client' component would drag Node crypto into the browser bundle. This
+// is the same hazard lib/studio/quotaConstants.ts was split out to avoid, and
+// tsc cannot see it; only `next build` can. types.ts imports nothing at all.
 import {
   READINESS_GATES,
   READINESS_LABELS,
   type MethodologyScore,
   type ReadinessChecklist,
   type ScoredItem,
-} from '@/lib/quality'
+} from '@/lib/quality/types'
 import {
   EDITABLE_FIELD_LABELS,
   STUDY_DESIGNS,
