@@ -4,6 +4,12 @@
 // (product). Nothing here imports a not-yet-installed dependency.
 
 import type { ArticleType, JournalRules } from './rulesSchema'
+// Imported from lib/quality/types DIRECTLY, never from the '@/lib/quality'
+// barrel. The barrel re-exports cache.ts, which imports node:crypto, and this
+// module is reachable from client components -- that exact import broke the
+// build once already (commit d571fed). lib/quality/types imports nothing at all,
+// so there is no graph to drag along.
+import type { ScoredItem } from '@/lib/quality/types'
 
 // ---------------------------------------------------------------------------
 // Ingest / content model
@@ -172,6 +178,43 @@ export interface FormattedReference {
   unparsed: boolean
 }
 
+/**
+ * The report's Methodological Quality section, already reduced to strings the
+ * two renderers can print without re-deriving anything (2026-07-26).
+ *
+ * Render-ready ON PURPOSE. The HTML view and the .docx are built by two separate
+ * functions, and every earlier section of this report that let them each format
+ * their own copy has drifted at least once. Deciding the score line and the
+ * improvement wording ONCE, in buildReport, is what makes "the docx says what the
+ * screen says" a structural property rather than a review item.
+ *
+ * This is a methodological-COMPLETENESS summary. It carries no probability, no
+ * percentage and no editorial opinion, and nothing added here ever may.
+ */
+export interface MethodologyReportSection {
+  /** e.g. "MINORS (comparative)". Shown verbatim -- the citability is the product. */
+  instrumentName: string
+  /** Full published citation, verbatim. */
+  citation: string
+  /**
+   * The headline result, already worded for the instrument's own scale:
+   * "18 of 24 applicable points" for a numeric instrument, "Some concerns" for
+   * RoB 2, "Moderate confidence" for AMSTAR-2. null only when noInstrument.
+   */
+  scoreLine: string | null
+  /**
+   * How many items the manuscript text could not answer, and which are therefore
+   * excluded from BOTH sides of the fraction above. Disclosed rather than hidden:
+   * "18 of 24" means something different when six items were unreadable.
+   */
+  notAssessableCount: number
+  items: ScoredItem[]
+  /** One actionable line per gap, in gap order. Empty when nothing is missing. */
+  improvements: string[]
+  /** True when the design has no validated instrument -- an answer, not a failure. */
+  noInstrument: boolean
+}
+
 export interface ReportModel {
   summaryVerdict: {
     journal: string
@@ -203,6 +246,18 @@ export interface ReportModel {
    */
   layoutNotPrescribed: boolean
   submissionChecklist: ChecklistRow[]
+  /**
+   * The Methodological Quality section, or null when there is nothing honest to
+   * show -- no grading was run, or grading failed. A failed grade omits the
+   * section ENTIRELY rather than rendering an empty one: a heading followed by
+   * "we could not do this" in a report the author downloads and keeps reads as a
+   * broken product, and the formatter's job is unaffected either way.
+   *
+   * Additive field. The `report` JSONB column stores whatever buildReport
+   * returns, so no migration -- and reports written before this deploy simply
+   * carry no key, which every consumer must treat as null.
+   */
+  methodology: MethodologyReportSection | null
   rulesVersion: string
   disclaimer: string
   /** Internal-only unit economics; never rendered to the author. */

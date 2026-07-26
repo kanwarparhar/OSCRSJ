@@ -26,7 +26,9 @@ import { parseReferences } from '../references/parse'
 import { verifyReferences } from '../references/verify'
 import { extractTitlePage } from './extract'
 import { analyze, analyzeFigures } from './analyze'
-import { buildReport, renderReportDocx } from '../report'
+import { buildReport, renderReportDocx, studyDesignForArticleType } from '../report'
+import { extractMethodology } from '@/lib/quality/extract'
+import type { MethodologyScore } from '@/lib/quality/types'
 import type { JobStatus, JobOutputPaths } from './stages'
 import type {
   CslReference,
@@ -59,6 +61,61 @@ const PARSE_BUDGET_MS = 40_000
 
 /** Minimum budget left to attempt the title-page extraction in the same call. */
 const TITLE_PAGE_RESERVE_MS = 15_000
+
+/**
+ * Grading budget for the render stage (2026-07-26).
+ *
+ * Shorter than the 40s the grading call allows itself elsewhere, because here it
+ * is a passenger. The render stage still has to run every transform, the
+ * immutability gate and four Storage uploads inside the same ~50s function
+ * budget, and those produce the thing the author actually came for. Grading gets
+ * whatever is left over and is skipped outright if the stage has already spent
+ * RENDER_GRADING_MAX_START_MS getting to this point -- an ungraded report is a
+ * missing section, whereas a killed function is a job the user has to retry.
+ */
+const RENDER_GRADING_TIMEOUT_MS = 20_000
+const RENDER_GRADING_MAX_START_MS = 12_000
+
+/**
+ * Grade the manuscript, or return undefined and say why in the log.
+ *
+ * FAILURE IS ISOLATED HERE AND NOWHERE ELSE. extractMethodology already degrades
+ * internally rather than throwing, but "already" is not "guaranteed" -- it
+ * reaches the network, and a formatting job must not be able to fail because a
+ * quality score did not arrive. So this wraps it anyway, catches everything, and
+ * returns undefined on any problem. The report then simply has no methodology
+ * section, which is the same outcome as a journal whose article type carries no
+ * validated instrument, and which every renderer already handles.
+ */
+async function gradeQuietly(
+  bodyText: string,
+  articleType: ArticleType,
+  elapsedMs: number,
+): Promise<MethodologyScore | undefined> {
+  const design = studyDesignForArticleType(articleType)
+  // No design we can honestly claim from the article type. Not an error, and not
+  // worth a network call: see DESIGN_BY_ARTICLE_TYPE in report.ts.
+  if (design === null) return undefined
+  if (elapsedMs > RENDER_GRADING_MAX_START_MS) {
+    console.warn('[formatting] skipped methodology grading: render stage near budget')
+    return undefined
+  }
+  try {
+    const { score } = await extractMethodology(bodyText, design, null, {
+      timeoutMs: RENDER_GRADING_TIMEOUT_MS,
+    })
+    if (score.gradingError) {
+      console.warn(`[formatting] methodology grading degraded: ${score.gradingError}`)
+      return undefined
+    }
+    return score
+  } catch (e) {
+    console.warn(
+      `[formatting] methodology grading threw: ${e instanceof Error ? e.message : String(e)}`,
+    )
+    return undefined
+  }
+}
 
 const emptyState = (): PipelineState => ({
   cslReferences: [],
@@ -287,12 +344,22 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
 
       // ---- render: deterministic format + report + package ----
       case 'verified': {
+        const t0 = Date.now()
         const input = await downloadObject(storagePaths.input(jobId))
         if (!input) return fail(jobId, 'verified', 'Uploaded file not found.')
         const state = await loadState(jobId)
         const { docx, model } = await ingestDocx(new Uint8Array(input))
         const before = model.bodyText
         const ctx = { rules, articleType }
+
+        // Methodological grading runs HERE, at the top of the stage, off the
+        // body text we have just ingested -- never by re-parsing the .docx, and
+        // never after the uploads. Running it early means a slow grading call
+        // eats budget that the deterministic work has not spent yet; running it
+        // late would risk the function being killed after the manuscript and
+        // report were already written but before the status advanced, which
+        // turns a missing section into a duplicated run.
+        const methodology = await gradeQuietly(before, articleType, Date.now() - t0)
 
         const layout = applyLayout(docx, model, ctx, { runningTitle: state.titlePageData.runningTitle ?? undefined })
         const blinding = blindManuscript(docx, model, ctx)
@@ -407,6 +474,7 @@ export async function runNextStage(jobId: string): Promise<AdvanceOutcome> {
             rules.layout.margins_mm === null &&
             rules.layout.line_spacing === null,
           checklist,
+          methodology,
           cost: state.cost,
         })
         const reportDocx = renderReportDocx(report)
