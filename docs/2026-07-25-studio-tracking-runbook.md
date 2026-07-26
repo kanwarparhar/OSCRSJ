@@ -11,6 +11,15 @@ Nothing below works until the four setup steps in §1 are done.
 
 ---
 
+## 1. Setup — DONE 2026-07-25 (same session, via Chrome)
+
+> **Both steps below were executed and verified.** Migration 029 is applied to
+> production (all six checks pass, §1.1) and the Apps Script is redeployed as
+> **Version 2 on Jul 25, 2026, 4:54 PM**, deployment ID and web-app URL
+> unchanged so no Vercel env edit was needed. Two pre-existing defects were
+> found while doing it and are recorded in §8. Kept below as the runbook of
+> record and for whoever repeats this on a second environment.
+
 ## 1. Setup (Kanwar, roughly 15 minutes, once)
 
 ### 1.1 Run migration 029
@@ -264,3 +273,53 @@ the list is a sheet and a database column until an ESP is wired up.
 **Not verified, and needs the post-deploy curls in §1.4:** the live Sheets
 round-trip against the re-deployed Apps Script, a real DeepSeek balance read, and
 the first brief actually landing in the inbox. `next build` was not run.
+
+---
+
+## 8. What the deploy turned up (2026-07-25)
+
+Two things were already broken before this change. Neither was caused by it;
+both were invisible until someone opened the live script.
+
+### 8.1 The Apps Script had never been updated past Version 1 (fixed)
+
+The deployment was still serving **Version 1, 19 May 2026** — the original
+Scholars-only webhook. It defined headers for `Scholars Applications` and
+nothing else. `Formatter Submissions` and `Finder Submissions` were therefore
+auto-created by `insertSheet` with **no header row at all**, because
+`HEADERS[sheetName]` was `undefined` for both, and the code only writes headers
+it has. Every Studio row since the Studio shipped landed in an unlabelled tab.
+
+The repo copy at `docs/google-sheets-apps-script.gs` had been kept current in
+git and simply never deployed. Editing the committed file is not deploying it,
+and nothing in the pipeline made that gap visible: rows kept arriving, so the
+integration looked healthy.
+
+Fixed: Version 2 deployed, and header rows were inserted by hand on both
+existing tabs (a redeploy alone would not have — headers are written only when
+a tab is first created). `Formatter Submissions` data moved to rows 2-7,
+`Finder Submissions` to rows 2-4. Nothing was overwritten.
+
+### 8.2 The Scholars Applications header row is off by one column (NOT fixed)
+
+The live script carried a 17th header, `AI Policy Ack`, between
+`Admin Detail URL` and `Participant Agreement Ack`. `lib/scholars/actions.ts`
+builds **16** values and has no AI-policy field, so every application submitted
+after that field was dropped from the form writes its
+`participantAgreementAck` into the column labelled **`AI Policy Ack`**, and
+leaves `Participant Agreement Ack` empty.
+
+Visible in the live sheet: rows 2-8 (older) carry `Yes` in both columns; the
+three genuine applicants from 2026-05-24 onward carry `Yes` under
+`AI Policy Ack` and **nothing** under `Participant Agreement Ack`.
+
+**This matters because it reads backwards.** Those applicants did acknowledge
+the participant agreement. The sheet says they did not, and says instead that
+they acknowledged an AI policy that is no longer part of the form.
+
+Deliberately left alone. Deleting column P would destroy the real
+`AI Policy Ack` values on rows 2-8, and relabelling it would mislabel those
+same rows. It needs a judgment call about which era of the form each row
+belongs to — Kanwar's or Manvir's, not a mechanical fix. The freshly deployed
+script now carries the correct 16-column header, so any tab created from here
+is right.
