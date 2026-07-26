@@ -5,6 +5,7 @@
 
 import { z } from 'zod'
 import type { ExtractedTitlePageData } from '../types'
+import { deepseekModel } from '@/lib/deepseekModel'
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions'
 const PRICE_INPUT_PER_M = 0.27
@@ -67,7 +68,7 @@ export async function extractTitlePage(
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: opts.model ?? 'deepseek-chat',
+        model: opts.model ?? deepseekModel(),
         messages: [
           { role: 'system', content: SYSTEM },
           { role: 'user', content: `Manuscript front matter:\n\n${frontText.slice(0, 6000)}` },

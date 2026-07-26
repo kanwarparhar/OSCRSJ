@@ -1,6 +1,7 @@
 // Reference parsing via DeepSeek (Sushant, Session B). Free-text reference
 // strings → CSL-JSON. Mirrors the renderer's aiExtractBody client: a plain
-// HTTPS call (DeepSeek is OpenAI-compatible — no SDK), deepseek-chat, JSON
+// HTTPS call (DeepSeek is OpenAI-compatible — no SDK), model per
+// lib/deepseekModel.ts, JSON
 // output mode, temperature 0 for maximum determinism. This is UNDERSTANDING
 // ONLY: the model segments each citation into fields and NEVER invents
 // bibliographic data — verify.ts confirms every field against Crossref/PubMed.
@@ -9,9 +10,9 @@
 
 import { z } from 'zod'
 import type { CslReference } from '../types'
+import { deepseekModel } from '@/lib/deepseekModel'
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions'
-const DEFAULT_MODEL = 'deepseek-chat'
 const BATCH_SIZE = 20
 
 // DeepSeek pricing (USD per 1M tokens) — for the cost estimate only; rates drift.
@@ -191,7 +192,8 @@ const MIN_CALL_MS = 3_000
 /** Parse raw reference strings into CSL-JSON, batched ≤20 per DeepSeek call. */
 export async function parseReferences(raw: string[], opts: ParseOptions = {}): Promise<ParseResult> {
   const apiKey = opts.apiKey ?? process.env.DEEPSEEK_API_KEY ?? ''
-  const model = opts.model ?? DEFAULT_MODEL
+  // Resolved per call so an env change lands on the next cold start.
+  const model = opts.model ?? deepseekModel()
   const baseUrl = opts.baseUrl ?? DEEPSEEK_URL
   // 40s ceiling (was 120s): a 120s per-call timeout cannot coexist with the
   // advance route's 60s wall (2026-07-22, Part D).

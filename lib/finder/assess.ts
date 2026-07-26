@@ -15,6 +15,7 @@
 // Everything except `extractProfile` is pure and exported for unit tests.
 
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
+import { deepseekModel } from '@/lib/deepseekModel'
 import {
   MANUAL_DESIGN_BY_ARTICLE_TYPE,
   STUDY_DESIGNS,
@@ -25,7 +26,6 @@ import {
 } from './profileTypes'
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions'
-const DEFAULT_MODEL = 'deepseek-chat'
 
 /** Methods and results live early; conclusions live late. Middle is discussion. */
 export const HEAD_WORDS = 9_000
@@ -422,7 +422,8 @@ export async function extractProfile(
   opts: AssessOptions = {},
 ): Promise<ManuscriptProfile> {
   const apiKey = opts.apiKey ?? process.env.DEEPSEEK_API_KEY ?? ''
-  const model = opts.model ?? DEFAULT_MODEL
+  // Resolved per call so an env change lands on the next cold start.
+  const model = opts.model ?? deepseekModel()
   const baseUrl = opts.baseUrl ?? DEEPSEEK_URL
   const timeoutMs = opts.timeoutMs ?? 40_000
   const fetchImpl = opts.fetchImpl ?? fetch

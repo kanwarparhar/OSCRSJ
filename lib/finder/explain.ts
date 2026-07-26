@@ -11,9 +11,9 @@
 
 import type { JournalScore, ManuscriptStats } from './types'
 import { describeCheck } from './match'
+import { deepseekModel } from '@/lib/deepseekModel'
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions'
-const MODEL = 'deepseek-chat'
 const TIMEOUT_MS = 8_000
 /** Only ever explain the strongest few results — cost + latency control. */
 const MAX_EXPLANATIONS = 3
@@ -46,7 +46,7 @@ async function explainOne(stats: ManuscriptStats, s: JournalScore): Promise<stri
       headers: { 'content-type': 'application/json', authorization: `Bearer ${apiKey}` },
       signal: controller.signal,
       body: JSON.stringify({
-        model: MODEL,
+        model: deepseekModel(),
         temperature: 0.2,
         max_tokens: 60,
         messages: [
