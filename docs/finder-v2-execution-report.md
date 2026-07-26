@@ -137,6 +137,14 @@ The ladder fixtures use **invented slugs**, deliberately: binding them to real r
 4. **John** — re-baseline `/studio/find` after deploy. The page's metadata, JSON-LD description and `featureList` all changed from "constraint checker" to "tiered recommender", so pre-deploy impressions are not comparable.
 5. **Sheet header row** — the "Finder Submissions" tab gains a different 8-column shape for assessment rows (timestamp, article type, design, anchor, top reach slug, eligible count, mode, IP). Same known Apps Script caveat as before.
 
+## Parallel session on the same branch
+
+Two commits from a concurrent session interleaved with mine: `6c9e0cb` (docs: 029 + Apps Script deploy) and `3c59638` (Studio tabs move to the Admin Manuscript Hub). They are the reason `.git/HEAD.lock` had to be cleared twice mid-session (stale zero-byte locks from contention; moved to `.git/.stale-junk/` per the FUSE convention, never `rm`'d).
+
+**Zero file overlap verified** between their two commits and my four. They did touch `lib/integrations/googleSheets.ts`, which my assessment logger imports, so the full battery was **re-run on the combined HEAD**: `tsc` exit 0, **222 tests / 221 pass / 0 fail / 1 skipped**, `next build` compiled successfully. `appendRowToSheet`'s signature is unchanged.
+
+Note their `6c9e0cb` records that migration **029** was deployed. That is Session 103's tracking/consent migration, unrelated to and not a substitute for **030**, which is still unrun.
+
 ## Out of scope, confirmed not built (§6)
 
 No outcome tracking or calibration loop; `explain.ts` untouched and still off; no registry expansion; no `apc_amount`/`apc_currency`; no two-tier et-al; no `figures_tables_combined_max`; **no Impact Factor field anywhere**; no change to the formatter product.
