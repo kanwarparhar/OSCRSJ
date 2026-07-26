@@ -1,6 +1,8 @@
 # Journal Finder v2 — execution report
 
-> Executed 2026-07-25 against `docs/2026-07-25-finder-v2-ladder-build-brief.md`, one Claude Code session, three phases in order. All three gates passed. Four commits, **none pushed** (push is Kanwar's).
+> Executed 2026-07-25 against `docs/2026-07-25-finder-v2-ladder-build-brief.md`, one Claude Code session, three phases in order. All three gates passed.
+>
+> **STATUS: LIVE.** Migration 030 was run by Kanwar, all commits were pushed on his instruction, and the feature was verified end to end against production with a real manuscript and a real DeepSeek call. See §"Live verification" at the end.
 
 ## Commits
 
@@ -42,9 +44,11 @@ Phase 1 cross-check went beyond the brief's "eyeball 5 more": every row of the �
 
 **Finder uploads are therefore reaped by the existing 7-day retention cron with zero changes to it.** Their statuses (`uploaded` → `extracted` → `complete`/`failed`) are all inside 027's existing CHECK constraint, so `retentionActionFor` classifies them correctly with no changes either. This was the deciding reason to reuse `formatting_jobs` rather than create a new table: a separate table would have sat silently outside the only retention promise the Studio makes in writing.
 
-## Migration status — ⚠️ ACTION REQUIRED, NOT RUN
+## Migration status — ✅ RUN AND VERIFIED
 
-**`supabase/migrations/030_finder_assess_kind.sql` has NOT been run.** Kanwar was not available to run it during the session, and per GATE 2 the commit was not blocked on it.
+**`supabase/migrations/030_finder_assess_kind.sql` was run by Kanwar** after the three phases landed. Verified live: the `kind` column is readable through PostgREST (so the schema cache reloaded), pre-existing rows carry the `format` default, and newly created assessment rows carry `finder_assess`.
+
+The section below records the pre-migration state, which is worth keeping because it is the evidence that the fail-closed path works.
 
 **Slot 029 was already taken.** The brief specified `029_finder_assess_kind.sql`, but `029_studio_tracking_and_consent.sql` (Session 103) was already committed in `dd904c4` before this work began. Per the repo's migration-slot-arithmetic convention the file landed at **030**. Nothing else changed.
 
@@ -144,6 +148,36 @@ Two commits from a concurrent session interleaved with mine: `6c9e0cb` (docs: 02
 **Zero file overlap verified** between their two commits and my four. They did touch `lib/integrations/googleSheets.ts`, which my assessment logger imports, so the full battery was **re-run on the combined HEAD**: `tsc` exit 0, **222 tests / 221 pass / 0 fail / 1 skipped**, `next build` compiled successfully. `appendRowToSheet`'s signature is unchanged.
 
 Note their `6c9e0cb` records that migration **029** was deployed. That is Session 103's tracking/consent migration, unrelated to and not a substitute for **030**, which is still unrun.
+
+## Live verification (post-push)
+
+Everything below ran against `https://www.oscrsj.com` after the push.
+
+**A production defect was found by the first real end-to-end run, and it was bigger than this feature.** The assessment completed but every field came back null, with this disclosed error:
+
+```
+DeepSeek HTTP 400: "The supported API model names are deepseek-v4-pro or
+deepseek-v4-flash, but you passed deepseek-chat."
+```
+
+DeepSeek retired `deepseek-chat`, and **four call sites had the name hardcoded independently**: the formatter's title-page extractor (`pipeline/extract.ts`), the formatter's reference parser (`references/parse.ts`), the Finder's assessment extractor, and the Finder's flag-gated explanation writer. So every AI-backed capability in Submission Studio was failing in production simultaneously, each degrading quietly in its own way. **Session 100's "⚠️ Unverified — check manually" on all five well-formed DOI-bearing references, filed then as possible DeepSeek variance, was this.** It was not transient, and the open follow-up asking for "one deliberate re-run before announcing" can be closed by this fix rather than by a re-run.
+
+Fixed in `16ce648`: the name now lives once in `lib/deepseekModel.ts`, is resolved per call, and is overridable with a `DEEPSEEK_MODEL` env var. Default is `deepseek-v4-flash`, the cost and latency successor to the model this product's ~$0.0014/manuscript figure was measured against; `deepseek-v4-pro` is a one-variable change in Vercel if extraction quality proves weak. This is precisely the failure the repo's constant-fix-repo-wide-grep convention exists to catch.
+
+**Real end-to-end run after the fix** (`oscrsj-example-case-report.docx`, article type case report, subspecialty trauma):
+
+| Field | Value | Confidence | Quote |
+|---|---|---|---|
+| design | `case_report` | high | "We describe a case of complete iatrogenic median nerve palsy in a 7-year..." |
+| sampleSize | `1` | high | "A 7-year-old previously healthy boy" |
+| followUpMonths | `12` | high | "Surveillance examination at 12 months showed no residual deficit." |
+| multicenter / comparative / statsReported / noveltyClaim | null | — | correctly silent for a case report |
+
+Level of evidence V, anchor 0.25, `extractionError: null`, 13s. Ladder built; `oscrsj` absent from every slot; OSCRSJ card shown. **No `cost` key on the wire.** Every surviving quote passed the substring guardrail against the real manuscript.
+
+Also verified live: `kind='finder_assess'` set on all three test rows; consent gate rejects `marketingConsent:false`; article-type validation rejects junk; the manual ladder path returns the spine-banded ladder; the deployed page carries the verbatim hero, the four "how it is scored" steps, a Studio-scoped `twitter:title`, and an `og:image`.
+
+**Test data cleaned up by me**: three `formatting_jobs` rows (`d67f5498`, `0057a3c6`, `a4cac07f`) plus all eight storage objects deleted; zero remain. Nothing is owed to Kanwar.
 
 ## Out of scope, confirmed not built (§6)
 
