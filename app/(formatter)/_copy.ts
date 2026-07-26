@@ -115,3 +115,90 @@ export const DISCLAIMER =
 
 export const SOURCES_LINE =
   '1. LeBlanc et al. PLOS ONE 2019;14(9):e0223116 · 2. Jiang et al. PLOS ONE 2019;14(10):e0223976 · 3. Zotero Style Repository · 4. Clotworthy et al. BMC Medicine 2023;21:155 · 5. aje.com/services/formatting'
+
+/* -------------------------------------------------------------------------- */
+/*  Journal Finder v2 — manuscript profile + reach/target/safety ladder        */
+/*  (2026-07-25, per docs/2026-07-25-finder-v2-ladder-build-brief.md §4.2)     */
+/*                                                                            */
+/*  These strings are LOAD-BEARING. Two of them do the honesty work the whole  */
+/*  feature depends on: LADDER_DISCLAIMER (we do not predict acceptance) and   */
+/*  OSCRSJ_CARD.body (our own journal is not here on merit we assessed). Do    */
+/*  not soften either, and do not introduce probability language anywhere in   */
+/*  this block. House rule still applies: no em dashes.                        */
+/* -------------------------------------------------------------------------- */
+
+export const FINDER_V2 = {
+  heroTitle: 'Find where your manuscript actually belongs.',
+  heroSub:
+    'Upload your manuscript. We build a verifiable profile of what it shows, you tell us what you are aiming for, and we lay out five journals: two worth reaching for, two aligned targets, and one to fall back on.',
+  manualLink: 'No upload? Answer a few questions instead.',
+
+  profileHeading: 'What we could verify from your manuscript',
+  profileNull: 'Not stated in the text we read.',
+  profileRejected: 'We could not verify this against the text, so it is not used.',
+  confidenceHigh: 'verified',
+  confidenceLow: 'read with interpretation',
+  truncationNote: 'Long manuscript: we read the first ~9,000 and last ~1,500 words.',
+  selfReportedBanner: 'Self-reported profile. Nothing here was verified against a manuscript.',
+
+  questionsIntro:
+    'Two questions about your own read, one about your goals. Your answers can nudge the ladder by one band at most; they never override what the text shows.',
+  q1: 'How novel is this work, in your honest view?',
+  q1Options: [
+    { value: 'first_reported', label: 'First reported, to my knowledge' },
+    { value: 'uncommon_variant', label: 'Uncommon variant of a known entity' },
+    { value: 'adds_to_known', label: 'Adds to established literature' },
+  ],
+  q2: 'How strong are the findings?',
+  q2Options: [
+    { value: 'definitive_or_comparative', label: 'Definitive, or shows a comparative advantage' },
+    { value: 'suggestive_descriptive', label: 'Suggestive or descriptive' },
+    { value: 'negative_or_confirmatory', label: 'Negative or confirmatory' },
+  ],
+  q3: 'What matters most to you? (pick up to two)',
+  q3Options: [
+    { value: 'prestige', label: 'Prestige and readership' },
+    { value: 'speed', label: 'Speed to a decision' },
+    { value: 'cost', label: 'Low or no cost' },
+    { value: 'oa_visibility', label: 'Open-access visibility' },
+  ],
+
+  bandLabels: { reach: 'REACH', target: 'TARGET', safety: 'SAFETY' },
+  bandSubtitles: {
+    reach: 'Shoot your shot',
+    target: 'Aligned with your tier',
+    safety: 'A dependable fallback',
+  },
+  reachExpectation:
+    'Top-tier journals often desk-reject without reviewer feedback. Budget one to three weeks before cascading down.',
+
+  ladderDisclaimer:
+    "This ladder reflects alignment between your manuscript's verifiable characteristics and each journal's SJR standing among the journals eligible for it. It is not a prediction of acceptance, and no honest tool can offer one.",
+
+  notRankedChip: 'Not SJR-ranked',
+  buildLadderCta: 'Build my ladder',
+} as const
+
+/** Disagreement line. {field} is the author's own word for what they rated. */
+export function finderDisagreementLine(field: string): string {
+  return `Your self-assessment rates ${field} higher than what we could verify in the text. The ladder uses the verified profile, nudged one band at most.`
+}
+
+/**
+ * The OSCRSJ card. It exists BECAUSE we cannot honestly put our own journal in a
+ * ladder we generated. The body says so in plain words; keep it that way.
+ */
+export const FINDER_OSCRSJ_CARD = {
+  title: 'From the makers of this tool',
+  body: (articleTypePhrase: string) =>
+    `OSCRSJ, the Orthopedic Surgery Case Reports and Series Journal, accepts ${articleTypePhrase}. It is our own journal. It is not ranked by this tool, and its appearance here is not based on your manuscript's assessment.`,
+  action: "Read OSCRSJ's Guide for Authors ↗",
+}
+
+export function finderAllEligibleLabel(n: number): string {
+  return `All ${n} eligible journals, with formatting fit`
+}
+
+export function finderProvenanceLine(year: number | null, category: string): string {
+  return `Journal standings: SJR ${year ?? 'year not recorded'}, Scimago category ${category}. Unknown values render as a dash; we do not guess.`
+}

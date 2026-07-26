@@ -14,7 +14,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getJob, updateJob } from '@/lib/formatting/pipeline/jobs'
 import type { FormattingJob } from '@/lib/formatting/pipeline/stages'
-import { runAssessment, type AssessReport } from '@/lib/finder/assessJob'
+import { parseSelfAssessment, rebuildLadder, runAssessment, type AssessReport } from '@/lib/finder/assessJob'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -61,6 +61,17 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const job = await authorize(req, params.id)
   if (!job) return NextResponse.json({ error: 'Not found.' }, { status: 404 })
+
+  const body = (await req.json().catch(() => null)) as { selfAssessment?: unknown } | null
+
+  // Second call: the author has now seen the profile and answered the three
+  // questions. Rebuild the ladder from the STORED profile — same verified
+  // fields, new author shift, no second DeepSeek call.
+  if (job.status === 'complete' && body && 'selfAssessment' in body) {
+    await rebuildLadder(job, parseSelfAssessment(body.selfAssessment))
+    const updated = await getJob(params.id)
+    return NextResponse.json(statusBody(updated ?? job))
+  }
 
   // Already terminal — return the result rather than re-running (and re-billing).
   if (job.status === 'complete' || job.status === 'failed') {

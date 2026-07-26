@@ -1,290 +1,337 @@
 'use client'
 
-// Journal Finder v1 UI (Sushant, Session 2). Manual 7-field form (primary path)
-// OR an auto-fill banner when arriving from a just-completed format job, then a
-// bucketed scorecard: per-journal fit chip, exact constraint deltas, metadata
-// line, guidelines link, and a "Format for this journal →" button that pre-loads
-// the journal in the Formatter above — the loop that makes the two tools one.
+// Journal Finder v2 (2026-07-25) — upload-first manuscript profile, then a
+// reach / target / safety ladder.
 //
-// Scoring happens server-side (deterministic, stateless) at /api/finder/match.
-// Re-sorting reuses the pure client-safe sortScores() so changing the secondary
-// sort never re-hits the endpoint (and never burns a rate-limit slot).
+// WHAT CHANGED FROM V1 AND WHY. v1 asked for six numbers and ranked journals by
+// formatting-constraint fit. Nobody chooses a journal that way, and the ranking
+// implied a judgement the numbers could not support. v2 reads the manuscript,
+// shows the author exactly what it could verify (with the sentence behind every
+// fact), asks three questions, and lays out five journals banded by SJR standing
+// RELATIVE to the journals eligible for that manuscript. The v1 scorecard is not
+// gone: it is the eligibility gate underneath, and it is one click away as
+// "all eligible journals, with formatting fit".
+//
+// STATE MACHINE (brief §4.1). Upload path:
+//   idle → uploading → processing → profile_review → results
+// Manual path:
+//   idle → manual_form → results   (synchronous, no job, nothing uploaded)
+// Either can land in `error`, which is a plain card with a retry.
+//
+// A reload during `processing` recovers from the job id in sessionStorage, the
+// same mechanism the format page uses.
+//
+// The questions come AFTER the profile deliberately: an author should see what
+// their text actually supports before rating their own work. That is why the
+// ladder is rebuilt server-side from the stored profile rather than computed in
+// one pass at upload time.
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ARTICLE_TYPE_LABELS } from '@/lib/formatting/registry-meta'
 import type { ArticleType } from '@/lib/formatting/rulesSchema'
-import { describeCheck, sortScores } from '@/lib/finder/match'
+import { sortScores } from '@/lib/finder/match'
+import { MAX_MANUSCRIPT_BYTES } from '@/lib/formatting/pipeline/api'
+import { CONSENT_LABEL, CONSENT_DETAIL } from '@/lib/studio/consent'
 import {
   SCOPE_TAGS,
   SCOPE_TAG_LABELS,
-  type Bucket,
-  type ConstraintCheck,
   type FinderResult,
   type JournalScore,
   type ManuscriptStats,
   type ScopeTag,
-  type SortKey,
 } from '@/lib/finder/types'
-import type { FinderMatchRequest } from '@/lib/finder/api'
+import type { LadderResult, LadderSlot, ManuscriptProfile, SelfAssessment } from '@/lib/finder/profileTypes'
 import { subscribeFormatHandoff, requestFormatJournal } from '@/lib/finder/handoff'
+import { FINDER_V2, finderAllEligibleLabel } from '../_copy'
+import FinderProfileCard from './FinderProfileCard'
+import FinderSelfAssessmentForm from './FinderSelfAssessmentForm'
+import FinderLadderView from './FinderLadderView'
+import ResultCard from './FinderResultCard'
 
 /* ------------------------------------------------------------------ */
 /*  Static bits                                                         */
 /* ------------------------------------------------------------------ */
 
 const ARTICLE_TYPE_OPTIONS = Object.entries(ARTICLE_TYPE_LABELS) as [ArticleType, string][]
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+const JOB_KEY = 'oscrsj-finder-assess-job'
 
-const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: 'fit', label: 'Best fit' },
-  { value: 'indexing', label: 'Indexing' },
-  { value: 'review_speed', label: 'Review speed' },
-  { value: 'apc_asc', label: 'APC (low → high)' },
-]
-
-const BUCKET_META: Record<Exclude<Bucket, 'not_eligible'>, { label: string; blurb: string; chip: string }> = {
-  fits: {
-    label: 'Fits',
-    blurb: 'Every stated limit is satisfied.',
-    chip: 'bg-[#E8F5EE] text-fmt-ok border-transparent',
-  },
-  near_fit: {
-    label: 'Near fit',
-    blurb: 'Within 10% on one or two limits. A light trim gets you there.',
-    chip: 'bg-[#FBF3E4] text-fmt-warn border-transparent',
-  },
-  needs_work: {
-    label: 'Needs work',
-    blurb: 'Over one or more limits. See the exact deltas.',
-    chip: 'bg-[#FBEAE9] text-fmt-bad border-transparent',
-  },
+/** Article-type phrase for the OSCRSJ card, mirroring lib/finder/match.ts. */
+const ARTICLE_TYPE_PHRASE: Record<string, string> = {
+  case_report: 'case reports',
+  case_series: 'case series',
+  original_research: 'original research articles',
+  review: 'review articles',
+  systematic_review: 'systematic reviews and meta-analyses',
+  narrative_review: 'narrative reviews',
+  technical_note: 'technical notes and surgical techniques',
+  letter: 'letters to the editor',
+  editorial: 'editorials',
 }
 
-const CHECK_COLOR: Record<ConstraintCheck['status'], string> = {
-  fit: 'text-fmt-ok',
-  near: 'text-fmt-warn',
-  over: 'text-fmt-bad',
+function formatBytes(n: number): string {
+  // Sub-megabyte uploads rendered as "0.0 MB", which reads like an empty file
+  // next to a green check (Franklin, Session 100).
+  if (n < 1024 * 1024) return `${Math.max(1, Math.round(n / 1024))} KB`
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`
 }
 
-/** Neutral chip: eligible, but no stated limit was actually verified. */
-const NEUTRAL_CHIP = 'border-fmt-hairline bg-fmt-surface text-fmt-ink-2'
+const EMPTY_SELF_ASSESSMENT: SelfAssessment = { novelty: null, strength: null, priorities: [] }
 
-/**
- * A green "Fits" chip must mean at least one real constraint was verified.
- * A journal that publishes no limits for the numbers the author gave lands in
- * the 'fits' bucket by default (nothing there to fail) — that is eligibility,
- * not fit, and it gets a neutral chip instead.
- */
-function bucketChip(score: JournalScore): { label: string; chip: string } | null {
-  if (score.bucket === 'not_eligible') return null
-  if (score.bucket === 'fits' && score.checkedCount === 0) {
-    return { label: 'Eligible, limits not stated', chip: NEUTRAL_CHIP }
-  }
-  const bm = BUCKET_META[score.bucket]
-  return { label: bm.label, chip: bm.chip }
-}
+type Phase = 'idle' | 'manual_form' | 'uploading' | 'processing' | 'profile_review' | 'results' | 'error'
 
-/** How much of this journal's verdict is evidence rather than silence. */
-function checkLine(score: JournalScore): string {
-  if (score.suppliedCount === 0) {
-    return 'You did not give any numbers, so nothing was checked against this journal.'
-  }
-  if (score.checkedCount === 0) {
-    return 'This journal does not publish limits for the numbers you gave. Check its Guide for Authors.'
-  }
-  return `Checked ${score.checkedCount} of ${score.suppliedCount} of your numbers.`
-}
-
-/* ------------------------------------------------------------------ */
-/*  Form field helpers                                                  */
-/* ------------------------------------------------------------------ */
-
-interface FormState {
-  articleType: ArticleType | ''
-  wordCount: string
-  abstractWordCount: string
-  figureCount: string
-  tableCount: string
-  referenceCount: string
-  subspecialty: ScopeTag | null
-}
-
-const EMPTY_FORM: FormState = {
-  articleType: '',
-  wordCount: '',
-  abstractWordCount: '',
-  figureCount: '',
-  tableCount: '',
-  referenceCount: '',
-  subspecialty: null,
-}
-
-function numOrNull(v: string): number | null {
-  const t = v.trim()
-  if (t === '') return null
-  const n = Number(t)
-  return Number.isFinite(n) && n >= 0 ? Math.floor(n) : null
-}
-
-function apcLabel(apc: number | null, oa: string | null): string {
-  if (apc === 0) return 'No APC'
-  if (apc === null) return oa === 'subscription' ? 'Subscription' : '—'
-  return `APC $${apc.toLocaleString('en-US')}`
-}
-
-/* ------------------------------------------------------------------ */
-/*  Result card                                                         */
-/* ------------------------------------------------------------------ */
-
-function ResultCard({ score, onFormat }: { score: JournalScore; onFormat: (s: JournalScore) => void }) {
-  const bm = bucketChip(score)
-  const m = score.meta
-  const metaBits = [
-    m.indexing.length ? m.indexing.join(' · ') : '—',
-    m.oa_model === 'oa' ? 'Open access' : m.oa_model === 'hybrid' ? 'Hybrid' : m.oa_model === 'subscription' ? 'Subscription' : '—',
-    apcLabel(m.apc_usd, m.oa_model),
-    m.review_speed ?? '—',
-  ]
-
-  return (
-    <div className="rounded-xl border border-fmt-hairline bg-white p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        {/* flex-1 so a long journal name shrinks this column instead of forcing
-            the action button to wrap, where justify-between left-aligns it and
-            it no longer lines up with the other cards. Franklin, 2026-07-25. */}
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h4 className="font-fmt-display text-lg text-fmt-ink">{score.name}</h4>
-            {bm && (
-              <span className={`inline-block rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${bm.chip}`}>
-                {bm.label}
-              </span>
-            )}
-            {score.isSelf && (
-              <span className="inline-block rounded-full border border-fmt-hairline bg-fmt-surface px-2.5 py-0.5 text-[11px] font-medium text-fmt-ink-2">
-                Published by us
-              </span>
-            )}
-            {score.scopeMatch && (
-              <span className="inline-block rounded-full border border-fmt-hairline bg-fmt-surface px-2.5 py-0.5 text-[11px] font-medium text-fmt-ink-2">
-                Scope match
-              </span>
-            )}
-            {score.scopeMismatch && (
-              <span className="inline-block rounded-full border border-transparent bg-[#FBF3E4] px-2.5 py-0.5 text-[11px] font-medium text-fmt-warn">
-                Outside stated scope
-              </span>
-            )}
-          </div>
-          {score.publisher && <p className="mt-0.5 text-xs text-fmt-ink-3">{score.publisher}</p>}
-        </div>
-        {score.eligible && (
-          <button
-            type="button"
-            onClick={() => onFormat(score)}
-            className="btn btn-secondary flex-shrink-0 text-sm"
-          >
-            Format for this journal →
-          </button>
-        )}
-      </div>
-
-      {/* Constraint deltas */}
-      {score.checks.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-fmt-mono text-xs">
-          {score.checks.map((c) => (
-            <span key={c.key} className={CHECK_COLOR[c.status]}>
-              <span className="text-fmt-ink-3">{c.label}:</span> {describeCheck(c)}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* How much of the verdict above is actually evidence. */}
-      {score.eligible && (
-        <p className="mt-2 font-fmt-mono text-xs text-fmt-ink-3">{checkLine(score)}</p>
-      )}
-
-      {score.explanation && <p className="mt-3 text-sm italic text-fmt-ink-2">{score.explanation}</p>}
-
-      {/* Metadata + guidelines */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-fmt-hairline pt-3">
-        <p className="font-fmt-mono text-[11px] text-fmt-ink-3">{metaBits.join('  ·  ')}</p>
-        <a
-          href={score.guidelinesUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-fmt-mono text-[11px] text-fmt-ink-2 underline hover:text-fmt-accent-deep"
-        >
-          Guide for Authors ↗
-        </a>
-      </div>
-    </div>
-  )
+interface StoredJob {
+  jobId: string
+  email: string
+  articleType: ArticleType
 }
 
 /* ------------------------------------------------------------------ */
 /*  Main component                                                      */
 /* ------------------------------------------------------------------ */
 
-type Phase = 'form' | 'loading' | 'results' | 'error'
-
 export default function FinderClient() {
   const router = useRouter()
-  const [form, setForm] = useState<FormState>(EMPTY_FORM)
-  const [sortBy, setSortBy] = useState<SortKey>('fit')
-  const [phase, setPhase] = useState<Phase>('form')
-  const [result, setResult] = useState<FinderResult | null>(null)
+
+  const [phase, setPhase] = useState<Phase>('idle')
   const [error, setError] = useState<string | null>(null)
+
+  // Shared inputs
+  const [articleType, setArticleType] = useState<ArticleType | ''>('')
+  const [subspecialty, setSubspecialty] = useState<ScopeTag | null>(null)
+  const [selfAssessment, setSelfAssessment] = useState<SelfAssessment>(EMPTY_SELF_ASSESSMENT)
+
+  // Upload path
+  const [email, setEmail] = useState('')
+  const [consent, setConsent] = useState(false)
+  const [manuscript, setManuscript] = useState<File | null>(null)
+  const [dragOver, setDragOver] = useState(false)
+  const [jobId, setJobId] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Results
+  const [profile, setProfile] = useState<ManuscriptProfile | null>(null)
+  const [ladder, setLadder] = useState<LadderResult | null>(null)
+  const [matchResult, setMatchResult] = useState<FinderResult | null>(null)
   const [handoffFilename, setHandoffFilename] = useState<string | null>(null)
 
-  // Auto-fill from a completed format job (in-memory handoff — never the URL).
+  // Poll-loop lifecycle: navigating away aborts instead of fetching against an
+  // unmounted component (Session 98, Part F).
+  const abortRef = useRef<AbortController | null>(null)
+  useEffect(() => () => abortRef.current?.abort(), [])
+
+  // The processing copy asks users to keep the tab open. Enforce it honestly.
+  useEffect(() => {
+    if (phase !== 'processing' && phase !== 'uploading') return
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [phase])
+
+  // Auto-fill from a completed format job (sessionStorage-backed, so it survives
+  // the navigation from /studio/format — Session 96).
   useEffect(() => {
     return subscribeFormatHandoff((h) => {
-      setForm((prev) => ({
-        ...prev,
-        articleType: h.articleType ?? prev.articleType,
-        figureCount: h.figureCount != null ? String(h.figureCount) : prev.figureCount,
-        referenceCount: h.referenceCount != null ? String(h.referenceCount) : prev.referenceCount,
-      }))
+      if (h.articleType) setArticleType(h.articleType)
       setHandoffFilename(h.filename)
     })
   }, [])
 
-  const set = useCallback(<K extends keyof FormState>(key: K, value: FormState[K]) => {
-    setForm((f) => ({ ...f, [key]: value }))
+  /* ---- Reload recovery: pick a job back up mid-processing ---- */
+  useEffect(() => {
+    let raw: string | null = null
+    try {
+      raw = window.sessionStorage.getItem(JOB_KEY)
+    } catch {
+      // Storage can be blocked outright. A lost recovery costs a re-upload; it
+      // must never throw and break the page.
+      return
+    }
+    if (!raw) return
+    let stored: StoredJob
+    try {
+      stored = JSON.parse(raw) as StoredJob
+    } catch {
+      return
+    }
+    if (!stored?.jobId || !stored?.email) return
+    setJobId(stored.jobId)
+    setEmail(stored.email)
+    setArticleType(stored.articleType)
+    setPhase('processing')
+    void pollUntilDone(stored.jobId, stored.email)
+    // Recovery runs once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const canSubmit = form.articleType !== '' && phase !== 'loading'
+  const rememberJob = useCallback((j: StoredJob) => {
+    try {
+      window.sessionStorage.setItem(JOB_KEY, JSON.stringify(j))
+    } catch {
+      /* storage blocked: recovery is a convenience, never a requirement */
+    }
+  }, [])
 
-  async function runMatch(e?: React.FormEvent) {
-    e?.preventDefault()
-    if (form.articleType === '') return
-    setPhase('loading')
+  const forgetJob = useCallback(() => {
+    try {
+      window.sessionStorage.removeItem(JOB_KEY)
+    } catch {
+      /* ignore */
+    }
+  }, [])
+
+  /* ---- Upload path ---- */
+
+  function chooseFile(file: File | null) {
+    setError(null)
+    if (!file) return
+    if (!file.name.toLowerCase().endsWith('.docx')) {
+      setError('Please upload a Word .docx file. Other formats cannot be read.')
+      return
+    }
+    if (file.size > MAX_MANUSCRIPT_BYTES) {
+      setError(`That file is ${formatBytes(file.size)}. The maximum manuscript size is ${formatBytes(MAX_MANUSCRIPT_BYTES)}.`)
+      return
+    }
+    setManuscript(file)
+  }
+
+  const canUpload =
+    !!manuscript && articleType !== '' && EMAIL_RE.test(email) && consent && phase !== 'uploading' && phase !== 'processing'
+
+  async function pollUntilDone(id: string, addr: string) {
+    const controller = new AbortController()
+    abortRef.current?.abort()
+    abortRef.current = controller
+
+    // One POST kicks the assessment off and returns when it is terminal; the
+    // GET loop is the reload-recovery path and the safety net if that request
+    // is cut off mid-flight.
+    try {
+      await fetch(`/api/finder/assess/${id}`, {
+        method: 'POST',
+        headers: { 'x-job-email': addr, 'content-type': 'application/json' },
+        body: '{}',
+        signal: controller.signal,
+      })
+    } catch {
+      if (controller.signal.aborted) return
+      // Fall through to polling: the work may have completed server-side.
+    }
+
+    let deadPolls = 0
+    for (let i = 0; i < 60; i++) {
+      if (controller.signal.aborted) return
+      try {
+        const res = await fetch(`/api/finder/assess/${id}`, {
+          headers: { 'x-job-email': addr },
+          signal: controller.signal,
+        })
+        if (!res.ok) throw new Error(String(res.status))
+        const data = (await res.json()) as {
+          done: boolean
+          profile: ManuscriptProfile | null
+          ladder: LadderResult | null
+          error: { message: string } | null
+        }
+        deadPolls = 0
+        if (data.done) {
+          forgetJob()
+          if (data.error) {
+            setError(data.error.message)
+            setPhase('error')
+            return
+          }
+          setProfile(data.profile)
+          setLadder(data.ladder)
+          // Show the profile and ask the three questions before the ladder.
+          setPhase('profile_review')
+          return
+        }
+      } catch {
+        if (controller.signal.aborted) return
+        deadPolls++
+        // Five dead polls in a row is a real outage, not a slow stage. Say so
+        // rather than spinning forever (Session 98, Part F).
+        if (deadPolls >= 5) {
+          setError('We lost contact with the assessment service. Please try again.')
+          setPhase('error')
+          return
+        }
+      }
+      await new Promise((r) => setTimeout(r, 2500))
+    }
+    setError('The assessment is taking longer than expected. Please try again.')
+    setPhase('error')
+  }
+
+  async function handleUpload(e: React.FormEvent) {
+    e.preventDefault()
+    // canUpload already proves manuscript and articleType are set (TS narrows
+    // through the const), so re-testing articleType here is an unreachable
+    // comparison rather than a safety net.
+    if (!canUpload || !manuscript) return
+    setPhase('uploading')
     setError(null)
 
-    const stats: ManuscriptStats = {
-      articleType: form.articleType,
-      wordCount: numOrNull(form.wordCount),
-      abstractWordCount: numOrNull(form.abstractWordCount),
-      figureCount: numOrNull(form.figureCount),
-      tableCount: numOrNull(form.tableCount),
-      referenceCount: numOrNull(form.referenceCount),
-      subspecialty: form.subspecialty,
-    }
-    const payload: FinderMatchRequest = { stats, sortBy }
-
     try {
-      const res = await fetch('/api/finder/match', {
+      const createRes = await fetch('/api/finder/assess', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          email,
+          articleType,
+          subspecialty,
+          selfAssessment: EMPTY_SELF_ASSESSMENT,
+          manuscriptFilename: manuscript.name,
+          marketingConsent: consent,
+        }),
       })
-      if (!res.ok) {
-        const data = (await res.json().catch(() => null)) as { error?: string } | null
-        throw new Error(data?.error || 'The Journal Finder is unavailable right now. Please try again.')
+      if (!createRes.ok) {
+        const data = (await createRes.json().catch(() => null)) as { error?: string } | null
+        throw new Error(data?.error || 'We could not start the assessment. Please try again.')
       }
-      setResult((await res.json()) as FinderResult)
+      const job = (await createRes.json()) as { jobId: string; manuscriptUpload: { url: string } }
+
+      const put = await fetch(job.manuscriptUpload.url, {
+        method: 'PUT',
+        body: manuscript,
+        headers: { 'content-type': manuscript.type || 'application/octet-stream' },
+      })
+      if (!put.ok) throw new Error('The upload failed. Please check your connection and try again.')
+
+      setJobId(job.jobId)
+      rememberJob({ jobId: job.jobId, email, articleType })
+      setPhase('processing')
+      await pollUntilDone(job.jobId, email)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
+      setPhase('error')
+    }
+  }
+
+  /** Second server call: rebuild the ladder with the author's answers. */
+  async function buildLadderWithAnswers() {
+    if (!jobId) {
+      // Manual mode reaches results without a job.
+      setPhase('results')
+      return
+    }
+    setError(null)
+    try {
+      const res = await fetch(`/api/finder/assess/${jobId}`, {
+        method: 'POST',
+        headers: { 'x-job-email': email, 'content-type': 'application/json' },
+        body: JSON.stringify({ selfAssessment }),
+      })
+      if (!res.ok) throw new Error('We could not build your ladder. Please try again.')
+      const data = (await res.json()) as { profile: ManuscriptProfile | null; ladder: LadderResult | null }
+      if (data.profile) setProfile(data.profile)
+      if (data.ladder) setLadder(data.ladder)
       setPhase('results')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
@@ -292,136 +339,206 @@ export default function FinderClient() {
     }
   }
 
-  // Re-sorting is client-side over the already-scored list — no re-fetch.
-  const sortedResults = useMemo(() => {
-    if (!result) return null
-    return { ...result, results: sortScores(result.results, sortBy) }
-  }, [result, sortBy])
+  /* ---- Manual path (no upload, synchronous) ---- */
 
-  function handleFormatFor(score: JournalScore) {
-    if (form.articleType === '') return
-    // Session 95: the Formatter is its own route now, so this publishes the
-    // request (sessionStorage-backed, so it survives the navigation) and routes
-    // there, instead of scrolling to a #app section that no longer exists on
-    // this page.
-    requestFormatJournal({ slug: score.slug, articleType: form.articleType })
-    router.push('/studio/format')
+  async function runManual(e: React.FormEvent) {
+    e.preventDefault()
+    if (articleType === '') return
+    setError(null)
+    const stats: ManuscriptStats = {
+      articleType,
+      wordCount: null,
+      abstractWordCount: null,
+      figureCount: null,
+      tableCount: null,
+      referenceCount: null,
+      subspecialty,
+    }
+    try {
+      const res = await fetch('/api/finder/match', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ stats, sortBy: 'fit', mode: 'ladder', selfAssessment }),
+      })
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as { error?: string } | null
+        throw new Error(data?.error || 'The Journal Finder is unavailable right now. Please try again.')
+      }
+      const data = (await res.json()) as FinderResult & { profile: ManuscriptProfile; ladder: LadderResult }
+      setMatchResult(data)
+      setProfile(data.profile)
+      setLadder(data.ladder)
+      setJobId(null)
+      setPhase('results')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
+      setPhase('error')
+    }
   }
 
-  /* ---- render: results ---- */
-  if ((phase === 'results' || (phase === 'loading' && result)) && sortedResults) {
-    const eligible = sortedResults.results.filter((r) => r.bucket !== 'not_eligible')
-    const ineligible = sortedResults.results.filter((r) => r.bucket === 'not_eligible')
-    const c = sortedResults.counts
-    // A re-submit keeps the previous scorecard on screen while loading
-    // (2026-07-22, Part F): dim it and say so, so old numbers never read as
-    // the answer to the new query.
-    const updating = phase === 'loading'
+  /* ---- Handoff into the formatter ---- */
 
+  const handoffTo = useCallback(
+    (slug: string) => {
+      if (articleType === '') return
+      requestFormatJournal({ slug, articleType })
+      router.push('/studio/format')
+    },
+    [articleType, router],
+  )
+
+  const allEligible = useMemo(() => {
+    const list = ladder?.allEligible ?? matchResult?.results.filter((r) => r.eligible) ?? []
+    return sortScores(list as JournalScore[], 'fit')
+  }, [ladder, matchResult])
+
+  const typePhrase = articleType ? ARTICLE_TYPE_PHRASE[articleType] ?? 'this article type' : 'this article type'
+
+  function reset() {
+    forgetJob()
+    abortRef.current?.abort()
+    setPhase('idle')
+    setError(null)
+    setProfile(null)
+    setLadder(null)
+    setMatchResult(null)
+    setJobId(null)
+    setManuscript(null)
+  }
+
+  const errorBanner = error ? (
+    <div role="alert" className="rounded-xl border border-[#F0C7C4] bg-[#FBEAE9] px-4 py-3 text-sm text-fmt-bad">
+      {error}
+    </div>
+  ) : null
+
+  /* ------------------------------ ERROR ---------------------------- */
+  if (phase === 'error') {
     return (
-      <div
-        aria-busy={updating}
-        className={`space-y-6${updating ? ' pointer-events-none opacity-50 transition-opacity' : ''}`}
-      >
-        {updating && (
-          <p
-            role="status"
-            className="rounded-xl border border-fmt-hairline bg-fmt-surface px-4 py-3 text-sm font-medium text-fmt-ink"
-          >
-            Updating results for your new numbers…
-          </p>
-        )}
-        {/* Summary + controls */}
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-fmt-hairline bg-fmt-surface p-4">
-          <p className="text-sm text-fmt-ink">
-            <strong>{c.fits}</strong> fit · <strong>{c.near_fit}</strong> near fit ·{' '}
-            <strong>{c.needs_work}</strong> need work · <strong>{c.not_eligible}</strong> not eligible
-          </p>
-          <div className="flex items-center gap-2">
-            <label htmlFor="finder-sort" className="text-xs text-fmt-ink-2">
-              Sort
-            </label>
-            <select
-              id="finder-sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortKey)}
-              className="rounded-lg border border-fmt-hairline bg-white px-3 py-1.5 text-sm text-fmt-ink focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40"
-            >
-              {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-            <button type="button" onClick={() => setPhase('form')} className="btn btn-secondary text-sm">
-              Edit numbers
-            </button>
-          </div>
-        </div>
-
-        {/* Sparse input: numbers left blank that journals do publish limits for. */}
-        {(sortedResults.uncheckedStats?.length ?? 0) > 0 && (
-          <div className="rounded-xl border border-fmt-hairline bg-fmt-surface p-4">
-            <p className="mb-1.5 text-sm font-medium text-fmt-ink">Some checks were skipped</p>
-            <ul className="space-y-1 text-sm text-fmt-ink-2">
-              {sortedResults.uncheckedStats?.map((u) => (
-                <li key={u.stat}>
-                  You left {u.label} blank.{' '}
-                  {u.journalsWithLimit === 1
-                    ? '1 eligible journal states a limit'
-                    : `${u.journalsWithLimit} eligible journals state a limit`}{' '}
-                  we could not check.
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {eligible.length === 0 && (
-          <p className="rounded-xl border border-fmt-hairline bg-white p-5 text-sm text-fmt-ink-2">
-            No journal in the registry accepts this article type. Try a different type, or check the eligibility list
-            below.
-          </p>
-        )}
-
-        {eligible.map((s) => (
-          <ResultCard key={s.slug} score={s} onFormat={handleFormatFor} />
-        ))}
-
-        {/* OSCRSJ disclosure */}
-        <p className="text-xs italic leading-relaxed text-fmt-ink-3">
-          OSCRSJ builds this tool and appears in results only when your manuscript genuinely fits our scope and limits.
-          We are scored identically to every other journal, with no boost.
-        </p>
-
-        {/* Not eligible (collapsed) */}
-        {ineligible.length > 0 && (
-          <details className="rounded-xl border border-fmt-hairline bg-white">
-            <summary className="cursor-pointer px-5 py-3 text-sm font-medium text-fmt-ink-2">
-              Not eligible for this article type ({ineligible.length})
-            </summary>
-            <ul className="divide-y divide-fmt-hairline border-t border-fmt-hairline">
-              {ineligible.map((s) => (
-                <li key={s.slug} className="flex flex-wrap items-center justify-between gap-2 px-5 py-3 text-sm">
-                  <span className="text-fmt-ink">{s.name}</span>
-                  <span className="text-xs text-fmt-ink-3">{s.ineligibleReason}</span>
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
+      <div className="space-y-4">
+        {errorBanner}
+        <button type="button" onClick={reset} className="btn btn-primary text-sm">
+          Start over
+        </button>
       </div>
     )
   }
 
-  /* ---- render: form ---- */
-  return (
-    <form onSubmit={runMatch} className="space-y-6">
-      {phase === 'error' && error && (
-        <div role="alert" className="rounded-xl border border-[#F0C7C4] bg-[#FBEAE9] px-4 py-3 text-sm text-fmt-bad">
-          {error}
+  /* --------------------------- PROCESSING -------------------------- */
+  if (phase === 'uploading' || phase === 'processing') {
+    return (
+      <div className="rounded-xl border border-fmt-hairline bg-white p-8 text-center" aria-busy="true">
+        <p role="status" className="font-fmt-display text-xl text-fmt-ink">
+          {phase === 'uploading' ? 'Uploading your manuscript…' : 'Reading your manuscript…'}
+        </p>
+        <p className="mx-auto mt-2 max-w-md text-sm text-fmt-ink-2">
+          We are pulling out the study characteristics we can verify against the text. This usually takes under a
+          minute. Please keep this tab open.
+        </p>
+      </div>
+    )
+  }
+
+  /* ------------------------ PROFILE REVIEW ------------------------- */
+  if (phase === 'profile_review' && profile) {
+    return (
+      <div className="space-y-6">
+        {errorBanner}
+        <FinderProfileCard profile={profile} />
+        <FinderSelfAssessmentForm value={selfAssessment} onChange={setSelfAssessment} />
+        <div className="flex flex-col items-center gap-3">
+          <button
+            type="button"
+            onClick={buildLadderWithAnswers}
+            className="btn btn-primary w-full sm:w-auto sm:min-w-[240px]"
+          >
+            {FINDER_V2.buildLadderCta}
+          </button>
+          <button type="button" onClick={reset} className="text-xs text-fmt-ink-3 underline hover:text-fmt-ink-2">
+            Start over with a different manuscript
+          </button>
         </div>
-      )}
+      </div>
+    )
+  }
+
+  /* ----------------------------- RESULTS --------------------------- */
+  if (phase === 'results' && ladder && profile) {
+    return (
+      <div className="space-y-6">
+        <FinderLadderView
+          ladder={ladder}
+          articleTypePhrase={typePhrase}
+          sjrYear={ladder.slots.find((s) => s.meta.sjr.year !== null)?.meta.sjr.year ?? 2025}
+          onFormat={(slot: LadderSlot) => handoffTo(slot.slug)}
+          onFormatOscrsj={() => handoffTo('oscrsj')}
+        />
+
+        <details className="rounded-xl border border-fmt-hairline bg-white">
+          <summary className="cursor-pointer px-5 py-3 text-sm font-medium text-fmt-ink-2">
+            {finderAllEligibleLabel(ladder.eligibleCount)}
+          </summary>
+          <div className="space-y-4 border-t border-fmt-hairline p-5">
+            {allEligible.map((s) => (
+              <ResultCard key={s.slug} score={s} onFormat={(sc) => handoffTo(sc.slug)} />
+            ))}
+          </div>
+        </details>
+
+        <details className="rounded-xl border border-fmt-hairline bg-white">
+          <summary className="cursor-pointer px-5 py-3 text-sm font-medium text-fmt-ink-2">
+            {FINDER_V2.profileHeading}
+          </summary>
+          <div className="border-t border-fmt-hairline p-5">
+            <FinderProfileCard profile={profile} />
+          </div>
+        </details>
+
+        <div className="flex justify-center">
+          <button type="button" onClick={reset} className="btn btn-secondary text-sm">
+            Start over
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  /* --------------------------- MANUAL FORM ------------------------- */
+  if (phase === 'manual_form') {
+    return (
+      <form onSubmit={runManual} className="space-y-6">
+        {errorBanner}
+        <div className="rounded-xl border border-fmt-hairline bg-white p-6">
+          <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">Tell us about your manuscript</h3>
+          <p className="mb-5 text-sm text-fmt-ink-2">{FINDER_V2.selfReportedBanner}</p>
+          <TypeAndScope
+            articleType={articleType}
+            setArticleType={setArticleType}
+            subspecialty={subspecialty}
+            setSubspecialty={setSubspecialty}
+          />
+        </div>
+        <FinderSelfAssessmentForm value={selfAssessment} onChange={setSelfAssessment} />
+        <div className="flex flex-col items-center gap-3">
+          <button
+            type="submit"
+            disabled={articleType === ''}
+            className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-[240px]"
+          >
+            {FINDER_V2.buildLadderCta}
+          </button>
+          <button type="button" onClick={reset} className="text-xs text-fmt-ink-3 underline hover:text-fmt-ink-2">
+            Upload a manuscript instead
+          </button>
+        </div>
+      </form>
+    )
+  }
+
+  /* ------------------------------ IDLE ----------------------------- */
+  return (
+    <form onSubmit={handleUpload} className="space-y-6">
+      {errorBanner}
 
       {handoffFilename && (
         <div className="flex items-start gap-3 rounded-xl border border-[#CDE9D8] bg-[#E8F5EE] px-4 py-3 text-sm text-fmt-ink">
@@ -429,107 +546,189 @@ export default function FinderClient() {
             ↑
           </span>
           <p>
-            Using the numbers from <strong>{handoffFilename}</strong>. Edit any of them below. Add your word, abstract,
-            and table counts for the most accurate match.
+            Carried over from <strong>{handoffFilename}</strong>. Upload the same manuscript to get a full profile, or
+            answer a few questions instead.
           </p>
         </div>
       )}
 
       <div className="rounded-xl border border-fmt-hairline bg-white p-6">
-        <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">Describe your manuscript</h3>
+        <h3 className="mb-1 font-fmt-display text-xl text-fmt-ink">Upload your manuscript</h3>
         <p className="mb-5 text-sm text-fmt-ink-2">
-          Only the article type is required. The more numbers you add, the sharper the fit. Leave any you do not
-          know blank and we will skip that check, and say so in the results.
+          A blinded Word .docx, up to {formatBytes(MAX_MANUSCRIPT_BYTES)}. We read it to build the profile below, and it
+          is deleted within seven days.
         </p>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2">
-            <label htmlFor="f-type" className="mb-1 block text-sm font-medium text-fmt-ink">
-              Article type <span className="text-fmt-bad">*</span>
-            </label>
-            <select
-              id="f-type"
-              value={form.articleType}
-              onChange={(e) => set('articleType', e.target.value as ArticleType)}
-              className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40"
-            >
-              <option value="">Select an article type…</option>
-              {ARTICLE_TYPE_OPTIONS.map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {(
-            [
-              ['wordCount', 'Manuscript word count'],
-              ['abstractWordCount', 'Abstract word count'],
-              ['referenceCount', 'References'],
-              ['figureCount', 'Figures'],
-              ['tableCount', 'Tables'],
-            ] as [keyof FormState, string][]
-          ).map(([key, label]) => (
-            <div key={key}>
-              <label htmlFor={`f-${key}`} className="mb-1 block text-sm font-medium text-fmt-ink">
-                {label} <span className="font-normal text-fmt-ink-3">(optional)</span>
-              </label>
-              <input
-                id={`f-${key}`}
-                type="number"
-                min={0}
-                inputMode="numeric"
-                value={form[key] as string}
-                onChange={(e) => set(key, e.target.value as FormState[typeof key])}
-                placeholder="—"
-                className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink placeholder:text-fmt-ink-3 focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40"
-              />
-            </div>
-          ))}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault()
+            setDragOver(true)
+          }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault()
+            setDragOver(false)
+            chooseFile(e.dataTransfer.files?.[0] ?? null)
+          }}
+          onClick={() => fileInputRef.current?.click()}
+          className={`cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-colors ${
+            dragOver ? 'border-fmt-accent bg-fmt-accent/5' : 'border-fmt-hairline bg-fmt-surface hover:border-fmt-ink-3'
+          }`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".docx"
+            className="hidden"
+            onChange={(e) => chooseFile(e.target.files?.[0] ?? null)}
+          />
+          {manuscript ? (
+            <p className="text-sm font-medium text-fmt-ink">
+              {manuscript.name} · {formatBytes(manuscript.size)} ✓
+            </p>
+          ) : (
+            <>
+              <p className="text-sm font-medium text-fmt-ink">Drop your .docx here, or click to choose</p>
+              <p className="mt-1 font-fmt-mono text-xs text-fmt-ink-3">
+                Microsoft Word only · max {formatBytes(MAX_MANUSCRIPT_BYTES)}
+              </p>
+            </>
+          )}
         </div>
 
-        {/* Subspecialty chips */}
         <div className="mt-5">
-          <p className="mb-2 text-sm font-medium text-fmt-ink">
-            Subspecialty <span className="font-normal text-fmt-ink-3">(optional, sharpens ordering)</span>
+          <TypeAndScope
+            articleType={articleType}
+            setArticleType={setArticleType}
+            subspecialty={subspecialty}
+            setSubspecialty={setSubspecialty}
+          />
+        </div>
+
+        <div className="mt-5">
+          <label htmlFor="finder-email" className="mb-1 block text-sm font-medium text-fmt-ink">
+            Email <span className="text-fmt-bad">*</span>
+          </label>
+          <input
+            id="finder-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink placeholder:text-fmt-ink-3 focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40"
+          />
+          <p className="mt-1 text-xs text-fmt-ink-3">Used to retrieve your assessment if this tab is closed.</p>
+        </div>
+
+        {/* Required consent, gated again server-side so a hand-rolled POST
+            cannot slip an address in without it. Same wording and version as
+            the formatter: one Studio, one promise. */}
+        <div className="mt-5 rounded-lg border border-fmt-hairline bg-fmt-surface p-4">
+          <label htmlFor="finder-consent" className="flex cursor-pointer items-start gap-3">
+            <input
+              id="finder-consent"
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer accent-fmt-accent"
+            />
+            <span className="text-sm font-medium leading-snug text-fmt-ink">{CONSENT_LABEL}</span>
+          </label>
+          <p className="mt-2 pl-7 text-xs leading-relaxed text-fmt-ink-2">{CONSENT_DETAIL}</p>
+          <p className="mt-2 pl-7 text-xs text-fmt-ink-2">
+            See our{' '}
+            <a href="/privacy" className="underline hover:text-fmt-accent" target="_blank" rel="noopener">
+              privacy policy
+            </a>
+            .
           </p>
-          <div className="flex flex-wrap gap-2">
-            {SCOPE_TAGS.map((tag) => {
-              const active = form.subspecialty === tag
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => set('subspecialty', active ? null : tag)}
-                  className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                    active
-                      ? 'border-fmt-accent bg-fmt-accent/10 text-fmt-accent-deep'
-                      : 'border-fmt-hairline bg-white text-fmt-ink-2 hover:border-fmt-ink-3'
-                  }`}
-                >
-                  {SCOPE_TAG_LABELS[tag]}
-                </button>
-              )
-            })}
-          </div>
         </div>
       </div>
 
       <div className="flex flex-col items-center gap-3">
         <button
           type="submit"
-          disabled={!canSubmit}
-          className="btn btn-primary inline-flex w-full items-center justify-center gap-2 sm:w-auto sm:min-w-[240px] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!canUpload}
+          className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-[240px]"
         >
-          {phase === 'loading' ? 'Finding journals…' : 'Find journals that fit'}
+          Build my profile
         </button>
-        <p className="max-w-md text-center text-xs text-fmt-ink-2">
-          The Finder checks your numbers against each journal&apos;s published limits. It never reads or stores your
-          manuscript text. Always confirm against the journal&apos;s current Guide for Authors.
-        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setError(null)
+            setPhase('manual_form')
+          }}
+          className="text-sm text-fmt-ink-2 underline hover:text-fmt-accent-deep"
+        >
+          {FINDER_V2.manualLink}
+        </button>
       </div>
     </form>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Shared article-type + subspecialty inputs                           */
+/* ------------------------------------------------------------------ */
+
+function TypeAndScope({
+  articleType,
+  setArticleType,
+  subspecialty,
+  setSubspecialty,
+}: {
+  articleType: ArticleType | ''
+  setArticleType: (t: ArticleType) => void
+  subspecialty: ScopeTag | null
+  setSubspecialty: (s: ScopeTag | null) => void
+}) {
+  return (
+    <>
+      <div>
+        <label htmlFor="finder-type" className="mb-1 block text-sm font-medium text-fmt-ink">
+          Article type <span className="text-fmt-bad">*</span>
+        </label>
+        <select
+          id="finder-type"
+          value={articleType}
+          onChange={(e) => setArticleType(e.target.value as ArticleType)}
+          className="w-full rounded-lg border border-fmt-hairline bg-white px-4 py-2.5 text-sm text-fmt-ink focus:border-fmt-accent focus:outline-none focus:ring-2 focus:ring-fmt-accent/40"
+        >
+          <option value="">Select an article type…</option>
+          {ARTICLE_TYPE_OPTIONS.map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mt-4">
+        <p className="mb-2 text-sm font-medium text-fmt-ink">
+          Subspecialty <span className="font-normal text-fmt-ink-3">(optional, sharpens the ladder)</span>
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {SCOPE_TAGS.map((tag) => {
+            const active = subspecialty === tag
+            return (
+              <button
+                key={tag}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setSubspecialty(active ? null : tag)}
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                  active
+                    ? 'border-fmt-accent bg-fmt-accent/10 text-fmt-accent-deep'
+                    : 'border-fmt-hairline bg-white text-fmt-ink-2 hover:border-fmt-ink-3'
+                }`}
+              >
+                {SCOPE_TAG_LABELS[tag]}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </>
   )
 }

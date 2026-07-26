@@ -17,7 +17,13 @@ import { SCHEMA_VERSION } from '@/lib/formatting/rulesSchema'
 import { createJob, checkRateLimit, createSignedUpload, writeJobMeta } from '@/lib/formatting/pipeline/jobs'
 import { storagePaths } from '@/lib/formatting/pipeline/api'
 import { CONSENT_VERSION, CONSENT_SCOPE } from '@/lib/studio/consent'
-import { markJobKind, FINDER_ASSESS_KIND, parseSelfAssessment, writeAssessInput } from '@/lib/finder/assessJob'
+import {
+  markJobKind,
+  deleteJobRow,
+  FINDER_ASSESS_KIND,
+  parseSelfAssessment,
+  writeAssessInput,
+} from '@/lib/finder/assessJob'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -75,6 +81,9 @@ export async function POST(req: NextRequest) {
 
   const kindOk = await markJobKind(job.id)
   if (!kindOk) {
+    // Roll the row back rather than leaving an untagged orphan that burns a
+    // rate-limit slot and reads as a formatter job in the metrics.
+    await deleteJobRow(job.id)
     return NextResponse.json(
       {
         error:

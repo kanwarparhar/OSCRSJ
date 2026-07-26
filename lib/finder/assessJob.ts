@@ -15,7 +15,7 @@ import { MAX_MANUSCRIPT_BYTES, storagePaths } from '@/lib/formatting/pipeline/ap
 import type { FormattingJob } from '@/lib/formatting/pipeline/stages'
 import { appendRowToSheet } from '@/lib/integrations/googleSheets'
 import { getJournalMeta } from './journalMeta'
-import { extractProfile, buildSelfReportedProfile } from './assess'
+import { extractProfile, buildSelfReportedProfile, finalizeProfile } from './assess'
 import { buildLadder } from './ladder'
 import { AUTHOR_PRIORITIES, type LadderResult, type ManuscriptProfile, type SelfAssessment } from './profileTypes'
 import { computeUncheckedStats } from './match'
@@ -107,6 +107,21 @@ export async function markJobKind(jobId: string): Promise<boolean> {
   }
 }
 
+/**
+ * Delete a job row we created but could not finish setting up. Used when the
+ * kind tag fails on a not-yet-migrated database: without this, every rejected
+ * attempt would leave an orphan row that looks like a formatter job and counts
+ * against the author's daily rate limit.
+ */
+export async function deleteJobRow(jobId: string): Promise<void> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin().from('formatting_jobs') as any).delete().eq('id', jobId)
+  } catch (err) {
+    console.error('[finder/assess] could not roll back job row', jobId, err)
+  }
+}
+
 /** Build the matchable registry for one article type (same shape v1 uses). */
 export function buildMatchable(articleType: ArticleType): MatchableJournal[] {
   return JOURNALS.map((j) => ({
@@ -170,6 +185,66 @@ export function logAssessment(
       ip ?? '',
     ],
   })
+}
+
+/**
+ * Rebuild the ladder for an already-assessed job after the author answers the
+ * three questions.
+ *
+ * The questions are asked AFTER the profile is shown, which is the whole point:
+ * an author should see what the text actually supports before rating their own
+ * work. So the ladder has to be recomputable from the stored profile. This
+ * re-derives the anchor from the SAME verified fields with the new author shift
+ * applied, and makes NO new DeepSeek call — re-reading the manuscript to apply a
+ * radio button would be both wasteful and non-deterministic.
+ */
+export async function rebuildLadder(
+  job: FormattingJob,
+  selfAssessment: SelfAssessment,
+): Promise<AssessReport | null> {
+  const stored = job.report as unknown as AssessReport | null
+  if (!stored?.profile) return null
+
+  const p = stored.profile
+  const profile = finalizeProfile(
+    {
+      design: p.design,
+      sampleSize: p.sampleSize,
+      multicenter: p.multicenter,
+      comparative: p.comparative,
+      followUpMonths: p.followUpMonths,
+      statsReported: p.statsReported,
+      noveltyClaim: p.noveltyClaim,
+    },
+    selfAssessment,
+    { selfReported: p.selfReported, truncated: p.truncated, extractionError: p.extractionError },
+  )
+
+  const input = await readAssessInput(job.id)
+  const articleType = (
+    job.article_type && (ARTICLE_TYPES as readonly string[]).includes(job.article_type)
+      ? job.article_type
+      : 'original_research'
+  ) as ArticleType
+  const stats: ManuscriptStats = {
+    articleType,
+    wordCount: null,
+    abstractWordCount: null,
+    figureCount: null,
+    tableCount: null,
+    referenceCount: null,
+    subspecialty: parseScopeTag(input?.subspecialty),
+  }
+
+  const report = ladderFor(profile, selfAssessment, stats)
+  await writeAssessInput(job.id, { selfAssessment, subspecialty: input?.subspecialty ?? null })
+  await updateJob(job.id, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    report: report as any,
+    updated_at: new Date().toISOString(),
+  } as Partial<FormattingJob>)
+  logAssessment(report, stats, 'upload', job.ip)
+  return report
 }
 
 /** Manual (no-upload) mode: nothing is read, so nothing is presented as read. */

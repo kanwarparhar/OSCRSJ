@@ -4,31 +4,32 @@ import { JOURNAL_SUMMARIES } from '@/lib/formatting/journalList'
 import FinderClient from '../../_components/FinderClient'
 import FormatterMotion from '../../_components/FormatterMotion'
 import { StudioNav, StudioFooter } from '../../_components/StudioChrome'
-import { DISCLAIMER } from '../../_copy'
+import { DISCLAIMER, FINDER_V2 } from '../../_copy'
 import { studioBreadcrumb, studioMetadata, studioToolSchema } from '../../_seo'
 
 const JOURNAL_COUNT = JOURNAL_SUMMARIES.length
 
 export const metadata: Metadata = studioMetadata({
   title: 'Find a journal | Submission Studio by OSCRSJ',
-  description: `Score your manuscript against ${JOURNAL_COUNT} orthopedic journals on the numbers that decide eligibility: article type, word count, abstract length, figures, tables, and references. See what fits and exactly how far over you are where it does not. Free to use.`,
+  description: `Upload your manuscript and get a reach, target and safety ladder across ${JOURNAL_COUNT} orthopedic journals. Every study characteristic we report carries the sentence from your text that states it. Tier alignment, not a prediction of acceptance. Free to use.`,
   path: '/studio/find',
-  social: `Which orthopedic journals is your manuscript eligible for? Score it against ${JOURNAL_COUNT} journals on the counts that decide eligibility, not on topical impression. Free to use.`,
+  social: `Where does your manuscript actually belong? Two journals worth reaching for, two aligned targets, one dependable fallback, across ${JOURNAL_COUNT} orthopedic journals. Free to use.`,
 })
 
-// Tool-level schema. Deliberately describes a constraint checker, not a
-// recommender — the Finder scores published limits and does not model
-// acceptance odds or topical fit, and the schema should not imply otherwise.
+// Tool-level schema. v2 does band journals into tiers, so the schema says so —
+// but it still must not imply an acceptance prediction, because the tool does
+// not make one. "Tier alignment" is the honest description and the wording here
+// deliberately matches the on-page disclaimer.
 const toolLd = studioToolSchema({
   name: 'Find a journal — Submission Studio',
   path: '/studio/find',
-  description: `Scores a manuscript against ${JOURNAL_COUNT} orthopedic journals on published constraints: article-type eligibility, word count, abstract length, figures, tables, and references. Reports which journals fit, which are near misses, and the exact delta where a limit is exceeded.`,
+  description: `Builds an evidence-quoted profile of a manuscript's study characteristics, then lays out a reach, target and safety ladder across ${JOURNAL_COUNT} orthopedic journals, banded by SJR standing among the journals eligible for that manuscript. Reports tier alignment, never a probability of acceptance.`,
   featureList: [
+    'Manuscript profile with a verbatim quote behind every extracted fact',
+    'Reach, target and safety ladder banded by SJR standing among eligible journals',
     'Article-type eligibility gating',
-    'Word count, abstract, figure, table and reference limit checks',
-    'Exact over-limit deltas rather than pass/fail',
-    'Explicit count of how many of your numbers were actually checked',
-    'No self-preference: OSCRSJ is scored by the same rules as every other journal',
+    'Formatting-fit detail with exact over-limit deltas per journal',
+    'No self-preference: OSCRSJ is excluded from the ladder and disclosed separately',
   ],
 })
 
@@ -36,17 +37,22 @@ const howScored = [
   {
     step: '1',
     title: 'Eligibility first',
-    body: 'A journal that does not accept your article type is not a near miss, it is a no. Those are gated out before anything is scored, and listed separately so you can see why.',
+    body: 'A journal that does not accept your article type is not a near miss, it is a no. Those are gated out before anything is banded, and listed separately so you can see why.',
   },
   {
     step: '2',
-    title: 'Then the numbers',
-    body: "Each of your counts is checked against that journal's published limit. Within limit fits. Up to ten percent over is a near miss. Beyond that is over, and we show you the exact delta.",
+    title: 'Then a tier, relative to your options',
+    body: 'Every eligible journal is placed by its SJR standing among the journals eligible for YOUR manuscript, not against the whole field. A spine case series is banded among spine venues that take case series.',
   },
   {
     step: '3',
+    title: 'Evidence, or a dash',
+    body: 'Each study characteristic we report carries the sentence from your manuscript that states it, checked as a real substring before we use it. Where the text is silent we show a dash rather than a guess.',
+  },
+  {
+    step: '4',
     title: 'No thumb on the scale',
-    body: 'OSCRSJ is scored by the same math as every other journal, with no boost. Where a journal publishes no limit, that constraint is neutral rather than a guess.',
+    body: 'OSCRSJ is removed from the ladder before any journal is placed in it. Our own journal appears only as a separate card that says it is ours and that its appearance owes nothing to your assessment.',
   },
 ]
 
@@ -71,16 +77,12 @@ export default function FindToolPage() {
           <div className="rule-head">
             <span className="kicker">Tool 02</span>
             <span style={{ fontFamily: 'var(--mono)', fontSize: '12px', color: 'var(--fmt-ink-3)' }}>
-              {JOURNAL_COUNT} journals scored
+              {JOURNAL_COUNT} journals ranked
             </span>
           </div>
-          <h1 className="reveal">Find where your manuscript fits</h1>
+          <h1 className="reveal">{FINDER_V2.heroTitle}</h1>
           <p className="sub reveal" style={{ marginTop: '16px', maxWidth: '70ch' }}>
-            Journal selection is a question of stated constraints, not topical impression. Enter your article type,
-            word count, figure count, and reference count, and each value is checked against every journal&apos;s
-            published limits: which journals your manuscript is eligible for, which of your counts fall within their
-            limits, and the exact margin by which any limit is exceeded. Counts from a completed formatting job are
-            carried over automatically. Only the values you enter are read; your manuscript text is never processed.
+            {FINDER_V2.heroSub}
           </p>
           <div className="reveal" style={{ marginTop: '40px' }}>
             <FinderClient />
@@ -120,8 +122,8 @@ export default function FindToolPage() {
             <div>
               <h2 style={{ fontSize: '24px', marginBottom: '8px' }}>Found your journal?</h2>
               <p style={{ color: 'var(--fmt-ink-2)', maxWidth: '60ch' }}>
-                Send it straight into the formatter. Every result carries a &ldquo;Format for this journal&rdquo; link
-                that preselects it for you.
+                Send it straight into the formatter. Every rung of the ladder carries a &ldquo;Format for this
+                journal&rdquo; link that preselects it for you.
               </p>
             </div>
             <Link className="btn btn-primary" href="/studio/format">
