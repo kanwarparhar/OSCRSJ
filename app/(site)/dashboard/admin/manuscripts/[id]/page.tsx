@@ -25,6 +25,7 @@ import DecisionHistoryPanel from './DecisionHistoryPanel'
 import PublishedPdfPanel from './PublishedPdfPanel'
 import PublishedJatsPanel from './PublishedJatsPanel'
 import PublishPipelinePanel from './PublishPipelinePanel'
+import ApcPaymentPanel from './ApcPaymentPanel'
 import MetadataEditorPanel from './MetadataEditorPanel'
 import BodyEditorPanel from './BodyEditorPanel'
 
@@ -552,6 +553,10 @@ export default async function AdminManuscriptDetailPage({
           <div className="px-6 pb-6 space-y-6">{reviewPanels}</div>
         </details>
       )}
+
+      {/* APC payment. Self-gating: renders nothing unless the
+          manuscript is `accepted` or `awaiting_payment`. */}
+      <ApcPaymentPanel manuscriptId={manuscript.id} />
 
       <MetadataEditorPanel manuscriptId={manuscript.id} />
 

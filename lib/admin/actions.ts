@@ -61,7 +61,10 @@ const SIGNED_URL_TTL_SECONDS = 30 * 60
 // editorial_decisions row), not a rescind.
 const RESCIND_WINDOW_MS = 15 * 60 * 1000
 
-async function requireEditorOrAdmin(): Promise<
+// Exported so lib/payments/actions.ts can reuse the one gate rather
+// than defining a second, drift-prone copy (Constant-fix convention).
+// Safe under 'use server': it is an async function.
+export async function requireEditorOrAdmin(): Promise<
   { userId: string } | { error: string }
 > {
   const supabase = await createClient()

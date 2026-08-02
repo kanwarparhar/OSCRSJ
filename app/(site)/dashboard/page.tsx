@@ -76,6 +76,45 @@ export default async function DashboardPage() {
     }
   }
 
+  // Open APC invoice for any manuscript sitting at awaiting_payment.
+  // Admin client because payments is service-role-write / author-read
+  // and we need the Stripe hosted URL, which is the author's own data
+  // (they received it by email) — surfacing it here is safe and is the
+  // difference between "you owe money" and "here is how to pay it".
+  const awaitingPaymentIds = manuscripts
+    .filter((m) => m.status === 'awaiting_payment')
+    .map((m) => m.id)
+  const apcByManuscript = new Map<
+    string,
+    { amountCents: number; currency: string; dueDate: string | null; hostedUrl: string | null }
+  >()
+  if (awaitingPaymentIds.length > 0) {
+    const admin = createAdminClient()
+    const { data: payRows } = await admin
+      .from('payments')
+      .select('manuscript_id, amount_cents, currency, due_date, hosted_invoice_url, status')
+      .in('manuscript_id', awaitingPaymentIds)
+      .eq('status', 'pending')
+    const rows =
+      (payRows as
+        | {
+            manuscript_id: string
+            amount_cents: number
+            currency: string
+            due_date: string | null
+            hosted_invoice_url: string | null
+          }[]
+        | null) || []
+    for (const r of rows) {
+      apcByManuscript.set(r.manuscript_id, {
+        amountCents: r.amount_cents,
+        currency: r.currency,
+        dueDate: r.due_date,
+        hostedUrl: r.hosted_invoice_url,
+      })
+    }
+  }
+
   return (
     <div>
       {/* Page header with action */}
@@ -144,6 +183,47 @@ export default async function DashboardPage() {
                         <div className="truncate">
                           {ms.title || 'Untitled manuscript'}
                         </div>
+                        {ms.status === 'awaiting_payment' && (() => {
+                          const apc = apcByManuscript.get(ms.id)
+                          if (!apc) return null
+                          const amount = new Intl.NumberFormat('en-US', {
+                            style: 'currency',
+                            currency: (apc.currency || 'USD').toUpperCase(),
+                          }).format(apc.amountCents / 100)
+                          const due = apc.dueDate
+                            ? new Date(apc.dueDate).toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })
+                            : null
+                          return (
+                            <div className="mt-1.5 text-[11px] border rounded px-2 py-1.5 bg-amber-50 border-amber-200 text-amber-900 max-w-sm">
+                              <p className="font-semibold">
+                                Article processing charge — {amount}
+                                {due ? ` · due ${due}` : ''}
+                              </p>
+                              {/* This sentence does real work. An author
+                                  seeing an unexpected bill after acceptance
+                                  is exactly the moment a journal can read as
+                                  predatory. Do not cut it. */}
+                              <p className="mt-0.5 text-amber-800">
+                                Your manuscript is accepted. Payment is an administrative step and
+                                does not affect that.
+                              </p>
+                              {apc.hostedUrl && (
+                                <a
+                                  href={apc.hostedUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="mt-1 inline-block font-semibold underline underline-offset-2"
+                                >
+                                  Pay invoice ↗
+                                </a>
+                              )}
+                            </div>
+                          )
+                        })()}
                         {ms.status === 'revision_requested' && (
                           <div
                             className={`mt-1.5 text-[11px] border rounded px-2 py-1 inline-flex items-center gap-2 ${
