@@ -5,12 +5,12 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'FAQ — Fees, Peer Review & Publication Timelines',
   description:
-    'Is OSCRSJ peer reviewed? What does publishing cost? Quick answers on APCs — free before August 1, 2026 — double-blind review, timelines, and open access.',
+    'Is OSCRSJ peer reviewed? What does publishing cost? Quick answers on the $399 APC, double-blind review, timelines, and open access.',
   alternates: { canonical: 'https://www.oscrsj.com/faq' },
   openGraph: {
     title: 'FAQ — Fees, Peer Review & Publication Timelines | OSCRSJ',
     description:
-      'Is OSCRSJ peer reviewed? What does publishing cost? Quick answers on APCs — free before August 1, 2026 — double-blind review, timelines, and open access.',
+      'Is OSCRSJ peer reviewed? What does publishing cost? Quick answers on the $399 APC, double-blind review, timelines, and open access.',
     url: 'https://www.oscrsj.com/faq',
     type: 'website',
   },
@@ -96,11 +96,11 @@ const faqSections = [
       },
       {
         q: 'What is the Article Processing Charge (APC)?',
-        a: 'OSCRSJ is currently waiving the full APC for every manuscript submitted before August 1, 2026 as part of our launch window. After that, the APC is a flat $499 per accepted manuscript. See our APC page for full details.',
+        a: 'The APC is a flat $399 USD per accepted manuscript. There is no submission fee, no page or colour charges, and nothing is payable if your manuscript is rejected or withdrawn before a decision — the charge is invoiced only after acceptance. It applies once per manuscript regardless of the number of authors or revision rounds. See our APC page for full details.',
       },
       {
-        q: 'Are discounts on the APC available?',
-        a: 'Yes. We review discount requests on a case-by-case basis for medical students, trainees, and authors from lower-income settings. We do not want cost to be a barrier to publication — submit the discount inquiry form on our APC page or email waivers@oscrsj.com to start the conversation.',
+        q: 'Are waivers or discounts on the APC available?',
+        a: 'No. OSCRSJ operates a single flat rate with no waivers, no discounts, no institutional agreements, and no membership schemes — every accepted manuscript pays the same $399 USD. The charge is set deliberately low, well below the typical open-access rate in orthopedics, so that one predictable figure works without a negotiation. Applying one rate to everyone also keeps fee decisions entirely outside the editorial process.',
       },
       {
         q: 'Is OSCRSJ open access?',

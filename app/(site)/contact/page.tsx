@@ -7,7 +7,7 @@ import { SOCIAL_CHANNELS } from '@/lib/social'
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Contact OSCRSJ — general inquiries, submission questions, editorial board correspondence, APC waiver inquiries, and media requests.',
+    'Contact OSCRSJ — general inquiries, submission questions, editorial board correspondence, and media requests.',
   alternates: { canonical: 'https://www.oscrsj.com/contact' },
   openGraph: {
     title: 'Contact | OSCRSJ',
@@ -35,9 +35,9 @@ const contacts = [
     desc: 'Interest in joining the editorial board or peer reviewing.',
   },
   {
-    label: 'APC Waivers',
-    email: 'waivers@oscrsj.com',
-    desc: 'Waiver or discount requests with supporting documentation.',
+    label: 'APC & Invoicing',
+    email: 'info@oscrsj.com',
+    desc: 'Questions about the article processing charge or an acceptance invoice.',
   },
 ]
 

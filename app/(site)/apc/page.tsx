@@ -1,21 +1,62 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
-import DiscountInquiryForm from './DiscountInquiryForm'
+import {
+  APC_DISPLAY,
+  APC_DISPLAY_WITH_CURRENCY,
+  APC_CURRENCY,
+  APC_GRANDFATHER_NOTE,
+  APC_PAYMENT_TERMS_DAYS,
+} from '@/lib/apc/config'
 
 export const metadata: Metadata = {
   title: 'APC & Fees',
   description:
-    'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver for manuscripts submitted before August 1, 2026; $499 standard APC after.',
+    `OSCRSJ charges a flat ${APC_DISPLAY_WITH_CURRENCY} article processing charge per accepted manuscript. No submission fee, no page or colour charges, nothing payable if your manuscript is rejected.`,
   alternates: { canonical: 'https://www.oscrsj.com/apc' },
   openGraph: {
     title: 'APC & Fees | OSCRSJ',
     description:
-      'OSCRSJ article processing charges and case-by-case discount inquiries. Full APC fee waiver before August 1, 2026.',
+      `A flat ${APC_DISPLAY_WITH_CURRENCY} article processing charge per accepted manuscript. Nothing is payable unless your manuscript is accepted.`,
     url: 'https://www.oscrsj.com/apc',
     type: 'website',
   },
 }
+
+const FAQS = [
+  {
+    q: 'When is the APC charged?',
+    a: `After acceptance, never before. Submission is free, peer review is free, and you pay nothing if your manuscript is rejected or you withdraw it before a decision.`,
+  },
+  {
+    q: 'Is the APC per article or per author?',
+    a: 'Per accepted manuscript, regardless of how many authors are listed. Liability sits with the corresponding author, who can direct the invoice to an institution, department, or grant.',
+  },
+  {
+    q: 'Are revisions charged separately?',
+    a: 'No. A manuscript that goes through two rounds of revision pays exactly the same single charge as one accepted on first review.',
+  },
+  {
+    q: 'Are there any other fees?',
+    a: 'None. No submission fee, no page charges, no colour figure charges, no supplementary material charges, and no surcharge for length or number of authors. The APC is the only author-facing charge OSCRSJ levies.',
+  },
+  {
+    q: 'How do I pay?',
+    a: `Payment is by credit or debit card through Stripe, due within ${APC_PAYMENT_TERMS_DAYS} days of the acceptance invoice. An itemized invoice suitable for institutional or grant reimbursement is issued in every case.`,
+  },
+  {
+    q: 'Does OSCRSJ offer waivers or discounts?',
+    a: 'No. OSCRSJ operates a single flat charge with no waivers, no discounts, and no institutional or membership schemes. Applying one rate to every accepted manuscript is what keeps the charge low and keeps fee decisions entirely out of the editorial process.',
+  },
+  {
+    q: 'Does paying affect whether my manuscript is accepted?',
+    a: 'No. Reviewers and handling editors are never told whether an author has paid or been invoiced. Fee administration only begins once a decision has been issued, and no member of the editorial team receives any share of APC revenue.',
+  },
+  {
+    q: 'What if my article is later retracted?',
+    a: 'A duplicate or erroneous charge is refunded in full. Where an article is retracted because of an error attributable to the journal, the APC is refunded in full. Retraction for author misconduct carries no refund.',
+  },
+]
 
 export default function ApcPage() {
   const faqData = {
@@ -27,17 +68,14 @@ export default function ApcPage() {
         name: 'How much does it cost to publish in OSCRSJ?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'OSCRSJ is currently waiving the full APC for all manuscripts submitted before August 1, 2026. After this launch window, the article processing charge is $499 per accepted manuscript.',
+          text: `OSCRSJ charges a flat article processing charge of ${APC_DISPLAY_WITH_CURRENCY} per accepted manuscript. There is no submission fee and nothing is payable if your manuscript is rejected.`,
         },
       },
-      {
+      ...FAQS.map((f) => ({
         '@type': 'Question',
-        name: 'Does OSCRSJ offer discounts on the APC?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes. We review discount requests on a case-by-case basis for medical students, trainees, and authors from lower-income settings. We do not want cost to be a barrier to publication — please use the discount inquiry form on our APC page to start the conversation.',
-        },
-      },
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
       {
         '@type': 'Question',
         name: 'Is OSCRSJ open access?',
@@ -58,44 +96,77 @@ export default function ApcPage() {
       <PageHeader
         label="For Authors"
         title="Article Processing Charges"
-        subtitle="OSCRSJ is fully open access. APCs support our operations — peer review coordination, DOI registration, and hosting."
+        subtitle="OSCRSJ is fully open access. Readers pay nothing. A single charge on acceptance covers peer review coordination, production, DOI registration, indexing, and permanent hosting."
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Launch-window APC waiver banner — dark editorial brown */}
-        <div className="bg-brown-dark text-cream rounded-xl p-6 mb-12">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-peach/20 rounded-full flex-shrink-0 flex items-center justify-center text-xl">🎉</div>
-            <div>
-              <p className="font-semibold text-lg text-cream">Full APC Fee Waiver — Submit Before August 1, 2026</p>
-              <p className="text-cream/80 text-sm mt-1">
-                The full article processing charge is waived for every manuscript submitted before August 1, 2026. Submit during our launch window and the full APC is on us.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Standard APC — single rate */}
+        {/* Headline price */}
         <section className="mb-12">
           <span className="section-label">Pricing</span>
-          <h2 className="section-heading mb-5">Standard Article Processing Charge</h2>
+          <h2 className="section-heading mb-5">One charge, on acceptance</h2>
           <div className="bg-white border border-border rounded-xl p-8">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
               <div>
                 <p className="text-xs font-semibold text-brown uppercase tracking-widest">Per Accepted Manuscript</p>
                 <p className="text-sm text-ink mt-2 max-w-xl leading-relaxed">
-                  After August 1, 2026, OSCRSJ charges a flat article processing charge per accepted manuscript. The fee covers editorial coordination, peer review management, DOI registration, indexing submissions, hosting, and long-term preservation.
+                  OSCRSJ charges a flat article processing charge per accepted manuscript. It covers editorial coordination, peer review management, copy-editing and typesetting, DOI registration with Crossref, indexing submissions, hosting, and long-term preservation.
                 </p>
               </div>
-              <div className="text-left sm:text-right">
-                <p className="font-serif text-5xl font-bold text-brown-dark leading-none">$499</p>
-                <p className="text-xs text-brown mt-2">Charged on acceptance</p>
+              <div className="text-left sm:text-right shrink-0">
+                <p className="font-serif text-5xl font-bold text-brown-dark leading-none">{APC_DISPLAY}</p>
+                <p className="text-xs text-brown mt-2">{APC_CURRENCY} &middot; charged on acceptance</p>
               </div>
             </div>
           </div>
-          <p className="text-xs text-brown mt-3">
-            Authors are never charged before acceptance. If your manuscript is rejected, there is no fee.
+
+          <div className="grid sm:grid-cols-3 gap-4 mt-4">
+            {[
+              { t: 'Free to submit', d: 'No submission fee. Peer review costs you nothing.' },
+              { t: 'Free if rejected', d: 'Nothing is payable unless your manuscript is accepted.' },
+              { t: 'No hidden extras', d: 'No page, colour, figure, or supplementary charges.' },
+            ].map((item) => (
+              <div key={item.t} className="bg-cream-alt border border-border rounded-xl p-5">
+                <p className="font-semibold text-ink text-sm mb-1">{item.t}</p>
+                <p className="text-xs text-brown leading-relaxed">{item.d}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-brown mt-4 leading-relaxed">
+            {APC_GRANDFATHER_NOTE}
           </p>
+        </section>
+
+        {/* Editorial independence — COPE / DOAJ transparency requirement */}
+        <section className="mb-12">
+          <span className="section-label">Integrity</span>
+          <h2 className="section-heading mb-3">Payment does not influence editorial decisions</h2>
+          <div className="bg-white border border-border rounded-xl p-6">
+            <p className="text-sm text-ink leading-relaxed">
+              Reviewers and handling editors are never told whether an author has paid or been invoiced. Acceptance is decided on scientific merit alone. Fee administration is handled separately from editorial decision-making and only begins once a decision has been issued. No member of the editorial team receives any share of APC revenue.
+            </p>
+          </div>
+        </section>
+
+        {/* Payment terms */}
+        <section className="mb-12">
+          <span className="section-label">Payment</span>
+          <h2 className="section-heading mb-3">How and when you pay</h2>
+          <div className="bg-white border border-border rounded-xl p-6">
+            <ul className="space-y-2.5 text-sm">
+              {[
+                `An invoice is emailed to the corresponding author after a formal decision of acceptance, payable within ${APC_PAYMENT_TERMS_DAYS} days.`,
+                'Payment is by credit or debit card through Stripe. An itemized invoice for institutional or grant reimbursement is provided in every case.',
+                `The charge is stated and payable in ${APC_CURRENCY}. Any bank or currency-conversion fees are the payer's responsibility.`,
+                'Production of the final article begins on receipt of payment; an article is not published while its invoice is outstanding.',
+              ].map((line) => (
+                <li key={line} className="flex items-start gap-2">
+                  <span className="text-brown mt-1 flex-shrink-0">&rarr;</span>
+                  <span className="text-ink">{line}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* FAQ */}
@@ -103,12 +174,7 @@ export default function ApcPage() {
           <span className="section-label">Common Questions</span>
           <h2 className="section-heading mb-5">Frequently Asked Questions</h2>
           <div className="space-y-4">
-            {[
-              { q: 'When is the APC charged?', a: 'The APC is charged after acceptance — never before. You won\'t pay anything if your manuscript is rejected.' },
-              { q: 'Is the APC per article or per author?', a: 'It\'s per accepted manuscript, regardless of the number of authors.' },
-              { q: 'Are revisions charged separately?', a: 'No. Resubmissions after major revision are not re-charged. You pay once per accepted article.' },
-              { q: 'How do I pay?', a: 'We accept payment via Stripe (credit/debit card). An invoice is provided for institutional reimbursement.' },
-            ].map((faq) => (
+            {FAQS.map((faq) => (
               <div key={faq.q} className="bg-white border border-border rounded-xl p-6">
                 <p className="font-semibold text-ink text-sm mb-1.5">{faq.q}</p>
                 <p className="text-sm text-ink">{faq.a}</p>
@@ -117,18 +183,36 @@ export default function ApcPage() {
           </div>
         </section>
 
-        {/* Discount Inquiry */}
+        {/* No-waiver disclosure — DOAJ Principles of Transparency §13 requires
+            the absence of waivers to be stated as plainly as their presence. */}
         <section className="mb-12">
-          <span className="section-label">Financial Support</span>
-          <h2 className="section-heading mb-3">Request a Discount</h2>
-          <p className="text-ink text-sm mb-6 max-w-2xl leading-relaxed">
-            We are committed to supporting authors who would otherwise face a financial barrier to publication — particularly medical students and authors from lower-income settings. We do not want cost to stand between rigorous orthopedic scholarship and the readers who need it. Tell us a little about your situation and our editorial team will follow up directly.
-          </p>
-          <DiscountInquiryForm />
+          <span className="section-label">Waivers</span>
+          <h2 className="section-heading mb-3">One rate, applied to everyone</h2>
+          <div className="bg-white border border-border rounded-xl p-6">
+            <p className="text-sm text-ink leading-relaxed">
+              OSCRSJ does not operate a waiver or discount scheme. There are no institutional agreements, no membership rates, and no case-by-case reductions. Every accepted manuscript pays the same {APC_DISPLAY_WITH_CURRENCY}.
+            </p>
+            <p className="text-sm text-ink leading-relaxed mt-3">
+              We have set the charge deliberately low &mdash; well under the typical open-access rate in orthopedics &mdash; so that a single, predictable figure works for authors without needing a negotiation. Applying one rate to everyone also keeps fee decisions completely outside the editorial process, which is where they belong.
+            </p>
+          </div>
+        </section>
+
+        {/* Agreement pointer */}
+        <section className="mb-12">
+          <div className="bg-cream-alt border border-border rounded-xl p-6">
+            <p className="font-semibold text-ink text-sm mb-1.5">Before you submit</p>
+            <p className="text-sm text-ink leading-relaxed">
+              The {APC_DISPLAY} charge, the CC BY 4.0 license, and the warranties you give as an author are set out in full in the{' '}
+              <Link href="/publication-agreement" className="text-brown hover:text-brown underline font-medium">Author Publication Agreement</Link>. You will be asked to accept it as a required step in the submission portal, before your manuscript is sent to the editorial office.
+            </p>
+          </div>
         </section>
 
         <div className="text-center">
-          <Link href="/submit" className="btn-primary-light">Submit a Manuscript — Full APC Waived Before August 1, 2026</Link>
+          <Link href="/submit" className="btn-primary-light">
+            Submit a Manuscript &mdash; free unless accepted
+          </Link>
         </div>
       </div>
     </div>

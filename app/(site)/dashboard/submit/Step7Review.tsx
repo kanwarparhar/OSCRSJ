@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { AuthorEntry } from './Step4Authors'
 import type { ManuscriptType, ManuscriptFileRow } from '@/lib/types/database'
+import { APC_DISPLAY_WITH_CURRENCY } from '@/lib/apc/config'
 
 const MANUSCRIPT_TYPE_LABELS: Record<string, string> = {
   case_report: 'Case Report',
@@ -76,6 +77,9 @@ interface Step6ReviewProps {
   aiToolsUsed: boolean | null
   aiToolsDetails: string
   noteToEditor: string
+  // Step 6 — all three Publication Agreement clauses ticked (always
+  // true in revising mode, where the original acceptance carries over)
+  apcAgreementAccepted: boolean
   // Callbacks
   onGoToStep: (step: number) => void
   onSubmit: () => void
@@ -112,6 +116,7 @@ export default function Step6Review({
   aiToolsUsed,
   aiToolsDetails,
   noteToEditor,
+  apcAgreementAccepted,
   onGoToStep,
   onSubmit,
   submitting,
@@ -413,6 +418,45 @@ export default function Step6Review({
             )}
           </div>
         </div>
+
+        {/* Step 6: Publication Agreement */}
+        <div className="p-4 bg-white rounded-lg border border-border">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-ink">Publication Agreement</h3>
+            <button
+              onClick={() => onGoToStep(6)}
+              className="text-xs text-brown hover:underline"
+            >
+              {isRevising ? 'View' : 'Edit'}
+            </button>
+          </div>
+          {isRevising ? (
+            <p className="text-xs text-ink">
+              Carried over from the original submission. Revisions are not
+              charged separately.
+            </p>
+          ) : (
+            <div className="space-y-1 text-xs text-ink">
+              <p>
+                <span className="font-medium">Article processing charge:</span>{' '}
+                {APC_DISPLAY_WITH_CURRENCY}, invoiced only if this manuscript is
+                accepted
+              </p>
+              <p>
+                <span className="font-medium">Terms accepted:</span>{' '}
+                {apcAgreementAccepted ? (
+                  <span className="text-green-600">
+                    Fee, licensing, and author warranties all confirmed
+                  </span>
+                ) : (
+                  <span className="text-red-500">
+                    Not accepted &mdash; return to Step 6 to complete
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Author confirmation checkbox */}
@@ -426,9 +470,16 @@ export default function Step6Review({
           />
           <span className="text-sm text-ink leading-relaxed">
             I have fully reviewed my submission and would like to proceed.
-            I understand that once submitted I cannot edit the manuscript,
-            and that the editorial team will review my submission and notify
-            me of their decision.
+            I understand that once submitted I cannot edit the manuscript, and
+            that the editorial team will review my submission and notify me of
+            their decision.{' '}
+            {!isRevising && (
+              <>
+                I confirm my acceptance of the Author Publication Agreement,
+                including the one-time {APC_DISPLAY_WITH_CURRENCY} article
+                processing charge payable if this manuscript is accepted.
+              </>
+            )}
           </span>
         </label>
       </div>

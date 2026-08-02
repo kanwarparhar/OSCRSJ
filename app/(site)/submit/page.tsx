@@ -3,14 +3,14 @@ import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
-  title: 'Submit a Manuscript — Publish Free Before August 1, 2026',
+  title: 'Submit a Manuscript',
   description:
-    'Submit your orthopedic case report, case series, or review to OSCRSJ. Double-blind peer review, CC BY 4.0 open access, and no APC before August 1, 2026.',
+    'Submit your orthopedic case report, case series, or review to OSCRSJ. Double-blind peer review, CC BY 4.0 open access, and a flat $399 APC payable only on acceptance.',
   alternates: { canonical: 'https://www.oscrsj.com/submit' },
   openGraph: {
-    title: 'Submit a Manuscript — Publish Free Before August 1, 2026 | OSCRSJ',
+    title: 'Submit a Manuscript | OSCRSJ',
     description:
-      'Submit your orthopedic case report, case series, or review to OSCRSJ. Double-blind peer review, CC BY 4.0 open access, and no APC before August 1, 2026.',
+      'Submit your orthopedic case report, case series, or review to OSCRSJ. Double-blind peer review, CC BY 4.0 open access, and a flat $399 APC payable only on acceptance.',
     url: 'https://www.oscrsj.com/submit',
     type: 'website',
   },
@@ -44,8 +44,13 @@ const resourceLinks = [
   },
   {
     title: 'APC & Fees',
-    desc: 'Article processing charges, the launch-window waiver, and discount eligibility for low-income countries, lower-middle-income countries, and first-time authors.',
+    desc: 'The flat $399 USD article processing charge, what it covers, when it is invoiced, and the payment terms. One rate for every accepted manuscript.',
     href: '/apc',
+  },
+  {
+    title: 'Author Publication Agreement',
+    desc: 'The binding terms you accept at submission: the $399 APC payable on acceptance, CC BY 4.0 licensing, author warranties, consent and ethics obligations, and the withdrawal and refund policy.',
+    href: '/publication-agreement',
   },
   {
     title: 'Open Access Policy',
@@ -96,10 +101,11 @@ export default function SubmitPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-sm font-semibold text-brown">Full APC Fee Waiver — Submit Before August 1, 2026</p>
+            <p className="text-sm font-semibold text-brown">Free to submit &mdash; $399 USD only if accepted</p>
             <p className="text-sm text-brown mt-0.5">
-              The full article processing charge (APC) is waived for every manuscript submitted before August 1, 2026.{' '}
-              <Link href="/apc" className="text-brown hover:text-brown underline">Learn about our APC policy →</Link>
+              There is no submission fee. A one-time article processing charge of $399 USD is invoiced to the corresponding author only after a formal decision of acceptance, and nothing is payable if your manuscript is rejected or withdrawn beforehand. You will be asked to accept the{' '}
+              <Link href="/publication-agreement" className="text-brown hover:text-brown underline">Author Publication Agreement</Link>{' '}as a required step in the portal.{' '}
+              <Link href="/apc" className="text-brown hover:text-brown underline">Read the full APC policy →</Link>
             </p>
           </div>
         </div>

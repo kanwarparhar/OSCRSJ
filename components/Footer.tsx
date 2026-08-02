@@ -70,6 +70,7 @@ export default function Footer() {
                 { label: 'Open Access Policy', href: '/open-access' },
                 { label: 'Editorial Policies', href: '/editorial-policies' },
                 { label: 'APC & Fees', href: '/apc' },
+                { label: 'Publication Agreement', href: '/publication-agreement' },
               ].map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-sm text-peach/50 hover:text-peach transition-colors">

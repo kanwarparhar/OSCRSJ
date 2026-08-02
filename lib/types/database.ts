@@ -241,6 +241,17 @@ export interface ManuscriptMetadataRow {
   patient_consent_irb_protocol: string | null
   acknowledgments: string | null
   equal_contribution_statement: string | null
+  // Migration 033 — Author Publication Agreement acceptance. The
+  // launch-window APC waiver expired 2026-07-31; from 2026-08-01 the
+  // corresponding author must accept the agreement before the wizard
+  // will submit. amount_cents snapshots the fee quoted at acceptance
+  // so a later price change is never applied retroactively.
+  // Pre-2026-08-01 rows carry `false` and are grandfathered by
+  // submission date, not by this column.
+  apc_agreement_accepted: boolean
+  apc_agreement_accepted_at: string | null
+  apc_agreement_version: string | null
+  apc_agreement_amount_cents: number | null
   created_at: string
   updated_at: string
 }

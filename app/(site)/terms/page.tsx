@@ -22,7 +22,7 @@ export default function TermsPage() {
       <PageHeader
         label="Legal"
         title="Terms of Service"
-        subtitle="Last updated: April 2026"
+        subtitle="Last updated: August 2026"
       />
 
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -72,7 +72,8 @@ export default function TermsPage() {
             <span className="section-label">Author Obligations</span>
             <h2 className="section-heading mb-3">Submissions & Peer Review</h2>
             <p className="text-ink mb-3">
-              By submitting a manuscript to OSCRSJ, authors agree to the following:
+              By submitting a manuscript to OSCRSJ, authors agree to the following. These points are summaries; the binding terms are set out in the{' '}
+              <Link href="/publication-agreement" className="text-brown hover:text-brown transition-colors font-medium">Author Publication Agreement</Link>, which every corresponding author accepts as a required step in the submission portal.
             </p>
             <ul className="space-y-2 pl-4">
               {[
@@ -81,7 +82,7 @@ export default function TermsPage() {
                 'All authors have read and approved the final manuscript',
                 'Appropriate patient consent and ethical approvals have been obtained',
                 'Upon acceptance, the article will be published under CC BY 4.0',
-                'Article processing charges (APCs) will be paid according to the current fee schedule',
+                'If the manuscript is accepted, the corresponding author will pay the article processing charge of $399 USD in force on the date of submission',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-brown mt-1 flex-shrink-0">&rarr;</span>
@@ -146,6 +147,7 @@ export default function TermsPage() {
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-3">
+          <Link href="/publication-agreement" className="btn-outline">Publication Agreement</Link>
           <Link href="/privacy" className="btn-outline">Privacy Policy</Link>
           <Link href="/contact" className="btn-outline">Contact Us</Link>
         </div>

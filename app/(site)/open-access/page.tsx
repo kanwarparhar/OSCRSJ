@@ -5,7 +5,7 @@ import PageHeader from '@/components/PageHeader'
 export const metadata: Metadata = {
   title: 'Open Access Policy',
   description:
-    'OSCRSJ open access policy — CC BY 4.0 licensing, no embargoes, free-to-read for every article, and case-by-case discount inquiries for authors who need them.',
+    'OSCRSJ open access policy — CC BY 4.0 licensing, no embargoes, free-to-read for every article, and a single flat article processing charge on acceptance.',
   alternates: { canonical: 'https://www.oscrsj.com/open-access' },
   openGraph: {
     title: 'Open Access Policy | OSCRSJ',
@@ -90,7 +90,7 @@ export default function OpenAccessPage() {
             OSCRSJ is funded through article processing charges (APCs) paid by authors upon acceptance. APCs cover the costs of peer review coordination, copyediting, DOI registration, web hosting, and long-term digital archiving.
           </p>
           <p className="text-ink leading-relaxed">
-            APCs are waived entirely for manuscripts submitted before August 1, 2026. After that, we evaluate discount requests on a case-by-case basis &mdash; we are committed to supporting authors who would otherwise face a financial barrier to publication, particularly medical students and authors from lower-income settings. See our <Link href="/apc" className="text-brown hover:text-brown transition-colors font-medium">APC &amp; Fees</Link> page for full details and to request a discount.
+            The charge is a flat $399 USD per accepted manuscript. Nothing is payable at submission, and nothing is payable if a manuscript is rejected. There are no waivers, discounts, institutional agreements, or membership schemes &mdash; one flat rate applies to every accepted manuscript, set deliberately low so that a single predictable figure works without a negotiation. Payment status is never disclosed to reviewers or handling editors. See our <Link href="/apc" className="text-brown hover:text-brown transition-colors font-medium">APC &amp; Fees</Link> page for full details.
           </p>
         </section>
 

@@ -18,7 +18,8 @@ import Step3Info from './Step3Info'
 import Step4Authors from './Step4Authors'
 import type { AuthorEntry } from './Step4Authors'
 import Step5Declarations from './Step5Declarations'
-import Step6Review from './Step6Review'
+import Step6Agreement from './Step6Agreement'
+import Step7Review from './Step7Review'
 import RevisionStep0 from './RevisionStep0'
 
 // ---- Step definitions ----
@@ -29,7 +30,8 @@ const STEPS_BASE = [
   { number: 3, label: 'Manuscript Info' },
   { number: 4, label: 'Authors' },
   { number: 5, label: 'Declarations' },
-  { number: 6, label: 'Review & Submit' },
+  { number: 6, label: 'Publication Agreement' },
+  { number: 7, label: 'Review & Submit' },
 ]
 
 const STEPS_REVISING = [
@@ -39,8 +41,11 @@ const STEPS_REVISING = [
   { number: 3, label: 'Manuscript Info' },
   { number: 4, label: 'Authors' },
   { number: 5, label: 'Declarations' },
-  { number: 6, label: 'Review & Submit' },
+  { number: 6, label: 'Publication Agreement' },
+  { number: 7, label: 'Review & Submit' },
 ]
+
+const LAST_STEP = 7
 
 // ---- Wizard state types ----
 
@@ -81,6 +86,12 @@ export interface WizardState {
   aiToolsUsed: boolean | null
   aiToolsDetails: string
   noteToEditor: string
+  // Step 6 — Author Publication Agreement (migration 033). All three
+  // must be true before the wizard will submit. Revisions inherit the
+  // original submission's acceptance and skip the gate entirely.
+  apcFeeAcknowledged: boolean
+  apcLicenseAcknowledged: boolean
+  apcWarrantiesAcknowledged: boolean
 }
 
 export interface RevisionContextClient {
@@ -205,6 +216,12 @@ function initialStateFromDraft(
         : null,
     aiToolsDetails: meta?.ai_tools_details || '',
     noteToEditor: m?.note_to_editor || '',
+    // A returning author who already accepted sees all three
+    // pre-ticked; the stored timestamp and version are never
+    // rewritten by a later save.
+    apcFeeAcknowledged: meta?.apc_agreement_accepted || false,
+    apcLicenseAcknowledged: meta?.apc_agreement_accepted || false,
+    apcWarrantiesAcknowledged: meta?.apc_agreement_accepted || false,
   }
 }
 
@@ -251,7 +268,12 @@ function computeInitialStep(state: WizardState): number {
   const declarationsOk =
     coiOk && fundingOk && dataOk && ethicsOk && trialOk && aiAnswered && aiDetailsOk
   if (!declarationsOk) return 5
-  return 6
+  const agreementOk =
+    state.apcFeeAcknowledged &&
+    state.apcLicenseAcknowledged &&
+    state.apcWarrantiesAcknowledged
+  if (!agreementOk) return 6
+  return LAST_STEP
 }
 
 export default function SubmissionWizard({ draft, userProfile, revisionContext }: SubmissionWizardProps) {
@@ -373,6 +395,16 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
           // lives on manuscript_revisions, not the original
           // manuscript.
           ...(isRevising ? {} : { noteToEditor: s.noteToEditor || null }),
+          // Omit in revising mode — the original submission's
+          // acceptance stands and must not be re-stamped.
+          ...(isRevising
+            ? {}
+            : {
+                apcAgreementAccepted:
+                  s.apcFeeAcknowledged &&
+                  s.apcLicenseAcknowledged &&
+                  s.apcWarrantiesAcknowledged,
+              }),
         })
       }
 
@@ -423,7 +455,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
     // Step 2+ with a null manuscriptId and a misleading "complete Step
     // 1 first" error on file upload.
     if (!result.ok) return
-    if (currentStep < 6) setCurrentStep(prev => prev + 1)
+    if (currentStep < LAST_STEP) setCurrentStep(prev => prev + 1)
   }, [currentStep, saveDraft, isRevising])
 
   const goBack = useCallback(async () => {
@@ -565,6 +597,15 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
   const aiToolsOk = aiAnswered && aiDetailsOk
   const step5Complete = coiOk && fundingOk && dataOk && ethicsOk && trialOk && aiToolsOk
 
+  // Step 6 — Publication Agreement. Revisions carry the original
+  // acceptance forward, so the gate is satisfied automatically and the
+  // step renders as read-only confirmation instead.
+  const step6Complete =
+    isRevising ||
+    (state.apcFeeAcknowledged &&
+      state.apcLicenseAcknowledged &&
+      state.apcWarrantiesAcknowledged)
+
   // Revision response is required only in revising mode.
   const revisionResponseOk =
     !isRevising || (revisionResponse || '').trim().length >= 50
@@ -577,6 +618,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
     step3Complete &&
     step4Complete &&
     step5Complete &&
+    step6Complete &&
     revisionResponseOk
 
   // Can we move to the next step?
@@ -586,6 +628,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
     if (step === 3) return step3Complete
     if (step === 4) return step4Complete
     if (step === 5) return step5Complete && revisionResponseOk
+    if (step === 6) return step6Complete
     return false
   }
 
@@ -616,7 +659,8 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
               (step.number === 5 &&
                 step5Complete &&
                 revisionResponseOk &&
-                currentStep > 5)
+                currentStep > 5) ||
+              (step.number === 6 && step6Complete && currentStep > 6)
             const isCurrent = step.number === currentStep
 
             return (
@@ -748,7 +792,17 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
         )}
 
         {currentStep === 6 && (
-          <Step6Review
+          <Step6Agreement
+            apcFeeAcknowledged={state.apcFeeAcknowledged}
+            apcLicenseAcknowledged={state.apcLicenseAcknowledged}
+            apcWarrantiesAcknowledged={state.apcWarrantiesAcknowledged}
+            onChange={updateState}
+            isRevising={isRevising}
+          />
+        )}
+
+        {currentStep === LAST_STEP && (
+          <Step7Review
             manuscriptType={state.manuscriptType}
             files={state.files}
             title={state.title}
@@ -772,6 +826,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             aiToolsUsed={state.aiToolsUsed}
             aiToolsDetails={state.aiToolsDetails}
             noteToEditor={state.noteToEditor}
+            apcAgreementAccepted={step6Complete}
             onGoToStep={goToStep}
             onSubmit={handleSubmit}
             submitting={submitting}
@@ -820,7 +875,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             {saving ? 'Saving...' : 'Save & Continue Later'}
           </button>
 
-          {currentStep < 6 && (
+          {currentStep < LAST_STEP && (
             <button
               onClick={goNext}
               disabled={

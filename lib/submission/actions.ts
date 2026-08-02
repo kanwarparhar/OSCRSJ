@@ -11,6 +11,7 @@ import type {
   UserRow,
   PreRevisionSnapshot,
 } from '@/lib/types/database'
+import { APC_AGREEMENT_VERSION, APC_AMOUNT_CENTS } from '@/lib/apc/config'
 import { sendEmail } from '@/lib/email/resend'
 import {
   renderSubmissionConfirmation,
@@ -724,6 +725,10 @@ export async function saveDeclarations(params: {
   aiToolsUsed: boolean | null
   aiToolsDetails: string | null
   noteToEditor?: string | null
+  // Migration 033 — true once the author has ticked every clause on
+  // the Publication Agreement step. Omitted (undefined) in revising
+  // mode, where the original submission's acceptance carries over.
+  apcAgreementAccepted?: boolean
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -740,6 +745,7 @@ export async function saveDeclarations(params: {
     aiToolsUsed,
     aiToolsDetails,
     noteToEditor,
+    apcAgreementAccepted,
   } = params
 
   // Confirm ownership via RLS-protected read before any writes.
@@ -756,9 +762,13 @@ export async function saveDeclarations(params: {
   // Upsert manuscript_metadata
   const { data: existingMeta } = await admin
     .from('manuscript_metadata')
-    .select('id')
+    .select('id, apc_agreement_accepted_at')
     .eq('manuscript_id', manuscriptId)
     .single()
+
+  const existingAgreementAt =
+    (existingMeta as { apc_agreement_accepted_at?: string | null } | null)
+      ?.apc_agreement_accepted_at || null
 
   const metaFields: Record<string, unknown> = {
     conflict_of_interest: conflictOfInterest,
@@ -774,6 +784,22 @@ export async function saveDeclarations(params: {
   if (aiToolsUsed !== null) {
     metaFields.ai_tools_used = aiToolsUsed
     metaFields.ai_tools_details = aiToolsUsed ? aiToolsDetails : null
+  }
+
+  // Publication Agreement acceptance. The timestamp, version, and
+  // quoted amount are stamped on the first save that carries a true
+  // value and are never rewritten afterwards — the record must
+  // reflect the terms the author actually saw, not the terms in
+  // force at some later save. Un-ticking a box before submitting
+  // clears the flag but leaves the historical stamp alone; the
+  // wizard will not submit while the flag is false.
+  if (apcAgreementAccepted !== undefined) {
+    metaFields.apc_agreement_accepted = apcAgreementAccepted
+    if (apcAgreementAccepted && !existingAgreementAt) {
+      metaFields.apc_agreement_accepted_at = new Date().toISOString()
+      metaFields.apc_agreement_version = APC_AGREEMENT_VERSION
+      metaFields.apc_agreement_amount_cents = APC_AMOUNT_CENTS
+    }
   }
 
   if (existingMeta) {
@@ -871,6 +897,13 @@ export async function submitManuscript(manuscriptId: string) {
   const meta = metaData as ManuscriptMetadataRow | null
   if (!meta) return { error: 'Declarations are required' }
   if (!meta.author_consent_certified) return { error: 'Author certification is required' }
+  // Publication Agreement gate (migration 033). The wizard blocks the
+  // Submit button without it, but client gates are bypassable and this
+  // one is contractual — we must not accept a manuscript whose author
+  // has not accepted the APC terms.
+  if (!meta.apc_agreement_accepted) {
+    return { error: 'You must accept the Author Publication Agreement before submitting. Return to the Publication Agreement step to complete it.' }
+  }
 
   // All validations passed — update status
   const { error } = await (supabase.from('manuscripts') as any)

@@ -12,6 +12,5 @@ export const CONTACT_SUBJECT_LABELS: readonly string[] = [
   'Manuscript Submission',
   'Editorial Board Interest',
   'Research Team Interest',
-  'APC Waiver Request',
   'Other',
 ] as const

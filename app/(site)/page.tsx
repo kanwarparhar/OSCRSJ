@@ -110,7 +110,7 @@ async function loadFeaturedArticles(): Promise<FeaturedArticle[]> {
 
 const newsItems = [
   { date: 'April 2026', title: 'OSCRSJ officially launches, accepting submissions across all orthopedic subspecialties', tag: 'Journal' },
-  { date: 'April 2026', title: 'Article Processing Charges waived for manuscripts submitted before August 1, 2026', tag: 'Journal' },
+  { date: 'August 2026', title: 'Standard article processing charge of $399 USD now in effect for new submissions', tag: 'Journal' },
   { date: 'March 2026', title: 'Crossref membership confirmed, DOI registration active', tag: 'Journal' },
   { date: 'March 2026', title: 'AAOS 2026: Highlights in trauma and sports medicine research', tag: 'Orthopedics' },
   { date: 'February 2026', title: 'New CARE guidelines update for surgical case reporting', tag: 'Research' },
@@ -321,7 +321,7 @@ export default async function HomePage() {
                   <div>
                     <p className="text-sm font-medium text-black mb-1">Open Access</p>
                     <p className="text-xs text-ink leading-snug">
-                      All articles published under CC BY 4.0. Authors retain copyright. APCs waived for 2026.
+                      All articles published under CC BY 4.0. Authors retain copyright. Flat $399 APC on acceptance only.
                     </p>
                   </div>
                 </div>
