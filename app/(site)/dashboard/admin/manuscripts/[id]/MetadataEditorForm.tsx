@@ -30,6 +30,7 @@ import type {
   ManuscriptDraftOverlay,
   ValidationRow,
 } from '@/lib/publish/synthesize'
+import { DOI_PREFIX, DOI_SUFFIX_NS, isValidOscrsjDoi } from '@/lib/publish/doi'
 import type {
   ExtractedFields,
   ExtractionConfidence,
@@ -1269,8 +1270,22 @@ export default function MetadataEditorForm({ initial, rendererUrl }: Props) {
               className="bg-cream-alt border border-border rounded-lg px-3 py-2 text-sm text-brown w-full font-mono"
             />
             <p className="editor-field-hint">
-              Auto-generated. Format: 10.XXXXX/oscrsj.{'{year}'}.{'{elocation}'} until Crossref membership lands.
+              System-minted at acceptance: {DOI_PREFIX}/{DOI_SUFFIX_NS}.{'{elocation}'}. Never
+              hand-edited — the DOI is a permanent identifier and must match the elocation ID.
             </p>
+            {doi.trim().length > 0 && !isValidOscrsjDoi(doi) && (
+              <p className="mt-1 text-sm font-medium text-red-700">
+                ⚠ This is not a valid OSCRSJ DOI. Renders and go-live are blocked until it is
+                corrected. Expected {DOI_PREFIX}/{DOI_SUFFIX_NS}.eNNNN — re-run the acceptance
+                decision to re-allocate identity.
+              </p>
+            )}
+            {doi.trim().length === 0 && (
+              <p className="mt-1 text-sm font-medium text-red-700">
+                ⚠ No DOI assigned. This manuscript cannot be rendered or published. Re-run the
+                acceptance decision to allocate identity.
+              </p>
+            )}
           </div>
         </div>
 

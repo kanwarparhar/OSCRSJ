@@ -44,6 +44,8 @@ import type {
 } from '@/lib/types/database'
 import {
   validateMetadataForRender,
+  buildDoi,
+  isValidOscrsjDoi,
   type ManuscriptDraftOverlay,
   type ValidationRow,
 } from '@/lib/publish/synthesize'
@@ -837,36 +839,89 @@ export async function submitEditorialDecision(
     decision_date: nowIso,
   }
 
-  // On acceptance, assign the next sequential elocation_id (e0002, e0003…)
-  // if one hasn't been assigned yet. The renderer otherwise defaults every
-  // manuscript to 'e0001' (synthesize.ts §article), and the placeholder DOI is
-  // derived from that elocation — so without this, every accepted article would
-  // publish with a duplicate identity. idx_manuscripts_elocation_id_unique
-  // (migration 026) is the backstop if two accepts ever race to the same number.
-  if (targetStatus === 'accepted' && !manuscript.elocation_id) {
+  // ---- Identity allocation on acceptance (elocation_id + DOI) ----
+  //
+  // Both permanent identifiers are minted HERE, at acceptance, in one update.
+  // Acceptance is the correct seam because the renderer pulls the payload
+  // while the article is still 'accepted' and bakes the DOI into the PDF
+  // page-1 ID bar, the XMP packet and the JATS <article-id>. Minting at the
+  // publish transition would be too late — the bytes are already written.
+  //
+  // DOI = 10.67687/oscrsj.{elocation_id} (decision D1, locked 2026-08-02 —
+  // permanent). idx_manuscripts_elocation_id_unique (migration 026) and
+  // idx_manuscripts_doi_unique (migration 013) are the backstops if two
+  // accepts race; the retry loop below turns that race into a retry rather
+  // than a user-visible failure.
+  const allocateIdentity = async (): Promise<string | null> => {
+    const { data: maxRow, error: maxErr } = await admin
+      .from('manuscripts')
+      .select('elocation_id')
+      .not('elocation_id', 'is', null)
+      .order('elocation_id', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (maxErr) throw new Error(`elocation lookup failed: ${maxErr.message}`)
+    const lastId =
+      (maxRow as { elocation_id: string | null } | null)?.elocation_id ?? null
+    const lastNum = lastId ? parseInt(lastId.replace(/^e/i, ''), 10) : 0
+    const nextNum = Number.isFinite(lastNum) && lastNum > 0 ? lastNum + 1 : 1
+    return `e${String(nextNum).padStart(4, '0')}`
+  }
+
+  let identityAllocated = false
+  if (targetStatus === 'accepted') {
     try {
-      const { data: maxRow } = await admin
-        .from('manuscripts')
-        .select('elocation_id')
-        .not('elocation_id', 'is', null)
-        .order('elocation_id', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      const lastId =
-        (maxRow as { elocation_id: string | null } | null)?.elocation_id ?? null
-      const lastNum = lastId ? parseInt(lastId.replace(/^e/i, ''), 10) : 0
-      const nextNum = Number.isFinite(lastNum) && lastNum > 0 ? lastNum + 1 : 1
-      manuscriptStatusUpdate.elocation_id = `e${String(nextNum).padStart(4, '0')}`
+      if (!manuscript.elocation_id) {
+        const nextEloc = await allocateIdentity()
+        if (nextEloc) {
+          manuscriptStatusUpdate.elocation_id = nextEloc
+          manuscriptStatusUpdate.doi = buildDoi(nextEloc)
+          identityAllocated = true
+        }
+      } else if (!manuscript.doi || !isValidOscrsjDoi(manuscript.doi)) {
+        // Elocation already assigned (e.g. accepted before DOI minting
+        // shipped, or a placeholder DOI persisted) — backfill the real DOI.
+        manuscriptStatusUpdate.doi = buildDoi(manuscript.elocation_id)
+      }
     } catch (err) {
-      // Non-fatal: if assignment fails, the editor can still set it before
-      // publish. Don't block the acceptance decision on an elocation lookup.
-      console.error('elocation_id auto-assign failed', err)
+      // No longer swallowed. An accepted manuscript without identity cannot
+      // be rendered at all (synthesize.ts hard-errors), so a silent failure
+      // here would surface much later as an unexplained render block.
+      return {
+        ok: false,
+        error: `Decision recorded but identity allocation failed: ${
+          err instanceof Error ? err.message : String(err)
+        }. Re-run the acceptance decision.`,
+      }
     }
   }
 
-  const { error: updErr } = await (admin.from('manuscripts') as any)
-    .update(manuscriptStatusUpdate)
-    .eq('id', args.manuscriptId)
+  const runStatusUpdate = async () =>
+    await (admin.from('manuscripts') as any)
+      .update(manuscriptStatusUpdate)
+      .eq('id', args.manuscriptId)
+
+  let { error: updErr } = await runStatusUpdate()
+
+  // Retry ONCE on a unique violation (23505) against elocation_id / doi:
+  // two editors accepting concurrently both read the same max elocation.
+  if (
+    updErr &&
+    identityAllocated &&
+    ((updErr as { code?: string }).code === '23505' ||
+      /duplicate key|unique constraint/i.test(updErr.message || ''))
+  ) {
+    try {
+      const retryEloc = await allocateIdentity()
+      if (retryEloc) {
+        manuscriptStatusUpdate.elocation_id = retryEloc
+        manuscriptStatusUpdate.doi = buildDoi(retryEloc)
+        ;({ error: updErr } = await runStatusUpdate())
+      }
+    } catch (err) {
+      console.error('identity retry failed', err)
+    }
+  }
 
   if (updErr) {
     return {
@@ -1699,7 +1754,7 @@ export async function publishGoLive(
 
   const { data: mData, error: mErr } = await admin
     .from('manuscripts')
-    .select('id, status, published_pdf_storage_path, published_date')
+    .select('id, status, published_pdf_storage_path, published_date, elocation_id, doi')
     .eq('id', manuscriptId)
     .maybeSingle()
 
@@ -1708,7 +1763,12 @@ export async function publishGoLive(
   }
   const m = mData as Pick<
     ManuscriptRow,
-    'id' | 'status' | 'published_pdf_storage_path' | 'published_date'
+    | 'id'
+    | 'status'
+    | 'published_pdf_storage_path'
+    | 'published_date'
+    | 'elocation_id'
+    | 'doi'
   >
 
   if (m.status === 'published') {
@@ -1726,6 +1786,24 @@ export async function publishGoLive(
     return {
       error:
         'Cannot publish: no published_pdf_storage_path on this manuscript. Run the renderer first.',
+    }
+  }
+
+  // Identity gate. The rendered PDF/XMP/JATS already carry the DOI, and the
+  // Crossref deposit that follows go-live asserts it as a permanent
+  // identifier — so a mismatch here means the bytes on disk and the database
+  // disagree about what this article IS. Block rather than publish.
+  if (!m.elocation_id) {
+    return {
+      error:
+        'Cannot publish: no elocation_id on this manuscript. Re-run the acceptance decision to allocate identity.',
+    }
+  }
+  if (!m.doi || m.doi !== buildDoi(m.elocation_id)) {
+    return {
+      error: `Cannot publish: DOI missing or does not match elocation (expected ${buildDoi(
+        m.elocation_id
+      )}, found ${m.doi || 'none'}). Re-run acceptance identity allocation.`,
     }
   }
 

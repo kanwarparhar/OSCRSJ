@@ -165,6 +165,20 @@ const LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/'
 const JOURNAL_SHORT = 'OSCRSJ'
 const JOURNAL_FULL = 'Orthopedic Surgery Case Reports & Series Journal'
 const ISSN_PLACEHOLDER = 'XXXX-XXXX'
+
+// ---- DOI identity ----
+// Implementation lives in ./doi (dependency-free so client components can
+// import it too). Re-exported here because this module is the historical
+// import surface for the publish pipeline.
+export {
+  DOI_PREFIX,
+  DOI_SUFFIX_NS,
+  buildDoi,
+  isValidOscrsjDoi,
+  validateRenderIdentity,
+} from './doi'
+import { validateRenderIdentity } from './doi'
+
 const RUNNING_TITLE_MAX = 45
 
 // ManuscriptType → display string (matches sample-payload.json `type` values).
@@ -783,8 +797,11 @@ export async function synthesizeRendererPayload(
   const typeSlug = type ? TYPE_SLUG[type] : ''
 
   // ---- article ----
-  const elocationId = manuscript.elocation_id || 'e0001'
-  const doi = manuscript.doi || `10.XXXXX/oscrsj.${new Date().getUTCFullYear()}.${elocationId.replace(/^e/, '').padStart(4, '0')}`
+  // Identity is minted at acceptance (lib/admin/actions.ts) and is never
+  // fabricated here. Any gap is a blocking error — see validateRenderIdentity.
+  const elocationId = (manuscript.elocation_id || '').trim()
+  const doi = (manuscript.doi || '').trim()
+  errors.push(...validateRenderIdentity(elocationId, doi))
   const doiUrl = `https://doi.org/${doi}`
 
   let runningTitle = (manuscript.running_title || manuscript.title || '').trim()
@@ -1120,7 +1137,7 @@ export async function synthesizeRendererPayload(
       ? familyNames.join(', ')
       : familyNames.slice(0, 6).join(', ') + ', et al'
   const titleCitation = (manuscript.title || '').replace(/\.+$/, '').trim().toLowerCase()
-  const suggestedCitation = `${authorCitation}. ${titleCitation}. <em>${JOURNAL_SHORT}</em>. ${issue.year};${issue.volume}(${issue.issue_number}):${elocationId}.`
+  const suggestedCitation = `${authorCitation}. ${titleCitation}. <em>${JOURNAL_SHORT}</em>. ${issue.year};${issue.volume}(${issue.issue_number}):${elocationId}. doi:${doi}`
 
   // ---- xmp_metadata ----
   // Session 57: xmpRights_WebStatement carryforward from Janine

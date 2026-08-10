@@ -157,7 +157,10 @@ export default async function MetadataEditorPanel({ manuscriptId }: Props) {
           title: manuscript.title || '',
           running_title: manuscript.running_title || '',
           doi: manuscript.doi || '',
-          elocation_id: manuscript.elocation_id || 'e0001',
+          // No 'e0001' default. An unassigned elocation must LOOK unassigned:
+          // showing e0001 told the editor this manuscript already had the
+          // identity of article one. Identity is minted at acceptance.
+          elocation_id: manuscript.elocation_id || '',
           subspecialty: manuscript.subspecialty || '',
           keywords: manuscript.keywords || [],
           abstract: manuscript.abstract || '',
