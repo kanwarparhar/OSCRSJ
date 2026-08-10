@@ -79,6 +79,25 @@ export default function ContactPage() {
           </div>
         </section>
 
+        {/* Publisher */}
+        <section className="mb-12">
+          <span className="section-label">Publisher</span>
+          <h2 className="section-heading mb-4">Editorial &amp; Business Office</h2>
+          <div className="bg-white border border-border rounded-xl p-6">
+            <address className="not-italic text-ink text-sm leading-relaxed">
+              <strong className="font-semibold">OSCRSJ LLC</strong>
+              <br />
+              Publisher of the Orthopedic Surgery Case Reports &amp; Series Journal
+              <br />
+              Kent, Washington, United States
+            </address>
+            <p className="text-xs text-brown mt-3">
+              OSCRSJ LLC is a Washington State limited liability company. Correspondence is
+              handled by email at the addresses above.
+            </p>
+          </div>
+        </section>
+
         {/* Follow Us */}
         <section className="mb-12">
           <span className="section-label">Connect</span>

@@ -22,6 +22,11 @@ export default function Footer() {
             <p className="text-sm text-peach/50 leading-relaxed">
               An independent, peer-reviewed, open-access journal advancing orthopedic education and research for the global orthopedic surgery community.
             </p>
+            <p className="mt-5 text-xs text-peach/50 leading-relaxed not-italic">
+              Published by <span className="text-peach/60">OSCRSJ LLC</span>
+              <br />
+              Kent, Washington, United States
+            </p>
             <p className="mt-4 text-xs text-peach/30 font-medium tracking-widest uppercase">
               Est. 2026
             </p>
