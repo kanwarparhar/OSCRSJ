@@ -128,7 +128,10 @@ export default async function DashboardPage() {
             }
           </p>
         </div>
-        <Link href="/dashboard/submit" className="btn-primary-light flex-shrink-0">
+        {/* ?new=1 — always start a blank submission. Without it this button
+            re-opened the author's most recent draft, so anyone with an
+            abandoned draft could never start a second paper. */}
+        <Link href="/dashboard/submit?new=1" className="btn-primary-light flex-shrink-0">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>

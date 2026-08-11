@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'New Submission — OSCRSJ' }
 export default async function SubmitPage({
   searchParams,
 }: {
-  searchParams?: { revising?: string }
+  searchParams?: { revising?: string; draft?: string; new?: string }
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -79,19 +79,41 @@ export default async function SubmitPage({
     )
   }
 
-  // Load existing draft (most recent)
+  // ---- Which draft (if any) are we opening? ----
+  //
+  // Three cases, and before 2026-08-10 only the third existed:
+  //   ?new=1        start a genuinely blank submission, even if drafts exist
+  //   ?draft={id}   open THAT draft (the dashboard's Resume link)
+  //   (no param)    resume the most recent draft, or start fresh if none
+  //
+  // The bug this replaces: `draft` was not in the searchParams type and was
+  // never read, so Resume on an older draft silently opened the NEWER one and
+  // edited it instead — and "New Submission" re-opened the existing draft, so
+  // an author with an abandoned draft had no way to start a second paper.
+  // Verified live 2026-08-10: New Submission loaded OSCRSJ-2026-0035.
   let manuscript: ManuscriptRow | null = null
   let metadata: ManuscriptMetadataRow | null = null
   let files: ManuscriptFileRow[] = []
   let authors: ManuscriptAuthorRow[] = []
 
-  const { data: manuscripts } = await supabase
+  const wantsNew = searchParams?.new === '1' || searchParams?.new === 'true'
+  const requestedDraftId = searchParams?.draft
+
+  let draftQuery = supabase
     .from('manuscripts')
     .select('*')
     .eq('corresponding_author_id', user.id)
     .eq('status', 'draft')
-    .order('created_at', { ascending: false })
-    .limit(1)
+
+  if (requestedDraftId) {
+    // Owner scoping is already applied above, so an id belonging to someone
+    // else simply returns no row and the author gets a blank wizard.
+    draftQuery = draftQuery.eq('id', requestedDraftId)
+  }
+
+  const { data: manuscripts } = wantsNew
+    ? { data: null }
+    : await draftQuery.order('created_at', { ascending: false }).limit(1)
 
   const rows = manuscripts as ManuscriptRow[] | null
   if (rows && rows.length > 0) {

@@ -24,7 +24,11 @@ const NAV_ITEMS = [
   },
   {
     label: 'New Submission',
-    href: '/dashboard/submit',
+    // ?new=1 so the label is honest everywhere: "New Submission" always opens
+    // a blank wizard. Resuming is the dashboard table's Resume link
+    // (?draft={id}). Active-state matching is on pathname, so the query
+    // string does not affect highlighting.
+    href: '/dashboard/submit?new=1',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
@@ -78,8 +82,12 @@ export default function DashboardShell({ userName, userEmail, userRole, children
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') return pathname === '/dashboard'
-    return pathname.startsWith(href)
+    // Compare on pathname only. Nav hrefs may carry a query string
+    // (e.g. /dashboard/submit?new=1); without stripping it the
+    // startsWith below never matches and the item never highlights.
+    const path = href.split('?')[0]
+    if (path === '/dashboard') return pathname === '/dashboard'
+    return pathname.startsWith(path)
   }
 
   const isAdmin = userRole === 'editor' || userRole === 'admin'

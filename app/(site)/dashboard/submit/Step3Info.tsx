@@ -41,6 +41,59 @@ interface Step3InfoProps {
   }) => void
   subspecialtyLocked?: boolean
   hideReviewerSuggestions?: boolean
+  /** Drives the abstract label/helper copy. See ABSTRACT_GUIDANCE. */
+  manuscriptType?: string | null
+}
+
+/**
+ * Per-type abstract guidance. Mirrors the "Abstract" row of the comparison
+ * table in app/(site)/guide-for-authors — previously this step hardcoded the
+ * case-report structure ("Background, Case Presentation, Discussion,
+ * Conclusion") for all seven types and told Letter/Images authors to write a
+ * structured abstract the guide says they should not have.
+ */
+const ABSTRACT_GUIDANCE: Record<string, { required: boolean; help: string; placeholder: string }> = {
+  case_report: {
+    required: true,
+    help: 'Structured abstract: Background, Case Presentation, Discussion, Conclusion. Up to 300 words.',
+    placeholder: 'Background: ...\nCase Presentation: ...\nDiscussion: ...\nConclusion: ...',
+  },
+  case_series: {
+    required: true,
+    help: 'Structured abstract: Background, Methods, Results, Conclusion. Up to 300 words.',
+    placeholder: 'Background: ...\nMethods: ...\nResults: ...\nConclusion: ...',
+  },
+  review_article: {
+    required: true,
+    help: 'Structured abstract: Background, Methods, Results, Conclusion. Up to 300 words.',
+    placeholder: 'Background: ...\nMethods: ...\nResults: ...\nConclusion: ...',
+  },
+  narrative_review: {
+    required: true,
+    help: 'Structured abstract: Background, Methods, Results, Conclusion. Up to 300 words.',
+    placeholder: 'Background: ...\nMethods: ...\nResults: ...\nConclusion: ...',
+  },
+  surgical_technique: {
+    required: true,
+    help: 'Unstructured abstract, up to 300 words.',
+    placeholder: 'A single unstructured paragraph summarising the technique, its indication, and what it adds.',
+  },
+  images_in_orthopedics: {
+    required: false,
+    help: 'No abstract is required for Images in Orthopedics. Leave this blank, or add a short summary if you have one.',
+    placeholder: 'Optional.',
+  },
+  letter_to_editor: {
+    required: false,
+    help: 'No abstract is required for a Letter to the Editor. Leave this blank, or add a short summary if you have one.',
+    placeholder: 'Optional.',
+  },
+}
+
+const DEFAULT_ABSTRACT_GUIDANCE = {
+  required: true,
+  help: 'Structured abstract. Up to 300 words.',
+  placeholder: '',
 }
 
 export default function Step3Info({
@@ -53,7 +106,11 @@ export default function Step3Info({
   onChange,
   subspecialtyLocked,
   hideReviewerSuggestions,
+  manuscriptType,
 }: Step3InfoProps) {
+  const abstractGuidance =
+    (manuscriptType && ABSTRACT_GUIDANCE[manuscriptType]) ||
+    DEFAULT_ABSTRACT_GUIDANCE
   const [keywordInput, setKeywordInput] = useState('')
 
   // ---- Word count helper ----
@@ -140,22 +197,25 @@ export default function Step3Info({
       {/* Abstract */}
       <div className="mb-6">
         <label className="block text-sm font-medium text-ink mb-1">
-          Abstract <span className="text-red-500">*</span>
+          Abstract{' '}
+          {abstractGuidance.required ? (
+            <span className="text-red-500">*</span>
+          ) : (
+            <span className="text-brown font-normal">(optional)</span>
+          )}
         </label>
-        <p className="text-xs text-brown mb-2">
-          Structured abstract: Background, Case Presentation, Discussion, Conclusion. 0 to 300 words.
-        </p>
+        <p className="text-xs text-brown mb-2">{abstractGuidance.help}</p>
         <textarea
           value={abstract}
           onChange={(e) => onChange({ abstract: e.target.value })}
-          rows={8}
-          placeholder="Background: ...&#10;Case Presentation: ...&#10;Discussion: ...&#10;Conclusion: ..."
+          rows={abstractGuidance.required ? 8 : 4}
+          placeholder={abstractGuidance.placeholder}
           className="w-full px-4 py-2.5 border border-border rounded-lg text-sm text-ink placeholder:text-taupe focus:outline-none focus:border-tan focus:ring-1 focus:ring-tan/30 resize-y"
         />
         <p className={`text-xs mt-1 text-right ${
           abstractWords === 0 ? 'text-brown' : abstractOver ? 'text-red-500' : abstractValid ? 'text-green-600' : 'text-brown'
         }`}>
-          {abstractWords} / 0-300 words{abstractOver ? ' — please trim to 300 or fewer' : ''}
+          {abstractWords} / 300 words{abstractOver ? ' — please trim to 300 or fewer' : ''}
         </p>
       </div>
 

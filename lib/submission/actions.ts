@@ -35,6 +35,10 @@ import {
   getRevisionReceivedEditorSubject,
 } from '@/lib/email/templates/revisionReceivedEditor'
 import {
+  renderSubmissionReceivedEditor,
+  getSubmissionReceivedEditorSubject,
+} from '@/lib/email/templates/submissionReceivedEditor'
+import {
   generateDisputeToken,
   buildDisputeUrl,
 } from '@/lib/email/disputeTokens'
@@ -44,6 +48,19 @@ import {
 // provisioned (see commit f93bf5b — GoDaddy removed free forwarding for
 // admin@oscrsj.com).
 const EDITORIAL_NOTIFY_EMAIL = 'oscrsjournal@gmail.com'
+
+/**
+ * Article types published with no abstract. Must stay in step with the
+ * "Abstract" row of the comparison table in app/(site)/guide-for-authors.
+ */
+const ABSTRACT_EXEMPT_TYPES: readonly string[] = [
+  'images_in_orthopedics',
+  'letter_to_editor',
+]
+
+/** Matches a canonical UUID, used to find the manuscript id inside a storage key. */
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 // Statuses that allow author self-service withdrawal. Anything past
 // an editorial decision (accepted, rejected, published, etc.) cannot
@@ -396,6 +413,25 @@ export async function recordFile(params: {
     .maybeSingle()
   if (!ownsMs) return { error: 'Manuscript not found' }
 
+  // Bind the storage path to the manuscript it claims to belong to.
+  // Ownership of the manuscript is not by itself enough: without this,
+  // a user could insert a row on their OWN draft whose storage_path
+  // points into someone else's manuscript folder, and then read it back
+  // through getAuthorFileSignedUrl — which trusts the row as the
+  // authorization boundary. (Security audit 2026-08-10.)
+  //
+  // Deliberately a SEGMENT test, not a prefix test. Comments in this file
+  // disagree about whether keys are `{manuscriptId}/v{n}/...` or
+  // `manuscripts/{manuscriptId}/v{n}/...`, and a strict prefix check that
+  // guesses wrong rejects every upload in the journal. Requiring the id to
+  // appear as its own path segment is exactly as strong for the threat this
+  // stops — the caller's ownership of `manuscriptId` is proven above, and a
+  // victim's key cannot contain the attacker's manuscript id as a segment.
+  const pathSegments = (storagePath || '').split('/').filter(Boolean)
+  if (!storagePath || !pathSegments.includes(manuscriptId)) {
+    return { error: 'Invalid storage path for this manuscript.' }
+  }
+
   const admin = createAdminClient()
 
   const { data, error } = await (admin.from('manuscript_files') as any)
@@ -466,17 +502,51 @@ export async function deleteFile(fileId: string, storagePath: string) {
     | null
 
   // Idempotent path: the row is genuinely gone, so the deletion is
-  // already achieved. Best-effort: also clear the storage object the
-  // caller passed in case it's still around (orphan from a prior
-  // partial-failure upload). This can't accidentally clobber another
-  // user's file because storage paths are UUID-namespaced
-  // (manuscripts/{ms_id}/v{n}/...) and a caller would need to know
-  // the exact path to abuse it.
+  // already achieved. We still best-effort clear the storage object the
+  // caller passed, because it may be an orphan from a partial-failure
+  // upload — but ONLY after proving the caller owns the manuscript whose
+  // folder that path sits in.
+  //
+  // The previous version deleted the caller-supplied path unconditionally
+  // with the admin client (which bypasses storage RLS), justified by paths
+  // being "UUID-namespaced so a caller would need to know the exact path".
+  // That is obscurity, not authorization: manuscript UUIDs appear in
+  // dashboard and article URLs and the rest of the path is deterministic,
+  // so any registered user could destroy any file in the bucket.
+  // (Security audit 2026-08-10.)
   if (!file) {
-    try {
-      await admin.storage.from('submissions').remove([storagePath])
-    } catch {
-      // best-effort cleanup; deletion is already achieved
+    // Locate a UUID-shaped segment rather than assuming segment 0: keys may
+    // or may not carry a leading `manuscripts/`, and feeding a non-UUID into
+    // `.eq('id', ...)` against a uuid column raises 22P02 rather than
+    // returning no rows.
+    const orphanManuscriptId = (storagePath || '')
+      .split('/')
+      .find((seg) => UUID_RE.test(seg))
+
+    if (orphanManuscriptId) {
+      const { data: ownsOrphan, error: ownsOrphanError } = await admin
+        .from('manuscripts')
+        .select('id')
+        .eq('id', orphanManuscriptId)
+        .eq('corresponding_author_id', user.id)
+        .maybeSingle()
+
+      if (ownsOrphanError) {
+        // Fail closed AND loudly. A silently-swallowed error here would turn
+        // the ownership gate into a permanent no-op and leak storage forever
+        // with no log line. The deletion the caller asked for is already
+        // achieved (the row is gone), so skipping cleanup is the safe branch.
+        console.error(
+          '[deleteFile] orphan ownership check failed; skipping storage cleanup:',
+          ownsOrphanError
+        )
+      } else if (ownsOrphan) {
+        try {
+          await admin.storage.from('submissions').remove([storagePath])
+        } catch (cleanupErr) {
+          console.error('[deleteFile] orphan storage cleanup failed:', cleanupErr)
+        }
+      }
     }
     return { success: true }
   }
@@ -506,20 +576,16 @@ export async function deleteFile(fileId: string, storagePath: string) {
 }
 
 // ---- Get a signed download URL ----
-
-export async function getFileDownloadUrl(storagePath: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Not authenticated' }
-
-  const { data, error } = await supabase.storage
-    .from('submissions')
-    .createSignedUrl(storagePath, 60)
-
-  if (error || !data) return { error: 'Failed to generate download URL' }
-
-  return { url: data.signedUrl }
-}
+//
+// REMOVED 2026-08-10 (pre-announcement security audit). The old
+// getFileDownloadUrl(storagePath) took a caller-supplied path, checked only
+// that the caller was authenticated, and signed it. The `submissions` bucket's
+// storage.objects policies gate on `bucket_id` alone, and storage paths are
+// fully deterministic ({manuscriptId}/v{n}/{manuscriptId}_v{n}_{type}_{seq}),
+// with manuscript UUIDs exposed in dashboard and article URLs — so any
+// registered user could name and download any unpublished manuscript in the
+// journal. Use getAuthorFileSignedUrl(fileId) below: it authorizes on the ROW
+// through the caller's own RLS session, which is the only boundary that holds.
 
 // ---- Author-scoped signed download URL (by file id) ----
 
@@ -848,7 +914,14 @@ export async function submitManuscript(manuscriptId: string) {
   // Validate required fields
   if (!m.manuscript_type) return { error: 'Manuscript type is required' }
   if (!m.title) return { error: 'Title is required' }
-  if (!m.abstract) return { error: 'Abstract is required' }
+  // Abstract is required for every type EXCEPT the two the published Guide for
+  // Authors lists as "Abstract: None" (guide-for-authors comparisonRows).
+  // Before 2026-08-10 this gate applied to all seven types, so an author
+  // submitting an Image or a Letter was hard-blocked unless they invented an
+  // abstract the guide told them not to write.
+  if (!ABSTRACT_EXEMPT_TYPES.includes(m.manuscript_type) && !m.abstract) {
+    return { error: 'Abstract is required' }
+  }
   if (!m.keywords || m.keywords.length < 3) return { error: 'At least 3 keywords are required' }
   if (!m.subspecialty) return { error: 'Subspecialty is required' }
 
@@ -1020,6 +1093,42 @@ export async function submitManuscript(manuscriptId: string) {
           `Co-author email to ${coAuthor.email} threw: ${err instanceof Error ? err.message : 'unknown error'}`
         )
       }
+    }
+    // 3. Editorial office notification.
+    //
+    // Added 2026-08-10. Without this the editorial office learned of a new
+    // submission only from the 13:00 UTC daily digest, so anything arriving
+    // just after that sat unseen for ~24 hours. Sent last and its failure is
+    // a warning, not an error: the manuscript is already safely submitted.
+    try {
+      const { html, text } = renderSubmissionReceivedEditor({
+        correspondingAuthorName: correspondingName,
+        correspondingAuthorEmail: correspondingEmail || '(unknown)',
+        submissionId: m.submission_id,
+        title: m.title || '(untitled)',
+        manuscriptType: m.manuscript_type!,
+        subspecialty: m.subspecialty,
+        authorCount: allAuthors.length,
+        adminUrl: `${siteUrl.replace(/\/$/, '')}/dashboard/admin/manuscripts/${manuscriptId}`,
+        noteToEditor: m.note_to_editor,
+      })
+      const editorResult = await sendEmail({
+        to: EDITORIAL_NOTIFY_EMAIL,
+        subject: getSubmissionReceivedEditorSubject(m.submission_id),
+        html,
+        text,
+        emailType: 'submission_received_editor',
+        manuscriptId,
+      })
+      if (editorResult.error) {
+        emailWarnings.push(
+          `Editor notification to ${EDITORIAL_NOTIFY_EMAIL} failed: ${editorResult.error}`
+        )
+      }
+    } catch (err) {
+      emailWarnings.push(
+        `Editor notification threw: ${err instanceof Error ? err.message : 'unknown error'}`
+      )
     }
   } catch (err) {
     emailWarnings.push(

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import type { ManuscriptRow, ManuscriptMetadataRow, ManuscriptFileRow, ManuscriptAuthorRow, ManuscriptType } from '@/lib/types/database'
 import {
   createOrUpdateDraft,
@@ -295,6 +296,18 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
   const [saveError, setSaveError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // Post-submit confirmation. Before 2026-08-10 a successful submit did
+  // router.push('/dashboard?submitted=true') and DashboardPage took no
+  // searchParams at all — so the flag was dead and the author's only signal
+  // that anything happened was a new row appearing in a table. If the
+  // confirmation email also failed (emailWarnings, which handleSubmit threw
+  // away) they got no acknowledgement anywhere.
+  const [submitted, setSubmitted] = useState<{
+    submissionId: string
+    revision: number | null
+    emailWarnings: string[]
+  } | null>(null)
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const stateRef = useRef(state)
   stateRef.current = state
@@ -351,7 +364,12 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
         mId = result.manuscriptId || s.manuscriptId
 
         if (mId && s.title) {
-          await saveManuscriptInfo({
+          // Check the result. Previously this (and the two writes below)
+          // were awaited with the return value discarded, then the green
+          // "Draft saved" toast fired unconditionally — so an author whose
+          // declarations write failed got a success confirmation, moved on,
+          // and was rejected at submit with no idea why.
+          const infoResult = await saveManuscriptInfo({
             manuscriptId: mId,
             title: s.title,
             abstract: s.abstract,
@@ -361,6 +379,12 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             nonPreferredReviewers: s.nonPreferredReviewers,
             noteToEditor: s.noteToEditor || undefined,
           })
+          if (infoResult?.error) {
+            console.error('Save failed (manuscript info):', infoResult.error)
+            setSaveError(infoResult.error)
+            setSaving(false)
+            return { ok: false, error: infoResult.error }
+          }
         }
       }
 
@@ -369,14 +393,20 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
       // abstract / keywords / note_to_editor are held in-memory and
       // persisted by submitRevision on final submit; see below.
       if (mId && s.authors.length > 0) {
-        await saveAuthors({
+        const authorsResult = await saveAuthors({
           manuscriptId: mId,
           authors: s.authors,
         })
+        if (authorsResult?.error) {
+          console.error('Save failed (authors):', authorsResult.error)
+          setSaveError(authorsResult.error)
+          setSaving(false)
+          return { ok: false, error: authorsResult.error }
+        }
       }
 
       if (mId) {
-        await saveDeclarations({
+        const declResult = await saveDeclarations({
           manuscriptId: mId,
           conflictOfInterest: s.noConflicts ? null : (s.conflictOfInterest || null),
           fundingSources: s.noFunding ? [] : s.fundingSources,
@@ -406,6 +436,12 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
                   s.apcWarrantiesAcknowledged,
               }),
         })
+        if (declResult?.error) {
+          console.error('Save failed (declarations):', declResult.error)
+          setSaveError(declResult.error)
+          setSaving(false)
+          return { ok: false, error: declResult.error }
+        }
       }
 
       showSavedToast()
@@ -513,7 +549,16 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
           setSubmitting(false)
           return
         }
-        router.push('/dashboard?revised=true')
+        if (autoSaveTimer.current) {
+          clearTimeout(autoSaveTimer.current)
+          autoSaveTimer.current = null
+        }
+        setSubmitted({
+          submissionId: state.submissionId || '',
+          revision: revisionContext!.revisionNumber,
+          emailWarnings: (result as { emailWarnings?: string[] }).emailWarnings || [],
+        })
+        setSubmitting(false)
         return
       }
 
@@ -524,14 +569,29 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
         return
       }
 
-      // Success — redirect to dashboard
-      router.push('/dashboard?submitted=true')
+      // Cancel any pending 30s autosave, so a timer scheduled just before
+      // submit cannot fire afterwards and write to a non-draft manuscript.
+      if (autoSaveTimer.current) {
+        clearTimeout(autoSaveTimer.current)
+        autoSaveTimer.current = null
+      }
+
+      // Success — show a real confirmation instead of a silent redirect.
+      setSubmitted({
+        submissionId:
+          (result as { submissionId?: string }).submissionId ||
+          state.submissionId ||
+          '',
+        revision: null,
+        emailWarnings: (result as { emailWarnings?: string[] }).emailWarnings || [],
+      })
+      setSubmitting(false)
     } catch (err) {
       console.error('Submit error:', err)
       setSubmitError('An unexpected error occurred. Please try again.')
       setSubmitting(false)
     }
-  }, [state.manuscriptId, state.title, state.abstract, state.keywords, state.noteToEditor, saveDraft, router, isRevising, revisionResponse])
+  }, [state.manuscriptId, state.submissionId, state.title, state.abstract, state.keywords, state.noteToEditor, saveDraft, router, isRevising, revisionResponse, revisionContext])
 
   // ---- Step completion checks ----
   const step1Complete = !!(
@@ -565,12 +625,21 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             : true
   const step2Complete = hasBlindedManuscript && reportingChecklistOk
 
-  // Step 3 abstract gate: required (non-empty) AND ≤300 words.
-  // Mirror Step3Info's word count.
+  // Step 3 abstract gate: ≤300 words, and required for every article type
+  // EXCEPT the two the published Guide for Authors lists as "Abstract: None"
+  // (Images in Orthopedics, Letter to the Editor). Before 2026-08-10 the
+  // non-empty check applied to all seven types, so those two authors were
+  // hard-blocked at Step 3 unless they wrote an abstract the guide told them
+  // not to write. Keep ABSTRACT_EXEMPT_TYPES in step with the server gate in
+  // lib/submission/actions.ts.
+  const abstractExempt =
+    state.manuscriptType === 'images_in_orthopedics' ||
+    state.manuscriptType === 'letter_to_editor'
   const abstractWords = state.abstract.trim()
     ? state.abstract.trim().split(/\s+/).length
     : 0
-  const abstractOk = abstractWords > 0 && abstractWords <= 300
+  const abstractOk =
+    (abstractExempt || abstractWords > 0) && abstractWords <= 300
 
   // Suggested reviewers are optional — authors may suggest them but the
   // wizard no longer blocks Step 3 on the absence of one.
@@ -630,6 +699,104 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
     if (step === 5) return step5Complete && revisionResponseOk
     if (step === 6) return step6Complete
     return false
+  }
+
+  // ---- Post-submit confirmation screen ----
+  //
+  // Added 2026-08-10. The old flow did router.push('/dashboard?submitted=true')
+  // and DashboardPage accepted no searchParams at all, so the flag was dead:
+  // the author's only signal that anything had happened was a new row in a
+  // table. emailWarnings was returned by submitManuscript and discarded here,
+  // so a failed confirmation email was invisible to everyone.
+  if (submitted) {
+    const isRev = submitted.revision !== null
+    return (
+      <div className="max-w-2xl">
+        <div className="bg-white border border-border rounded-xl p-6 sm:p-10 text-center">
+          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-5">
+            <svg className="w-7 h-7 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <h1 className="font-serif text-2xl text-brown-dark mb-2">
+            {isRev
+              ? `Revision v${submitted.revision} submitted`
+              : 'Manuscript submitted'}
+          </h1>
+
+          {submitted.submissionId && (
+            <p className="text-sm text-brown mb-1">
+              Your submission ID is{' '}
+              <span className="font-mono text-brown-dark font-medium">
+                {submitted.submissionId}
+              </span>
+            </p>
+          )}
+          <p className="text-sm text-brown mb-8">
+            Quote this ID in any correspondence with the editorial office.
+          </p>
+
+          <div className="text-left bg-cream/40 border border-border rounded-lg p-5 mb-8">
+            <h2 className="text-sm font-medium text-brown-dark mb-3">
+              What happens next
+            </h2>
+            <ol className="text-sm text-brown space-y-2 list-decimal list-inside">
+              <li>
+                A confirmation email is on its way to the corresponding author.
+                {!isRev && ' Co-authors have been notified separately.'}
+              </li>
+              <li>
+                The editorial office screens the submission for scope and
+                completeness.
+              </li>
+              <li>
+                If it passes screening it goes to double-blind peer review with
+                two independent reviewers.
+              </li>
+              <li>
+                You can track the status any time from your dashboard, and we
+                email you at every change.
+              </li>
+            </ol>
+          </div>
+
+          {submitted.emailWarnings.length > 0 && (
+            <div className="text-left bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
+              <p className="text-sm font-medium text-amber-900 mb-2">
+                Your submission was received, but some notification emails did
+                not go out:
+              </p>
+              <ul className="text-xs text-amber-800 space-y-1 list-disc list-inside">
+                {submitted.emailWarnings.map((w, i) => (
+                  <li key={i}>{w}</li>
+                ))}
+              </ul>
+              <p className="text-xs text-amber-800 mt-3">
+                Nothing is lost. The manuscript is safely recorded under{' '}
+                {submitted.submissionId || 'your submission ID'}. If no
+                confirmation arrives, contact the editorial office and quote
+                that ID.
+              </p>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/dashboard" className="btn-primary-light">
+              Back to my submissions
+            </Link>
+            {state.manuscriptId && (
+              <Link
+                href={`/dashboard/submission/${state.manuscriptId}`}
+                className="btn-outline"
+              >
+                View this submission
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -758,6 +925,7 @@ export default function SubmissionWizard({ draft, userProfile, revisionContext }
             onChange={updateState}
             subspecialtyLocked={isRevising}
             hideReviewerSuggestions={isRevising}
+            manuscriptType={state.manuscriptType}
           />
         )}
 

@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { ManuscriptFileRow, FileType, ManuscriptType } from '@/lib/types/database'
-import { recordFile, deleteFile, getFileDownloadUrl } from '@/lib/submission/actions'
+import { recordFile, deleteFile, getAuthorFileSignedUrl } from '@/lib/submission/actions'
 
 // ---- File category definitions ----
 
@@ -473,12 +473,14 @@ export default function Step2Files({ manuscriptId, files, onFilesChange, revisio
   }, [files, onFilesChange, removingIds])
 
   const handleDownload = useCallback(async (file: ManuscriptFileRow) => {
-    const result = await getFileDownloadUrl(file.storage_path)
-    if (result.error || !result.url) {
-      setError('Failed to get download link.')
+    // File ID, not storage path — authorization happens on the row through
+    // the caller's own RLS session. See getAuthorFileSignedUrl.
+    const result = await getAuthorFileSignedUrl(file.id)
+    if (result.error || !result.signedUrl) {
+      setError(result.error || 'Failed to get download link.')
       return
     }
-    window.open(result.url, '_blank')
+    window.open(result.signedUrl, '_blank')
   }, [])
 
   const formatSize = (bytes: number) => {
