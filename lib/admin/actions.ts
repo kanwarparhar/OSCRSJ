@@ -44,11 +44,12 @@ import type {
 } from '@/lib/types/database'
 import {
   validateMetadataForRender,
-  buildDoi,
-  isValidOscrsjDoi,
   type ManuscriptDraftOverlay,
   type ValidationRow,
 } from '@/lib/publish/synthesize'
+// Straight from ./doi, not via synthesize: that module carries 'use server'
+// and may only export async functions.
+import { buildDoi, isValidOscrsjDoi } from '@/lib/publish/doi'
 
 // Admin-scoped server actions. Every export here re-checks editor/admin
 // role on the authenticated user before touching the admin (service-role)

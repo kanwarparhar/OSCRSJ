@@ -168,15 +168,12 @@ const ISSN_PLACEHOLDER = 'XXXX-XXXX'
 
 // ---- DOI identity ----
 // Implementation lives in ./doi (dependency-free so client components can
-// import it too). Re-exported here because this module is the historical
-// import surface for the publish pipeline.
-export {
-  DOI_PREFIX,
-  DOI_SUFFIX_NS,
-  buildDoi,
-  isValidOscrsjDoi,
-  validateRenderIdentity,
-} from './doi'
+// import it too). It is deliberately NOT re-exported from here: this file
+// carries 'use server', and Next only permits async function exports from a
+// 'use server' module — re-exporting the constants and sync helpers is what
+// broke `next build` on 9f07faa. tsc --noEmit passes either way, so nothing
+// short of a real build catches it. Import DOI identity straight from
+// '@/lib/publish/doi'.
 import { validateRenderIdentity } from './doi'
 
 const RUNNING_TITLE_MAX = 45
