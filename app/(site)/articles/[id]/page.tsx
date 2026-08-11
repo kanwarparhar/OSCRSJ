@@ -6,9 +6,24 @@
 // manuscript_affiliations + manuscript_metadata tables.
 
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/server'
+import {
+  ISSN,
+  JOURNAL_ABBREV,
+  JOURNAL_FULL,
+  JOURNAL_SHORT,
+  LICENSE_URL,
+  CURRENT_VOLUME,
+  CURRENT_ISSUE,
+  articlePdfUrl,
+  buildCitation,
+  canonicalArticleUrl,
+  classifyArticleParam,
+  doiDisplayUrl,
+  normalizeElocationParam,
+} from '@/lib/publish/journal'
 import { SUBSPECIALTIES } from '@/lib/constants'
 import type {
   ManuscriptRow,
@@ -45,18 +60,27 @@ interface ArticleData {
   metadata: ManuscriptMetadataRow | null
 }
 
-async function loadArticle(id: string): Promise<ArticleData | null> {
+// Resolves an /articles/[id] param that may be EITHER the canonical
+// elocation form (/articles/e0001) or a legacy UUID. Junk params never reach
+// the database. The caller is responsible for issuing the 308 when
+// `matchedBy === 'uuid'` — see ArticlePage.
+async function loadArticle(
+  param: string
+): Promise<(ArticleData & { matchedBy: 'elocation' | 'uuid' }) | null> {
+  const kind = classifyArticleParam(param)
+  if (kind === 'invalid') return null
+
   const admin = createAdminClient()
 
-  const { data: m } = await admin
-    .from('manuscripts')
-    .select('*')
-    .eq('id', id)
-    .eq('status', 'published')
-    .single()
+  const base = admin.from('manuscripts').select('*').eq('status', 'published')
+  const { data: m } =
+    kind === 'elocation'
+      ? await base.eq('elocation_id', normalizeElocationParam(param)).single()
+      : await base.eq('id', param).single()
 
   if (!m) return null
   const manuscript = m as ManuscriptRow
+  const id = manuscript.id
 
   const [{ data: aData }, { data: affData }, { data: metaData }] =
     await Promise.all([
@@ -82,6 +106,7 @@ async function loadArticle(id: string): Promise<ArticleData | null> {
     authors: (aData as ManuscriptAuthorRow[] | null) || [],
     affiliations: (affData as ManuscriptAffiliationRow[] | null) || [],
     metadata: (metaData as ManuscriptMetadataRow | null) || null,
+    matchedBy: kind,
   }
 }
 
@@ -95,7 +120,11 @@ export async function generateMetadata({
   const data = await loadArticle(params.id)
   if (!data) return { title: 'Article Not Found' }
 
-  const { manuscript, authors } = data
+  const { manuscript, authors, affiliations } = data
+  // Canonical identity is the elocation, NEVER params.id — otherwise the UUID
+  // form self-canonicalizes and competes with the article it redirects to.
+  const eloc = manuscript.elocation_id
+  const canonical = eloc ? canonicalArticleUrl(eloc) : undefined
   const description = manuscript.abstract
     ? manuscript.abstract.slice(0, 200) + '…'
     : 'Published in OSCRSJ — Orthopedic Surgery Case Reports & Series Journal.'
@@ -116,33 +145,57 @@ export async function generateMetadata({
   const citationMeta: Record<string, string | string[]> = {
     citation_title: manuscript.title || '',
     citation_author: authors.map((a) => a.full_name), // one <meta> per author
-    citation_journal_title:
-      'Orthopedic Surgery Case Reports and Series Journal',
-    citation_publisher: 'OSCRSJ',
-    citation_volume: '1',
-    citation_issue: '1',
-    citation_pdf_url: `https://www.oscrsj.com/api/articles/${params.id}/pdf`,
-    citation_fulltext_html_url: `https://www.oscrsj.com/articles/${params.id}`,
+    citation_journal_title: JOURNAL_FULL,
+    citation_journal_abbrev: JOURNAL_ABBREV,
+    citation_publisher: JOURNAL_SHORT,
+    citation_volume: String(CURRENT_VOLUME),
+    citation_issue: String(CURRENT_ISSUE),
+    citation_language: 'en',
+  }
+  // The PDF must live in the SAME directory as the landing page or Google
+  // Scholar refuses to associate them — it was under /api/, which robots.txt
+  // also blocked outright.
+  if (eloc) {
+    citationMeta.citation_pdf_url = articlePdfUrl(eloc)
+    citationMeta.citation_fulltext_html_url = canonicalArticleUrl(eloc)
+    citationMeta.citation_firstpage = eloc
   }
   if (citationDate) citationMeta.citation_publication_date = citationDate
-  if (manuscript.elocation_id)
-    citationMeta.citation_firstpage = manuscript.elocation_id
   if (manuscript.abstract)
     citationMeta.citation_abstract = manuscript.abstract
   if (articleKeywords)
     citationMeta.citation_keyword = articleKeywords // one <meta> per keyword
+  if (manuscript.doi) citationMeta.citation_doi = manuscript.doi
+  // Omitted entirely until the LOC assigns one — a placeholder ISSN reads as
+  // a real identifier for a different journal.
+  if (ISSN) citationMeta.citation_issn = ISSN
+
+  const orcids = authors
+    .map((a) => a.orcid_id)
+    .filter((o): o is string => Boolean(o))
+    .map((o) => (o.startsWith('http') ? o : `https://orcid.org/${o}`))
+  if (orcids.length > 0) citationMeta.citation_author_orcid = orcids
+
+  const institutions = Array.from(
+    new Set(
+      [
+        ...authors.map((a) => a.affiliation),
+        ...affiliations.map((aff) => aff.affiliation_name),
+      ].filter((v): v is string => Boolean(v && v.trim()))
+    )
+  )
+  if (institutions.length > 0)
+    citationMeta.citation_author_institution = institutions
 
   return {
     title: manuscript.title || 'Article',
     description,
     keywords: articleKeywords,
-    alternates: {
-      canonical: `https://www.oscrsj.com/articles/${params.id}`,
-    },
+    alternates: canonical ? { canonical } : undefined,
     openGraph: {
       title: manuscript.title || 'Article',
       description,
-      url: `https://www.oscrsj.com/articles/${params.id}`,
+      url: canonical,
       type: 'article',
       authors: authors.map((a) => a.full_name),
     },
@@ -167,6 +220,21 @@ export default async function ArticlePage({
 
   const { manuscript, authors, affiliations, metadata } = data
 
+  // Legacy UUID URL -> 308 to the canonical elocation form. Permanent, so
+  // Google transfers signal rather than treating the two as duplicates.
+  // NOTE: permanentRedirect throws, so it must run before any render work.
+  if (data.matchedBy === 'uuid' && manuscript.elocation_id) {
+    permanentRedirect(`/articles/${manuscript.elocation_id}`)
+  }
+
+  const eloc = manuscript.elocation_id
+  const pdfHref = eloc
+    ? `/articles/${eloc}/pdf?v=${manuscript.updated_at ? new Date(manuscript.updated_at).getTime() : '1'}`
+    : `/api/articles/${manuscript.id}/pdf`
+  const canonicalUrl = eloc
+    ? canonicalArticleUrl(eloc)
+    : `https://www.oscrsj.com/articles/${manuscript.id}`
+
   const typeLabel = manuscript.manuscript_type
     ? TYPE_LABELS[manuscript.manuscript_type]
     : 'Article'
@@ -184,23 +252,18 @@ export default async function ArticlePage({
 
   const hasPdf = Boolean(manuscript.published_pdf_storage_path)
 
-  // Build citation string: Authors. Title. OSCRSJ. Year;Vol(Issue):eLocation.
-  const citationAuthors = authors
-    .map((a) => {
-      const parts = a.full_name.trim().split(' ')
-      const last = parts[parts.length - 1]
-      const initials = parts
-        .slice(0, -1)
-        .map((p) => p[0])
-        .join('')
-      return `${last} ${initials}`
-    })
-    .join(', ')
+  // ONE citation builder, shared with the renderer payload's
+  // suggested_citation_html. These two had already drifted apart once.
   const citationYear = manuscript.published_date
     ? new Date(manuscript.published_date).getFullYear()
     : ''
-  const elocId = manuscript.elocation_id || manuscript.id.slice(0, 8)
-  const citation = `${citationAuthors}. ${manuscript.title || ''}. OSCRSJ. ${citationYear};1(1):${elocId}.`
+  const citation = buildCitation({
+    authors: authors.map((a) => a.full_name),
+    title: manuscript.title || '',
+    year: citationYear,
+    elocationId: eloc || manuscript.id.slice(0, 8),
+    doi: manuscript.doi,
+  })
 
   // Build corresponding author info
   const corresponding = authors.find((a) => a.is_corresponding)
@@ -211,9 +274,9 @@ export default async function ArticlePage({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'MedicalScholarlyArticle',
-    '@id': `https://www.oscrsj.com/articles/${manuscript.id}`,
+    '@id': canonicalUrl,
     headline: manuscript.title || undefined,
-    url: `https://www.oscrsj.com/articles/${manuscript.id}`,
+    url: canonicalUrl,
     datePublished: manuscript.published_date ?? undefined,
     description: manuscript.abstract
       ? manuscript.abstract.slice(0, 300)
@@ -231,7 +294,17 @@ export default async function ArticlePage({
     publisher: { '@id': 'https://www.oscrsj.com/#organization' },
     isPartOf: { '@id': 'https://www.oscrsj.com/#periodical' },
     isAccessibleForFree: true,
-    license: 'https://creativecommons.org/licenses/by/4.0/',
+    license: LICENSE_URL,
+    ...(manuscript.doi
+      ? {
+          identifier: {
+            '@type': 'PropertyValue',
+            propertyID: 'DOI',
+            value: manuscript.doi,
+          },
+          sameAs: [doiDisplayUrl(manuscript.doi)],
+        }
+      : {}),
     ...(manuscript.subspecialty
       ? {
           about: {
@@ -333,12 +406,12 @@ export default async function ArticlePage({
             )}
             {manuscript.doi ? (
               <a
-                href={`https://doi.org/${manuscript.doi}`}
+                href={doiDisplayUrl(manuscript.doi)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono hover:text-peach transition-colors"
               >
-                DOI: {manuscript.doi}
+                {doiDisplayUrl(manuscript.doi)}
               </a>
             ) : (
               <span className="italic">DOI assignment pending</span>
@@ -348,7 +421,7 @@ export default async function ArticlePage({
           {/* PDF download button */}
           {hasPdf ? (
             <a
-              href={`/api/articles/${manuscript.id}/pdf?v=${manuscript.updated_at ? new Date(manuscript.updated_at).getTime() : '1'}`}
+              href={pdfHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-peach text-brown-dark font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-peach-dark transition-colors"
@@ -491,7 +564,7 @@ export default async function ArticlePage({
             {/* PDF download (sidebar repeat) */}
             {hasPdf && (
               <a
-                href={`/api/articles/${manuscript.id}/pdf?v=${manuscript.updated_at ? new Date(manuscript.updated_at).getTime() : '1'}`}
+                href={pdfHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full bg-brown-dark text-peach font-semibold text-sm px-4 py-3 rounded-xl hover:bg-ink transition-colors"

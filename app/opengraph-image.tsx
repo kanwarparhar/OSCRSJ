@@ -103,7 +103,7 @@ export default function OGImage() {
 
         {/* Badges */}
         <div style={{ display: 'flex', gap: 12 }}>
-          {['Peer-Reviewed', 'Open Access', 'DOI Registered'].map((badge) => (
+          {['Peer-Reviewed', 'Open Access', 'Crossref Member'].map((badge) => (
             <div
               key={badge}
               style={{

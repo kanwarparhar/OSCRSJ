@@ -25,6 +25,7 @@ import DecisionHistoryPanel from './DecisionHistoryPanel'
 import PublishedPdfPanel from './PublishedPdfPanel'
 import PublishedJatsPanel from './PublishedJatsPanel'
 import PublishPipelinePanel from './PublishPipelinePanel'
+import CrossrefDepositPanel from './CrossrefDepositPanel'
 import ApcPaymentPanel from './ApcPaymentPanel'
 import MetadataEditorPanel from './MetadataEditorPanel'
 import BodyEditorPanel from './BodyEditorPanel'
@@ -561,6 +562,8 @@ export default async function AdminManuscriptDetailPage({
       <MetadataEditorPanel manuscriptId={manuscript.id} />
 
       <PublishPipelinePanel manuscriptId={manuscript.id} />
+
+      <CrossrefDepositPanel manuscriptId={manuscript.id} />
 
       {phase === 'production' && (
         <div className="grid gap-6 lg:grid-cols-2 items-start">

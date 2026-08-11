@@ -215,6 +215,7 @@ async function loadPublishedArticles(): Promise<BrowserArticle[]> {
       title: m.title || '(untitled manuscript)',
       authors: authorsLine,
       doi: m.doi,
+      elocationId: m.elocation_id ?? null,
       topic: subspecialtyLabel,
       topicSlug: urlSlug,
       date,

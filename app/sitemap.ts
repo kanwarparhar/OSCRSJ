@@ -39,13 +39,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const admin = createAdminClient()
     const { data } = await admin
       .from('manuscripts')
-      .select('id, updated_at')
+      .select('id, elocation_id, updated_at')
       .eq('status', 'published')
       .order('updated_at', { ascending: false })
-      .returns<{ id: string; updated_at: string | null }[]>()
+      .returns<
+        { id: string; elocation_id: string | null; updated_at: string | null }[]
+      >()
     if (data) {
-      articlePages = data.map((m) => ({
-        url: `${baseUrl}/articles/${m.id}`,
+      // Canonical article URLs are the elocation form. A row without one is
+      // not yet citable and is omitted rather than emitted as a UUID URL that
+      // would immediately 308 — a sitemap of redirects wastes crawl budget.
+      articlePages = data
+        .filter((m) => Boolean(m.elocation_id))
+        .map((m) => ({
+        url: `${baseUrl}/articles/${m.elocation_id}`,
         lastModified: m.updated_at ? new Date(m.updated_at) : new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.9,

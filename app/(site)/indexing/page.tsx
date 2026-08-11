@@ -25,7 +25,7 @@ export default function IndexingPage() {
           <span className="section-label">Where We Stand</span>
           <h2 className="section-heading mb-3">Current Status</h2>
           <p className="text-ink leading-relaxed">
-            OSCRSJ is a newly established journal (founded 2026). We are registered with Crossref for DOI assignment and are actively pursuing indexing in major medical databases. Every article published in OSCRSJ receives a unique DOI, making it permanently citable and discoverable in academic literature.
+            OSCRSJ is a newly established journal (founded 2026). We are a Crossref member (DOI prefix 10.67687) and are actively pursuing indexing in major medical databases. DOIs are assigned to accepted articles through Crossref; registration of our first published articles is in progress.
           </p>
         </section>
 
@@ -34,8 +34,8 @@ export default function IndexingPage() {
           <h2 className="section-heading mb-5">Indexing Roadmap</h2>
           <div className="space-y-3">
             {[
-              { title: 'Crossref DOI Registration', status: 'Active', desc: 'Every article receives a unique Crossref DOI upon publication, ensuring permanent citability and linking.', done: true },
-              { title: 'Google Scholar', status: 'In Progress', desc: 'Automatic indexing once articles are published with proper metadata and DOIs. Typically occurs within weeks of first publication.', done: false },
+              { title: 'Crossref DOI Registration', status: 'In Progress', desc: 'OSCRSJ is a Crossref member with an assigned DOI prefix (10.67687). DOIs are minted for every accepted article; registration of the published back catalogue is underway.', done: false },
+              { title: 'Google Scholar', status: 'In Progress', desc: 'Automatic indexing once articles are published with complete Highwire citation metadata and registered DOIs. Typically occurs within weeks of first publication.', done: false },
               { title: 'DOAJ (Directory of Open Access Journals)', status: 'Planned — Year 1', desc: 'Application requires demonstrated commitment to open access, peer review, and editorial standards, plus an initial body of published research. We will apply once we have built up our first volume of articles.', done: false },
               { title: 'PMC / PubMed', status: 'Planned — Year 2', desc: 'PubMed Central and PubMed indexing require a track record of consistent, high-quality publication (typically 12–24 months). This is our primary indexing goal.', done: false },
               { title: 'Scopus', status: 'Planned — Year 2–3', desc: 'Scopus evaluates journals based on editorial quality, citedness, regularity of publication, and online availability. Application follows PubMed.', done: false },

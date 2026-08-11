@@ -16,6 +16,7 @@ export type BrowserArticle = {
   title: string
   authors: string
   doi: string | null
+  elocationId: string | null
   topic: string
   topicSlug: string
   date: string
@@ -237,7 +238,7 @@ function ArticlesBrowserInner({ articles }: { articles: BrowserArticle[] }) {
                     )}
                   </div>
                   <Link
-                    href={`/articles/${article.id}`}
+                    href={`/articles/${article.elocationId || article.id}`}
                     className="group block"
                   >
                     <h2 className="font-serif text-xl font-normal text-brown-dark leading-snug mb-2 group-hover:text-ink transition-colors">
@@ -252,20 +253,26 @@ function ArticlesBrowserInner({ articles }: { articles: BrowserArticle[] }) {
                   )}
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     {article.doi ? (
+                      /* Crossref display guidelines: full URL form,
+                         hyperlinked, no 'doi:' anchor-text prefix. */
                       <a
                         href={`https://doi.org/${article.doi}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-brown font-mono hover:underline underline-offset-2"
                       >
-                        DOI {article.doi}
+                        https://doi.org/{article.doi}
                       </a>
                     ) : (
                       <span className="text-xs text-brown italic">DOI assignment pending</span>
                     )}
                     {article.pdfStoragePath ? (
                       <a
-                        href={`/api/articles/${article.id}/pdf?v=${article.pdfVersion}`}
+                        href={
+                          article.elocationId
+                            ? `/articles/${article.elocationId}/pdf?v=${article.pdfVersion}`
+                            : `/api/articles/${article.id}/pdf?v=${article.pdfVersion}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-brown-dark font-medium hover:underline underline-offset-2 flex items-center gap-1"

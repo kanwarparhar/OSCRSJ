@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'In Press — Forthcoming Orthopedic Case Reports',
     description:
-      'Articles accepted for publication in OSCRSJ — peer-reviewed case reports and case series awaiting copyediting and final issue assignment, with author bylines and Crossref DOIs.',
+      'Articles accepted for publication in OSCRSJ — peer-reviewed case reports and case series awaiting copyediting and final issue assignment, with author bylines and assigned Crossref DOIs.',
     alternates: {
       canonical: 'https://www.oscrsj.com/articles/in-press',
     },
@@ -358,16 +358,18 @@ function ArticleCard({
           </span>
         )}
         {manuscript.doi && (
+          /* Decision D8: In Press articles show their ASSIGNED DOI but must
+             NOT hyperlink it. The DOI is minted at acceptance and is final,
+             but it is only registered with Crossref once the article goes
+             live — a member obligation is that a DOI resolves to a real
+             landing page. Linking it here would produce a doi.org 404 on our
+             own site, which is exactly the credibility damage the whole
+             Crossref workstream exists to prevent. */
           <span>
-            DOI{' '}
-            <a
-              href={`https://doi.org/${manuscript.doi}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline underline-offset-2"
-            >
-              {manuscript.doi}
-            </a>
+            DOI <span className="font-mono">{manuscript.doi}</span>{' '}
+            <span className="italic text-[0.9em] opacity-70">
+              (registers on publication)
+            </span>
           </span>
         )}
         <span className="italic">Full text available soon</span>

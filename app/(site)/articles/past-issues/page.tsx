@@ -45,7 +45,7 @@ export default function PastIssuesPage() {
             {[
               { label: 'Publication Model', value: 'Continuous — one annual volume' },
               { label: 'Format', value: 'Online, open access' },
-              { label: 'Archiving', value: 'Permanent digital archive with DOIs' },
+              { label: 'Archiving', value: 'Permanent digital archive, Crossref DOIs' },
               { label: 'Access', value: 'Free to read, download, share, and adapt with attribution (CC BY 4.0)' },
             ].map((fact) => (
               <div key={fact.label} className="bg-white border border-border rounded-xl p-6">

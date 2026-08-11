@@ -111,7 +111,7 @@ async function loadFeaturedArticles(): Promise<FeaturedArticle[]> {
 const newsItems = [
   { date: 'April 2026', title: 'OSCRSJ officially launches, accepting submissions across all orthopedic subspecialties', tag: 'Journal' },
   { date: 'August 2026', title: 'Standard article processing charge of $399 USD now in effect for new submissions', tag: 'Journal' },
-  { date: 'March 2026', title: 'Crossref membership confirmed, DOI registration active', tag: 'Journal' },
+  { date: 'March 2026', title: 'Crossref membership confirmed, DOI prefix assigned', tag: 'Journal' },
   { date: 'March 2026', title: 'AAOS 2026: Highlights in trauma and sports medicine research', tag: 'Orthopedics' },
   { date: 'February 2026', title: 'New CARE guidelines update for surgical case reporting', tag: 'Research' },
   { date: 'February 2026', title: 'Rising interest in AI-assisted fracture classification tools', tag: 'Orthopedics' },
@@ -293,7 +293,7 @@ export default async function HomePage() {
                   <div>
                     <p className="text-sm font-medium text-black mb-1">Indexing</p>
                     <p className="text-xs text-ink leading-snug">
-                      Crossref-registered DOIs. Active applications: DOAJ, Google Scholar, EBSCO. PubMed pathway underway.
+                      Crossref member with an assigned DOI prefix. Active applications: DOAJ, Google Scholar, EBSCO. PubMed pathway underway.
                     </p>
                   </div>
                 </div>

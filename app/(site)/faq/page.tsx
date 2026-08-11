@@ -108,7 +108,7 @@ const faqSections = [
       },
       {
         q: 'Does OSCRSJ assign DOIs?',
-        a: 'Yes. Every published article receives a unique Digital Object Identifier (DOI) via Crossref, making it permanently citable and discoverable.',
+        a: 'Yes. OSCRSJ is a Crossref member with its own DOI prefix (10.67687), and a DOI is minted for every article at acceptance. Registration of our first published articles with Crossref is in progress, after which each DOI resolves permanently to its article page.',
       },
     ],
   },
@@ -158,7 +158,7 @@ const faqSections = [
       },
       {
         q: 'Will my article appear on Google Scholar?',
-        a: 'Yes. All OSCRSJ articles are indexed by Google Scholar automatically. Additionally, Crossref DOI registration ensures your article is discoverable across major academic search engines and databases.',
+        a: 'OSCRSJ articles carry the Highwire citation metadata Google Scholar reads, and Scholar indexes new journals automatically once published content is crawlable. Crossref DOI registration, which is in progress, further improves discoverability across academic search engines and databases.',
       },
     ],
   },

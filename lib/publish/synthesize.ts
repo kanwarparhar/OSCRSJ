@@ -161,20 +161,42 @@ export interface SynthesizeResult {
 
 const SCHEMA_URL = 'https://oscrsj.com/schema/article-payload/v1.0.json'
 const LICENSE_CODE = 'CC BY 4.0'
-const LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/'
-const JOURNAL_SHORT = 'OSCRSJ'
+const LICENSE_URL = JOURNAL_LICENSE_URL
+const JOURNAL_SHORT = JOURNAL_SHORT_NAME
+// NOTE: the renderer's PDF/JATS masthead uses the ampersand form of the
+// title; the Highwire/Crossref surfaces use the spelled-out `and` form in
+// lib/publish/journal.ts. Both are the journal's registered name; keep them
+// distinct deliberately rather than "fixing" one into the other.
 const JOURNAL_FULL = 'Orthopedic Surgery Case Reports & Series Journal'
-const ISSN_PLACEHOLDER = 'XXXX-XXXX'
+
+// Placeholder shipped to the renderer while the LOC application (APPL0007345)
+// is open. The renderer maps it to the DTD-valid '0000-0000'. The moment
+// `ISSN` in journal.ts is set to the assigned value, the real ISSN flows all
+// the way into the PDF's XMP packet and the JATS <journal-meta> — but the
+// renderer's own JOURNAL_ISSN env var must be set in the SAME change or only
+// half the pipeline flips (execution-plan gap G10).
+const ISSN_PLACEHOLDER = JOURNAL_ISSN ?? 'XXXX-XXXX'
+
+// ---- Journal identity ----
+// Single source of truth (execution-plan gap G12): volume, ISSN, licence and
+// canonical URLs used to be hardcoded independently here, on the article page
+// and in the sitemap, and had already diverged.
 
 // ---- DOI identity ----
 // Implementation lives in ./doi (dependency-free so client components can
 // import it too). It is deliberately NOT re-exported from here: this file
 // carries 'use server', and Next only permits async function exports from a
-// 'use server' module — re-exporting the constants and sync helpers is what
-// broke `next build` on 9f07faa. tsc --noEmit passes either way, so nothing
-// short of a real build catches it. Import DOI identity straight from
-// '@/lib/publish/doi'.
+// 'use server' module — re-exporting the constants and sync helpers broke
+// `next build` on 9f07faa (it typechecks clean, so tsc will not catch it).
+// Import DOI identity straight from '@/lib/publish/doi'.
 import { validateRenderIdentity } from './doi'
+import {
+  ISSN as JOURNAL_ISSN,
+  JOURNAL_SHORT as JOURNAL_SHORT_NAME,
+  LICENSE_URL as JOURNAL_LICENSE_URL,
+  CURRENT_VOLUME,
+  CURRENT_ISSUE,
+} from './journal'
 
 const RUNNING_TITLE_MAX = 45
 
@@ -833,8 +855,8 @@ export async function synthesizeRendererPayload(
     journal_full: JOURNAL_FULL,
     issn_electronic: ISSN_PLACEHOLDER,
     year: publishedDt.getUTCFullYear(),
-    volume: 1,
-    issue_number: 1,
+    volume: CURRENT_VOLUME,
+    issue_number: CURRENT_ISSUE,
     month_short: MONTH_SHORT[publishedDt.getUTCMonth()],
     issue_slug: '1-1',
     issue_cover_date: publishedDt.toISOString().slice(0, 10),

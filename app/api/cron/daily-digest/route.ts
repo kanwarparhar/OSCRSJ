@@ -424,12 +424,28 @@ export async function GET(req: NextRequest) {
     // swallow
   }
 
+  // ---- Crossref deposit sweep ----
+  // Piggybacked here rather than added as a sixth vercel.json cron, following
+  // the studio-daily precedent. This sweep — not the fire-and-forget call at
+  // go-live — is the guarantee: it drains anything still 'queued' and polls
+  // every 'submitted' batch until Crossref returns a verdict. Its own
+  // try/catch so a deposit problem cannot sink the digest, and vice versa.
+  let crossref: unknown = { skipped: true }
+  try {
+    const { processQueue } = await import('@/lib/publish/crossref/queue')
+    crossref = await processQueue(40_000)
+  } catch (err) {
+    crossref = { error: err instanceof Error ? err.message : String(err) }
+    console.error('[cron/daily-digest] crossref sweep failed:', err)
+  }
+
   if (sendErr) {
     return NextResponse.json(
       {
         sent: false,
         error: sendErr,
         studio,
+        crossref,
         counts,
         window: { start: windowStartIso, end: windowEndIso },
       },
@@ -440,6 +456,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     sent: true,
     studio,
+    crossref,
     recipient: digestRecipient(),
     subject,
     counts,

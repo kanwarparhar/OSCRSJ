@@ -47,8 +47,8 @@ import {
   type ManuscriptDraftOverlay,
   type ValidationRow,
 } from '@/lib/publish/synthesize'
-// Straight from ./doi, not via synthesize: that module carries 'use server'
-// and may only export async functions.
+// Straight from ./doi, not via synthesize: that module is 'use server' and
+// may only export async functions.
 import { buildDoi, isValidOscrsjDoi } from '@/lib/publish/doi'
 
 // Admin-scoped server actions. Every export here re-checks editor/admin
@@ -1843,6 +1843,28 @@ export async function publishGoLive(
   revalidatePath('/articles')
   revalidatePath('/articles/in-press')
 
+  // ---- Crossref deposit ----
+  // Enqueue only AFTER the status flip. Crossref members must not register a
+  // DOI before its landing page is live — the DOI has to resolve to a real
+  // page at the moment it becomes public. The immediate drain is best-effort
+  // (it may be unconfigured, slow, or rate-limited); the daily-digest cron
+  // sweep is what actually guarantees delivery, and the crossref_deposits row
+  // is what makes a silent failure impossible.
+  try {
+    const { enqueue, processQueue } = await import('@/lib/publish/crossref/queue')
+    const enq = await enqueue(manuscriptId, m.doi)
+    if (!enq.ok) {
+      console.error('[publish] crossref enqueue failed:', enq.error)
+    } else {
+      void processQueue(10_000).catch((err) =>
+        console.error('[publish] crossref drain failed:', err)
+      )
+    }
+  } catch (err) {
+    // Never let a deposit problem undo a successful publication.
+    console.error('[publish] crossref wiring error:', err)
+  }
+
   return { ok: true }
 }
 
@@ -2601,4 +2623,86 @@ export async function saveManuscriptBodyCleanedHtml(
   revalidatePath(`/dashboard/admin/manuscripts/${manuscriptId}`)
 
   return { ok: true }
+}
+
+// ============================================================
+// Crossref deposit — admin surface
+// ============================================================
+
+export interface CrossrefDepositActionResult {
+  ok?: true
+  error?: string
+  summary?: {
+    submitted: number
+    confirmed: number
+    failed: number
+    stillPending: number
+    configured: boolean
+    errors: string[]
+  }
+}
+
+/**
+ * Manual deposit / re-deposit from the admin publish panel.
+ *
+ * `force` creates a FRESH deposit row rather than reusing the existing one.
+ * That is the only remedy for a bad deposit: Crossref DOIs cannot be
+ * withdrawn, only superseded by a corrected full re-deposit of the same DOI.
+ * Because Crossref nulls any field a re-deposit omits, the generator always
+ * rebuilds the complete record from the database — there is no patch path.
+ */
+export async function depositToCrossref(
+  manuscriptId: string,
+  opts: { force?: boolean } = {}
+): Promise<CrossrefDepositActionResult> {
+  const gate = await requireAdminOnly()
+  if ('error' in gate) return { error: gate.error }
+
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('manuscripts')
+    .select('id, status, doi, elocation_id')
+    .eq('id', manuscriptId)
+    .maybeSingle()
+
+  const m = data as Pick<
+    ManuscriptRow,
+    'id' | 'status' | 'doi' | 'elocation_id'
+  > | null
+  if (!m) return { error: 'Manuscript not found.' }
+
+  if (m.status !== 'published') {
+    return {
+      error:
+        'Cannot deposit: the article is not published. A registered DOI must resolve to a live landing page — that is a Crossref member obligation, not a preference.',
+    }
+  }
+  if (!m.doi || !m.elocation_id || m.doi !== buildDoi(m.elocation_id)) {
+    return {
+      error: `Cannot deposit: DOI missing or inconsistent with elocation (expected ${
+        m.elocation_id ? buildDoi(m.elocation_id) : 'an elocation first'
+      }, found ${m.doi || 'none'}).`,
+    }
+  }
+
+  const { enqueue, processQueue } = await import('@/lib/publish/crossref/queue')
+  const enq = await enqueue(manuscriptId, m.doi, { force: opts.force })
+  if (!enq.ok) return { error: enq.error || 'Could not queue the deposit.' }
+
+  const summary = await processQueue(40_000)
+
+  try {
+    await (admin.from('audit_logs') as any).insert({
+      user_id: gate.userId,
+      action: opts.force ? 'crossref_redeposit_requested' : 'crossref_deposit_requested',
+      resource_type: 'manuscript',
+      resource_id: manuscriptId,
+      details: { manuscript_id: manuscriptId, doi: m.doi, summary },
+    })
+  } catch {
+    // swallow
+  }
+
+  revalidatePath(`/dashboard/admin/manuscripts/${manuscriptId}`)
+  return { ok: true, summary }
 }
