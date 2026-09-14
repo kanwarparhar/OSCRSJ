@@ -582,6 +582,23 @@ export async function markApcPaidManually(args: {
     return { ok: false, error: 'There is no open invoice to mark paid on this manuscript.' }
   }
 
+  // Settle it in Stripe too, or Stripe keeps dunning an author who has
+  // already paid us. `paid_out_of_band` is exactly this case: the money
+  // arrived by wire/check, outside Stripe, and the invoice must close
+  // without Stripe attempting a charge. Best-effort — a Stripe failure
+  // must not stop us recording money we have actually received.
+  let stripeSettled = false
+  let stripeSettleError: string | null = null
+  const stripe = getStripe()
+  if (stripe && existing.stripe_invoice_id) {
+    try {
+      await stripe.invoices.pay(existing.stripe_invoice_id, { paid_out_of_band: true })
+      stripeSettled = true
+    } catch (e) {
+      stripeSettleError = e instanceof Error ? e.message : String(e)
+    }
+  }
+
   const admin = createAdminClient()
   const paidAt = new Date().toISOString()
   const { error: updErr } = await (admin.from('payments') as any)
@@ -612,6 +629,8 @@ export async function markApcPaidManually(args: {
         amount_cents: existing.amount_cents,
         note,
         editor_id: gate.userId,
+        stripe_settled_out_of_band: stripeSettled,
+        stripe_settle_error: stripeSettleError,
       },
     })
   } catch {
@@ -620,5 +639,17 @@ export async function markApcPaidManually(args: {
 
   revalidatePath(`${ADMIN_PATH}/${manuscript.id}`)
   revalidatePath('/dashboard')
+
+  // Recorded either way, but say so plainly when Stripe still shows the
+  // invoice open — otherwise the author keeps getting reminders.
+  if (existing.stripe_invoice_id && !stripeSettled) {
+    return {
+      ok: false,
+      error:
+        `Payment recorded in OSCRSJ, but Stripe invoice ${existing.stripe_invoice_id} could not be closed` +
+        `${stripeSettleError ? ` (${stripeSettleError})` : ''}. Mark it "paid out of band" in the Stripe ` +
+        `dashboard, or the author will keep receiving payment reminders.`,
+    }
+  }
   return { ok: true }
 }
