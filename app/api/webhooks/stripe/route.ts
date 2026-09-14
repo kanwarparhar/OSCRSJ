@@ -76,6 +76,47 @@ function extractPaymentIntentId(invoice: Stripe.Invoice): string | null {
   return null
 }
 
+/**
+ * The PaymentIntent id, re-fetching with `expand: ['payments']` when the
+ * webhook payload does not carry it.
+ *
+ * `Invoice.payments` is an OPTIONAL ApiList — it is absent unless
+ * expanded, and webhook payloads are never expanded. So the sync
+ * extractor above returns null for every real card payment, and the
+ * `charge.refunded` handler — which matches refunds to a payment row BY
+ * PaymentIntent id — could never find the row. Refunds would silently
+ * never reconcile, leaving a refunded APC recorded as `paid` forever.
+ *
+ * Observed on the 2026-09-14 test-mode round trip: a real card payment
+ * on invoice in_1UFP4JDElpAClrmm9i0x955T stored
+ * stripe_payment_intent_id = null.
+ *
+ * Best-effort by design: a failure here must not stop us recording a
+ * payment that actually happened.
+ */
+async function resolvePaymentIntentId(
+  stripe: Stripe,
+  invoice: Stripe.Invoice
+): Promise<string | null> {
+  const inline = extractPaymentIntentId(invoice)
+  if (inline) return inline
+  if (!invoice.id) return null
+
+  try {
+    const expanded = await stripe.invoices.retrieve(invoice.id, {
+      expand: ['payments'],
+    })
+    return extractPaymentIntentId(expanded)
+  } catch (e) {
+    console.error(
+      '[stripe-webhook] could not expand payments for',
+      invoice.id,
+      e instanceof Error ? e.message : String(e)
+    )
+    return null
+  }
+}
+
 async function findPaymentByInvoice(
   admin: Admin,
   invoiceId: string
@@ -110,7 +151,11 @@ async function logAudit(
 // ------------------------------------------------------------
 // invoice.paid
 // ------------------------------------------------------------
-async function handleInvoicePaid(admin: Admin, invoice: Stripe.Invoice): Promise<void> {
+async function handleInvoicePaid(
+  admin: Admin,
+  stripe: Stripe,
+  invoice: Stripe.Invoice
+): Promise<void> {
   const invoiceId = invoice.id
   if (!invoiceId) return
 
@@ -128,7 +173,7 @@ async function handleInvoicePaid(admin: Admin, invoice: Stripe.Invoice): Promise
   if (row.status === 'paid') return
 
   const paidAt = new Date()
-  const paymentIntentId = extractPaymentIntentId(invoice)
+  const paymentIntentId = await resolvePaymentIntentId(stripe, invoice)
 
   const { error: updErr } = await (admin.from('payments') as any)
     .update({
@@ -335,7 +380,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   try {
     switch (event.type) {
       case 'invoice.paid':
-        await handleInvoicePaid(admin, event.data.object as Stripe.Invoice)
+        await handleInvoicePaid(admin, stripe, event.data.object as Stripe.Invoice)
         break
       case 'invoice.payment_failed':
         await handlePaymentFailed(admin, event.data.object as Stripe.Invoice)
