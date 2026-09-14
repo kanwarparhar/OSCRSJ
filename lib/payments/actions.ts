@@ -256,14 +256,25 @@ export async function createApcInvoice(args: {
       }))
     customerId = customer.id
 
-    await stripe.invoiceItems.create({
-      customer: customerId,
-      amount: amountCents,
-      currency: APC_CURRENCY,
-      // This string lands on an institutional finance officer's desk.
-      description: `Article Processing Charge — ${manuscript.submission_id}: ${title}`,
-    })
-
+    // ORDER MATTERS. Create the invoice FIRST, then bind the line item
+    // to it by id.
+    //
+    // The obvious-looking order — invoiceItems.create() then
+    // invoices.create() — is a MONEY BUG, not a style preference.
+    // `pending_invoice_items_behavior` defaults to 'exclude', so
+    // invoices.create() returns an EMPTY draft and the pending item is
+    // left dangling on the customer. The invoice then totals $0.00,
+    // Stripe auto-finalizes it as paid, `invoice.paid` fires, and we
+    // record a $399 APC as collected having billed nobody anything.
+    // Observed live on 2026-09-14 against OSCRSJ-TEST-STRIPE
+    // (invoice in_1UFNc5DElpAClrmm0zbXJO1L, total $0.00, paid in 1s).
+    //
+    // Passing pending_invoice_items_behavior: 'include' would also fix
+    // the total, but it sweeps up EVERY dangling item on the customer —
+    // including ones orphaned by a previous failed attempt — so a
+    // second manuscript could be billed for the first one's charge.
+    // Binding by invoice id is the only version with no stray-item
+    // failure mode. Do not reorder these two calls.
     const draft = await stripe.invoices.create({
       customer: customerId,
       collection_method: 'send_invoice',
@@ -279,8 +290,31 @@ export async function createApcInvoice(args: {
     })
     if (!draft.id) throw new Error('Stripe returned an invoice with no id.')
 
+    await stripe.invoiceItems.create({
+      customer: customerId,
+      invoice: draft.id,
+      amount: amountCents,
+      currency: APC_CURRENCY,
+      // This string lands on an institutional finance officer's desk.
+      description: `Article Processing Charge — ${manuscript.submission_id}: ${title}`,
+    })
+
     const finalized = await stripe.invoices.finalizeInvoice(draft.id)
     if (!finalized.id) throw new Error('Stripe returned a finalized invoice with no id.')
+
+    // Hard guard: refuse to proceed unless Stripe agrees on the amount.
+    // A finalized invoice whose total is not exactly what we intended to
+    // charge must never reach an author or our books. This is the check
+    // that would have caught the $0.00 bug above in the same second it
+    // happened, instead of at the first real acceptance.
+    if (finalized.total !== amountCents) {
+      await stripe.invoices.voidInvoice(finalized.id).catch(() => {})
+      throw new Error(
+        `Invoice total ${finalized.total} does not match the intended charge ${amountCents}. ` +
+          `The invoice was voided and nothing was sent. This means the line item did not attach.`
+      )
+    }
+
     const sent = await stripe.invoices.sendInvoice(finalized.id)
 
     invoiceId = sent.id || finalized.id
