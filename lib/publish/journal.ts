@@ -27,8 +27,8 @@ export const LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/'
 export const SITE_ORIGIN = 'https://www.oscrsj.com'
 
 /**
- * Electronic ISSN. NULL until the Library of Congress assigns one
- * (application APPL0007345, filed 2026-07-25).
+ * Electronic ISSN — ASSIGNED 2026-09-08 by the US ISSN Center at the Library
+ * of Congress (application APPL0007345, filed 2026-07-25). Online format.
  *
  * Every consumer MUST treat null as "omit the field entirely" rather than
  * emitting a placeholder. A syntactically-valid fake ISSN in a Crossref
@@ -39,7 +39,7 @@ export const SITE_ORIGIN = 'https://www.oscrsj.com'
  * renderer's `JOURNAL_ISSN` env var (plus the launchd plist environment on
  * the render host). Neither alone is sufficient.
  */
-export const ISSN: string | null = null
+export const ISSN: string | null = '3144-0940'
 
 // ---- Volume / issue ----
 // OSCRSJ publishes continuously within an annual volume. Volume 1 = 2026.

@@ -26,6 +26,8 @@ export default function Footer() {
               Published by <span className="text-peach/60">OSCRSJ LLC</span>
               <br />
               Kent, Washington, United States
+              <br />
+              ISSN 3144-0940 (Online)
             </p>
             <p className="mt-4 text-xs text-peach/30 font-medium tracking-widest uppercase">
               Est. 2026

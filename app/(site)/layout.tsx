@@ -43,7 +43,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         url: 'https://www.oscrsj.com',
         publisher: { '@id': 'https://www.oscrsj.com/#organization' },
         inLanguage: 'en-US',
-        // issn: '' — populate once Janine lands ISSN (Gate 1, post-5-articles)
+        issn: '3144-0940',
       },
     ],
   }

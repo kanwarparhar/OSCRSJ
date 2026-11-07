@@ -201,13 +201,25 @@ test('[C4] the sitemap is still advertised', () => {
 
 // ── C5 — journal identity single source of truth ─────────────────────────────
 
-test('[C5] ISSN is null until the LOC assigns one, and is never a placeholder', () => {
-  // A syntactically valid fake ISSN is worse than none: it is machine-read as
-  // a real identifier for a different journal. Consumers must omit, not fake.
-  assert.equal(ISSN, null)
-  if (ISSN !== null) {
-    assert.ok(!['XXXX-XXXX', '0000-0000'].includes(ISSN as string))
-  }
+test('[C5] ISSN is the LOC-assigned eISSN, never a placeholder', () => {
+  // ASSIGNED 2026-09-08 by the US ISSN Center (LOC), appl APPL0007345, and
+  // verified live on portal.issn.org under our title. Crossref REJECTS a
+  // journal-title deposit with no ISSN ("must deposit with an ISSN and/or
+  // journal title DOI" — batch oscrsj-e0001-1787666235, 2026-08-25), which is
+  // why this constant is load-bearing and pinned by contract.
+  //
+  // A syntactically valid FAKE ISSN is worse than none: it is machine-read as
+  // a real identifier for a different journal. Omit, never fake.
+  assert.equal(ISSN, '3144-0940')
+  assert.ok(!['XXXX-XXXX', '0000-0000'].includes(ISSN as string))
+  // ISSN check-digit (mod 11, weights 8..2): 3144-094 -> 0.
+  const digits = (ISSN as string).replace('-', '')
+  const sum = digits
+    .slice(0, 7)
+    .split('')
+    .reduce((acc, d, i) => acc + Number(d) * (8 - i), 0)
+  const check = (11 - (sum % 11)) % 11
+  assert.equal(check === 10 ? 'X' : String(check), digits[7])
 })
 
 test('[C5] journal identity constants are the registered values', () => {
