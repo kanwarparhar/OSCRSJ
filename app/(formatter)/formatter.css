@@ -4,7 +4,7 @@
    reference mockup (docs/formatter-redesign-mockup.html). EVERYTHING here is
    namespaced under .fmt-root so the formatter's design language never leaks
    into the OSCRSJ site, and the site's "Neutral Elegance" tokens never leak in.
-   Font-family vars (--fmt-font-*) are provided by next/font in the layout.
+   Font-family vars (--fmt-font-*) are provided by the local fonts.css stylesheet.
    ============================================================================ */
 
 .fmt-root {
@@ -26,7 +26,7 @@
   --fmt-warn: #a16207;
   --fmt-bad: #b3261e;
 
-  /* type stacks (display/body/mono from next/font; serif for the demo/intro) */
+  /* type stacks (display/body/mono from fonts.css; serif for the demo/intro) */
   --disp: var(--fmt-font-display), 'Inter Tight', system-ui, sans-serif;
   --body: var(--fmt-font-body), 'Inter', system-ui, sans-serif;
   --mono: var(--fmt-font-mono), 'JetBrains Mono', ui-monospace, monospace;
