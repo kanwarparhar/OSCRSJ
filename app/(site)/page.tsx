@@ -262,14 +262,14 @@ export default async function HomePage() {
 
             {/* RIGHT — Indexing / standards / open access (no heading) */}
             <div className="lg:col-span-4 flex flex-col justify-center">
-              {/* Two key turnaround stats */}
+              {/* Editorial turnaround targets, not measured performance */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-cream-alt/50 rounded-lg p-4">
                   <p className="font-serif text-brown-dark leading-none mb-2" style={{ fontSize: '36px' }}>
                     10<span className="text-ink text-sm font-sans ml-1">days</span>
                   </p>
                   <p className="text-xs text-ink leading-snug">
-                    From submission to initial editorial response
+                    Target: submission to initial editorial response
                   </p>
                 </div>
                 <div className="bg-cream-alt/50 rounded-lg p-4">
@@ -277,7 +277,7 @@ export default async function HomePage() {
                     35<span className="text-ink text-sm font-sans ml-1">days</span>
                   </p>
                   <p className="text-xs text-ink leading-snug">
-                    From acceptance to publication
+                    Target: acceptance to publication
                   </p>
                 </div>
               </div>
@@ -293,7 +293,7 @@ export default async function HomePage() {
                   <div>
                     <p className="text-sm font-medium text-black mb-1">Indexing</p>
                     <p className="text-xs text-ink leading-snug">
-                      Crossref member with an assigned DOI prefix. Active applications: DOAJ, Google Scholar, EBSCO. PubMed pathway underway.
+                      Crossref member with an assigned DOI prefix. We are working toward broader discovery and indexing. Inclusion in additional indexes is not yet confirmed. PubMed pathway underway.
                     </p>
                   </div>
                 </div>
