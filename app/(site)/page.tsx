@@ -293,7 +293,7 @@ export default async function HomePage() {
                   <div>
                     <p className="text-sm font-medium text-black mb-1">Indexing</p>
                     <p className="text-xs text-ink leading-snug">
-                      Crossref member with an assigned DOI prefix. We are working toward broader discovery and indexing. Inclusion in additional indexes is not yet confirmed. PubMed pathway underway.
+                      Crossref member with an assigned DOI prefix. We are working toward broader discovery and indexing. Inclusion in additional indexes is not yet confirmed. PubMed-related indexing remains a future goal, subject to eligibility and independent evaluation.
                     </p>
                   </div>
                 </div>
@@ -350,7 +350,7 @@ export default async function HomePage() {
               The <strong>Orthopedic Surgery Case Reports &amp; Series Journal (OSCRSJ)</strong> is an independent, peer-reviewed, open-access medical journal founded in 2026. OSCRSJ publishes case reports, case series, systematic reviews and meta-analyses, narrative reviews, surgical techniques, images in orthopedics, and letters to the editor across every musculoskeletal subspecialty — including trauma, sports medicine, spine, adult reconstruction, pediatric orthopedics, hand and wrist, foot and ankle, shoulder, and orthopedic oncology.
             </p>
             <p>
-              Every manuscript undergoes double-blind peer review by reviewers outside of our network, with a target first decision within ten days. Accepted articles receive a Crossref DOI and are published open access — free to read, download, and reuse with attribution — with an active pathway toward PubMed indexing. OSCRSJ serves the global orthopedic surgery community: practicing surgeons, fellows, residents, students, and researchers.
+              Every manuscript undergoes double-blind peer review by reviewers outside of our network, with a target first decision within ten days. Articles are published open access — free to read, download, and reuse with attribution — with broader indexing as a long-term goal. OSCRSJ serves the global orthopedic surgery community: practicing surgeons, fellows, residents, students, and researchers.
             </p>
           </div>
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">

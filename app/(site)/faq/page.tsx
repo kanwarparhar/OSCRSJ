@@ -67,7 +67,7 @@ const faqSections = [
       },
       {
         q: 'How long does the review process take?',
-        a: 'Our target turnaround has two milestones: (1) initial editorial response within 10 days of submission — the Editor-in-Chief screens for scope, completeness, and basic quality and either advances the manuscript to peer review or returns it; (2) full peer-reviewed decision within 30 days of submission — at least two independent reviewers evaluate the manuscript over the following 14–21 days and the editor issues an Accept / Minor Revisions / Major Revisions / Reject decision. Once accepted, articles are published within 35 days. Images in Orthopedics undergo expedited review (7–10 days for the full decision).',
+        a: 'Our target turnaround has two milestones: (1) initial editorial response within 10 days of submission — the Editor-in-Chief screens for scope, completeness, and basic quality and either advances the manuscript to peer review or returns it; (2) full peer-reviewed decision within 30 days of submission — at least two independent reviewers evaluate the manuscript over the following 14–21 days and the editor issues an Accept / Minor Revisions / Major Revisions / Reject decision. Our target is publication within 35 days of final acceptance, once author-approved proofs and all publication requirements are complete. This is a target, not a guaranteed turnaround. Images in Orthopedics undergo expedited review (7–10 days for the full decision).',
       },
       {
         q: 'How many reviewers evaluate each manuscript?',
@@ -108,7 +108,7 @@ const faqSections = [
       },
       {
         q: 'Does OSCRSJ assign DOIs?',
-        a: 'Yes. OSCRSJ is a Crossref member with its own DOI prefix (10.67687), and a DOI is minted for every article at acceptance. Registration of our first published articles with Crossref is in progress, after which each DOI resolves permanently to its article page.',
+        a: 'OSCRSJ is a Crossref member with DOI prefix 10.67687. Crossref records are available for articles e0001, e0002, e0003, e0005 and e0006. Not every published article has a registered DOI yet. DOI assignment and registration are separate steps; use the DOI link on the article page to check its destination.',
       },
     ],
   },
@@ -142,11 +142,11 @@ const faqSections = [
     questions: [
       {
         q: 'How quickly are accepted articles published?',
-        a: 'Accepted articles are typically published online within 14 days of final acceptance. OSCRSJ uses continuous publication: each article goes online as soon as it is ready — there is no wait for a scheduled issue — and is collected into the current annual volume.',
+        a: 'Our target is publication within 35 days of final acceptance, once author-approved proofs and all publication requirements are complete. This is a target, not a guaranteed turnaround. OSCRSJ uses continuous publication: each article goes online as soon as it is ready — there is no wait for a scheduled issue — and is collected into the current annual volume.',
       },
       {
         q: 'Is OSCRSJ indexed in PubMed?',
-        a: 'OSCRSJ is currently pursuing indexing. Our roadmap includes DOAJ listing, Crossref registration, and application to PubMed Central (PMC). We will update this page as indexing milestones are achieved.',
+        a: 'We are working toward the publication, editorial and technical requirements for future indexing applications. PMC and MEDLINE have separate eligibility and evaluation processes. This roadmap does not mean an application has been submitted or accepted. We will report verified milestones here.',
       },
       {
         q: 'Can I share my published article on social media or my personal website?',
@@ -158,7 +158,7 @@ const faqSections = [
       },
       {
         q: 'Will my article appear on Google Scholar?',
-        a: 'OSCRSJ articles carry the Highwire citation metadata Google Scholar reads, and Scholar indexes new journals automatically once published content is crawlable. Crossref DOI registration, which is in progress, further improves discoverability across academic search engines and databases.',
+        a: 'Article pages include citation metadata to support discovery by academic search services. Search-engine inclusion and timing are controlled by each service and are not guaranteed. Registered Crossref DOIs support persistent article identification.',
       },
     ],
   },
